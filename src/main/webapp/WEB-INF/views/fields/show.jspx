@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_searchbox_domain_Field" object="${field}" path="/fields" z="yYJQgHmRW6LpxeRpN9qvJywLPH0=">
+        <field:display field="key" id="s_com_searchbox_domain_Field_key" object="${field}" z="SgXgImNSW0DRpwSB1NKPiSDPiNM="/>
+        <field:display field="label" id="s_com_searchbox_domain_Field_label" object="${field}" z="nwG3lkjo0ojYVW4CPQa3U0NyxKo="/>
+        <field:display field="searchable" id="s_com_searchbox_domain_Field_searchable" object="${field}" z="t/+6yaCaD72PdHcSIOAPi0gu0WA="/>
+        <field:display field="sortable" id="s_com_searchbox_domain_Field_sortable" object="${field}" z="fXjOsFGjh/wsx7+iq4U0DT+axdI="/>
+        <field:display field="spellable" id="s_com_searchbox_domain_Field_spellable" object="${field}" z="tAEOyYyKxAUQtCEuubvfnbIdKOU="/>
+        <field:display field="type" id="s_com_searchbox_domain_Field_type" object="${field}" z="39WiCiacFUip6gkebxb485w9EyE="/>
+        <field:display field="weight" id="s_com_searchbox_domain_Field_weight" object="${field}" z="lHWr+cBJZK+PuTxR/YIe+kmUVDw="/>
+    </page:show>
+</div>

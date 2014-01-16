@@ -1,0 +1,35 @@
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-16 17:00:26
+project --topLevelPackage com.searchbox
+jpa setup --provider HIBERNATE --database H2_IN_MEMORY
+interface --class ~.ref.ProduceFitler
+entity jpa --class ~.domain.Account
+field string --fieldName username
+field string --fieldName email
+field string --fieldName password
+field string --fieldName fullName
+entity jpa --class ~.domain.Collection --abstract
+field string --fieldName name
+entity jpa --class ~.domain.collection.SolrCollection --extends ~.domain.Collection
+field string --fieldName solrHost
+entity jpa --class ~.domain.collection.SolrCloudCollection --extends ~.domain.Collection
+field string --fieldName zkHost
+entity jpa --class ~.domain.Field
+field string --fieldName key --permitReservedWords
+field string --fieldName label
+field boolean --fieldName searchable
+field boolean --fieldName sortable
+field boolean --fieldName spellable
+field string --fieldName type --permitReservedWords
+field number --fieldName weight --type float
+entity jpa --class ~.domain.Facet --abstract
+field string --fieldName label
+field number --fieldName position --type int --permitReservedWords
+entity jpa --class ~.domain.facet.FieldFacet --extends ~.domain.Facet
+field string --fieldName fieldName
+// [failed] field reference --fieldName fieldName --type ~.domain.facet.FieldFacet --class ~.domain.Field --cardinality ONE_TO_MANY
+logging setup --level INFO 
+perform eclipse
+web mvc setup
+hint
+web mvc all --package com.searchbox.web
+perform eclipse

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_searchbox_domain_collection_SolrCollection" object="${solrcollection}" path="/solrcollections" z="6dSGTTplCQyP1/O04pEyl91Ozr0=">
+        <field:display field="name" id="s_com_searchbox_domain_collection_SolrCollection_name" object="${solrcollection}" z="j/OGuRmHs03A/K7Bc01v8hKvfXk="/>
+        <field:display field="solrHost" id="s_com_searchbox_domain_collection_SolrCollection_solrHost" object="${solrcollection}" z="VBmUnkEMD53aNac5jbyqPQIR5xk="/>
+    </page:show>
+</div>
