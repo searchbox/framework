@@ -9,12 +9,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect SolrCollection_Roo_Jpa_ActiveRecord {
     
+    public static final List<String> SolrCollection.fieldNames4OrderClauseFilter = java.util.Arrays.asList("solrHost");
+    
     public static long SolrCollection.countSolrCollections() {
         return entityManager().createQuery("SELECT COUNT(o) FROM SolrCollection o", Long.class).getSingleResult();
     }
     
     public static List<SolrCollection> SolrCollection.findAllSolrCollections() {
         return entityManager().createQuery("SELECT o FROM SolrCollection o", SolrCollection.class).getResultList();
+    }
+    
+    public static List<SolrCollection> SolrCollection.findAllSolrCollections(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM SolrCollection o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, SolrCollection.class).getResultList();
     }
     
     public static SolrCollection SolrCollection.findSolrCollection(Long id) {
@@ -24,6 +37,17 @@ privileged aspect SolrCollection_Roo_Jpa_ActiveRecord {
     
     public static List<SolrCollection> SolrCollection.findSolrCollectionEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM SolrCollection o", SolrCollection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<SolrCollection> SolrCollection.findSolrCollectionEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM SolrCollection o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, SolrCollection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

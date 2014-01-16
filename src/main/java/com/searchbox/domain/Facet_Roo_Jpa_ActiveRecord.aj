@@ -14,6 +14,8 @@ privileged aspect Facet_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager Facet.entityManager;
     
+    public static final List<String> Facet.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "position");
+    
     public static final EntityManager Facet.entityManager() {
         EntityManager em = new Facet() {
         }.entityManager;
@@ -29,6 +31,17 @@ privileged aspect Facet_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Facet o", Facet.class).getResultList();
     }
     
+    public static List<Facet> Facet.findAllFacets(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Facet o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Facet.class).getResultList();
+    }
+    
     public static Facet Facet.findFacet(Long id) {
         if (id == null) return null;
         return entityManager().find(Facet.class, id);
@@ -36,6 +49,17 @@ privileged aspect Facet_Roo_Jpa_ActiveRecord {
     
     public static List<Facet> Facet.findFacetEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Facet o", Facet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Facet> Facet.findFacetEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Facet o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Facet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

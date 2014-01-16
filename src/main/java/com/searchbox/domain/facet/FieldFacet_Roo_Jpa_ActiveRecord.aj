@@ -9,12 +9,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect FieldFacet_Roo_Jpa_ActiveRecord {
     
+    public static final List<String> FieldFacet.fieldNames4OrderClauseFilter = java.util.Arrays.asList("fieldName");
+    
     public static long FieldFacet.countFieldFacets() {
         return entityManager().createQuery("SELECT COUNT(o) FROM FieldFacet o", Long.class).getSingleResult();
     }
     
     public static List<FieldFacet> FieldFacet.findAllFieldFacets() {
         return entityManager().createQuery("SELECT o FROM FieldFacet o", FieldFacet.class).getResultList();
+    }
+    
+    public static List<FieldFacet> FieldFacet.findAllFieldFacets(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FieldFacet o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, FieldFacet.class).getResultList();
     }
     
     public static FieldFacet FieldFacet.findFieldFacet(Long id) {
@@ -24,6 +37,17 @@ privileged aspect FieldFacet_Roo_Jpa_ActiveRecord {
     
     public static List<FieldFacet> FieldFacet.findFieldFacetEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM FieldFacet o", FieldFacet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<FieldFacet> FieldFacet.findFieldFacetEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FieldFacet o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, FieldFacet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

@@ -14,6 +14,8 @@ privileged aspect Collection_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager Collection.entityManager;
     
+    public static final List<String> Collection.fieldNames4OrderClauseFilter = java.util.Arrays.asList("name");
+    
     public static final EntityManager Collection.entityManager() {
         EntityManager em = new Collection() {
         }.entityManager;
@@ -29,6 +31,17 @@ privileged aspect Collection_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Collection o", Collection.class).getResultList();
     }
     
+    public static List<Collection> Collection.findAllCollections(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Collection o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Collection.class).getResultList();
+    }
+    
     public static Collection Collection.findCollection(Long id) {
         if (id == null) return null;
         return entityManager().find(Collection.class, id);
@@ -36,6 +49,17 @@ privileged aspect Collection_Roo_Jpa_ActiveRecord {
     
     public static List<Collection> Collection.findCollectionEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Collection o", Collection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Collection> Collection.findCollectionEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Collection o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Collection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional
