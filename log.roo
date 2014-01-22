@@ -81,3 +81,13 @@ web mvc setup
 web mvc scaffold --class ~.web.app.SearchboxController --backingType ~.domain.app.Searchbox
 web mvc setup
 web mvc all --package com.searchbox.web
+perform eclipse
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 23:37:40
+help mvc all
+hint
+hint logging
+logging setup --level INFO 
+web mvc setup
+hint web
+help web mvc all
+web mvc all --package ~.web

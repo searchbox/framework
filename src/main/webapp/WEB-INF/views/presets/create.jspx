@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_searchbox_domain_app_Preset" modelAttribute="preset" path="/presets" render="${empty dependencies}" z="rmLxlau0nRirDuwFBvWvIBJHVqc=">
+        <field:input field="slug" id="c_com_searchbox_domain_app_Preset_slug" z="hmrH2ee0BSCMHoSQLYJ3/eSpJYY="/>
+        <field:input field="label" id="c_com_searchbox_domain_app_Preset_label" z="SCoGxcOsZ/2+g3EK0/wDCdzVgWI="/>
+        <field:input field="description" id="c_com_searchbox_domain_app_Preset_description" z="sRn29LVUSl6zC48xifqe6Bg/Ci4="/>
+        <field:checkbox field="global" id="c_com_searchbox_domain_app_Preset_global" z="IPmfO+jCgNFkcaWY8QoGqFHihxs="/>
+        <field:checkbox field="visible" id="c_com_searchbox_domain_app_Preset_visible" z="4f9am45nyR7p0eYQtfrXNilnG+o="/>
+        <field:input field="position" id="c_com_searchbox_domain_app_Preset_position" validationMessageCode="field_invalid_integer" z="/sMISRlXrIVLmqTBpwgu9ESZ6AA="/>
+        <field:input field="snippetTemplate" id="c_com_searchbox_domain_app_Preset_snippetTemplate" z="iiX4C6GuO3ILpKx6johgZ/eEf3Y="/>
+        <field:input field="viewTemplate" id="c_com_searchbox_domain_app_Preset_viewTemplate" z="qfNO5psdl4zqJEwb0tzGctlrS+Q="/>
+        <field:input field="metaTemplate" id="c_com_searchbox_domain_app_Preset_metaTemplate" z="731/xaTIhnk7G8NXREPCzW82Mn8="/>
+        <field:select field="searchbox" id="c_com_searchbox_domain_app_Preset_searchbox" itemValue="id" items="${searchboxes}" path="/searchboxes" z="6378ZIyDPvnl5zUihKKR1Ed0nvQ="/>
+        <field:simple field="fields" id="c_com_searchbox_domain_app_Preset_fields" messageCode="entity_reference_not_managed" messageCodeAttribute="Field Definition" z="+8ESRkFcKHYhPLQX4wd4nb1AqZY="/>
+        <field:simple field="facets" id="c_com_searchbox_domain_app_Preset_facets" messageCode="entity_reference_not_managed" messageCodeAttribute="Facet Definition" z="EbMsFm99XwZlzQ8ScP0HUgmgwM4="/>
+        <field:select field="collections" id="c_com_searchbox_domain_app_Preset_collections" itemValue="id" items="${collections}" multiple="true" path="/collections" z="1ek2Xh7FDFvYRbtP2osOyQ1KBcw="/>
+        <field:select field="spells" id="c_com_searchbox_domain_app_Preset_spells" itemValue="id" items="${fields}" multiple="true" path="/fields" z="D3j7mfolpt9kMhbsZOiMhFW8MwA="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_searchbox_domain_app_Preset" render="${not empty dependencies}" z="XMsYxGQGt/1ThkjtnD5KxGKcaAU="/>
+</div>

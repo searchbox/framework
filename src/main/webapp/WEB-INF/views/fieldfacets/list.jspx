@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_searchbox_domain_search_facet_FieldFacet" items="${fieldfacets}" z="7aUcBA0JsRjGBeZ5S1ccNcwUnnc=">
+        <table:table data="${fieldfacets}" id="l_com_searchbox_domain_search_facet_FieldFacet" path="/fieldfacets" z="6ApfCdUHSMXo22hDDSODXolNDCc=">
+            <table:column id="c_com_searchbox_domain_search_facet_FieldFacet_label" property="label" z="W6zSDfVILKDobQxOQ98Jo7rIG+0="/>
+            <table:column id="c_com_searchbox_domain_search_facet_FieldFacet_position" property="position" z="HHSgfBymI9ikrCFwJp0TUETatJc="/>
+            <table:column id="c_com_searchbox_domain_search_facet_FieldFacet_fieldName" property="fieldName" z="OhhC1AvJ8LxVQBi9GD+1FD+5J8A="/>
+        </table:table>
+    </page:list>
+</div>

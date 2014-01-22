@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="solrcloudengines/list">
+        <put-attribute name="body" value="/WEB-INF/views/solrcloudengines/list.jspx"/>
+    </definition>
+<definition extends="default" name="solrcloudengines/show">
+        <put-attribute name="body" value="/WEB-INF/views/solrcloudengines/show.jspx"/>
+    </definition>
+<definition extends="default" name="solrcloudengines/create">
+        <put-attribute name="body" value="/WEB-INF/views/solrcloudengines/create.jspx"/>
+    </definition>
+<definition extends="default" name="solrcloudengines/update">
+        <put-attribute name="body" value="/WEB-INF/views/solrcloudengines/update.jspx"/>
+    </definition>
+</tiles-definitions>

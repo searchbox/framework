@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_searchbox_domain_engine_SolrCloudEngine" modelAttribute="solrCloudEngine" path="/solrcloudengines" versionField="Version" z="TU8MVU0VA1i9RhsfUDbAB/s20eQ=">
+        <field:simple field="collections" id="c_com_searchbox_domain_engine_SolrCloudEngine_collections" messageCode="entity_reference_not_managed" messageCodeAttribute="Collection" z="+XlWNzbP+L8hgZ0E9q/HsGPaFi4="/>
+        <field:input field="zkHost" id="c_com_searchbox_domain_engine_SolrCloudEngine_zkHost" z="Nvqnj5SGq6l4xyj9m9MTYr7dOlE="/>
+        <field:input field="name" id="c_com_searchbox_domain_engine_SolrCloudEngine_name" z="2/kP61KIgqXOQDpoHvwirU1xajM="/>
+    </form:update>
+</div>

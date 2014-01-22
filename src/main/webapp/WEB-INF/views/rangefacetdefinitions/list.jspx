@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_searchbox_domain_app_facet_RangeFacetDefinition" items="${rangefacetdefinitions}" z="u3Ek+Ih6345UhBXpaXQi8/PEZuk=">
+        <table:table data="${rangefacetdefinitions}" id="l_com_searchbox_domain_app_facet_RangeFacetDefinition" path="/rangefacetdefinitions" z="YBAuitRsiRO3+cjCHep5SJryszY=">
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_label" property="label" z="O5UgoZM86LvfHkU6kyW9disDblY="/>
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_position" property="position" z="oxQO1+GOoRfThX0zwp+SZWheWIE="/>
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_field" property="field" z="peqScE2ZLte1ElDzmaZeb1/3tvw="/>
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_preset" property="preset" z="+nCIrWd9s6eW0X1fqrF0mgtkip0="/>
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_min" property="min" z="KDjhbalDp5+dzs5EF5T5fQpX3aE="/>
+            <table:column id="c_com_searchbox_domain_app_facet_RangeFacetDefinition_max" property="max" z="VUSNAHvlrGrkRbj3ygm8+h1ZRrg="/>
+        </table:table>
+    </page:list>
+</div>
