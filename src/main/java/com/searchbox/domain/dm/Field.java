@@ -18,10 +18,14 @@ public class Field {
      */
     private String label;
     
-    @ManyToOne(targetEntity=FieldType.class)
-    private FieldType type;
+//    @ManyToOne(targetEntity=FieldType.class)
+//    private FieldType type;
     
     @ManyToOne(targetEntity=Collection.class)
     private Collection collection;
+    
+    public Field(String key){
+    	this.key = key;
+    }
     
 }

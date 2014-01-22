@@ -5,7 +5,6 @@
     <form:update id="fu_com_searchbox_domain_dm_Field" modelAttribute="field" path="/fields" versionField="Version" z="fOMwWxK7B8xje5JjmH8+lxISnW0=">
         <field:input field="key" id="c_com_searchbox_domain_dm_Field_key" z="GCz403H+SFl3/+z/xX3jj6M+PPU="/>
         <field:input field="label" id="c_com_searchbox_domain_dm_Field_label" z="uqehA4XfUR0EHWsv5gKtAjkzfi8="/>
-        <field:select field="type" id="c_com_searchbox_domain_dm_Field_type" itemValue="id" items="${fieldtypes}" path="/fieldtypes" z="JY9whrvBCM4QMoPtBvXeKcC8h6E="/>
         <field:select field="collection" id="c_com_searchbox_domain_dm_Field_collection" itemValue="id" items="${collections}" path="/collections" z="DDWEC4z5EfY0jH4IUbP2Orxv+tQ="/>
     </form:update>
 </div>

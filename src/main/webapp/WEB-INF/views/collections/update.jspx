@@ -5,6 +5,6 @@
     <form:update id="fu_com_searchbox_domain_dm_Collection" modelAttribute="collection" path="/collections" versionField="Version" z="anT3U0Yo4pHWNBRQQ5tLa0Sowzw=">
         <field:input field="name" id="c_com_searchbox_domain_dm_Collection_name" z="tiOv9urSxVLKwGlfsmTjIkLYJUQ="/>
         <field:select field="engine" id="c_com_searchbox_domain_dm_Collection_engine" itemValue="id" items="${searchengines}" path="/searchengines" z="KL3zK3CMgA8p72A0xs5fP4gvHhg="/>
-        <field:simple field="fields" id="c_com_searchbox_domain_dm_Collection_fields" messageCode="entity_reference_not_managed" messageCodeAttribute="Field" z="orqqhfNGwuTidq6lKvsb6W5BKpE="/>
+        <field:simple field="cfields" id="c_com_searchbox_domain_dm_Collection_cfields" messageCode="entity_reference_not_managed" messageCodeAttribute="Field" z="h3Z1LW7CevYRCfQQKrRVCjlaYC0="/>
     </form:update>
 </div>

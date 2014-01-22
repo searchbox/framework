@@ -5,7 +5,6 @@ package com.searchbox.web;
 
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
-import com.searchbox.domain.dm.FieldType;
 import com.searchbox.web.FieldController;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +88,6 @@ privileged aspect FieldController_Roo_Controller {
     void FieldController.populateEditForm(Model uiModel, Field field) {
         uiModel.addAttribute("field", field);
         uiModel.addAttribute("collections", Collection.findAllCollections());
-        uiModel.addAttribute("fieldtypes", FieldType.findAllFieldTypes());
     }
     
     String FieldController.encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -5,7 +5,7 @@
     <form:create id="fc_com_searchbox_domain_dm_Collection" modelAttribute="collection" path="/collections" render="${empty dependencies}" z="g9w74TDHrC5LdJ1XbOA4LOkMEto=">
         <field:input field="name" id="c_com_searchbox_domain_dm_Collection_name" z="tiOv9urSxVLKwGlfsmTjIkLYJUQ="/>
         <field:select field="engine" id="c_com_searchbox_domain_dm_Collection_engine" itemValue="id" items="${searchengines}" path="/searchengines" z="KL3zK3CMgA8p72A0xs5fP4gvHhg="/>
-        <field:simple field="fields" id="c_com_searchbox_domain_dm_Collection_fields" messageCode="entity_reference_not_managed" messageCodeAttribute="Field" z="orqqhfNGwuTidq6lKvsb6W5BKpE="/>
+        <field:simple field="cfields" id="c_com_searchbox_domain_dm_Collection_cfields" messageCode="entity_reference_not_managed" messageCodeAttribute="Field" z="h3Z1LW7CevYRCfQQKrRVCjlaYC0="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_searchbox_domain_dm_Collection" render="${not empty dependencies}" z="sg4RSzSumgC57Bl3FMib+VjKIlI="/>
 </div>

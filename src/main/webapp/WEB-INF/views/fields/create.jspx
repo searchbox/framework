@@ -5,7 +5,6 @@
     <form:create id="fc_com_searchbox_domain_dm_Field" modelAttribute="field" path="/fields" render="${empty dependencies}" z="Rb81w0Q5ia0DLgyMIJKKdTAQ9XQ=">
         <field:input field="key" id="c_com_searchbox_domain_dm_Field_key" z="GCz403H+SFl3/+z/xX3jj6M+PPU="/>
         <field:input field="label" id="c_com_searchbox_domain_dm_Field_label" z="uqehA4XfUR0EHWsv5gKtAjkzfi8="/>
-        <field:select field="type" id="c_com_searchbox_domain_dm_Field_type" itemValue="id" items="${fieldtypes}" path="/fieldtypes" z="JY9whrvBCM4QMoPtBvXeKcC8h6E="/>
         <field:select field="collection" id="c_com_searchbox_domain_dm_Field_collection" itemValue="id" items="${collections}" path="/collections" z="DDWEC4z5EfY0jH4IUbP2Orxv+tQ="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_searchbox_domain_dm_Field" render="${not empty dependencies}" z="y23Zg1jTfiealXZvEzm3zjbSyIc="/>

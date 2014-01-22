@@ -6,7 +6,6 @@
         <table:table data="${fields}" id="l_com_searchbox_domain_dm_Field" path="/fields" z="T8hbLvvSRvy+TiqqCSC38deWPIk=">
             <table:column id="c_com_searchbox_domain_dm_Field_key" property="key" z="s/Ann1aheTmtkJ5a1EteW3w1zsc="/>
             <table:column id="c_com_searchbox_domain_dm_Field_label" property="label" z="67uvoRmlnXpemyUl4IokVeAbL+w="/>
-            <table:column id="c_com_searchbox_domain_dm_Field_type" property="type" z="z/bLxWpq2MGXlbNJddADYwnDfkM="/>
             <table:column id="c_com_searchbox_domain_dm_Field_collection" property="collection" z="bv1kSbDrOL6I6RDC8m+4akin4i8="/>
         </table:table>
     </page:list>

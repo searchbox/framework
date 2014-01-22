@@ -1,5 +1,6 @@
 package com.searchbox.data;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.Searchbox;
 import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.dm.Field;
 import com.searchbox.domain.engine.SolrCloudEngine;
 
 @Component
@@ -32,19 +34,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		if (bootstraped)
 			return;
 
-		try {
-
+	
 			Searchbox testSearchbox = new Searchbox("test","this is a test Searchbox");
 			testSearchbox.persist();
 
 			SolrCloudEngine solr = new SolrCloudEngine();
 			solr.setName("test-collection");
-			solr.setZkHost(new URL("http://www.zk.com/"));
+			try {
+				solr.setZkHost(new URL("http://www.zk.com/"));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			solr.persist();
 			
-			Collection collection = new Collection();
-			collection.setEngine(solr);
-			
+			Collection collection = new Collection("Test", solr);
+			collection.addField(new Field("id"));
 			collection.persist();
 			
 			Preset searchAll = new Preset("Search All", collection);
@@ -59,15 +64,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 			Preset searchDoc = new Preset("Documents", collection);			
 			testSearchbox.addPreset(searchDoc);
 			
+			testSearchbox.persist();
+
+			
 			for(Preset preset:testSearchbox.getPresets()){
 				log.info("Addded preset: " + preset.getLabel() + " with position: " + preset.getPosition());
 			}
 			
-			testSearchbox.persist();
+			
+			for(Collection cc:Collection.findAllCollections()){
+				log.info("Got Collection: " + collection.getName() + " with engine: " + collection.getEngine().getClass());
+			}
+			
 
-		} catch (Exception e) {
-
-		}
+		
 
 		log.info("Bootstraping");
 

@@ -24,6 +24,10 @@ privileged aspect Field_Roo_Jpa_Entity {
     @Column(name = "version")
     private Integer Field.version;
     
+    public Field.new() {
+        super();
+    }
+
     public Long Field.getId() {
         return this.id;
     }

@@ -91,3 +91,4 @@ web mvc setup
 hint web
 help web mvc all
 web mvc all --package ~.web
+perform eclipse

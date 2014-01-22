@@ -2,6 +2,7 @@ package com.searchbox.domain.dm;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -20,11 +21,11 @@ public class Collection {
      */
     private String name;
     
-    @ManyToOne(targetEntity= Collection.class)
+    @ManyToOne
     private SearchEngine engine;
     
-    @OneToMany(mappedBy="collection")
-    private List<Field> fields = new ArrayList<Field>();
+    @OneToMany(mappedBy="collection", cascade=CascadeType.ALL)
+    private List<Field> cfields = new ArrayList<Field>();
     
     public Collection(String name){
     	this.name = name;
@@ -36,6 +37,7 @@ public class Collection {
     }
     
     public void addField(Field field){
-    	this.fields.add(field);
+    	field.setCollection(this);
+    	this.cfields.add(field);
     }
 }
