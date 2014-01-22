@@ -3,7 +3,9 @@
 
 package com.searchbox.domain.dm;
 
+import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
+import com.searchbox.domain.dm.FieldType;
 
 privileged aspect Field_Roo_JavaBean {
     
@@ -23,44 +25,20 @@ privileged aspect Field_Roo_JavaBean {
         this.label = label;
     }
     
-    public Boolean Field.getSearchable() {
-        return this.searchable;
-    }
-    
-    public void Field.setSearchable(Boolean searchable) {
-        this.searchable = searchable;
-    }
-    
-    public Boolean Field.getSortable() {
-        return this.sortable;
-    }
-    
-    public void Field.setSortable(Boolean sortable) {
-        this.sortable = sortable;
-    }
-    
-    public Boolean Field.getSpellable() {
-        return this.spellable;
-    }
-    
-    public void Field.setSpellable(Boolean spellable) {
-        this.spellable = spellable;
-    }
-    
-    public String Field.getType() {
+    public FieldType Field.getType() {
         return this.type;
     }
     
-    public void Field.setType(String type) {
+    public void Field.setType(FieldType type) {
         this.type = type;
     }
     
-    public float Field.getWeight() {
-        return this.weight;
+    public Collection Field.getCollection() {
+        return this.collection;
     }
     
-    public void Field.setWeight(float weight) {
-        this.weight = weight;
+    public void Field.setCollection(Collection collection) {
+        this.collection = collection;
     }
     
 }

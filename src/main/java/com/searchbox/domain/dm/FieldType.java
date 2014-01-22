@@ -15,4 +15,5 @@ public class FieldType {
     /**
      */
     private Class clazz;
+    
 }

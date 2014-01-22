@@ -14,7 +14,7 @@ privileged aspect Preset_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager Preset.entityManager;
     
-    public static final List<String> Preset.fieldNames4OrderClauseFilter = java.util.Arrays.asList("slug", "name", "description", "position", "searchbox", "fields", "collections", "spells");
+    public static final List<String> Preset.fieldNames4OrderClauseFilter = java.util.Arrays.asList("slug", "label", "description", "global", "visible", "position", "snippetTemplate", "viewTemplate", "metaTemplate", "searchbox", "fields", "facets", "collections", "spells");
     
     public static final EntityManager Preset.entityManager() {
         EntityManager em = new Preset().entityManager;

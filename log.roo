@@ -53,3 +53,31 @@ perform eclipse
 web jsf setup 
 // [failed] web jsf all --package com.searchbox.domain
 addon install bundle --bundleSymbolicName https://github.com/codeconsole/roo-addon-sitemesh
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 21:44:47
+perform eclipse
+perform eclipse
+perform eclipse
+perform eclipse
+perform eclipse
+perform eclipse
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 22:24:47
+exit
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-22 22:24:47
+// [failed] perform eclipse
+// [failed] perform eclipse
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-22 22:31:31
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 22:32:24
+// [failed] perform eclipse
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 23:00:40
+web mvc setup
+web mvc all --package com.searchbox.domain.app 
+// [failed] web mvc all --package com.searchbox.domainc
+// [failed] web mvc scaffold --class ~.web.app.SearchboxController --backingType ~.domain.app.Searchbox
+web mvc setup
+help web mvc scaffold
+web mvc scaffold --class ~.web.app.SearchboxController --backingType ~.domain.app.Searchbox
+web mvc scaffold --class ~.web.app.SearchboxController --backingType ~.domain.app.Searchbox
+web mvc setup
+web mvc scaffold --class ~.web.app.SearchboxController --backingType ~.domain.app.Searchbox
+web mvc setup
+web mvc all --package com.searchbox.web

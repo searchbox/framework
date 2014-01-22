@@ -14,7 +14,7 @@ privileged aspect SearchEngine_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager SearchEngine.entityManager;
     
-    public static final List<String> SearchEngine.fieldNames4OrderClauseFilter = java.util.Arrays.asList("");
+    public static final List<String> SearchEngine.fieldNames4OrderClauseFilter = java.util.Arrays.asList("collections");
     
     public static final EntityManager SearchEngine.entityManager() {
         EntityManager em = new SearchEngine() {

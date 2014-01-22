@@ -11,6 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.Searchbox;
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.engine.SolrCloudEngine;
@@ -36,27 +37,31 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 			Searchbox testSearchbox = new Searchbox("test","this is a test Searchbox");
 			testSearchbox.persist();
 
-//			
-//			SolrCloudEngine solr = new SolrCloudEngine();
-//			solr.setName("test-collection");
-//			solr.setZkHost(new URL("http://www.zk.com/"));
-//			solr.persist();
-//			
+			SolrCloudEngine solr = new SolrCloudEngine();
+			solr.setName("test-collection");
+			solr.setZkHost(new URL("http://www.zk.com/"));
+			solr.persist();
+			
 			Collection collection = new Collection();
+			collection.setEngine(solr);
+			
 			collection.persist();
-//			
-//			Preset searchAll = new Preset("Search All", collection);			
-//			testSearchbox.addPreset(searchAll);
-//			
-//			Preset searchVideos = new Preset("Videos", collection);			
-//			testSearchbox.addPreset(searchVideos);
-//			
-//			Preset searchDoc = new Preset("Documents", collection);			
-//			testSearchbox.addPreset(searchDoc);
-//			
-//			for(Preset preset:testSearchbox.getPresets()){
-//				log.info("Addded preset: " + preset.getLabel() + " with position: " + preset.getPosition());
-//			}
+			
+			Preset searchAll = new Preset("Search All", collection);
+			testSearchbox.addPreset(searchAll);
+
+			searchAll.persist();
+		
+			
+			Preset searchVideos = new Preset("Videos", collection);			
+			testSearchbox.addPreset(searchVideos);
+			
+			Preset searchDoc = new Preset("Documents", collection);			
+			testSearchbox.addPreset(searchDoc);
+			
+			for(Preset preset:testSearchbox.getPresets()){
+				log.info("Addded preset: " + preset.getLabel() + " with position: " + preset.getPosition());
+			}
 			
 			testSearchbox.persist();
 

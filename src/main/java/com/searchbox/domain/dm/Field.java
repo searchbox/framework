@@ -1,11 +1,13 @@
 package com.searchbox.domain.dm;
+import javax.persistence.ManyToOne;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord
+@RooJpaActiveRecord(finders = { "findFieldsByFieldTypeEquals" })
 public class Field {
 
     /**
@@ -15,24 +17,11 @@ public class Field {
     /**
      */
     private String label;
-
-    /**
-     */
-    private Boolean searchable;
-
-    /**
-     */
-    private Boolean sortable;
-
-    /**
-     */
-    private Boolean spellable;
-
-    /**
-     */
-    private String type;
-
-    /**
-     */
-    private float weight;
+    
+    @ManyToOne(targetEntity=FieldType.class)
+    private FieldType type;
+    
+    @ManyToOne(targetEntity=Collection.class)
+    private Collection collection;
+    
 }

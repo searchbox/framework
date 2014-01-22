@@ -1,4 +1,7 @@
 package com.searchbox.domain.dm;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -20,6 +23,9 @@ public class Collection {
     @ManyToOne(targetEntity= Collection.class)
     private SearchEngine engine;
     
+    @OneToMany(mappedBy="collection")
+    private List<Field> fields = new ArrayList<Field>();
+    
     public Collection(String name){
     	this.name = name;
     }
@@ -27,5 +33,9 @@ public class Collection {
     public Collection(String name, SearchEngine engine){
     	this.name = name;
     	this.engine = engine;
+    }
+    
+    public void addField(Field field){
+    	this.fields.add(field);
     }
 }

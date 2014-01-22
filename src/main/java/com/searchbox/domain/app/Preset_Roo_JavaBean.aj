@@ -3,7 +3,8 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.PField;
+import com.searchbox.domain.app.FacetDefinition;
+import com.searchbox.domain.app.FieldDefinition;
 import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.Searchbox;
 import com.searchbox.domain.dm.Collection;
@@ -20,12 +21,12 @@ privileged aspect Preset_Roo_JavaBean {
         this.slug = slug;
     }
     
-    public String Preset.getName() {
-        return this.name;
+    public String Preset.getLabel() {
+        return this.label;
     }
     
-    public void Preset.setName(String name) {
-        this.name = name;
+    public void Preset.setLabel(String label) {
+        this.label = label;
     }
     
     public String Preset.getDescription() {
@@ -36,12 +37,52 @@ privileged aspect Preset_Roo_JavaBean {
         this.description = description;
     }
     
+    public Boolean Preset.getGlobal() {
+        return this.global;
+    }
+    
+    public void Preset.setGlobal(Boolean global) {
+        this.global = global;
+    }
+    
+    public Boolean Preset.getVisible() {
+        return this.visible;
+    }
+    
+    public void Preset.setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+    
     public Integer Preset.getPosition() {
         return this.position;
     }
     
     public void Preset.setPosition(Integer position) {
         this.position = position;
+    }
+    
+    public String Preset.getSnippetTemplate() {
+        return this.snippetTemplate;
+    }
+    
+    public void Preset.setSnippetTemplate(String snippetTemplate) {
+        this.snippetTemplate = snippetTemplate;
+    }
+    
+    public String Preset.getViewTemplate() {
+        return this.viewTemplate;
+    }
+    
+    public void Preset.setViewTemplate(String viewTemplate) {
+        this.viewTemplate = viewTemplate;
+    }
+    
+    public String Preset.getMetaTemplate() {
+        return this.metaTemplate;
+    }
+    
+    public void Preset.setMetaTemplate(String metaTemplate) {
+        this.metaTemplate = metaTemplate;
     }
     
     public Searchbox Preset.getSearchbox() {
@@ -52,12 +93,20 @@ privileged aspect Preset_Roo_JavaBean {
         this.searchbox = searchbox;
     }
     
-    public List<PField> Preset.getFields() {
+    public List<FieldDefinition> Preset.getFields() {
         return this.fields;
     }
     
-    public void Preset.setFields(List<PField> fields) {
+    public void Preset.setFields(List<FieldDefinition> fields) {
         this.fields = fields;
+    }
+    
+    public List<FacetDefinition> Preset.getFacets() {
+        return this.facets;
+    }
+    
+    public void Preset.setFacets(List<FacetDefinition> facets) {
+        this.facets = facets;
     }
     
     public List<Collection> Preset.getCollections() {
