@@ -24,6 +24,14 @@ privileged aspect PField_Roo_JavaBean {
         this.field = field;
     }
     
+    public Field PField.getPreset() {
+        return this.preset;
+    }
+    
+    public void PField.setPreset(Field preset) {
+        this.preset = preset;
+    }
+    
     public Double PField.getWeight() {
         return this.weight;
     }

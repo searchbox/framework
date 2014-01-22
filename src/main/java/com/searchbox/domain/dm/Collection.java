@@ -1,4 +1,5 @@
 package com.searchbox.domain.dm;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -16,7 +17,7 @@ public class Collection {
      */
     private String name;
     
-    @OneToMany
+    @ManyToOne(targetEntity= Collection.class)
     private SearchEngine engine;
     
     public Collection(String name){

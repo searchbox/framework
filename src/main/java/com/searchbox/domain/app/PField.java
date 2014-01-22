@@ -1,4 +1,6 @@
 package com.searchbox.domain.app;
+import javax.persistence.ManyToOne;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -16,8 +18,11 @@ public class PField {
 
     /**
      */
+    @ManyToOne
     private Field field;
-
+    
+    @ManyToOne
+    private Field preset;
     /**
      */
     private Double weight;

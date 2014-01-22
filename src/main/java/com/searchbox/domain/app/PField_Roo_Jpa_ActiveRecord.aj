@@ -14,7 +14,7 @@ privileged aspect PField_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager PField.entityManager;
     
-    public static final List<String> PField.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "field", "weight", "searchable", "sortable");
+    public static final List<String> PField.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "field", "preset", "weight", "searchable", "sortable");
     
     public static final EntityManager PField.entityManager() {
         EntityManager em = new PField().entityManager;

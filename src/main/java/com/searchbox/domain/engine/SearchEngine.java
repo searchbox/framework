@@ -10,7 +10,5 @@ import com.searchbox.domain.dm.Collection;
 @RooJpaActiveRecord
 public abstract class SearchEngine {
 
-    /**
-     */
-    private String zkHost;
+  
 }
