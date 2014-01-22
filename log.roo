@@ -36,3 +36,20 @@ perform eclipse
 // Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-16 17:51:57
 perform eclipse
 // Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 15:01:33
+web mvc setup
+// [failed] web mvc all --package ~.domain
+perform eclipse
+perform eclipse
+perform eclipse
+perform eclipse
+perform eclipse
+addon list
+addon search --requiresCommand "sitemesh"
+perform eclipse
+perform eclipse
+perform eclipse
+web mvc setup
+perform eclipse
+web jsf setup 
+// [failed] web jsf all --package com.searchbox.domain
+addon install bundle --bundleSymbolicName https://github.com/codeconsole/roo-addon-sitemesh

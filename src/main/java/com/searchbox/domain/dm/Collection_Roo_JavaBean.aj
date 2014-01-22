@@ -4,6 +4,7 @@
 package com.searchbox.domain.dm;
 
 import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.engine.SearchEngine;
 
 privileged aspect Collection_Roo_JavaBean {
     
@@ -13,6 +14,14 @@ privileged aspect Collection_Roo_JavaBean {
     
     public void Collection.setName(String name) {
         this.name = name;
+    }
+    
+    public SearchEngine Collection.getEngine() {
+        return this.engine;
+    }
+    
+    public void Collection.setEngine(SearchEngine engine) {
+        this.engine = engine;
     }
     
 }

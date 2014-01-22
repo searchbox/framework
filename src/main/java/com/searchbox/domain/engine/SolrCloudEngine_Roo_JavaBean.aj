@@ -4,15 +4,24 @@
 package com.searchbox.domain.engine;
 
 import com.searchbox.domain.engine.SolrCloudEngine;
+import java.net.URL;
 
 privileged aspect SolrCloudEngine_Roo_JavaBean {
     
-    public String SolrCloudEngine.getZkHost() {
+    public URL SolrCloudEngine.getZkHost() {
         return this.zkHost;
     }
     
-    public void SolrCloudEngine.setZkHost(String zkHost) {
+    public void SolrCloudEngine.setZkHost(URL zkHost) {
         this.zkHost = zkHost;
+    }
+    
+    public String SolrCloudEngine.getName() {
+        return this.name;
+    }
+    
+    public void SolrCloudEngine.setName(String name) {
+        this.name = name;
     }
     
 }

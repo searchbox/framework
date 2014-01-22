@@ -3,7 +3,7 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.dm.FieldType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,36 +11,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-privileged aspect Collection_Roo_Jpa_Entity {
+privileged aspect FieldType_Roo_Jpa_Entity {
     
-    declare @type: Collection: @Entity;
+    declare @type: FieldType: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long Collection.id;
+    private Long FieldType.id;
     
     @Version
     @Column(name = "version")
-    private Integer Collection.version;
+    private Integer FieldType.version;
     
-    public Collection.new() {
-        super();
-    }
-
-    public Long Collection.getId() {
+    public Long FieldType.getId() {
         return this.id;
     }
     
-    public void Collection.setId(Long id) {
+    public void FieldType.setId(Long id) {
         this.id = id;
     }
     
-    public Integer Collection.getVersion() {
+    public Integer FieldType.getVersion() {
         return this.version;
     }
     
-    public void Collection.setVersion(Integer version) {
+    public void FieldType.setVersion(Integer version) {
         this.version = version;
     }
     

@@ -3,97 +3,97 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.dm.FieldType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
-privileged aspect Collection_Roo_Jpa_ActiveRecord {
+privileged aspect FieldType_Roo_Jpa_ActiveRecord {
     
     @PersistenceContext
-    transient EntityManager Collection.entityManager;
+    transient EntityManager FieldType.entityManager;
     
-    public static final List<String> Collection.fieldNames4OrderClauseFilter = java.util.Arrays.asList("name", "engine");
+    public static final List<String> FieldType.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "clazz");
     
-    public static final EntityManager Collection.entityManager() {
-        EntityManager em = new Collection().entityManager;
+    public static final EntityManager FieldType.entityManager() {
+        EntityManager em = new FieldType().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
         return em;
     }
     
-    public static long Collection.countCollections() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM Collection o", Long.class).getSingleResult();
+    public static long FieldType.countFieldTypes() {
+        return entityManager().createQuery("SELECT COUNT(o) FROM FieldType o", Long.class).getSingleResult();
     }
     
-    public static List<Collection> Collection.findAllCollections() {
-        return entityManager().createQuery("SELECT o FROM Collection o", Collection.class).getResultList();
+    public static List<FieldType> FieldType.findAllFieldTypes() {
+        return entityManager().createQuery("SELECT o FROM FieldType o", FieldType.class).getResultList();
     }
     
-    public static List<Collection> Collection.findAllCollections(String sortFieldName, String sortOrder) {
-        String jpaQuery = "SELECT o FROM Collection o";
+    public static List<FieldType> FieldType.findAllFieldTypes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FieldType o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
                 jpaQuery = jpaQuery + " " + sortOrder;
             }
         }
-        return entityManager().createQuery(jpaQuery, Collection.class).getResultList();
+        return entityManager().createQuery(jpaQuery, FieldType.class).getResultList();
     }
     
-    public static Collection Collection.findCollection(Long id) {
+    public static FieldType FieldType.findFieldType(Long id) {
         if (id == null) return null;
-        return entityManager().find(Collection.class, id);
+        return entityManager().find(FieldType.class, id);
     }
     
-    public static List<Collection> Collection.findCollectionEntries(int firstResult, int maxResults) {
-        return entityManager().createQuery("SELECT o FROM Collection o", Collection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    public static List<FieldType> FieldType.findFieldTypeEntries(int firstResult, int maxResults) {
+        return entityManager().createQuery("SELECT o FROM FieldType o", FieldType.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
-    public static List<Collection> Collection.findCollectionEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
-        String jpaQuery = "SELECT o FROM Collection o";
+    public static List<FieldType> FieldType.findFieldTypeEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FieldType o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
                 jpaQuery = jpaQuery + " " + sortOrder;
             }
         }
-        return entityManager().createQuery(jpaQuery, Collection.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+        return entityManager().createQuery(jpaQuery, FieldType.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional
-    public void Collection.persist() {
+    public void FieldType.persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);
     }
     
     @Transactional
-    public void Collection.remove() {
+    public void FieldType.remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            Collection attached = Collection.findCollection(this.id);
+            FieldType attached = FieldType.findFieldType(this.id);
             this.entityManager.remove(attached);
         }
     }
     
     @Transactional
-    public void Collection.flush() {
+    public void FieldType.flush() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.flush();
     }
     
     @Transactional
-    public void Collection.clear() {
+    public void FieldType.clear() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.clear();
     }
     
     @Transactional
-    public Collection Collection.merge() {
+    public FieldType FieldType.merge() {
         if (this.entityManager == null) this.entityManager = entityManager();
-        Collection merged = this.entityManager.merge(this);
+        FieldType merged = this.entityManager.merge(this);
         this.entityManager.flush();
         return merged;
     }

@@ -1,21 +1,19 @@
-package com.searchbox.domain.engine;
-import java.net.URL;
-
+package com.searchbox.domain.app;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
-
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class SolrCloudEngine extends SearchEngine {
+public class PTemplate {
 
     /**
      */
-    private URL zkHost;
-    
+    private String name;
+
     /**
      */
-    private String name;
+    private String body;
+
 }
