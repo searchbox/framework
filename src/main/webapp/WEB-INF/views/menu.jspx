@@ -3,25 +3,48 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
-        <menu:category id="c_solrcloudcollection" z="VCY3oEHkwiiSBg9Oact/ST6Dh+A=">
-            <menu:item id="i_solrcloudcollection_new" messageCode="global_menu_new" url="/solrcloudcollections?form" z="sQ6ZtKjlrEYEDGVPYBqMjt0ZyDk="/>
-            <menu:item id="i_solrcloudcollection_list" messageCode="global_menu_list" url="/solrcloudcollections?page=1&amp;size=${empty param.size ? 10 : param.size}" z="/qR80aJR8t2krj+uQZ90A44swZI="/>
+        <menu:category id="c_fieldfacet" z="sQ5m14W6U7G/p4wWQMfBoMuxPQ0=">
+            <menu:item id="i_fieldfacet_new" messageCode="global_menu_new" url="/fieldfacets?form" z="uWW7k0fTS4v+yTRjbj1DoZd1bhE="/>
+            <menu:item id="i_fieldfacet_list" messageCode="global_menu_list" url="/fieldfacets?page=1&amp;size=${empty param.size ? 10 : param.size}" z="8mOzRl8n0KOkFcpZsZ1mR9i5S2g="/>
         </menu:category>
         <menu:category id="c_field" z="lL0BxtAH61FIpQ5W6T+G+F+Tpqk=">
             <menu:item id="i_field_new" messageCode="global_menu_new" url="/fields?form" z="llo9ZZ3kZVPCLwsynIMmDmIFqY0="/>
             <menu:item id="i_field_list" messageCode="global_menu_list" url="/fields?page=1&amp;size=${empty param.size ? 10 : param.size}" z="7mpsVuhYOtO7UAWZ7CNlvWgfQZA="/>
         </menu:category>
-        <menu:category id="c_solrcollection" z="bx3Mguub7otHFNivDmaFQWFPx9k=">
-            <menu:item id="i_solrcollection_new" messageCode="global_menu_new" url="/solrcollections?form" z="o5meLKITceTuiJ0AukieZJNQQTw="/>
-            <menu:item id="i_solrcollection_list" messageCode="global_menu_list" url="/solrcollections?page=1&amp;size=${empty param.size ? 10 : param.size}" z="jiDi+hXb9YFalp5dJgJLKNkQ86g="/>
+        <menu:category id="c_preset" z="IuhrGRDElV6gudaYRoBm+j6oWFQ=">
+            <menu:item id="i_preset_new" messageCode="global_menu_new" url="/presets?form" z="DiWX2UuPv9AcZIMhzp3n5DshOvg="/>
+            <menu:item id="i_preset_list" messageCode="global_menu_list" url="/presets?page=1&amp;size=${empty param.size ? 10 : param.size}" z="+VBF0CFA6J02/VJNpC+CMXINJZE="/>
         </menu:category>
-        <menu:category id="c_fieldfacet" z="sQ5m14W6U7G/p4wWQMfBoMuxPQ0=">
-            <menu:item id="i_fieldfacet_new" messageCode="global_menu_new" url="/fieldfacets?form" z="uWW7k0fTS4v+yTRjbj1DoZd1bhE="/>
-            <menu:item id="i_fieldfacet_list" messageCode="global_menu_list" url="/fieldfacets?page=1&amp;size=${empty param.size ? 10 : param.size}" z="8mOzRl8n0KOkFcpZsZ1mR9i5S2g="/>
+        <menu:category id="c_solrcloudengine" z="6DWJ3z9N/yXJ7RG6r5Ce8KtiVXY=">
+            <menu:item id="i_solrcloudengine_new" messageCode="global_menu_new" url="/solrcloudengines?form" z="Gh/I0927heTmRKujRW/L3pA2OwA="/>
+            <menu:item id="i_solrcloudengine_list" messageCode="global_menu_list" url="/solrcloudengines?page=1&amp;size=${empty param.size ? 10 : param.size}" z="N3h/22tpZVdxaVkmhX3J6GWME8A="/>
         </menu:category>
-        <menu:category id="c_account" z="/ObionklNVMvfxU5oSj2hEUJNu0=">
-            <menu:item id="i_account_new" messageCode="global_menu_new" url="/accounts?form" z="7ISq6pJsfrDJexgk1yAmzNiIcp8="/>
-            <menu:item id="i_account_list" messageCode="global_menu_list" url="/accounts?page=1&amp;size=${empty param.size ? 10 : param.size}" z="VeXZsM9n5bR9ZvhjdYhrVsG24uw="/>
+        <menu:category id="c_fielddefinition" z="GLhij079IEx0BU4pvV/l39Nif7M=">
+            <menu:item id="i_fielddefinition_new" messageCode="global_menu_new" url="/fielddefinitions?form" z="Wj2VVS6QdWQ+reKbGDb8E/kvsIM="/>
+            <menu:item id="i_fielddefinition_list" messageCode="global_menu_list" url="/fielddefinitions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="OJf7TYgrxpeXe8CqiXTtYCxR2wk="/>
+        </menu:category>
+        <menu:category id="c_searchbox" z="4N/bLzlCI1fbzC6U3Xw+CWGOQcM=">
+            <menu:item id="i_searchbox_new" messageCode="global_menu_new" url="/searchboxes?form" z="AvTXRay5mIQ8Vw3iySUpWqFL0UI="/>
+            <menu:item id="i_searchbox_list" messageCode="global_menu_list" url="/searchboxes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Wn/TYpJcwA3pRg5qvZYTjK9Qtxw="/>
+        </menu:category>
+        <menu:category id="c_collection" z="pIh9LMTl2RBfJOLMF0u9nao/hOY=">
+            <menu:item id="i_collection_new" messageCode="global_menu_new" url="/collections?form" z="OhIjQLwFfuvigyEyAiGtCJiY7bo="/>
+            <menu:item id="i_collection_list" messageCode="global_menu_list" url="/collections?page=1&amp;size=${empty param.size ? 10 : param.size}" z="dCX8fWVLJfEFiVc9d2jtRUTRraw="/>
+        </menu:category>
+        <menu:category id="c_fieldtype" z="3WR3/5SIFYcdnOb26DZnwRWvOkY=">
+            <menu:item id="i_fieldtype_new" messageCode="global_menu_new" url="/fieldtypes?form" z="yRBJmW198mCMHgcesnEvlBpiHHU="/>
+            <menu:item id="i_fieldtype_list" messageCode="global_menu_list" url="/fieldtypes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="OIi321dJkc7Vpw0eeQYxKCRlUG4="/>
+        </menu:category>
+        <menu:category id="c_fieldfacetdefinition" z="dAHwRmyb7l+MlOQSmSNj6SYZ9VQ=">
+            <menu:item id="i_fieldfacetdefinition_new" messageCode="global_menu_new" url="/fieldfacetdefinitions?form" z="RuJgROuuWr2L8c38OLwcDYhr7y4="/>
+            <menu:item id="i_fieldfacetdefinition_list" messageCode="global_menu_list" url="/fieldfacetdefinitions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="lCulSoIgYPATLk7T70GNbpnBGd4="/>
+        </menu:category>
+        <menu:category id="c_rangefacetdefinition" z="I0XkKHiQsyePi6QJ5AIe35/RW54=">
+            <menu:item id="i_rangefacetdefinition_new" messageCode="global_menu_new" url="/rangefacetdefinitions?form" z="LufCzGMWJF4IMLbl0P5n6RWfVPk="/>
+            <menu:item id="i_rangefacetdefinition_list" messageCode="global_menu_list" url="/rangefacetdefinitions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="kWzmhwZc/m2MIb9CIaj3S4wC5Yk="/>
+        </menu:category>
+        <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
+            <menu:item id="i_controller__searchindex_id" messageCode="global_generic" url="/search/index" z="Rr2P0bqq8h2TImrqyyTAYCJ8lLY="/>
         </menu:category>
     </menu:menu>
 </div>

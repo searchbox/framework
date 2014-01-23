@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_searchbox_domain_engine_SolrCloudEngine" items="${solrcloudengines}" z="zKNQMQXNOOgAkO+RdMAQwyElDPs=">
+        <table:table data="${solrcloudengines}" id="l_com_searchbox_domain_engine_SolrCloudEngine" path="/admin/solrcloudengines" z="XZ87GooD9wmwpL7zYRe7RKHGvh0=">
+            <table:column id="c_com_searchbox_domain_engine_SolrCloudEngine_zkHost" property="zkHost" z="D6tYI6xrtgRkADEshjVKykysmkU="/>
+            <table:column id="c_com_searchbox_domain_engine_SolrCloudEngine_name" property="name" z="5zaK6gV9VLHTxpYHrzIm6ENGkJQ="/>
+        </table:table>
+    </page:list>
+</div>

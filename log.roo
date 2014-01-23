@@ -35,29 +35,3 @@ web mvc all --package com.searchbox.web
 perform eclipse
 // Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-16 17:51:57
 perform eclipse
-addon list 
-// Spring Roo UNKNOWN VERSION log opened at 2014-01-21 11:20:14
-// Spring Roo UNKNOWN VERSION log opened at 2014-01-21 11:20:21
-// Spring Roo UNKNOWN VERSION log opened at 2014-01-21 11:22:04
-// Spring Roo UNKNOWN VERSION log opened at 2014-01-21 11:22:13
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-21 12:06:55
-perform eclipse
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-21 12:09:33
-// [failed] perform eclipse
-exit
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-21 12:10:00
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-21 12:11:14
-perform eclipse
-exit
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-21 12:12:23
-// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-22 15:15:35
-addon list 
-tailor list
-addon search sitemesh
-web jsf setup 
-web jsf all --package com.searchbox.domain
-perform eclipse
-perform eclipse
-perform eclipse
-perform package
-perform eclipse
