@@ -43,5 +43,8 @@
             <menu:item id="i_rangefacetdefinition_new" messageCode="global_menu_new" url="/rangefacetdefinitions?form" z="LufCzGMWJF4IMLbl0P5n6RWfVPk="/>
             <menu:item id="i_rangefacetdefinition_list" messageCode="global_menu_list" url="/rangefacetdefinitions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="kWzmhwZc/m2MIb9CIaj3S4wC5Yk="/>
         </menu:category>
+        <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
+            <menu:item id="i_controller__searchindex_id" messageCode="global_generic" url="/search/index" z="Rr2P0bqq8h2TImrqyyTAYCJ8lLY="/>
+        </menu:category>
     </menu:menu>
 </div>
