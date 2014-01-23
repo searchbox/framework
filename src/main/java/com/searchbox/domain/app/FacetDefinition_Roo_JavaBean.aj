@@ -5,7 +5,6 @@ package com.searchbox.domain.app;
 
 import com.searchbox.domain.app.FacetDefinition;
 import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.dm.Field;
 
 privileged aspect FacetDefinition_Roo_JavaBean {
     

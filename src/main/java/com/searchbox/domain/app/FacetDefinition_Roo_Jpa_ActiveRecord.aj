@@ -14,7 +14,7 @@ privileged aspect FacetDefinition_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager FacetDefinition.entityManager;
     
-    public static final List<String> FacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "position", "field", "preset");
+    public static final List<String> FacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("label", "position", "preset");
     
     public static final EntityManager FacetDefinition.entityManager() {
         EntityManager em = new FacetDefinition() {

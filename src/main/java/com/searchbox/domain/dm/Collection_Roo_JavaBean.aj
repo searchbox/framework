@@ -26,12 +26,12 @@ privileged aspect Collection_Roo_JavaBean {
         this.engine = engine;
     }
     
-    public List<Field> Collection.getCfields() {
+    public List<Field> Collection.getFields() {
         return this.fields;
     }
     
-    public void Collection.setCfields(List<Field> cfields) {
-        this.fields = cfields;
+    public void Collection.setFields(List<Field> fields) {
+        this.fields = fields;
     }
     
 }
