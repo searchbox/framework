@@ -4,6 +4,7 @@
 package com.searchbox.domain.app.facet;
 
 import com.searchbox.domain.app.facet.RangeFacetDefinition;
+import com.searchbox.domain.dm.Field;
 
 privileged aspect RangeFacetDefinition_Roo_JavaBean {
     
@@ -21,6 +22,14 @@ privileged aspect RangeFacetDefinition_Roo_JavaBean {
     
     public void RangeFacetDefinition.setMax(Integer max) {
         this.max = max;
+    }
+    
+    public Field RangeFacetDefinition.getField() {
+        return this.field;
+    }
+    
+    public void RangeFacetDefinition.setField(Field field) {
+        this.field = field;
     }
     
 }

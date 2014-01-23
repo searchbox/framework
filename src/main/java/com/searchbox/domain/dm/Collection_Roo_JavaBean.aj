@@ -27,11 +27,11 @@ privileged aspect Collection_Roo_JavaBean {
     }
     
     public List<Field> Collection.getCfields() {
-        return this.cfields;
+        return this.fields;
     }
     
     public void Collection.setCfields(List<Field> cfields) {
-        this.cfields = cfields;
+        this.fields = cfields;
     }
     
 }

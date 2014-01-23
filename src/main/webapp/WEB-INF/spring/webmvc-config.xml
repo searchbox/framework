@@ -29,15 +29,16 @@
 
 	<!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
 	<mvc:interceptors>
-	<!-- 	<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" /> -->
+		<!-- <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" 
+			/> -->
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
 			p:paramName="lang" />
 	</mvc:interceptors>
 
 	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->
-<!-- 	<mvc:view-controller path="/" view-name="index" />
- -->	<mvc:view-controller path="/uncaughtException" />
+	<!-- <mvc:view-controller path="/" view-name="index" /> -->
+	<mvc:view-controller path="/uncaughtException" />
 	<mvc:view-controller path="/resourceNotFound" />
 	<mvc:view-controller path="/dataAccessFailure" />
 
@@ -57,12 +58,11 @@
 
 	<!-- Resolves localized <theme_name>.properties files in the classpath to 
 		allow for theme support -->
-<!-- 	<bean
-		class="org.springframework.ui.context.support.ResourceBundleThemeSource"
+	<!-- <bean class="org.springframework.ui.context.support.ResourceBundleThemeSource" 
 		id="themeSource" /> -->
 
 	<!-- Store preferred theme configuration in a cookie -->
-<!-- 	<bean class="org.springframework.web.servlet.theme.CookieThemeResolver"
+	<!-- <bean class="org.springframework.web.servlet.theme.CookieThemeResolver" 
 		id="themeResolver" p:cookieName="theme" p:defaultThemeName="standard" /> -->
 
 	<!-- This bean resolves specific types of exceptions to corresponding logical 
@@ -82,20 +82,24 @@
 		</property>
 	</bean>
 
-	<!-- Enable this for integration of file upload functionality -->
-	<bean
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
-		id="multipartResolver" />
 
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix">
-			<value>/WEB-INF/views/</value>
-		</property>
-		<property name="suffix">
-			<value>.jspx</value>
-		</property>
+	<bean id="templateResolver"
+		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
 	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+	</bean>
+
+
+
+	<!-- Enable this for integration of file upload functionality <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" 
+		id="multipartResolver" /> <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="prefix"> <value>/WEB-INF/views/</value> </property> <property 
+		name="suffix"> <value>.jspx</value> </property> </bean> -->
 
 	<!-- <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
 		id="tilesViewResolver"> <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/> 
