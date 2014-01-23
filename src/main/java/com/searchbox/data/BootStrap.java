@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.Searchbox;
+import com.searchbox.domain.app.facet.FieldFacetDefinition;
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
 import com.searchbox.domain.engine.SolrCloudEngine;
@@ -54,7 +55,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 			
 			Preset searchAll = new Preset("Search All", collection);
 			testSearchbox.addPreset(searchAll);
-
+			searchAll.addFacetDefinition(new FieldFacetDefinition(Field.findFieldsByKeyEqualsAndCollectionEquals("id", collection).getSingleResult()));
 			searchAll.persist();
 		
 			

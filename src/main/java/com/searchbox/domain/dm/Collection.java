@@ -25,7 +25,7 @@ public class Collection {
     private SearchEngine engine;
     
     @OneToMany(mappedBy="collection", cascade=CascadeType.ALL)
-    private List<Field> cfields = new ArrayList<Field>();
+    private List<Field> fields = new ArrayList<Field>();
     
     public Collection(String name){
     	this.name = name;
@@ -38,6 +38,6 @@ public class Collection {
     
     public void addField(Field field){
     	field.setCollection(this);
-    	this.cfields.add(field);
+    	this.fields.add(field);
     }
 }

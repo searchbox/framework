@@ -25,14 +25,6 @@ privileged aspect FacetDefinition_Roo_JavaBean {
         this.position = position;
     }
     
-    public Field FacetDefinition.getField() {
-        return this.field;
-    }
-    
-    public void FacetDefinition.setField(Field field) {
-        this.field = field;
-    }
-    
     public Preset FacetDefinition.getPreset() {
         return this.preset;
     }

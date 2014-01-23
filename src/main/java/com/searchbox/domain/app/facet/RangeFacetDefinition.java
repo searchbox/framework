@@ -18,4 +18,9 @@ public class RangeFacetDefinition extends FacetDefinition{
     private Integer min;
     
     private Integer max;
+    
+    /**
+     */
+    @ManyToOne
+    private Field field;
 }

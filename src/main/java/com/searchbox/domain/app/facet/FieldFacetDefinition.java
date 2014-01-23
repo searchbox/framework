@@ -18,4 +18,14 @@ public class FieldFacetDefinition extends FacetDefinition{
     private Integer minCount;
     
     private Integer maxCount;
+    
+    /**
+     */
+    @ManyToOne
+    private Field field;
+    
+    public FieldFacetDefinition(Field field){
+    	this.field = field;
+    }
+    
 }

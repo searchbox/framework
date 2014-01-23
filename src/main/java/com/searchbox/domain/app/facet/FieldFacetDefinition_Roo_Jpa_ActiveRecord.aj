@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect FieldFacetDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> FieldFacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("minCount", "maxCount");
+    public static final List<String> FieldFacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("minCount", "maxCount", "field");
     
     public static long FieldFacetDefinition.countFieldFacetDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM FieldFacetDefinition o", Long.class).getSingleResult();

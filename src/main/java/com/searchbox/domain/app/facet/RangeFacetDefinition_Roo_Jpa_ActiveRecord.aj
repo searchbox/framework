@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect RangeFacetDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> RangeFacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("min", "max");
+    public static final List<String> RangeFacetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("min", "max", "field");
     
     public static long RangeFacetDefinition.countRangeFacetDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM RangeFacetDefinition o", Long.class).getSingleResult();

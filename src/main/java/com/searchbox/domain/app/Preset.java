@@ -63,7 +63,7 @@ public class Preset implements Comparable<Preset> {
     @OneToMany
     private List<FieldDefinition> fields;
     
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     @Sort(type = SortType.NATURAL)
     private List<FacetDefinition> facets = new ArrayList<FacetDefinition>();
     

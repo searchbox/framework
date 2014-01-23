@@ -17,11 +17,6 @@ public abstract class FacetDefinition implements Comparable<FacetDefinition>{
     private String label;
     
     private Integer position;
-
-    /**
-     */
-    @ManyToOne
-    private Field field;
     
     @ManyToOne
     private Preset preset;
