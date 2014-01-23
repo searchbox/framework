@@ -20,8 +20,10 @@
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
-	<mvc:resources location="/, classpath:/META-INF/web-resources/"
-		mapping="/resources/**" />
+	<mvc:resources location="/, classpath:/META-INF/web-resources/" mapping="/resources/**" />
+	<mvc:resources location="/images/" mapping="/images/**" />
+	<mvc:resources location="/css/" mapping="/css/**" />
+    
 
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
@@ -86,16 +88,28 @@
 	<bean
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		id="multipartResolver" />
-
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix">
-			<value>/WEB-INF/views/</value>
-		</property>
-		<property name="suffix">
-			<value>.jspx</value>
-		</property>
+	
+	
+	<!-- **************************************************************** -->
+  	<!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
+  	<!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
+  	<!-- **************************************************************** -->
+  
+	<bean id="templateResolver"
+        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+	    <property name="prefix" value="/WEB-INF/templates/" />
+	    <property name="suffix" value=".html" />
+	    <property name="templateMode" value="HTML5" />
+  	</bean>
+    
+	<bean id="templateEngine"
+	     class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
 	</bean>
+	   
+	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+	</bean>  
 
 	<!-- <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
 		id="tilesViewResolver"> <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/> 
