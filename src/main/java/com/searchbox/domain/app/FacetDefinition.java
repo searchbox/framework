@@ -24,7 +24,7 @@ public abstract class FacetDefinition implements Comparable<FacetDefinition>{
     private Field field;
     
     @ManyToOne
-    private Field preset;
+    private Preset preset;
     /**
      */
     

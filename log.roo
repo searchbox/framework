@@ -92,3 +92,4 @@ hint web
 help web mvc all
 web mvc all --package ~.web
 perform eclipse
+web mvc update tags 
