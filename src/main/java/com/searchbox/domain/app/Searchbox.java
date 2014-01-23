@@ -13,8 +13,6 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import sun.org.mozilla.javascript.internal.ast.AstNode.PositionComparator;
-
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findSearchboxesBySlugEquals","findSearchboxesBySlugLike" })
