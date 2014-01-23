@@ -6,7 +6,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public abstract class Facet {
+public abstract class Facet implements Comparable<Facet> {
 
     /**
      */
@@ -14,5 +14,10 @@ public abstract class Facet {
 
     /**
      */
-    private int position;
+    private Integer position;
+    
+    @Override
+	public int compareTo(Facet facet) {
+    	return this.position.compareTo(facet.getPosition());
+	}
 }

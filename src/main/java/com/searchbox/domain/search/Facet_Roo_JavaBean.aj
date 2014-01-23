@@ -15,11 +15,11 @@ privileged aspect Facet_Roo_JavaBean {
         this.label = label;
     }
     
-    public int Facet.getPosition() {
+    public Integer Facet.getPosition() {
         return this.position;
     }
     
-    public void Facet.setPosition(int position) {
+    public void Facet.setPosition(Integer position) {
         this.position = position;
     }
     
