@@ -289,6 +289,16 @@
             <artifactId>commons-codec</artifactId>
             <version>1.5</version>
         </dependency>
+         <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring3</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
 <!--     <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-jsp</artifactId>
