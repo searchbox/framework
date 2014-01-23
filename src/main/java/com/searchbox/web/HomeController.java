@@ -17,11 +17,13 @@ import com.searchbox.domain.search.SearchResult;
 @RequestMapping("/")
 public class HomeController {
 	
-	Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@RequestMapping
 	public ModelAndView index(@RequestParam(defaultValue="unknown") String h) {
 		ModelAndView model = new ModelAndView("index");
+		
+		logger.debug("Here is our param2 "+h);
 		model.addObject("h", h);
 		return model;
 	}

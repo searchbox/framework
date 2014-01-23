@@ -1,3 +1,5 @@
-    <p> IU have a param: ${h}</p>
-    <p> IU have a param: #{h}</p>
+    <input type="text" id="datePlanted" name="datePlanted" th:value="*{h}" />
+    
+    <p th:text="${h}">fasdf --- asfasdf</p>
+    <span th:text="${h}">dffdfd</span>
     
