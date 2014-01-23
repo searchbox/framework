@@ -93,3 +93,17 @@ help web mvc all
 web mvc all --package ~.web
 perform eclipse
 web mvc update tags 
+perform eclipse
+perform eclipse
+finder list --class ~.domain.app.Preset
+finder list --class ~.domain.app.Preset 
+help finder
+help finder list
+finder list --class ~.domain.app.Preset --depth 3
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-23 13:38:44
+finder list --class ~.domain.app.Preset --depth 2
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-23 13:52:32
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-23 13:54:53
+quit
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-01-23 13:55:00
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-01-23 13:55:23

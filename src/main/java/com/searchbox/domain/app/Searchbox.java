@@ -17,7 +17,7 @@ import sun.org.mozilla.javascript.internal.ast.AstNode.PositionComparator;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(finders = { "findSearchboxesBySlugEquals" })
+@RooJpaActiveRecord(finders = { "findSearchboxesBySlugEquals","findSearchboxesBySlugLike" })
 public class Searchbox {
 
     public Searchbox(String name, String description) {

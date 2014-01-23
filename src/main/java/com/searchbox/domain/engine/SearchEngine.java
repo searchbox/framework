@@ -17,5 +17,7 @@ public abstract class SearchEngine {
 
 	@OneToMany(mappedBy="engine",cascade=CascadeType.ALL)
 	private List<Collection> collections;
+	
+	
   
 }

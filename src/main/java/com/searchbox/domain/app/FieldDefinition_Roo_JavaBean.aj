@@ -4,6 +4,7 @@
 package com.searchbox.domain.app;
 
 import com.searchbox.domain.app.FieldDefinition;
+import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.dm.Field;
 
 privileged aspect FieldDefinition_Roo_JavaBean {
@@ -48,11 +49,11 @@ privileged aspect FieldDefinition_Roo_JavaBean {
         this.field = field;
     }
     
-    public Field FieldDefinition.getPreset() {
+    public Preset FieldDefinition.getPreset() {
         return this.preset;
     }
     
-    public void FieldDefinition.setPreset(Field preset) {
+    public void FieldDefinition.setPreset(Preset preset) {
         this.preset = preset;
     }
     

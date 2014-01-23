@@ -28,7 +28,7 @@ public class FieldDefinition {
     private Field field;
     
     @ManyToOne
-    private Field preset;
+    private Preset preset;
     /**
      */
  }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_searchbox_domain_dm_Field" modelAttribute="field" path="/admin/fields" render="${empty dependencies}" z="yslrBkwE7Q+Cxe/SauLHc51nU6s=">
+        <field:input field="key" id="c_com_searchbox_domain_dm_Field_key" z="GCz403H+SFl3/+z/xX3jj6M+PPU="/>
+        <field:input field="label" id="c_com_searchbox_domain_dm_Field_label" z="uqehA4XfUR0EHWsv5gKtAjkzfi8="/>
+        <field:select field="collection" id="c_com_searchbox_domain_dm_Field_collection" itemValue="id" items="${collections}" path="/admin/collections" z="kvj7dBa0kgHOOJyZjS5EYToaQD0="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_searchbox_domain_dm_Field" render="${not empty dependencies}" z="y23Zg1jTfiealXZvEzm3zjbSyIc="/>
+</div>
