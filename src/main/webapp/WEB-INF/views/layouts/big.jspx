@@ -13,6 +13,7 @@
 		
 	</head>
 	<body>
-	<h1>Index</h1>
-  	</body>
+	<h1>BIG layout</h1>
+  	<jsp:include page="/WEB-INF/views/${view}.jspx"></jsp:include>
+	</body>
 </html>
