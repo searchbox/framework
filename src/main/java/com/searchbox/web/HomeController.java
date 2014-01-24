@@ -66,7 +66,7 @@ public class HomeController {
 				desc += "lorem Ipsum dolores invictus amenentum centri. ";
 			}
 			hit.getFields().put("description", desc);
-			hit.setScore(new Float(Math.random()*(10*i)));
+			hit.setScore(new Float(Math.random()+(10-i)));
 			result.addHit(hit);
 		}
 		
