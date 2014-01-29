@@ -16,6 +16,6 @@ public class Hit implements Comparable<Hit>{
 	
 	@Override
 	public int compareTo(Hit hit) {	
-		return score.compareTo(hit.getScore());
+		return score.compareTo(hit.getScore())*-1;
 	}
 }

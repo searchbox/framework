@@ -28,6 +28,27 @@ public class HomeController {
 		return model;
 	}
 	
+	
+	@RequestMapping("L1")
+	@Layout("default")
+	public ModelAndView L1index(@RequestParam(defaultValue="unknown") String h) {
+		ModelAndView model = new ModelAndView("index");
+		
+		logger.debug("Here is our param2 "+h);
+		model.addObject("h", h);
+		return model;
+	}
+	
+	@RequestMapping("L2")
+	@Layout("big")
+	public ModelAndView L2index(@RequestParam(defaultValue="unknown") String h) {
+		ModelAndView model = new ModelAndView("index");
+		
+		logger.debug("Here is our param2 "+h);
+		model.addObject("h", h);
+		return model;
+	}
+	
 	@RequestMapping("search")
 	public ModelAndView search() {
 		ModelAndView model = new ModelAndView("search");
@@ -45,7 +66,7 @@ public class HomeController {
 				desc += "lorem Ipsum dolores invictus amenentum centri. ";
 			}
 			hit.getFields().put("description", desc);
-			hit.setScore(new Float(Math.random()*(10*i)));
+			hit.setScore(new Float(Math.random()+(10-i)));
 			result.addHit(hit);
 		}
 		
