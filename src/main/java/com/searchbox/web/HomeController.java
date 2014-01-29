@@ -66,6 +66,7 @@ public class HomeController {
 	public ModelAndView search() {
 		ModelAndView model = new ModelAndView("search");
 		
+		model.addObject("title", "Search results");
 		logger.debug("We're in the search controller");
 		
 		SearchResult result = new SearchResult();

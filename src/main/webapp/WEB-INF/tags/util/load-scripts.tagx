@@ -3,15 +3,15 @@
   <jsp:output omit-xml-declaration="yes" />
 
   <spring:theme code="styleSheet" var="roo_css" />
-  <spring:url value="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" var="bootstrap_css_url" />
-  <spring:url value="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" var="bootstrap-theme_css_url" />
-  <spring:url value="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" var="jquery_url" />
-  <spring:url value="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" var="bootstrap_js_url" />
+  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" var="bootstrap_css_url" />
+  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" var="bootstrap_theme_css_url" />
+  <spring:url value="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" var="jquery_url" />
+  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" var="bootstrap_js_url" />
 
   <spring:url value="/resources/images/favicon.ico" var="favicon" />
   
   <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
-  <link rel="stylesheet" type="text/css" href="${bootstrap-theme_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
   <link rel="SHORTCUT ICON" href="${favicon}" />
 
   <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
