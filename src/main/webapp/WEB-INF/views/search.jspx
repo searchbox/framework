@@ -1,25 +1,27 @@
-<html xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
 
-<table>
-	<tr>
-		<td width="200">facets go here</td>
-		<td>
-			<table>
-				<c:forEach items="${result.hits}" var="hit">
-					<tr>
-						<h4>${hit.fields['title']}</h4>
-						<p>${hit.fields['description']}</p>
-						<i>${hit.score}</i>
-						<hr />
-					</tr>
-				</c:forEach>
-			</table>
-		</td>
-	</tr>
-</table>
+	<table>
+		<tr>
+			<td width="200">facets go here</td>
+			<td>
+				<table>
+					<c:forEach items="${result.hits}" var="hit">
+						<tr>
+							<h4>${hit.fields['title']}</h4>
+							<p>${hit.fields['description']}</p>
+							<i>${hit.score}</i>
+							<hr />
+						</tr>
+					</c:forEach>
+				</table>
+			</td>
+		</tr>
+	</table>
 
-</html>
+</div>
