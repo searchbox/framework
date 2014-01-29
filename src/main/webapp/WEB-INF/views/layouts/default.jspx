@@ -12,13 +12,30 @@
 		<util:load-scripts/>
 		
 		<title>${title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
 	
-	<h1>default layout</h1>
-  	<jsp:include page="/WEB-INF/views/${view}.jspx"/>
-  	<h4>debug</h4>
-	<p>${exception}</p>
+		<div id="wrap">
+		    <jsp:include page="/WEB-INF/partials/header.jspx"/>
+		    <div class="columns-1-2-1" id="main-content" role="main">
+		
+		      <div class="row-fluid">
+		        <div class="portlet-column portlet-column-only" id="column-top">
+		          <jsp:include page="/WEB-INF/partials/searchbar.jspx"/>
+		        </div>
+		      </div>  
+		
+		      <div class="row-fluid" id="main-search-content">
+		      	<jsp:include page="/WEB-INF/views/${view}.jspx"/>
+		      	<p>${exception}</p>
+		      </div>
+		    </div>
+		    <div id="push"></div>
+	  	</div>
+		<jsp:include page="/WEB-INF/partials/footer.jspx"/>
+
+
 	
 	</body>
 </html>

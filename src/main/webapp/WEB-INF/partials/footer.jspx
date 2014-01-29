@@ -1,0 +1,10 @@
+<footer id="footer">
+  <div class="container">
+    <p>
+      <span>Powered by - </span>
+      <a href="http://www.searchbox.com/" target="_blank">
+      	<img src="/searchbox/img/searchbox-logo-small.png" alt="searchbox logo"/>
+      </a>
+    </p>
+  </div>
+</footer>
