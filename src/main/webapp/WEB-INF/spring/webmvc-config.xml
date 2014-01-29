@@ -70,7 +70,7 @@
 		- view names for error views. The default behaviour of DispatcherServlet 
 		- is to propagate all exceptions to the servlet container: this will happen 
 		- here with all other types of exceptions. -->
-	<!--  <bean
+  <bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
 		p:defaultErrorView="uncaughtException">
  		<property name="exceptionMappings">
@@ -81,7 +81,7 @@
 				<prop key=".MissingServletRequestParameterException">resourceNotFound</prop>
 			</props>
 		</property>
-	</bean> -->
+	</bean>
 
 	<!-- Enable this for integration of file upload functionality -->
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver"

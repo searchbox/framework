@@ -7,7 +7,7 @@
 	<jsp:output omit-xml-declaration="yes" />
 	<spring:message var="title" code="error_uncaughtexception_title"
 		htmlEscape="false" />
-
+Hello
 
 	<util:panel id="title" title="${title}">
 		<h2>${fn:escapeXml(title)}</h2>
