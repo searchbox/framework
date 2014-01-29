@@ -11,18 +11,9 @@
 			
 		<util:load-scripts />
 		
-		<spring:message code="application_name" var="app_name" htmlEscape="false"/>
-		<title><spring:message code="welcome_h3" arguments="${app_name}" /></title>
 	</head>
-	
-  	<body class="tundra spring">
-   		<div id="wrapper">
-		    <tiles:insertAttribute name="header" ignore="true" />
-		    <tiles:insertAttribute name="menu" ignore="true" />   
-		    <div id="main">
-	    		<tiles:insertAttribute name="body"/> 
-		    	<tiles:insertAttribute name="footer" ignore="true"/>
-		    </div>
-		</div>
+	<body>
+	<h1>Smalllllll layout</h1>
+  	<jsp:include page="/WEB-INF/views/${view}.jspx"></jsp:include>
 	</body>
 </html>
