@@ -2,6 +2,17 @@
 
   <jsp:output omit-xml-declaration="yes" />
 
+   <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+	
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"/>
+	
+	<!-- Latest compiled and minified JavaScript -->
+	<!--  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> -->
+ 
+  
+  <!-- 
   <spring:theme code="styleSheet" var="roo_css" />
   <spring:url value="/${roo_css}" var="roo_css_url" />
   <spring:url value="/resources/dojo/dojo.js" var="dojo_url" />
@@ -11,19 +22,21 @@
   <spring:url value="/resources/images/favicon.ico" var="favicon" />
   <link rel="stylesheet" type="text/css" href="${tundra_url}" />
   <link rel="stylesheet" type="text/css" media="screen" href="${roo_css_url}" />
-  <link rel="SHORTCUT ICON" href="${favicon}" />
+  <link rel="SHORTCUT ICON" href="${favicon}" /> -->
 
   <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
-  <c:set var="userLocale">
+  <!--<c:set var="userLocale">
     <c:set var="plocale">${pageContext.response.locale}</c:set>
     <c:out value="${fn:replace(plocale, '_', '-')}" default="en" />
-  </c:set>
+  </c:set> --> 
 
-  <script type="text/javascript">var djConfig = {parseOnLoad: false, isDebug: false, locale: '${fn:toLowerCase(userLocale)}'};</script>
+  <!-- <script type="text/javascript">var djConfig = {parseOnLoad: false, isDebug: false, locale: '${fn:toLowerCase(userLocale)}'};</script> -->
 
-  <script src="${dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script src="${spring_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-  <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script language="JavaScript" type="text/javascript">dojo.require("dojo.parser");</script>
-
+  <!--  <script src="${dojo_url}" type="text/javascript"> </script> -->
+  <!--<script src="${spring_url}" type="text/javascript"></script>  -->
+  <!--<script src="${spring_dojo_url}" type="text/javascript"></script> -->
+  <!--<script language="JavaScript" type="text/javascript">dojo.require("dojo.parser");</script>-->
+ 
+ 
+ 
 </jsp:root>
