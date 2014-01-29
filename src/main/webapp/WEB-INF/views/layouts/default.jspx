@@ -9,14 +9,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=8" />	
 			
-		<util:load-scripts />
+		<util:load-scripts/>
 		
 		
 	</head>
 	<body>
 	
 	<h1>default layout</h1>
-  	<jsp:include page="/WEB-INF/views/${view}.jspx"></jsp:include>
+  	<jsp:include page="/WEB-INF/views/${view}.jspx"/>
   	<h4>debug</h4>
 	<p>${exception}</p>
 	
