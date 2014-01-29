@@ -57,15 +57,16 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	private String getLayoutName(Object handler) {
-		try{
-		HandlerMethod handlerMethod = (HandlerMethod) handler;
-		Layout layout = getMethodOrTypeAnnotation(handlerMethod);
-		if (layout == null) {
-			return this.defaultLayout;
+		if(handler instanceof HandlerMethod){
+			HandlerMethod handlerMethod = (HandlerMethod) handler;
+			Layout layout = getMethodOrTypeAnnotation(handlerMethod);
+			if (layout == null) {
+				return this.defaultLayout;
+			} else {
+				return layout.value();
+			}
 		} else {
-			return layout.value();
-		}
-		} catch (Exception e){
+			//logger.debug("In interceptor. Got handler of type: " + handler.getClass());
 			//e.printStackTrace();
 			return this.defaultLayout;
 		}

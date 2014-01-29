@@ -1,6 +1,25 @@
-<html xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" >  
-	
-	
-	
-	${result}
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+
+<table>
+	<tr>
+		<td width="200">facets go here</td>
+		<td>
+			<table>
+				<c:forEach items="${result.hitts}" var="hit">
+					<tr>
+						<h4>${hit.fields['title']}</h4>
+						<p>${hit.fields['description']}</p>
+						<i>${hit.score}</i>
+						<hr />
+					</tr>
+				</c:forEach>
+			</table>
+		</td>
+	</tr>
+</table>
+
 </html>

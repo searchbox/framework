@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,18 @@ public class HomeController {
 		model.addObject("h", h);
 		return model;
 	}
+	
+	@RequestMapping("L3")
+	@Layout("big")
+	public ModelAndView L3index(@RequestParam(defaultValue="unknown") String h) {
+		ModelAndView model = new ModelAndView("index");
+		
+		logger.debug("Here is our param2 "+h);
+		model.addObject("h", h);
+			throw new RuntimeException("wassup");
+	}
+	
+	
 	
 	@RequestMapping("search")
 	public ModelAndView search() {
