@@ -31,7 +31,7 @@
 		      	<p>${exception}</p>
 		      </div>
 		    </div>
-		    <div id="push"></div>
+		    <div id="push"><!-- push --></div>
 	  	</div>
 		<jsp:include page="/WEB-INF/partials/footer.jspx"/>
 

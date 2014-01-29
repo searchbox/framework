@@ -7,13 +7,13 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 
-	<div class="row-fluid">
+	<div class="row">
 		<c:if test="${searchResponse}">
 			<jsp:include page="/WEB-INF/partials/statusbar.jspx" />
 		</c:if>
 	</div>
 
-	<div class="row-fluid">
+	<div class="row">
 
 		<jsp:include page="/WEB-INF/partials/facet.jspx" />
 
@@ -43,7 +43,7 @@
 	
 		</div>
 
-		<div class="span2" id="main-col-right"></div>
+		<div class="span2" id="main-col-right"><!-- right col --></div>
 		<c:if test="${request.xhr}">
 			<script type="text/javascript">
 				var queryTerm = '${query.q}';

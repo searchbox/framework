@@ -6,7 +6,7 @@
 	
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="row-fluid">
+	<div class="row">
 		<a href="#">
 			<div id="logo-wrapper" class="span3">
 				<div id="logo">
@@ -15,6 +15,6 @@
 				</div>
 			</div>
 		</a>
-		<div class="span7"></div>
+		<div class="span7"><!-- comment --></div>
 	</div>
 </div>

@@ -6,82 +6,7 @@
 	
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	
 	<form id="filterForm" method="get" action="/all-publications/search">
-
-
-		<div class="well sidebar-nav">
-			<ul id="article-year" class="nav nav-list facet-list">
-				<li class="nav-header">Publication Year</li>
-				<li><span class="labelus from-value">1969</span> <span
-					class="labelus to-value">2012</span> <span
-					style="float: left; clear: both;" id="inlinesparkline"
-					values="2012:591585,2011:506557,2010:666997,2009:626679,2008:600912,2007:613267,2006:542304,2005:514966,2004:491772,2003:436709,2002:403926,2001:385075,2000:341601,1999:352602,1998:323569,1997:85391,1996:226442,1995:286206,1994:286077,1993:275770,1992:313265,1991:279691,1990:264450,1989:244821,1988:199600,1987:194134,1986:181721,1985:184541,1984:178391,1983:162097,1982:132279,1981:136247,1980:113760,1979:107371,1978:96475,1977:110428,1976:112880,1975:59330,1974:8045,1973:7962,1972:7672,1971:5629,1970:5418,1969:2821"><canvas
-							width="192" height="35"
-							style="display: inline-block; width: 192px; height: 35px; vertical-align: top;"></canvas></span>
-				</li>
-				<input class="range-value-input" type="hidden"
-					name="fr[article-year]" value="[1969,2012]"/>
-			</ul>
-			<div style="margin-top: -9px" id="slider-article-year"
-				class="slider-range ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
-				<div class="ui-slider-range ui-widget-header"
-					style="left: 0%; width: 100%;"></div>
-				<a class="ui-slider-handle ui-state-default ui-corner-all" href="#"
-					style="left: 0%;"></a><a
-					class="ui-slider-handle ui-state-default ui-corner-all" href="#"
-					style="left: 100%;"></a>
-			</div>
-			<script>
-				$(function() {
-					$("#slider-article-year").slider(
-							{
-								range : true,
-								min : 1969,
-								max : 2012,
-								step : 1,
-								values : [ 1969, 2012 ],
-								slide : function(event, ui) {
-									$("#article-year .from-value").html(
-											ui.values[0]);
-									$("#article-year .to-value").html(
-											ui.values[1]);
-
-									$("#article-year .range-value-input").attr(
-											"value",
-											"[" + ui.values[0] + ","
-													+ ui.values[1] + "]");
-								},
-								stop : function(event, ui) {
-									filterFormSubmit();
-								}
-							});
-					$("#article-year .from-value").html(
-							$("#slider-article-year").slider("values", 0));
-					$("#article-year .to-value").html(
-							$("#slider-article-year").slider("values", 1));
-
-					$("#article-year #inlinesparkline").sparkline('html', {
-						type : 'line',
-						width : '192px',
-						lineColor : '#cccccc',
-						fillColor : '#cccccc',
-						height : '35px',
-						maxSpotColor : false,
-						minSpotColor : false,
-						spotColor : false,
-						lineWidth : 0
-					/*tooltipFormat: 'Tooltip {{value.levels}} - {{value}}',
-					tooltipValueLookups: { 
-					   levels: $.range_map({ 1: 'Low', '3:6': 'Medium', '7:': 'High' }) 
-					} */
-					});
-				});
-			</script>
-		</div>
-
-
-
 
 		<div class="well sidebar-nav">
 			<ul id="keyword" class="nav nav-list facet-list show-more-enabled">
@@ -90,8 +15,8 @@
 
 				<li style="display: block" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Population" id="Population"/> 
-					<label title="Population" for="Population" class=""> <span>Population</span><span class="count">(29862)</span></label>
+					name="ff[keyword]" value="Population" id="population"/> 
+					<label title="Population" for="population" class=""> <span>Population</span><span class="count">(29862)</span></label>
 				</li>
 
 
@@ -99,8 +24,8 @@
 				<li style="display: block" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
 					name="ff[keyword]" value="Demographic Factors"
-					id="Demographic Factors"/> <label
-					title="Demographic Factors" for="Demographic Factors" class="">
+					id="demographic_factors"/> <label
+					title="Demographic Factors" for="demographic_factors" class="">
 						<span>Demographic Factors</span> <span class="count">(28833)</span>
 				</label></li>
 
@@ -109,8 +34,8 @@
 				<li style="display: block" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
 					name="ff[keyword]" value="Developing Countries"
-					id="Developing Countries"/> <label
-					title="Developing Countries" for="Developing Countries" class="">
+					id="feveloping_countries"/> <label
+					title="Developing Countries" for="feveloping_countries" class="">
 						<span>Developing Countries</span> <span class="count">(27923)</span>
 				</label></li>
 
@@ -119,8 +44,8 @@
 				<li style="display: block" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
 					name="ff[keyword]" value="Research Methodology"
-					id="Research Methodology"/> <label
-					title="Research Methodology" for="Research Methodology" class="">
+					id="research_methodology"/> <label
+					title="Research Methodology" for="research_methodology" class="">
 						<span>Research Methodology</span> <span class="count">(25246)</span>
 				</label></li>
 
@@ -128,8 +53,8 @@
 
 				<li style="display: none;" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Family Planning" id="Family Planning"/>
-					<label title="Family Planning" for="Family Planning" class="">
+					name="ff[keyword]" value="Family Planning" id="family_panning"/>
+					<label title="Family Planning" for="family_panning" class="">
 						<span>Family Planning</span> <span class="count">(23387)</span>
 				</label></li>
 
@@ -138,8 +63,8 @@
 				<li style="display: none;" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
 					name="ff[keyword]" value="Population Dynamics"
-					id="Population Dynamics"/> <label
-					title="Population Dynamics" for="Population Dynamics" class="">
+					id="population_dynamics"/> <label
+					title="Population Dynamics" for="population_dynamics" class="">
 						<span>Population Dynamics</span> <span class="count">(20919)</span>
 				</label></li>
 
@@ -148,8 +73,8 @@
 				<li style="display: none;" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
 					name="ff[keyword]" value="Developed Countries"
-					id="Developed Countries"/> <label
-					title="Developed Countries" for="Developed Countries" class="">
+					id="developed_countries"/> <label
+					title="Developed Countries" for="developed_countries" class="">
 						<span>Developed Countries</span> <span class="count">(20193)</span>
 				</label></li>
 
@@ -157,8 +82,8 @@
 
 				<li style="display: none;" class=""><input type="hidden"
 					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Economic Factors" id="Economic Factors"/>
-					<label title="Economic Factors" for="Economic Factors" class="">
+					name="ff[keyword]" value="Economic Factors" id="economic_factors"/>
+					<label title="Economic Factors" for="economic_factors" class="">
 						<span>Economic Factors</span> <span class="count">(17232)</span>
 				</label></li>
 
