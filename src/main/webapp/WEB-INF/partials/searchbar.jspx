@@ -1,0 +1,20 @@
+<div class="hero-unit" id="search-bar" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page">
+	
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div class="row-fluid">
+		<a href="#">
+			<div id="logo-wrapper" class="span3">
+				<div id="logo">
+					<img src="/searchbox/img/searchbox-logo-big.png" alt="Searchbox"
+						id="logo-image" />
+				</div>
+			</div>
+		</a>
+		<div class="span7"></div>
+	</div>
+</div>

@@ -12,6 +12,8 @@
   
   <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
   <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
+  <link rel="stylesheet" type="text/css" href="/searchbox/css/searchbox-general.css" />
+  
   <link rel="SHORTCUT ICON" href="${favicon}" />
 
   <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
@@ -22,5 +24,6 @@
 
   <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+  <script src="/searchbox/js/searchbox.js" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>
