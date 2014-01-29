@@ -9,7 +9,7 @@
 		<td width="200">facets go here</td>
 		<td>
 			<table>
-				<c:forEach items="${result.hitts}" var="hit">
+				<c:forEach items="${result.hits}" var="hit">
 					<tr>
 						<h4>${hit.fields['title']}</h4>
 						<p>${hit.fields['description']}</p>
