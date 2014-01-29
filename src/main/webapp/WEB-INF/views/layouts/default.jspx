@@ -14,7 +14,11 @@
 		
 	</head>
 	<body>
+	
 	<h1>default layout</h1>
   	<jsp:include page="/WEB-INF/views/${view}.jspx"></jsp:include>
+  	<h4>debug</h4>
+	<p>${exception}</p>
+	
 	</body>
 </html>
