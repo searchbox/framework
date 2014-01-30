@@ -24,7 +24,7 @@
 		</c:forEach>
 	
 
-		<div class="span7" id="main-col-center">
+		<div class="col-md-7" id="main-col-center">
 
 			<c:if test="${query.collq}">
 				<c:set var="forceParams" value="${cleanedParams.clone()}" />
@@ -43,7 +43,7 @@
 	
 		</div>
 
-		<div class="span2" id="main-col-right"><!-- right col --></div>
+		<div class="col-md-2" id="main-col-right"><!-- right col --></div>
 		<c:if test="${request.xhr}">
 			<script type="text/javascript">
 				var queryTerm = '${query.q}';

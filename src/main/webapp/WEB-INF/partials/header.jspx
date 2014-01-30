@@ -17,7 +17,7 @@
 				<p class="pull-right"><!-- comment --></p>
 
 				<ul class="nav" id="preset-bar">
-					<li>Preset 1</li>
+					<li class="active">Preset 1</li>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->

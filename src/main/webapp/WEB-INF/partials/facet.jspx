@@ -1,4 +1,4 @@
-<div class="span3 col-left" id="main-col-left" xmlns:c="http://java.sun.com/jsp/jstl/core"
+<div class="col-md-3 col-left" id="main-col-left" xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
@@ -8,7 +8,7 @@
 	<jsp:output omit-xml-declaration="yes" />
 	<form id="filterForm" method="get" action="/all-publications/search">
 
-		<div class="well sidebar-nav">
+		<div class="well bs-sidebar affix">
 			<ul id="keyword" class="nav nav-list facet-list show-more-enabled">
 				<li class="nav-header">Keyword</li>
 
