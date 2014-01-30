@@ -19,15 +19,18 @@
 		<ul class="list-group">
 		  <li class="list-group-item">
 		    <span class="badge">29862</span>
-		    Population
+		    <input id="demo_box_2" class="css-checkbox" type="checkbox" checked="checked" />
+		    <label for="demo_box_2" name="demo_lbl_2" class="css-label">Population</label>
 		  </li>
 		  <li class="list-group-item">
 		    <span class="badge">28833</span>
-		    Demographic Factors
+		   	<input id="demo_box_3" class="css-checkbox" type="checkbox" checked="checked"/>
+		   	<label for="demo_box_3" name="demo_lbl_3" class="css-label">Demographic Factors</label>
 		  </li>
 		  <li class="list-group-item">
-		    <span class="badge">11</span>
-		    Cras justo odio
+		    <span class="badge">27923</span>
+		    <input id="demo_box_2" class="css-checkbox" type="checkbox" />
+		    <label for="demo_box_3" name="demo_lbl_3" class="css-label">Developing Countries</label>		    
 		  </li>
 		</ul>
 	  </div>
