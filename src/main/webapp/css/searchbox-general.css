@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+
+#first-row{
+	border-bottom:1px solid #eeeeee;
+	margin-bottom:15px;
+}
 /*************************************************************/
 /* Preset bar - dark background, horizontal menu with icon */
 /*************************************************************/
@@ -48,6 +53,110 @@
 	left: 50%;
 	width: 1px;
 }
+
+/*************************************************************/
+/*                         Search bar                        */
+/*************************************************************/
+input:focus,textarea:focus {
+	border-color: rgba(30, 187, 192, 0.8) !important;
+}
+
+#search-bar {
+	margin: -20px -20px 10px -20px;
+	border-radius: 0;
+	padding: 40px 30px 30px 40px;
+	border-bottom: 1px solid #BCBCBC;
+	background: url("/searchbox/img/texture-white.png") repeat scroll 0 0
+		rgba(0, 0, 0, 0);
+}
+
+#search-bar #logo {
+	margin: auto;
+	float: none;
+	text-align: left;
+}
+
+#search-bar #logo-image {
+	max-height: 65px;
+	max-width: 235px;
+}
+
+#search-bar #logo-wrapper {
+	width: 270px;
+}
+/*
+#search-bar #logo #logo-text {
+	float: right;
+	margin-top: -5px;
+	left: auto;
+	top: auto;
+	clear: left;
+	color: #777;
+	font-size: 16px;
+	font-weight: bold;
+	position: relative;
+	display: block !important;
+}
+
+#search-bar #logo #logo-text:hover {
+	text-decoration: none;
+}
+
+.texture-black {
+	background: url("../images/texture-black.png") repeat scroll 0 0
+		rgba(0, 0, 0, 0);
+}
+
+.text-from-url {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 14px;
+	color: #555;
+	line-height: 1.4em;
+}
+
+#search-bar .search-query {
+	border-radius: 5px;
+	height: 42px;
+	min-height: 42px;
+	font-size: 20px;
+	margin-right: 8px;
+	width: 60%;
+	padding-right: 35px;
+}
+
+a.clear_input:hover {
+	text-decoration: none
+}
+*/
+
+/*************************************************************/
+/*                         Status bar                        */
+/*************************************************************/
+
+#search-status-bar {
+	margin-bottom: -6px;
+	padding-bottom: -6px;
+	float:left;
+	margin-bottom:10px;
+	padding-left:20px;
+}
+
+#search-status-bar .status-text {
+	color: #999;;
+	font-size: 12px;
+}
+
+#status{
+	padding: 15px 20px;
+	color: #777;
+	background-color: #fafafa;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #e5e5e5;
+	margin-bottom:20px;
+}
+
+
 
 /*************************************************************/
 /*                  Left column / facets                     */
@@ -254,97 +363,9 @@ body #main-content {
 	padding-top: 60px;
 }
 
-#main-col-center,#main-col-status-bar {
-	width: 600px;
-}
-
-/* Override border color from bootstrap **/
-input:focus,textarea:focus {
-	border-color: rgba(30, 187, 192, 0.8) !important;
-}
-
-#search-bar {
-	margin: -20px -20px 20px -20px;
-	border-radius: 0;
-	padding: 40px 30px 30px 40px;
-	border-bottom: 1px solid #BCBCBC;
-	background: url("../images/texture-white.png") repeat scroll 0 0
-		rgba(0, 0, 0, 0);
-}
-
-#search-bar #logo {
-	margin: auto;
-	float: none;
-	text-align: left;
-}
-
-#search-bar #logo-image {
-	max-height: 65px;
-	max-width: 235px;
-}
-
-#search-bar #logo-wrapper {
-	width: 270px;
-}
-
-#search-bar #logo #logo-text {
-	float: right;
-	margin-top: -5px;
-	left: auto;
-	top: auto;
-	clear: left;
-	color: #777;
-	font-size: 16px;
-	font-weight: bold;
-	position: relative;
-	display: block !important;
-}
-
-#search-bar #logo #logo-text:hover {
-	text-decoration: none;
-}
-
-.texture-black {
-	background: url("../images/texture-black.png") repeat scroll 0 0
-		rgba(0, 0, 0, 0);
-}
-
-.text-from-url {
-	font-size: 24px;
-	font-weight: bold;
-	margin-bottom: 14px;
-	color: #555;
-	line-height: 1.4em;
-}
-
-#search-bar .search-query {
-	border-radius: 5px;
-	height: 42px;
-	min-height: 42px;
-	font-size: 20px;
-	margin-right: 8px;
-	width: 60%;
-	padding-right: 35px;
-}
-
-a.clear_input:hover {
-	text-decoration: none
-}
-
-#search-bar .span7 {
-	margin: 0;
-}
 
 /** Search header **/
-#search-status-bar {
-	margin-bottom: -6px;
-	padding-bottom: -6px;
-}
 
-#search-status-bar .status-text {
-	color: #999;;
-	font-size: 12px;
-}
 
 /** Tags **/
 #tag-bar {

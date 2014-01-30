@@ -8,13 +8,13 @@
 	<jsp:output omit-xml-declaration="yes" />
 	<div class="row">
 		<a href="#">
-			<div id="logo-wrapper" class="span3">
+			<div id="logo-wrapper" class="col-md-3">
 				<div id="logo">
 					<img src="/searchbox/img/searchbox-logo-big.png" alt="Searchbox"
 						id="logo-image" />
 				</div>
 			</div>
 		</a>
-		<div class="span7"><!-- comment --></div>
+		<div class="col-md-7"><!-- comment --></div>
 	</div>
 </div>

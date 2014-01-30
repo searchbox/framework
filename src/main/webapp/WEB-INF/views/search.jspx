@@ -7,8 +7,8 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 
-	<div class="row">
-		<c:if test="${searchResponse}">
+	<div class="row" id="first-row">
+		<c:if test="${true == true}">
 			<jsp:include page="/WEB-INF/partials/statusbar.jspx" />
 		</c:if>
 	</div>
