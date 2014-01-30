@@ -15,17 +15,17 @@
 
 	<div class="row">
 
-		<jsp:include page="/WEB-INF/partials/facet.jspx" />
+		<div class="col-md-4 col-left" id="main-col-left">
+			<jsp:include page="/WEB-INF/partials/facet.jspx" />
+			<c:forEach items="${request.cleanedParams}" var="hit">
+				<c:if test="${it.key == 'q' || it.key=='sort'}">
+					<input type="hidden" name="${it.key}" value="${it.value}" />
+				</c:if>
+			</c:forEach>
+		</div>
 
-		<c:forEach items="${request.cleanedParams}" var="hit">
-			<c:if test="${it.key == 'q' || it.key=='sort'}">
-				<input type="hidden" name="${it.key}" value="${it.value}" />
-			</c:if>
-		</c:forEach>
-	
 
-		<div class="col-md-7" id="main-col-center">
-
+		<div class="col-md-6" id="main-col-center">
 			<c:if test="${query.collq}">
 				<c:set var="forceParams" value="${cleanedParams.clone()}" />
 				<!-- ${forceParams.q = query.collq} -->
@@ -33,17 +33,17 @@
 				<div class="alert alert-info">
 					<button type="button" class="close" data-dismiss="alert">×</button>
 					Displaying results for <a href="#"> <strong>${query.q}</strong>
-					</a> <br/> <small>Show me results for <a href="#"> <strong>${forceParams.q}</strong>
+					</a> <br /> <small>Show me results for <a href="#"> <strong>${forceParams.q}</strong>
 					</a> anyway!
 					</small>
 				</div>
 			</c:if>
-			
 			<jsp:include page="/WEB-INF/partials/searchresults.jspx" />
-	
 		</div>
 
-		<div class="col-md-2" id="main-col-right"><!-- right col --></div>
+		<div class="col-md-2" id="main-col-right">
+			<!-- right col -->
+		</div>
 		<c:if test="${request.xhr}">
 			<script type="text/javascript">
 				var queryTerm = '${query.q}';

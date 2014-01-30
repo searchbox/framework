@@ -1,95 +1,89 @@
-<div class="col-md-3 col-left"  id="main-col-left" xmlns:c="http://java.sun.com/jsp/jstl/core"
+<form id="filterForm" method="get" action="/all-publications/search"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
 	xmlns:jsp="http://java.sun.com/JSP/Page">
-	
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<form id="filterForm" method="get" action="/all-publications/search">
 
-		<div class="well bs-sidebar" data-spy="affix" data-offset-top="60" data-offset-bottom="200">
-			<ul id="keyword" class="nav nav-list facet-list show-more-enabled">
-				<li class="nav-header">Keyword</li>
-
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Population" id="population"/> 
-					<label title="Population" for="population" class=""> <span>Population</span><span class="count">(29862)</span></label>
-				</li>
+	<div class="well bs-sidebar" data-spy="affix" data-offset-top="60"
+		data-offset-bottom="200">
+		<ul id="keyword" class="nav nav-list facet-list show-more-enabled">
+			<li class="nav-header">Keyword</li>
 
 
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Demographic Factors"
-					id="demographic_factors"/> <label
-					title="Demographic Factors" for="demographic_factors" class="">
-						<span>Demographic Factors</span> <span class="count">(28833)</span>
-				</label></li>
+			<li style="display: block" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Population" id="population" /> <label title="Population"
+				for="population" class=""> <span>Population</span><span
+					class="count">(29862)</span></label></li>
 
 
 
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Developing Countries"
-					id="feveloping_countries"/> <label
-					title="Developing Countries" for="feveloping_countries" class="">
-						<span>Developing Countries</span> <span class="count">(27923)</span>
-				</label></li>
+			<li style="display: block" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Demographic Factors" id="demographic_factors" /> <label
+				title="Demographic Factors" for="demographic_factors" class="">
+					<span>Demographic Factors</span> <span class="count">(28833)</span>
+			</label></li>
 
 
 
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Research Methodology"
-					id="research_methodology"/> <label
-					title="Research Methodology" for="research_methodology" class="">
-						<span>Research Methodology</span> <span class="count">(25246)</span>
-				</label></li>
+			<li style="display: block" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Developing Countries" id="feveloping_countries" /> <label
+				title="Developing Countries" for="feveloping_countries" class="">
+					<span>Developing Countries</span> <span class="count">(27923)</span>
+			</label></li>
 
 
 
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Family Planning" id="family_panning"/>
-					<label title="Family Planning" for="family_panning" class="">
-						<span>Family Planning</span> <span class="count">(23387)</span>
-				</label></li>
+			<li style="display: block" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Research Methodology" id="research_methodology" /> <label
+				title="Research Methodology" for="research_methodology" class="">
+					<span>Research Methodology</span> <span class="count">(25246)</span>
+			</label></li>
 
 
 
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Population Dynamics"
-					id="population_dynamics"/> <label
-					title="Population Dynamics" for="population_dynamics" class="">
-						<span>Population Dynamics</span> <span class="count">(20919)</span>
-				</label></li>
+			<li style="display: none;" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Family Planning" id="family_panning" /> <label
+				title="Family Planning" for="family_panning" class=""> <span>Family
+						Planning</span> <span class="count">(23387)</span>
+			</label></li>
 
 
 
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Developed Countries"
-					id="developed_countries"/> <label
-					title="Developed Countries" for="developed_countries" class="">
-						<span>Developed Countries</span> <span class="count">(20193)</span>
-				</label></li>
+			<li style="display: none;" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Population Dynamics" id="population_dynamics" /> <label
+				title="Population Dynamics" for="population_dynamics" class="">
+					<span>Population Dynamics</span> <span class="count">(20919)</span>
+			</label></li>
 
 
 
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]"/><input type="checkbox"
-					name="ff[keyword]" value="Economic Factors" id="economic_factors"/>
-					<label title="Economic Factors" for="economic_factors" class="">
-						<span>Economic Factors</span> <span class="count">(17232)</span>
-				</label></li>
+			<li style="display: none;" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Developed Countries" id="developed_countries" /> <label
+				title="Developed Countries" for="developed_countries" class="">
+					<span>Developed Countries</span> <span class="count">(20193)</span>
+			</label></li>
 
-			</ul>
-			<a href="#" class="show-more">Show More...</a>
-		</div>
-		<input type="hidden" name="q" value=""/>
-	</form>
-</div>
+
+
+			<li style="display: none;" class=""><input type="hidden"
+				name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
+				value="Economic Factors" id="economic_factors" /> <label
+				title="Economic Factors" for="economic_factors" class=""> <span>Economic
+						Factors</span> <span class="count">(17232)</span>
+			</label></li>
+
+		</ul>
+		<a href="#" class="show-more">Show More...</a>
+	</div>
+	<input type="hidden" name="q" value="" />
+</form>
