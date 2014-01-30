@@ -15,17 +15,18 @@
 
 	<div class="row">
 
-		<div class="col-md-4 col-left" id="main-col-left">
+		<div class="col-md-3 col-left" id="main-col-left">
 			<jsp:include page="/WEB-INF/partials/facet.jspx" />
 			<c:forEach items="${request.cleanedParams}" var="hit">
 				<c:if test="${it.key == 'q' || it.key=='sort'}">
 					<input type="hidden" name="${it.key}" value="${it.value}" />
 				</c:if>
 			</c:forEach>
+			<div style="clear:all"><!-- afsfd --></div>
 		</div>
 
 
-		<div class="col-md-6" id="main-col-center">
+		<div class="col-md-7" id="main-col-center">
 			<c:if test="${query.collq}">
 				<c:set var="forceParams" value="${cleanedParams.clone()}" />
 				<!-- ${forceParams.q = query.collq} -->
