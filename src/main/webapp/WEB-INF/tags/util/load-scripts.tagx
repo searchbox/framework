@@ -11,7 +11,7 @@
   <spring:url value="/resources/images/favicon.ico" var="favicon" />
   
   <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
-  <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
+  <!-- <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" /> -->
   <link rel="stylesheet" type="text/css" href="/searchbox/css/searchbox-general.css" />
   
   <link rel="SHORTCUT ICON" href="${favicon}" />
