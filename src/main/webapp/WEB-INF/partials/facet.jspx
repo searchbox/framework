@@ -29,8 +29,16 @@
 		  </li>
 		  <li class="list-group-item">
 		    <span class="badge">27923</span>
-		    <input id="demo_box_2" class="css-checkbox" type="checkbox" />
-		    <label for="demo_box_3" name="demo_lbl_3" class="css-label">Developing Countries</label>		    
+		    <input id="demo_box_4" class="css-checkbox" type="checkbox" />
+		    <label for="demo_box_4" name="demo_lbl_4" class="css-label">Developing Countries</label>		    
+		  </li>
+		  <li class="list-group-item">
+		    <span class="badge">27923</span>
+		    <input id="demo_box_5" class="css-checkbox" type="checkbox" />
+		    <label for="demo_box_5" name="demo_lbl_5" class="css-label">Research Methodology</label>		    
+		  </li>
+		  <li class="list-group-item">
+		    <a href="#">Show more...</a>	    
 		  </li>
 		</ul>
 	  </div>
