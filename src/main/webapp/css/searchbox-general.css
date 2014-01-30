@@ -1,4 +1,51 @@
 @CHARSET "UTF-8";
+
+
+
+/*************************************************************/
+/* Preset bar - dark background, horizontal menu with icon */
+/*************************************************************/
+
+
+/**  Top navbar **/
+#navbar-top {
+  border-bottom:5px solid #1EBBC0;
+  height:20px;
+  background-image:none;
+}
+
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar {min-height:45px !important}
+
+/** List, list items and links **/
+#preset-bar li.active a{
+  background-color:rgba(0,0,0,0);
+  position:relative;
+  background:none;
+  box-shadow:none;
+}
+
+#preset-bar a {
+  letter-spacing:0.1em;
+}
+
+#preset-bar li.active > a:after,  #preset-bar > a:hover:after {
+  content: " .";
+  display: block;
+  border:1px solid red;
+  text-indent: -99em;
+  border-bottom: 0.6em solid #1EBBC0;
+  border-left: 0.6em solid rgba(0,0,0,0);
+  border-right: 0.6em solid rgba(0,0,0,0);
+  border-top: none;
+  height: 0px;
+  margin-left: -0.6em;
+  margin-top: 5px;
+  position: absolute;
+  left: 50%;
+  width: 1px;
+}
+
 /** attribute and style of elements when in the col-left **/
 div.resultrow {
   margin-bottom: 25px;
@@ -59,9 +106,7 @@ input:focus, textarea:focus{
   padding: 9px 0;
 
 }
-#navbar-top .navbar-inner{
-  border-bottom:5px solid #1EBBC0;
-}
+
 #search-bar {
   margin: -20px -20px 20px -20px;
   border-radius:0;
@@ -127,28 +172,7 @@ a.clear_input:hover{text-decoration:none}
 #search-bar .span7{
   margin:0;
 }
-/** Presets **/
-#preset-bar li.active a{
-  background-color:rgba(0,0,0,0);
-  position:relative;
 
-}
-#preset-bar li.active > a:after,  #preset-bar > a:hover:after {
-  content: " .";
-  display: block;
-  border:1px solid red;
-  text-indent: -99em;
-  border-bottom: 0.6em solid #1EBBC0;
-  border-left: 0.6em solid rgba(0,0,0,0);
-  border-right: 0.6em solid rgba(0,0,0,0);
-  border-top: none;
-  height: 0px;
-  margin-left: -0.6em;
-  margin-top: 5px;
-  position: absolute;
-  left: 50%;
-  width: 1px;
-}
 
 /** Search header **/
 #search-status-bar{
@@ -214,11 +238,6 @@ a.clear_input:hover{text-decoration:none}
 }
 .btn.arrow-left.btn-inverse:after {
   border-right:  14px solid #1B1B1B;
-}
-
-/** Presets **/
-#preset-bar a {
-  letter-spacing:0.15em;
 }
 
 /** Loading mask **/
