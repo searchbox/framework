@@ -4,23 +4,27 @@
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
 	xmlns:jsp="http://java.sun.com/JSP/Page">
-	
+
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="navbar-inner">
-		<div class="container">
-			<a class="btn btn-navbar" data-toggle="collapse"
-				data-target=".nav-collapse"> <span class="icon-bar"><!-- comment --></span> <span
-				class="icon-bar"><!-- comment --></span> <span class="icon-bar"><!-- comment --></span>
-			</a>
-			<div class="nav-collapse">
-				<p class="pull-right"><!-- comment --></p>
 
-				<ul class="nav" id="preset-bar">
-					<li class="active">Preset 1</li>
-				</ul>
-			</div>
-			<!--/.nav-collapse -->
+	<div class="container" id="navbar-top-container">
+		<div class="navbar-header">
+			<button class="navbar-toggle" type="button" data-toggle="collapse"
+				data-target=".bs-navbar-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
 		</div>
+		<nav class="collapse navbar-collapse bs-navbar-collapse left" role="navigation">
+			<ul class="nav navbar-nav" id="preset-bar">
+				<li><a href="../getting-started">Preset 1</a></li>
+				<li class="active"><a href="../css">Preset 2</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="../about">About</a></li>
+			</ul>
+		</nav>
 	</div>
 </div>
