@@ -1,10 +1,16 @@
 @CHARSET "UTF-8";
 
 
+/** General style - layout related **/
 #first-row{
 	border-bottom:1px solid #eeeeee;
 	margin-bottom:15px;
 }
+.col-left {
+	max-width: 300px;
+	padding-left: 35px;
+}
+
 /*************************************************************/
 /* Preset bar - dark background, horizontal menu with icon */
 /*************************************************************/
@@ -137,9 +143,9 @@ a.clear_input:hover {
 #search-status-bar {
 	margin-bottom: -6px;
 	padding-bottom: -6px;
-	float:left;
 	margin-bottom:10px;
-	padding-left:20px;
+	width:100%;
+	padding:0;
 }
 
 #search-status-bar .status-text {
@@ -198,10 +204,7 @@ a.clear_input:hover {
 /** attribute and style of elements when in the col-left **/
 
 /** SB stylesheet **/
-#main-col-left {
-	max-width: 300px;
-	padding-left: 35px;
-}
+
 
 #main-col-left .panel .panel-body {
 	padding: 0;
