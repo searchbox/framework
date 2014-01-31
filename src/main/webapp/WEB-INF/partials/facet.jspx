@@ -41,8 +41,8 @@
 					class="badge">20919</span> <input id="demo_box_8"
 					class="css-checkbox" type="checkbox" /> <label for="demo_box_8"
 					name="demo_lbl_8" class="css-label">Population Dynamics</label></li>
-				<li class="list-group-item"><a href="#" class="show-more">Show
-						more...</a></li>
+				<!--  <li class="list-group-item"><a href="#" class="show-more">Show
+						more...</a></li>-->
 			</ul>
 		</div>
 	</div>
