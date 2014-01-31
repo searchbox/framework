@@ -16,7 +16,7 @@
 			<h3 class="panel-title">Keyword</h3>
 		</div>
 		<div class="panel-body">
-			<ul class="list-group">
+			<ul class="list-group facet-list">
 				<li class="list-group-item"><span class="badge">29862</span> <input
 					id="demo_box_2" class="css-checkbox" type="checkbox"
 					checked="checked" /> <label for="demo_box_2" name="demo_lbl_2"
@@ -37,11 +37,7 @@
 					id="demo_box_6" class="css-checkbox" type="checkbox" /> <label
 					for="demo_box_6" name="demo_lbl_6" class="css-label">Family
 						Planning</label></li>
-				<li class="list-group-item" style="display: none"><span
-					class="badge">23387</span> <input id="demo_box_7"
-					class="css-checkbox" type="checkbox" /> <label for="demo_box_7"
-					name="demo_lbl_7" class="css-label">Family Planning</label></li>
-				<li class="list-group-item" style="display: none"><span
+				<li class="list-group-item"><span
 					class="badge">20919</span> <input id="demo_box_8"
 					class="css-checkbox" type="checkbox" /> <label for="demo_box_8"
 					name="demo_lbl_8" class="css-label">Population Dynamics</label></li>
