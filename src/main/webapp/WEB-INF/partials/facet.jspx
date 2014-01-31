@@ -15,17 +15,17 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title">${facet.label }</h3>
+			<h3 class="panel-title">${facet.label}</h3>
 		</div>
 		<div class="panel-body">
 			<ul class="list-group facet-list">
-				<c:forEach items="${facet.facetValues }" var="value">
+				<c:forEach items="${facet.facetValues}" var="value" varStatus="i" >
 			
 				
-				<li class="list-group-item"><span class="badge">${value.count }</span> <input
-					id="demo_box_2" class="css-checkbox" type="checkbox"
-					checked="checked" /> <label for="demo_box_2" name="demo_lbl_2"
-					class="css-label">${value.label }</label></li>
+				<li class="list-group-item"><span class="badge">${value.count}</span> <input
+					id="demo_box_${i.getCount()}" class="css-checkbox" type="checkbox"
+					checked="checked" /> <label for="demo_box_${i.getCount()}" name="demo_lbl_${i.getCount()}"
+					class="css-label">${value.label}</label></li>
 				</c:forEach>
 			</ul>
 		</div>
