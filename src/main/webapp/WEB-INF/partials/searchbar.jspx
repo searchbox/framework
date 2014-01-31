@@ -1,9 +1,10 @@
-<div class="hero-unit" id="search-bar" xmlns:c="http://java.sun.com/jsp/jstl/core"
+<div class="hero-unit" id="search-bar"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
 	xmlns:jsp="http://java.sun.com/JSP/Page">
-	
+
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<div class="row">
@@ -15,6 +16,8 @@
 				</div>
 			</div>
 		</a>
-		<div class="col-md-7"><!-- comment --></div>
+		<div class="col-md-7">
+			<!-- comment -->
+		</div>
 	</div>
 </div>

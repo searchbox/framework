@@ -6,7 +6,7 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<div class="col-md-3 col-left" style="top:0.5em">
+	<div class="col-md-3 col-left" style="top: 0.5em">
 		<span class="status-text">found <span class="search-info-count">11'667'435</span>
 			results in 686 ms.
 		</span>
@@ -15,7 +15,8 @@
 	<div class="col-md-7 last" id="main-col-status-bar">
 		<div style="float: right">
 			<div class="btn-group">
-				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<button class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
 					Sort by <span class="caret"></span>
 				</button>
 				<ul id="sort-combo" class="dropdown-menu">

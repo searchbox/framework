@@ -1,29 +1,41 @@
-<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 
-  <jsp:output omit-xml-declaration="yes" />
+	<jsp:output omit-xml-declaration="yes" />
 
-  <spring:theme code="styleSheet" var="roo_css" />
-  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" var="bootstrap_css_url" />
-  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" var="bootstrap_theme_css_url" />
-  <spring:url value="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" var="jquery_url" />
-  <spring:url value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" var="bootstrap_js_url" />
+	<spring:theme code="styleSheet" var="roo_css" />
+	<spring:url
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"
+		var="bootstrap_css_url" />
+	<spring:url
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"
+		var="bootstrap_theme_css_url" />
+	<spring:url
+		value="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"
+		var="jquery_url" />
+	<spring:url
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"
+		var="bootstrap_js_url" />
 
-  <spring:url value="/resources/images/favicon.ico" var="favicon" />
-  
-  <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
-  <!-- <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" /> -->
-  <link rel="stylesheet" type="text/css" href="/searchbox/css/searchbox-general.css" />
-  
-  <link rel="SHORTCUT ICON" href="${favicon}" />
+	<spring:url value="/resources/images/favicon.ico" var="favicon" />
 
-  <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
-  <c:set var="userLocale">
-    <c:set var="plocale">${pageContext.response.locale}</c:set>
-    <c:out value="${fn:replace(plocale, '_', '-')}" default="en" />
-  </c:set>
+	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+	<!-- <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" /> -->
+	<link rel="stylesheet" type="text/css"
+		href="/searchbox/css/searchbox-general.css" />
 
-  <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-  <script src="/searchbox/js/searchbox.js" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+	<link rel="SHORTCUT ICON" href="${favicon}" />
+
+	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
+	<c:set var="userLocale">
+		<c:set var="plocale">${pageContext.response.locale}</c:set>
+		<c:out value="${fn:replace(plocale, '_', '-')}" default="en" />
+	</c:set>
+
+	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+	<script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+	<script src="/searchbox/js/searchbox.js" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>

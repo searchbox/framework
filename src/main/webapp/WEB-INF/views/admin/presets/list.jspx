@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-    <page:list id="pl_com_searchbox_domain_app_Preset" items="${presets}" z="B4T7kcdgWl87XS2000/r2b6nGwg=">
-        <table:table data="${presets}" id="l_com_searchbox_domain_app_Preset" path="/admin/presets" z="QmpEFANlU/dghu86rPKQdZW5B4c=">
-            <table:column id="c_com_searchbox_domain_app_Preset_slug" property="slug" z="BgAGCHnYEuTA2YCxlDc5wiubYCA="/>
-            <table:column id="c_com_searchbox_domain_app_Preset_label" property="label" z="wUUbGPB0BgGN8Uhjx2YUtBXWusw="/>
-            <table:column id="c_com_searchbox_domain_app_Preset_description" property="description" z="uX3XT+0cSdCkidotYyPhWfNvcrY="/>
-            <table:column id="c_com_searchbox_domain_app_Preset_global" property="global" z="qUpaaXmt8TBT2IeAaAysnCpt9Z4="/>
-            <table:column id="c_com_searchbox_domain_app_Preset_visible" property="visible" z="ZY+DsZIYYjbJBhxm2busUMx0mdM="/>
-            <table:column id="c_com_searchbox_domain_app_Preset_position" property="position" z="KR3/k3fN7DT4TGtypLCAxsv0DUA="/>
-        </table:table>
-    </page:list>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<page:list id="pl_com_searchbox_domain_app_Preset" items="${presets}"
+		z="B4T7kcdgWl87XS2000/r2b6nGwg=">
+		<table:table data="${presets}" id="l_com_searchbox_domain_app_Preset"
+			path="/admin/presets" z="QmpEFANlU/dghu86rPKQdZW5B4c=">
+			<table:column id="c_com_searchbox_domain_app_Preset_slug"
+				property="slug" z="BgAGCHnYEuTA2YCxlDc5wiubYCA=" />
+			<table:column id="c_com_searchbox_domain_app_Preset_label"
+				property="label" z="wUUbGPB0BgGN8Uhjx2YUtBXWusw=" />
+			<table:column id="c_com_searchbox_domain_app_Preset_description"
+				property="description" z="uX3XT+0cSdCkidotYyPhWfNvcrY=" />
+			<table:column id="c_com_searchbox_domain_app_Preset_global"
+				property="global" z="qUpaaXmt8TBT2IeAaAysnCpt9Z4=" />
+			<table:column id="c_com_searchbox_domain_app_Preset_visible"
+				property="visible" z="ZY+DsZIYYjbJBhxm2busUMx0mdM=" />
+			<table:column id="c_com_searchbox_domain_app_Preset_position"
+				property="position" z="KR3/k3fN7DT4TGtypLCAxsv0DUA=" />
+		</table:table>
+	</page:list>
 </div>

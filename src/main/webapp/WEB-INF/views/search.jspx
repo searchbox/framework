@@ -22,7 +22,9 @@
 					<input type="hidden" name="${it.key}" value="${it.value}" />
 				</c:if>
 			</c:forEach>
-			<div style="clear:all"><!-- afsfd --></div>
+			<div style="clear: all">
+				<!-- afsfd -->
+			</div>
 		</div>
 
 

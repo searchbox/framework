@@ -1,11 +1,11 @@
 @CHARSET "UTF-8";
 
-
 /** General style - layout related **/
-#first-row{
-	border-bottom:1px solid #eeeeee;
-	margin-bottom:15px;
+#first-row {
+	border-bottom: 1px solid #eeeeee;
+	margin-bottom: 15px;
 }
+
 .col-left {
 	max-width: 300px;
 	padding-left: 35px;
@@ -139,13 +139,12 @@ a.clear_input:hover {
 /*************************************************************/
 /*                         Status bar                        */
 /*************************************************************/
-
 #search-status-bar {
 	margin-bottom: -6px;
 	padding-bottom: -6px;
-	margin-bottom:10px;
-	width:100%;
-	padding:0;
+	margin-bottom: 10px;
+	width: 100%;
+	padding: 0;
 }
 
 #search-status-bar .status-text {
@@ -153,16 +152,14 @@ a.clear_input:hover {
 	font-size: 12px;
 }
 
-#status{
+#status {
 	padding: 15px 20px;
 	color: #777;
 	background-color: #fafafa;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #e5e5e5;
-	margin-bottom:20px;
+	margin-bottom: 20px;
 }
-
-
 
 /*************************************************************/
 /*                  Left column / facets                     */
@@ -190,10 +187,11 @@ a.clear_input:hover {
 	font-size: 12px;
 	vertical-align: middle;
 	cursor: pointer;
-	font-weight:normal;
+	font-weight: normal;
 }
 
-#main-col-left input[type=checkbox].css-checkbox:checked+label.css-label {
+#main-col-left input[type=checkbox].css-checkbox:checked+label.css-label
+	{
 	background-position: 0 -15px;
 }
 
@@ -204,8 +202,6 @@ a.clear_input:hover {
 /** attribute and style of elements when in the col-left **/
 
 /** SB stylesheet **/
-
-
 #main-col-left .panel .panel-body {
 	padding: 0;
 }
@@ -213,12 +209,11 @@ a.clear_input:hover {
 #main-col-left .list-group .list-group-item {
 	border-left: none;
 	border-right: none;
-	padding:6px 10px;
+	padding: 6px 10px;
 }
 
 #main-col-left .list-group {
 	margin-bottom: 0;
-	
 }
 
 .facet-list {
@@ -366,9 +361,7 @@ body #main-content {
 	padding-top: 60px;
 }
 
-
 /** Search header **/
-
 
 /** Tags **/
 #tag-bar {

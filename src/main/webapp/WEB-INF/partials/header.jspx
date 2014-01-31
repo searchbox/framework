@@ -17,7 +17,8 @@
 					class="icon-bar"></span>
 			</button>
 		</div>
-		<nav class="collapse navbar-collapse bs-navbar-collapse left" role="navigation">
+		<nav class="collapse navbar-collapse bs-navbar-collapse left"
+			role="navigation">
 			<ul class="nav navbar-nav" id="preset-bar">
 				<li><a href="../getting-started">Preset 1</a></li>
 				<li class="active"><a href="../css">Preset 2</a></li>

@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_com_searchbox_domain_app_facet_RangeFacetDefinition" object="${rangefacetdefinition}" path="/admin/rangefacetdefinitions" z="Gj6mdt7zH4E9kdgxgQORjaeAS/s=">
-        <field:display field="label" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_label" object="${rangefacetdefinition}" z="MVfnrG5+p1YX1EJihPKJ8stzjc8="/>
-        <field:display field="position" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_position" object="${rangefacetdefinition}" z="h7YR6KNU2dofRDto3clrZQmjYuw="/>
-        <field:display field="field" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_field" object="${rangefacetdefinition}" z="ZrMxFTDmW7r9LeeE/gRIVbmUn5s="/>
-        <field:display field="min" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_min" object="${rangefacetdefinition}" z="ANQdSDDn3Y+BMPlW5vFQaOIhvuw="/>
-        <field:display field="max" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_max" object="${rangefacetdefinition}" z="4k3bSQWgb5Up1WL71rcHxCHMxO8="/>
-        <field:display field="preset" id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_preset" object="${rangefacetdefinition}" z="cGIyrNzSACDnXlW6ccLrs6cmhDs="/>
-    </page:show>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<page:show id="ps_com_searchbox_domain_app_facet_RangeFacetDefinition"
+		object="${rangefacetdefinition}" path="/admin/rangefacetdefinitions"
+		z="Gj6mdt7zH4E9kdgxgQORjaeAS/s=">
+		<field:display field="label"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_label"
+			object="${rangefacetdefinition}" z="MVfnrG5+p1YX1EJihPKJ8stzjc8=" />
+		<field:display field="position"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_position"
+			object="${rangefacetdefinition}" z="h7YR6KNU2dofRDto3clrZQmjYuw=" />
+		<field:display field="field"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_field"
+			object="${rangefacetdefinition}" z="ZrMxFTDmW7r9LeeE/gRIVbmUn5s=" />
+		<field:display field="min"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_min"
+			object="${rangefacetdefinition}" z="ANQdSDDn3Y+BMPlW5vFQaOIhvuw=" />
+		<field:display field="max"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_max"
+			object="${rangefacetdefinition}" z="4k3bSQWgb5Up1WL71rcHxCHMxO8=" />
+		<field:display field="preset"
+			id="s_com_searchbox_domain_app_facet_RangeFacetDefinition_preset"
+			object="${rangefacetdefinition}" z="cGIyrNzSACDnXlW6ccLrs6cmhDs=" />
+	</page:show>
 </div>
