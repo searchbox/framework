@@ -88,19 +88,19 @@ public class HomeController {
 		}
 		
 		Facet facet = new FieldFacet("Keyword", "keyword");
-		facet.addFacetValue(new FacetValue<String>("Population","value1",29862));
-		facet.addFacetValue(new FacetValue<String>("Demographic Factors","value2",28833));
-		facet.addFacetValue(new FacetValue<String>("Developing Countries","value3",27923));
-		facet.addFacetValue(new FacetValue<String>("Research Methodology","value3",25246));
-		facet.addFacetValue(new FacetValue<String>("Family Planning","value3",23287));
-		facet.addFacetValue(new FacetValue<String>("Population Dynamics","value3",20919));
+		facet.addFacetValue(new FacetValue<String>("Population",29862));
+		facet.addFacetValue(new FacetValue<String>("Demographic Factors",28833));
+		facet.addFacetValue(new FacetValue<String>("Developing Countries",27923));
+		facet.addFacetValue(new FacetValue<String>("Research Methodology",25246));
+		facet.addFacetValue(new FacetValue<String>("Family Planning",23287));
+		facet.addFacetValue(new FacetValue<String>("Population Dynamics",20919));
 		
 		Facet facet2 = new FieldFacet("Institution", "institution");
-		facet2.addFacetValue(new FacetValue<String>("Department of Biology, MIT","value1",647));
-		facet2.addFacetValue(new FacetValue<String>("Department of Molecular and Cell Biology, University of California, Berkeley.","value3",609));
-		facet2.addFacetValue(new FacetValue<String>("Division of Biology, California Institute of Technology, Pasadena.","value3",558));
-		facet2.addFacetValue(new FacetValue<String>("European Molecular Biology Laboratory, Heidelberg, Germany.","value3",543));
-		facet2.addFacetValue(new FacetValue<String>("ARC","value3",525));
+		facet2.addFacetValue(new FacetValue<String>("Department of Biology, MIT",647));
+		facet2.addFacetValue(new FacetValue<String>("Department of Molecular and Cell Biology, University of California, Berkeley.",609));
+		facet2.addFacetValue(new FacetValue<String>("Division of Biology, California Institute of Technology, Pasadena.",558));
+		facet2.addFacetValue(new FacetValue<String>("European Molecular Biology Laboratory, Heidelberg, Germany.",543));
+		facet2.addFacetValue(new FacetValue<String>("ARC",525));
 		
 		result.addFacet(facet);
 		result.addFacet(facet2);

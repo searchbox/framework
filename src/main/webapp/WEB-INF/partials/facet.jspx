@@ -15,11 +15,11 @@
 			</div>
 			<div class="panel-body">
 				<ul class="list-group facet-list">
-					<c:forEach items="${facet.facetValues}" var="value" varStatus="i" >
-						<li class="list-group-item"><span class="badge">${value.count}</span> <input
+					<c:forEach items="${facet.facetValues}" var="facetValue" varStatus="i" >
+						<li class="list-group-item"><span class="badge">${facetValue.count}</span> <input
 							id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"
-							checked="checked" /> <label title="${value.label}" for="${facet.fieldName}${i.getCount()}"
-							class="css-label">${value.label}</label>
+							checked="checked" /> <label title="${facetValue.value}" for="${facet.fieldName}${i.getCount()}"
+							class="css-label">${facetValue.value}</label>
 						</li>
 					</c:forEach>
 				</ul>
