@@ -9,24 +9,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 public class FacetValue<K extends Serializable> {
 
-	String label;
 	
 	K value;
 	
 	Integer count;
 	
-	public FacetValue(String label, K value, Integer count){
-		this.label = label;
+	public FacetValue(K value, Integer count){
 		this.value = value;
 		this.count = count;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
 	}
 
 	public K getValue() {
