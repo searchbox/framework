@@ -1,5 +1,17 @@
 @CHARSET "UTF-8";
 
+
+/** Theme related **/
+.btn-black, .btn-black:hover {
+	color: #fff;
+	background-color: black;
+	border-color: gray;
+}
+
+.btn-black:hover {
+	font-weight:bold;
+}
+
 /** General style - layout related **/
 #first-row {
 	border-bottom: 1px solid #eeeeee;
@@ -90,6 +102,17 @@ input:focus,textarea:focus {
 #search-bar #logo-wrapper {
 	width: 270px;
 }
+
+#search-bar #search-field{
+	height: 42px;
+	min-height: 42px;
+	font-size: 20px;
+	margin-right: 8px;
+	width: 60%;
+	border-radius:3px;
+	padding-right: 35px;
+	border:1px solid rgb(204, 204, 204);
+}
 /*
 #search-bar #logo #logo-text {
 	float: right;
@@ -119,16 +142,6 @@ input:focus,textarea:focus {
 	margin-bottom: 14px;
 	color: #555;
 	line-height: 1.4em;
-}
-
-#search-bar .search-query {
-	border-radius: 5px;
-	height: 42px;
-	min-height: 42px;
-	font-size: 20px;
-	margin-right: 8px;
-	width: 60%;
-	padding-right: 35px;
 }
 
 a.clear_input:hover {
