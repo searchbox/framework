@@ -192,6 +192,11 @@ a.clear_input:hover {
 	vertical-align: middle;
 	cursor: pointer;
 	font-weight: normal;
+	
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 75%;
 }
 
 #main-col-left input[type=checkbox].css-checkbox:checked+label.css-label

@@ -18,7 +18,7 @@
 					<c:forEach items="${facet.facetValues}" var="value" varStatus="i" >
 						<li class="list-group-item"><span class="badge">${value.count}</span> <input
 							id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"
-							checked="checked" /> <label for="${facet.fieldName}${i.getCount()}"
+							checked="checked" /> <label title="${value.label}" for="${facet.fieldName}${i.getCount()}"
 							class="css-label">${value.label}</label>
 						</li>
 					</c:forEach>
