@@ -84,8 +84,9 @@ input:focus,textarea:focus {
 	border-radius: 0;
 	padding: 40px 30px 30px 40px;
 	border-bottom: 1px solid #BCBCBC;
-	background: url("/searchbox/img/texture-white.png") repeat scroll 0 0
-		rgba(0, 0, 0, 0);
+	/*background: url("/searchbox/img/texture-white.png") repeat scroll 0 0
+		rgba(0, 0, 0, 0);*/
+	background-color:#f5f5f5;
 }
 
 #search-bar #logo {
