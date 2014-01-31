@@ -8,109 +8,24 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
-
-	
 	<c:forEach items="${result.facets }" var="facet">
-	
-
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">${facet.label}</h3>
-		</div>
-		<div class="panel-body">
-			<ul class="list-group facet-list">
-				<c:forEach items="${facet.facetValues}" var="value" varStatus="i" >
-			
-				
-				<li class="list-group-item"><span class="badge">${value.count}</span> <input
-					id="demo_box_${i.getCount()}" class="css-checkbox" type="checkbox"
-					checked="checked" /> <label for="demo_box_${i.getCount()}" name="demo_lbl_${i.getCount()}"
-					class="css-label">${value.label}</label></li>
-				</c:forEach>
-			</ul>
-		</div>
-	</div>
-	</c:forEach>
-
-	<c:forEach begin="0" end="1">
-		<div class="bs-sidebar well">
-
-
-			<ul id="keyword" class="nav bs-sidenav facet-list show-more-enabled">
-				<li class="nav-header">Keyword</li>
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Population" id="population" /> <label title="Population"
-					for="population" class=""> <span>Population</span><span
-						class="count">(29862)</span></label></li>
-
-
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Demographic Factors" id="demographic_factors" /> <label
-					title="Demographic Factors" for="demographic_factors" class="">
-						<span>Demographic Factors</span> <span class="count">(28833)</span>
-				</label></li>
-
-
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Developing Countries" id="feveloping_countries" /> <label
-					title="Developing Countries" for="feveloping_countries" class="">
-						<span>Developing Countries</span> <span class="count">(27923)</span>
-				</label></li>
-
-
-
-				<li style="display: block" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Research Methodology" id="research_methodology" /> <label
-					title="Research Methodology" for="research_methodology" class="">
-						<span>Research Methodology</span> <span class="count">(25246)</span>
-				</label></li>
-
-
-
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Family Planning" id="family_panning" /> <label
-					title="Family Planning" for="family_panning" class=""> <span>Family
-							Planning</span> <span class="count">(23387)</span>
-				</label></li>
-
-
-
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Population Dynamics" id="population_dynamics" /> <label
-					title="Population Dynamics" for="population_dynamics" class="">
-						<span>Population Dynamics</span> <span class="count">(20919)</span>
-				</label></li>
-
-
-
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Developed Countries" id="developed_countries" /> <label
-					title="Developed Countries" for="developed_countries" class="">
-						<span>Developed Countries</span> <span class="count">(20193)</span>
-				</label></li>
-
-
-
-				<li style="display: none;" class=""><input type="hidden"
-					name="_ff[keyword]" /><input type="checkbox" name="ff[keyword]"
-					value="Economic Factors" id="economic_factors" /> <label
-					title="Economic Factors" for="economic_factors" class=""> <span>Economic
-							Factors</span> <span class="count">(17232)</span>
-				</label></li>
-
-			</ul>
-			<a href="#" class="show-more">Show More...</a>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">${facet.label}</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="list-group facet-list">
+					<c:forEach items="${facet.facetValues}" var="value" varStatus="i" >
+						<li class="list-group-item"><span class="badge">${value.count}</span> <input
+							id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"
+							checked="checked" /> <label for="${facet.fieldName}${i.getCount()}"
+							class="css-label">${value.label}</label>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
 		</div>
 	</c:forEach>
+
 	<input type="hidden" name="q" value="" />
 </form>

@@ -166,6 +166,10 @@ a.clear_input:hover {
 /*************************************************************/
 
 /*******************     CSS Checkbox      *******************/
+#main-col-left h3.panel-title{
+	text-transform:uppercase;
+}
+
 #main-col-left input[type=checkbox].css-checkbox {
 	position: absolute;
 	overflow: hidden;

@@ -94,8 +94,16 @@ public class HomeController {
 		facet.addFacetValue(new FacetValue<String>("Research Methodology","value3",25246));
 		facet.addFacetValue(new FacetValue<String>("Family Planning","value3",23287));
 		facet.addFacetValue(new FacetValue<String>("Population Dynamics","value3",20919));
-		result.addFacet(facet);
 		
+		Facet facet2 = new FieldFacet("Institution", "institution");
+		facet2.addFacetValue(new FacetValue<String>("Department of Biology, MIT","value1",647));
+		facet2.addFacetValue(new FacetValue<String>("Department of Molecular and Cell Biology, University of California, Berkeley.","value3",609));
+		facet2.addFacetValue(new FacetValue<String>("Division of Biology, California Institute of Technology, Pasadena.","value3",558));
+		facet2.addFacetValue(new FacetValue<String>("European Molecular Biology Laboratory, Heidelberg, Germany.","value3",543));
+		facet2.addFacetValue(new FacetValue<String>("ARC","value3",525));
+		
+		result.addFacet(facet);
+		result.addFacet(facet2);
 		
 		model.addObject("result", result);
 		return model;
