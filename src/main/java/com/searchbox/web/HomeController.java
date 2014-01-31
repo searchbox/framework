@@ -87,10 +87,13 @@ public class HomeController {
 			result.addHit(hit);
 		}
 		
-		Facet facet = new FieldFacet("the label", "my field");
-		facet.addFacetValue(new FacetValue<String>("label1","value1",1));
-		facet.addFacetValue(new FacetValue<String>("label2","value2",2));
-		facet.addFacetValue(new FacetValue<String>("label3","value3",3));
+		Facet facet = new FieldFacet("Keyword", "keyword");
+		facet.addFacetValue(new FacetValue<String>("Population","value1",29862));
+		facet.addFacetValue(new FacetValue<String>("Demographic Factors","value2",28833));
+		facet.addFacetValue(new FacetValue<String>("Developing Countries","value3",27923));
+		facet.addFacetValue(new FacetValue<String>("Research Methodology","value3",25246));
+		facet.addFacetValue(new FacetValue<String>("Family Planning","value3",23287));
+		facet.addFacetValue(new FacetValue<String>("Population Dynamics","value3",20919));
 		result.addFacet(facet);
 		
 		
