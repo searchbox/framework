@@ -9,43 +9,28 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 
-
+	
+	<c:forEach items="${result.facets }" var="facet">
+	
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title">Keyword</h3>
+			<h3 class="panel-title">${facet.label }</h3>
 		</div>
 		<div class="panel-body">
 			<ul class="list-group facet-list">
-				<li class="list-group-item"><span class="badge">29862</span> <input
+				<c:forEach items="${facet.facetValues }" var="value">
+			
+				
+				<li class="list-group-item"><span class="badge">${value.count }</span> <input
 					id="demo_box_2" class="css-checkbox" type="checkbox"
 					checked="checked" /> <label for="demo_box_2" name="demo_lbl_2"
-					class="css-label">Population</label></li>
-				<li class="list-group-item"><span class="badge">28833</span> <input
-					id="demo_box_3" class="css-checkbox" type="checkbox"
-					checked="checked" /> <label for="demo_box_3" name="demo_lbl_3"
-					class="css-label">Demographic Factors</label></li>
-				<li class="list-group-item"><span class="badge">27923</span> <input
-					id="demo_box_4" class="css-checkbox" type="checkbox" /> <label
-					for="demo_box_4" name="demo_lbl_4" class="css-label">Developing
-						Countries</label></li>
-				<li class="list-group-item"><span class="badge">25246</span> <input
-					id="demo_box_5" class="css-checkbox" type="checkbox" /> <label
-					for="demo_box_5" name="demo_lbl_5" class="css-label">Research
-						Methodology</label></li>
-				<li class="list-group-item"><span class="badge">23387</span> <input
-					id="demo_box_6" class="css-checkbox" type="checkbox" /> <label
-					for="demo_box_6" name="demo_lbl_6" class="css-label">Family
-						Planning</label></li>
-				<li class="list-group-item"><span
-					class="badge">20919</span> <input id="demo_box_8"
-					class="css-checkbox" type="checkbox" /> <label for="demo_box_8"
-					name="demo_lbl_8" class="css-label">Population Dynamics</label></li>
-				<!--  <li class="list-group-item"><a href="#" class="show-more">Show
-						more...</a></li>-->
+					class="css-label">${value.label }</label></li>
+				</c:forEach>
 			</ul>
 		</div>
 	</div>
+	</c:forEach>
 
 	<c:forEach begin="0" end="1">
 		<div class="bs-sidebar well">

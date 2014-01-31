@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.searchbox.domain.search.Facet;
 import com.searchbox.domain.search.Hit;
 import com.searchbox.domain.search.SearchResult;
+import com.searchbox.domain.search.facet.FacetValue;
+import com.searchbox.domain.search.facet.FieldFacet;
 
 @Controller
 @RequestMapping("/")
@@ -83,6 +86,13 @@ public class HomeController {
 			hit.setScore(new Float(Math.random()+(10-i)));
 			result.addHit(hit);
 		}
+		
+		Facet facet = new FieldFacet("the label", "my field");
+		facet.addFacetValue(new FacetValue<String>("label1","value1",1));
+		facet.addFacetValue(new FacetValue<String>("label2","value2",2));
+		facet.addFacetValue(new FacetValue<String>("label3","value3",3));
+		result.addFacet(facet);
+		
 		
 		model.addObject("result", result);
 		return model;

@@ -19,5 +19,10 @@ public class SearchResult {
 	public void addHit(Hit hit) {
 		this.hits.add(hit);
 	}
+
+	public void addFacet(Facet facet) {
+		facet.setPosition(this.facets.size()+1);
+		this.facets.add(facet);
+	}
 	
 }
