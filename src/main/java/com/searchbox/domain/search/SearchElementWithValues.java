@@ -1,9 +1,16 @@
 package com.searchbox.domain.search;
 
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.searchbox.ref.Order;
+import com.searchbox.ref.Sort;
+
 public class SearchElementWithValues<K extends ValueElement<?>> extends SearchElement {
+	
+	protected Order order;
+	protected Sort sort;
 	
 	SortedSet<K> values;
 
@@ -29,5 +36,21 @@ public class SearchElementWithValues<K extends ValueElement<?>> extends SearchEl
 	
 	public SortedSet<K> getValues(){
 		return this.values;
+	}
+	
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Sort getSort() {
+		return sort;
+	}
+
+	public void setSort(Sort sort) {
+		this.sort = sort;
 	}
 }

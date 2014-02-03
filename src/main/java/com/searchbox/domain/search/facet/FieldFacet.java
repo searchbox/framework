@@ -10,6 +10,9 @@ import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalValueElement;
 import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchElementWithValues;
+import com.searchbox.domain.search.ValueElement;
+import com.searchbox.ref.Order;
+import com.searchbox.ref.Sort;
 
 @RooJavaBean
 @RooToString
@@ -32,7 +35,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		return this;
 	}
 	
-	public class Value extends ConditionalValueElement<String> {
+	public class Value extends ConditionalValueElement<String> implements Comparable<Value>{
 
 		private Integer count;
 		private Boolean selected;
@@ -67,6 +70,17 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		@Override
 		public String geParamValue() {
 			return fieldName+"["+this.value+"]";
+		}
+
+		@Override
+		public int compareTo(Value o) {
+			int diff = 0;
+			if(order.equals(Order.KEY)){
+				diff = this.getLabel().compareTo(o.getLabel());
+			} else {
+				diff = this.getCount().compareTo(o.getCount());
+			}
+			return diff*((sort.equals(Sort.ASC))?1:-1);
 		}
 	}
 }

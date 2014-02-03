@@ -30,6 +30,8 @@ import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
 import com.searchbox.domain.search.facet.FieldFacet.Value;
+import com.searchbox.ref.Order;
+import com.searchbox.ref.Sort;
 
 @Controller
 @RequestMapping("/")
@@ -84,14 +86,6 @@ public class HomeController {
 	public ModelAndView search(HttpServletRequest request) {
 				
 		 Map<String, String[]> parameters = request.getParameterMap();
-
-		    for(String key : parameters.keySet()) {
-		        System.out.println(key);
-		        String[] vals = parameters.get(key);
-		        for(String val : vals)
-		            System.out.println(" -> " + val);
-		    }
-
 		
 
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
@@ -101,8 +95,13 @@ public class HomeController {
 				Class searchCondition = Class.forName(beanDefinition.getBeanClassName());
 	        	String prefix = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).prefix();
 	        	Class condition = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).condition();
-	        	logger.info("Found " + searchCondition.getSimpleName() + " with prefix: " + 
-	        			prefix + " and condition class: " + condition.getSimpleName());
+	        	
+	        	if(parameters.containsKey(prefix)){
+	        		for(String param:parameters.get(prefix)){
+	        			logger.info("got " + prefix + " in param to generate " + condition.getSimpleName());
+	        		}
+	        	}
+	        	
 			} catch (ClassNotFoundException e) {
 				logger.error("Could not find class for: " + beanDefinition.getBeanClassName());
 				e.printStackTrace();
@@ -135,19 +134,24 @@ public class HomeController {
 		}
 
 		FieldFacet facet = new FieldFacet("Keyword", "keyword");
+		facet.setOrder(Order.VALUE);
+		facet.setSort(Sort.DESC);
 		facet.addValueElement(facet.new Value("Population", "Population", 29862).setSelected(true));
-		facet.addValueElement("Demographic Factors", 28833);
+		facet.addValueElement("Demographic Factors", 40833);
 		facet.addValueElement("Developing Countries",27923);
 		facet.addValueElement("Research Methodology",25246);
 		facet.addValueElement("Family Planning", 23287);
 		facet.addValueElement("Population Dynamics", 20919);
 
 		FieldFacet facet2 = new FieldFacet("Institution", "institution");
+		facet2.setOrder(Order.KEY);
+		facet2.setSort(Sort.ASC);
 		facet2.addValueElement("Department of Biology, MIT", 647);
 		facet2.addValueElement("Department of Molecular and Cell Biology, University of California, Berkeley.",609);
 		facet2.addValueElement("Division of Biology, California Institute of Technology, Pasadena.",558);
 		facet2.addValueElement("European Molecular Biology Laboratory, Heidelberg, Germany.",543);
 		facet2.addValueElement("ARC", 525);
+		
 		result.addElement(facet);
 		result.addElement(facet2);
 
