@@ -1,10 +1,10 @@
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
 <jsp:output omit-xml-declaration="yes" />
 <jsp:output doctype-root-element="HTML"
-	doctype-system="about:legacy-compat" />
+  doctype-system="about:legacy-compat" />
 
 <jsp:directive.page contentType="text/html;charset=UTF-8" />
 <jsp:directive.page pageEncoding="UTF-8" />
@@ -19,24 +19,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-	<div id="wrap">
-		<jsp:include page="/WEB-INF/partials/header.jspx" />
-		<div id="main-content" role="main">
+  <div id="wrap">
+    <jsp:include page="/WEB-INF/partials/header.jspx" />
+    <div id="main-content" role="main">
 
-			<div class="row" id="column-top">
-				<jsp:include page="/WEB-INF/partials/searchbar.jspx" />
-			</div>
+      <div class="row" id="column-top">
+        <jsp:include page="/WEB-INF/partials/searchbar.jspx" />
+      </div>
 
-			<div class="row container" id="main-search-content">
-				<jsp:include page="/WEB-INF/views/${view}.jspx" />
-				<p>${exception}</p>
-			</div>
-		</div>
-		<div id="push">
-			<!-- push -->
-		</div>
-	</div>
-	<jsp:include page="/WEB-INF/partials/footer.jspx" />
+      <div class="row" id="main-search-content">
+        <jsp:include page="/WEB-INF/views/${view}.jspx" />
+        <p>${exception}</p>
+      </div>
+    </div>
+    <div id="push">
+      <!-- push -->
+    </div>
+  </div>
+  <jsp:include page="/WEB-INF/partials/footer.jspx" />
 
 
 </body>
