@@ -4,24 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 
 public abstract class SearchCondition {
 	
-	private Float weight;
+	private Float boost;
 	
 	private BooleanClause clause;
 	
 	private List<SearchCondition> innerConditions = new ArrayList<SearchCondition>();
 	
-	abstract Query getQuery();
-
-	public Float getWeight() {
-		return weight;
+	protected abstract Query getConditionalQuery();
+	
+	public Query getQuery(){
+		/** for later
+		BooleanQuery q = new BooleanQuery();
+		for(SearchCondition ic:this.innerConditions){
+			q.add(ic.getQuery(),ic.getClause().getOccur());
+		}
+		*/
+		Query q = this.getConditionalQuery();
+		q.setBoost(this.getBoost());
+		return q;
 	}
 
-	public void setWeight(Float weight) {
-		this.weight = weight;
+	public Float getBoost() {
+		return boost;
+	}
+
+	public void setBoost(Float boost) {
+		this.boost = boost;
 	}
 
 	public BooleanClause getClause() {

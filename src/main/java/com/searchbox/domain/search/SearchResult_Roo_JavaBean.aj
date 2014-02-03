@@ -3,8 +3,8 @@
 
 package com.searchbox.domain.search;
 
-import com.searchbox.domain.search.Facet;
 import com.searchbox.domain.search.Hit;
+import com.searchbox.domain.search.SearchElement;
 import com.searchbox.domain.search.SearchResult;
 import java.util.List;
 import java.util.SortedSet;
@@ -27,12 +27,12 @@ privileged aspect SearchResult_Roo_JavaBean {
         this.hits = hits;
     }
     
-    public SortedSet<Facet> SearchResult.getFacets() {
-        return this.facets;
+    public SortedSet<SearchElement> SearchResult.getElements() {
+        return this.elements;
     }
     
-    public void SearchResult.setFacets(SortedSet<Facet> facets) {
-        this.facets = facets;
+    public void SearchResult.setElements(SortedSet<SearchElement> elements) {
+        this.elements = elements;
     }
     
 }

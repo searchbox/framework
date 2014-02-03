@@ -11,8 +11,4 @@ privileged aspect FieldFacet_Roo_JavaBean {
         return this.fieldName;
     }
     
-    public void FieldFacet.setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-    
 }
