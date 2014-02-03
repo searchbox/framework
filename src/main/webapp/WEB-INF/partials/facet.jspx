@@ -11,7 +11,7 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
-	<c:forEach items="${result.facets }" var="facet">
+	<c:forEach items="${result.facets}" var="facet">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">${facet.label}</h3>
@@ -19,11 +19,11 @@
 			<div class="panel-body">
 				<ul class="list-group facet-list">
 					<c:forEach items="${facet.facetValues}" var="facetValue" varStatus="i" >
-						<li class="list-group-item"><span class="badge">${facetValue.count}</span> 
-						<form:checkbox path="selected" />	
-							<label title="${facetValue.value}" for="${facet.fieldName}${i.getCount()}"
-							class="css-label">YYY${facetValue.value}</label>
-						</li>
+                       <li class="list-group-item"><span class="badge">${facetValue.count}</span> <input
+							id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"
+							checked="checked" /> <label title="${facetValue.value}" for="${facet.fieldName}${i.getCount()}"
+							class="css-label">${facetValue.value}</label>
+                      </li>
 					</c:forEach>
 				</ul>
 			</div>
