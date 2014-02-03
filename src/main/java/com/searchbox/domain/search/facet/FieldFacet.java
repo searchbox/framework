@@ -62,6 +62,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 
 class FieldFacetValueCondition extends SearchCondition {
 
+	public static final String PARAMETER_PREFIX = "ff"; 
 	String fieldName;
 	String value;
 
@@ -73,5 +74,10 @@ class FieldFacetValueCondition extends SearchCondition {
 	@Override
 	protected Query getConditionalQuery() {
 		return new TermQuery(new Term(fieldName, value));
+	}
+
+	@Override
+	public String getParameterPrefix() {
+		return PARAMETER_PREFIX;
 	}
 }

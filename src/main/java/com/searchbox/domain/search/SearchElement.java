@@ -40,6 +40,7 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	}
 	
 	public URL getView(){
+		//TODO
 		System.out.println("XOXOXOXOXOX: " + this.getClass());
 		System.out.println("XOXOXOXOXOX: " + this.getClass().getResource("view.jspx"));
 		return this.getClass().getResource("view.jspx");

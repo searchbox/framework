@@ -17,6 +17,8 @@ public abstract class SearchCondition {
 	
 	protected abstract Query getConditionalQuery();
 	
+	public abstract String getParameterPrefix();
+	
 	public Query getQuery(){
 		/** for later
 		BooleanQuery q = new BooleanQuery();
