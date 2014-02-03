@@ -2,6 +2,8 @@ package com.searchbox.domain.search;
 
 import java.net.URL;
 
+import com.searchbox.ann.search.SearchComponent;
+
 public abstract class SearchElement implements Comparable<SearchElement>{
 
 	String label;
@@ -37,6 +39,15 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	public int compareTo(SearchElement searchElement) {
 		return this.getPosition().compareTo(searchElement.getPosition());
 		
+	}
+	
+	public String getParamPrefix(){
+		SearchComponent a = this.getClass().getAnnotation(SearchComponent.class);
+		if(a==null){
+			return "";
+		} else {
+			return a.prefix();
+		}
 	}
 	
 	public URL getView(){

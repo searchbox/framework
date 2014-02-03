@@ -19,14 +19,14 @@
                     <c:when test="${facetValue.getSelected()}">
                       <input id="${element.fieldName}${i.getCount()}" 
                       class="css-checkbox" type="checkbox" 
-                      name="${facetValue.searchCondition.parameterPrefix}"
+                      name="${element.getParamPrefix()}"
                       value="${element.fieldName}[${facetValue.value}]"
                       checked="checked" onclick="javascript:submit()"/>
                     </c:when>
                     <c:otherwise>
                       <input id="${element.fieldName}${i.getCount()}" 
                       class="css-checkbox" type="checkbox" 
-                      name="${facetValue.searchCondition.parameterPrefix}"
+                      name="${element.getParamPrefix()}"
                       value="${element.fieldName}[${facetValue.value}]"
                       onclick="javascript:submit()"/>
                     </c:otherwise>
