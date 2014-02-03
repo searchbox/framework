@@ -10,4 +10,8 @@ privileged aspect FieldFacet_Roo_Jpa_Entity {
     
     declare @type: FieldFacet: @Entity;
     
+    public FieldFacet.new() {
+        super();
+    }
+
 }

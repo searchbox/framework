@@ -4,6 +4,8 @@
 package com.searchbox.domain.search;
 
 import com.searchbox.domain.search.Facet;
+import com.searchbox.domain.search.facet.FacetValue;
+import java.util.List;
 
 privileged aspect Facet_Roo_JavaBean {
     
@@ -21,6 +23,10 @@ privileged aspect Facet_Roo_JavaBean {
     
     public void Facet.setPosition(Integer position) {
         this.position = position;
+    }
+    
+    public void Facet.setFacetValues(List<FacetValue<K>> facetValues) {
+        this.facetValues = facetValues;
     }
     
 }

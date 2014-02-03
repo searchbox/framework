@@ -12,17 +12,21 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 public class SearchResult {
 
+	public SearchResult(){
+		
+	}
+	
 	List<String> fields = new ArrayList<String>();
 	SortedSet<Hit> hits = new TreeSet<Hit>();
 	SortedSet<Facet> facets = new TreeSet<Facet>();
-	
+
 	public void addHit(Hit hit) {
 		this.hits.add(hit);
 	}
 
 	public void addFacet(Facet facet) {
-		facet.setPosition(this.facets.size()+1);
+		facet.setPosition(this.facets.size() + 1);
 		this.facets.add(facet);
 	}
-	
+
 }

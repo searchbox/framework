@@ -1,4 +1,5 @@
 package com.searchbox.domain.app;
+
 import javax.persistence.ManyToOne;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -12,23 +13,23 @@ import com.searchbox.domain.dm.Field;
 @RooJpaActiveRecord
 public class FieldDefinition {
 
-    /**
+	/**
      */
-    private String label;
+	private String label;
 
-    private Double weight;
-    
-    private boolean searchable;
-    
-    private boolean sortable;
+	private Double weight;
 
-    /**
+	private boolean searchable;
+
+	private boolean sortable;
+
+	/**
      */
-    @ManyToOne
-    private Field field;
-    
-    @ManyToOne
-    private Preset preset;
-    /**
+	@ManyToOne
+	private Field field;
+
+	@ManyToOne
+	private Preset preset;
+	/**
      */
- }
+}

@@ -1,9 +1,12 @@
+
+
 <form id="filterForm" method="get" action="/all-publications/search"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:jsp="http://java.sun.com/JSP/Page">
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:form="http://www.springframework.org/tags/form">
 
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
@@ -16,10 +19,10 @@
 			<div class="panel-body">
 				<ul class="list-group facet-list">
 					<c:forEach items="${facet.facetValues}" var="facetValue" varStatus="i" >
-						<li class="list-group-item"><span class="badge">${facetValue.count}</span> <input
-							id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"
-							checked="checked" /> <label title="${facetValue.value}" for="${facet.fieldName}${i.getCount()}"
-							class="css-label">${facetValue.value}</label>
+						<li class="list-group-item"><span class="badge">${facetValue.count}</span> 
+						<form:checkbox path="selected" />	
+							<label title="${facetValue.value}" for="${facet.fieldName}${i.getCount()}"
+							class="css-label">YYY${facetValue.value}</label>
 						</li>
 					</c:forEach>
 				</ul>
