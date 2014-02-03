@@ -18,8 +18,8 @@
 }
 
 .col-left {
-  max-width: 300px;
-  padding-left: 35px;
+  /*max-width: 300px;*/
+  min-width:280px;
 }
 
 /*************************************************************/
@@ -156,8 +156,9 @@ a.clear_input:hover {
   margin-bottom: -6px;
   padding-bottom: -6px;
   margin-bottom: 10px;
-  width: 100%;
-  padding: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  float:left;
 }
 
 #search-status-bar .status-text {

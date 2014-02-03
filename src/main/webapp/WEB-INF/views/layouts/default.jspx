@@ -37,7 +37,5 @@
     </div>
   </div>
   <jsp:include page="/WEB-INF/partials/footer.jspx" />
-
-
 </body>
 </html>

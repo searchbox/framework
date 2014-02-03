@@ -12,7 +12,7 @@
 		</c:if>
 	</div>
 
-	<div class="row">
+	<div class="row container">
 
 		<div class="col-md-3 col-left" id="main-col-left">
 			<jsp:include page="/WEB-INF/partials/facet.jspx" />
@@ -53,10 +53,5 @@
 			</script>
 		</c:if>
 	</div>
-  
-    <div class="row">
-        <div class="col-md-8" style="border:1px solid red">.col-md-8<input type="text" style="width:100%"/></div>
-        <div class="col-md-4" style="border:1px solid red">.col-md-4<input type="text" style="width:100%"/></div>
-      </div>
       
 </div>

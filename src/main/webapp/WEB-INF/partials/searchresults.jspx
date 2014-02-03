@@ -15,5 +15,10 @@
 			<p>${hit.fields['description']}</p>
 			<i>${hit.score}</i>
 		</c:if>
+    
+    <div class="label label-default" title="Kafkafi N" data-filter="author:Kafkafi N">
+      Author: <span class="field_value value_Laboratory value_attributes full">Kafkafi N</span>
+    </div>
+    
 	</c:forEach>
 </div>

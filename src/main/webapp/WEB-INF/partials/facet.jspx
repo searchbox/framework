@@ -36,7 +36,7 @@
                       <input id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox" checked="checked"/>
                     </c:when>
                     <c:otherwise>
-                      <input id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"/>
+                      <input id="${facet.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox" />
                     </c:otherwise>
                   </c:choose>
                   <label title="${facetValue.value}"
