@@ -4,15 +4,16 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalValueElement;
 import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchElementWithValues;
 
 @RooJavaBean
 @RooToString
+@SearchComponent(prefix="ff", condition=FieldFacetValueCondition.class)
 public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 
 	private final String fieldName;
@@ -51,6 +52,11 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		
 		public Boolean getSelected(){
 			return this.selected;
+		}
+		
+		public Value setSelected(Boolean selected){
+			this.selected = selected;
+			return this;
 		}
 
 		@Override

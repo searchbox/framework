@@ -3,22 +3,38 @@ package com.searchbox.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.PropertyValue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.searchbox.ann.search.SearchComponent;
+import com.searchbox.domain.search.GenerateSearchCondition;
 import com.searchbox.domain.search.Hit;
+import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
+import com.searchbox.domain.search.facet.FieldFacet.Value;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
+	
+	@Autowired
+	WebApplicationContext applicationContext;
 
 	private static Logger logger = LoggerFactory
 			.getLogger(HomeController.class);
@@ -64,6 +80,31 @@ public class HomeController {
 	
 	@RequestMapping("search")
 	public ModelAndView search() {
+				
+		logger.info("This is my AP: " + applicationContext);
+
+		
+	
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
+        for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.searchbox.domain.search")){
+        	try {
+				Class searchCondition = Class.forName(beanDefinition.getBeanClassName());
+	        	String prefix = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).prefix();
+	        	Class condition = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).condition();
+	        	logger.info("Found " + searchCondition.getSimpleName() + " with prefix: " + 
+	        			prefix + " and condition class: " + condition.getSimpleName());
+			} catch (ClassNotFoundException e) {
+				logger.error("Could not find class for: " + beanDefinition.getBeanClassName());
+				e.printStackTrace();
+			}
+        	
+            
+        }
+		
+		
+		
+		
 		ModelAndView model = new ModelAndView("search/index");
 
 		model.addObject("title", "Search results");
@@ -85,7 +126,7 @@ public class HomeController {
 		}
 
 		FieldFacet facet = new FieldFacet("Keyword", "keyword");
-		facet.addValueElement("Population", 29862);
+		facet.addValueElement(facet.new Value("Population", "Population", 29862).setSelected(true));
 		facet.addValueElement("Demographic Factors", 28833);
 		facet.addValueElement("Developing Countries",27923);
 		facet.addValueElement("Research Methodology",25246);

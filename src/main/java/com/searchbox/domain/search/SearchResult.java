@@ -8,9 +8,6 @@ import java.util.TreeSet;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.searchbox.domain.search.Hit;
-import com.searchbox.domain.search.SearchElement;
-
 @RooJavaBean
 @RooToString
 public class SearchResult {

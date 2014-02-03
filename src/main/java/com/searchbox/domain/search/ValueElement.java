@@ -1,6 +1,5 @@
 package com.searchbox.domain.search;
 
-import java.util.Comparator;
 
 public class ValueElement<K extends Comparable<K>> implements Comparable<ValueElement<K>>{
 	

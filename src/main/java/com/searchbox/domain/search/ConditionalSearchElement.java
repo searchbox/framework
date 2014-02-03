@@ -1,5 +1,6 @@
 package com.searchbox.domain.search;
 
+
 public abstract class ConditionalSearchElement extends SearchElement implements GenerateSearchCondition {
 
 	public ConditionalSearchElement() {

@@ -3,7 +3,7 @@ package com.searchbox.domain.search;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class SearchElementWithValues<K extends ValueElement> extends SearchElement {
+public class SearchElementWithValues<K extends ValueElement<?>> extends SearchElement {
 	
 	SortedSet<K> values;
 
