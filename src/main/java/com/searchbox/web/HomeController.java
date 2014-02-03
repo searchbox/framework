@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.PropertyValue;
@@ -79,12 +81,19 @@ public class HomeController {
 	}
 	
 	@RequestMapping("search")
-	public ModelAndView search() {
+	public ModelAndView search(HttpServletRequest request) {
 				
-		logger.info("This is my AP: " + applicationContext);
+		 Map<String, String[]> parameters = request.getParameterMap();
+
+		    for(String key : parameters.keySet()) {
+		        System.out.println(key);
+		        String[] vals = parameters.get(key);
+		        for(String val : vals)
+		            System.out.println(" -> " + val);
+		    }
 
 		
-	
+
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
         for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.searchbox.domain.search")){

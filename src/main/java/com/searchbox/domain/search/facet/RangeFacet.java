@@ -58,6 +58,11 @@ public class RangeFacet extends ConditionalSearchElementWithValues<RangeFacet.Va
 	public SearchCondition getSearchCondition() {
 		return new RangeFacetCondition(this.fieldName, this.lowerElement, this.upperElement);
 	}
+
+	@Override
+	public String geParamValue() {
+		return this.fieldName+"["+this.lowerElement+"##"+this.upperElement+"]";
+	}
 }
 
 class RangeFacetCondition extends SearchCondition {

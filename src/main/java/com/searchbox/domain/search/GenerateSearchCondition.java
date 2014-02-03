@@ -3,5 +3,7 @@ package com.searchbox.domain.search;
 
 public interface GenerateSearchCondition {
 	
-	SearchCondition getSearchCondition();
+	public SearchCondition getSearchCondition();
+	
+	public String geParamValue();
 }

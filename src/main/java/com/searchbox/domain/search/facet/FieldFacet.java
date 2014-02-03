@@ -63,6 +63,11 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		public SearchCondition getSearchCondition() {
 			return new FieldFacetValueCondition(fieldName, this.value);
 		}
+
+		@Override
+		public String geParamValue() {
+			return fieldName+"["+this.value+"]";
+		}
 	}
 }
 

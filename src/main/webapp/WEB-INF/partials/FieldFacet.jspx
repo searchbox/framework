@@ -20,14 +20,14 @@
                       <input id="${element.fieldName}${i.getCount()}" 
                       class="css-checkbox" type="checkbox" 
                       name="${element.getParamPrefix()}"
-                      value="${element.fieldName}[${facetValue.value}]"
+                      value="${facetValue.geParamValue()}"
                       checked="checked" onclick="javascript:submit()"/>
                     </c:when>
                     <c:otherwise>
                       <input id="${element.fieldName}${i.getCount()}" 
                       class="css-checkbox" type="checkbox" 
                       name="${element.getParamPrefix()}"
-                      value="${element.fieldName}[${facetValue.value}]"
+                      value="${facetValue.geParamValue()}"
                       onclick="javascript:submit()"/>
                     </c:otherwise>
                   </c:choose>
