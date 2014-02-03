@@ -1,0 +1,34 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+  <jsp:output omit-xml-declaration="yes" />
+  <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">${element.label}</h3>
+          </div>
+          <div class="panel-body">
+            <ul class="list-group facet-list">
+              <c:forEach items="${element.values}" var="facetValue"
+                varStatus="i">
+                <li class="list-group-item"><span class="badge">${facetValue.count}</span>
+                
+                  <c:choose>
+                    <c:when test="${facetValue.getSelected()}">
+                      <input id="${element.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox" checked="checked"/>
+                    </c:when>
+                    <c:otherwise>
+                      <input id="${element.fieldName}${i.getCount()}" class="css-checkbox" type="checkbox"/>
+                    </c:otherwise>
+                  </c:choose>
+                  <label title="${facetValue.value}"
+                  for="${element.fieldName}${i.getCount()}"
+                  class="css-label">${facetValue.value}</label></li>
+              </c:forEach>
+            </ul>
+          </div>
+        </div>
+  
+</jsp:root>
