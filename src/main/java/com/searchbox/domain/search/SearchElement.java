@@ -6,9 +6,11 @@ import com.searchbox.ann.search.SearchComponent;
 
 public abstract class SearchElement implements Comparable<SearchElement>{
 
-	String label;
+	private String label;
 	
-	Integer position = 0;
+	private Integer position = 0;
+	
+	protected SearchElementType type = SearchElementType.FILTER;
 	
 	SearchElement(String label){
 		this.label = label;
@@ -35,6 +37,14 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		this.position = position;
 	}
 
+	public SearchElementType getType() {
+		return type;
+	}
+
+	public void setType(SearchElementType type) {
+		this.type = type;
+	}
+
 	@Override
 	public int compareTo(SearchElement searchElement) {
 		return this.getPosition().compareTo(searchElement.getPosition());
@@ -51,7 +61,7 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	}
 	
 	public URL getView(){
-		//TODO
+		//TODO partial should be next to the .class file... 
 		System.out.println("XOXOXOXOXOX: " + this.getClass());
 		System.out.println("XOXOXOXOXOX: " + this.getClass().getResource("view.jspx"));
 		return this.getClass().getResource("view.jspx");
