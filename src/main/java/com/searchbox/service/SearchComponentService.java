@@ -1,6 +1,8 @@
 package com.searchbox.service;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -62,10 +64,12 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 		return this.searchConditions.keySet().contains(paramName);
 	}
 	
-	public SearchCondition getSearchCondition(String paramName, String... values){
+	public List<SearchCondition> getSearchCondition(String paramName, String... values){
 		logger.info("Creating a " + searchConditions.get(paramName).getSimpleName() +
 				" for component: " + searchComponents.get(paramName).getSimpleName());
-		return null;
+		
+		//TODO use Component to generate the condition
+		return Collections.emptyList();
 	}
 
 }

@@ -1,16 +1,20 @@
 package com.searchbox.web;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.domain.search.Hit;
+import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
@@ -30,6 +34,17 @@ public class SearchController {
 	
 	@RequestMapping
 	public ModelAndView search(HttpServletRequest request) {
+		
+		for(Object key:request.getParameterMap().keySet()){
+			for(String value:request.getParameterValues((String)key)){
+				logger.info("#####: " + key + " : " + value);
+			}
+		}
+		
+		//@RequestParam(value="conditions") List<SearchCondition> searchConditions
+//		for(SearchCondition searchCondition:searchConditions){
+//			logger.info("GOT CONDITION: " + searchCondition);
+//		}
 		
 		ModelAndView model = new ModelAndView("search/index");
 
