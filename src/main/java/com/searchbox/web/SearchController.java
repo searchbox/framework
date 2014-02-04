@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.domain.search.Hit;
+import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
 import com.searchbox.domain.search.facet.FieldFacet.Value;
@@ -70,6 +71,8 @@ public class SearchController {
 		result.addElement(facet);
 		result.addElement(facet2);
 
+		logger.info("XOXOXO got : " + result.getElements(SearchElementType.FACET).size());
+		
 		model.addObject("result", result);
 		return model;
 	}

@@ -7,11 +7,13 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 <form>
+
 	<div class="row" id="first-row">
 		<c:if test="${true == true}">
 			<jsp:include page="/WEB-INF/partials/statusbar.jspx" />
 		</c:if>
 	</div>
+
 
 	<div class="row">
 
