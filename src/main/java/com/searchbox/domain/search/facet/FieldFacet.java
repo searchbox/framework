@@ -9,6 +9,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalValueElement;
 import com.searchbox.domain.search.SearchCondition;
+import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchElementWithValues;
 import com.searchbox.domain.search.ValueElement;
 import com.searchbox.ref.Order;
@@ -24,6 +25,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 	public FieldFacet(String label, String fieldName) {
 		super(label);
 		this.fieldName = fieldName;
+		this.setType(SearchElementType.FACET);
 	}
 	
 	public FieldFacet addValueElement(String label, Integer count){
