@@ -37,9 +37,7 @@ import com.searchbox.ref.Sort;
 @RequestMapping("/")
 public class HomeController {
 	
-	@Autowired
-	WebApplicationContext applicationContext;
-
+	
 	private static Logger logger = LoggerFactory
 			.getLogger(HomeController.class);
 
@@ -84,34 +82,6 @@ public class HomeController {
 	
 	@RequestMapping("search")
 	public ModelAndView search(HttpServletRequest request) {
-				
-		 Map<String, String[]> parameters = request.getParameterMap();
-		
-
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
-        for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.searchbox.domain.search")){
-        	try {
-				Class searchCondition = Class.forName(beanDefinition.getBeanClassName());
-	        	String prefix = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).prefix();
-	        	Class condition = ((SearchComponent)searchCondition.getAnnotation(SearchComponent.class)).condition();
-	        	
-	        	if(parameters.containsKey(prefix)){
-	        		for(String param:parameters.get(prefix)){
-	        			logger.info("got " + prefix + " in param to generate " + condition.getSimpleName());
-	        		}
-	        	}
-	        	
-			} catch (ClassNotFoundException e) {
-				logger.error("Could not find class for: " + beanDefinition.getBeanClassName());
-				e.printStackTrace();
-			}
-        	
-            
-        }
-		
-		
-		
 		
 		ModelAndView model = new ModelAndView("search/index");
 
