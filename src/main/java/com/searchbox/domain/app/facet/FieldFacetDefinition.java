@@ -1,4 +1,5 @@
 package com.searchbox.domain.app.facet;
+
 import javax.persistence.ManyToOne;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -11,21 +12,21 @@ import com.searchbox.domain.dm.Field;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class FieldFacetDefinition extends FacetDefinition{
+public class FieldFacetDefinition extends FacetDefinition {
 
-    /**
+	/**
      */
-    private Integer minCount;
-    
-    private Integer maxCount;
-    
-    /**
+	private Integer minCount;
+
+	private Integer maxCount;
+
+	/**
      */
-    @ManyToOne
-    private Field field;
-    
-    public FieldFacetDefinition(Field field){
-    	this.field = field;
-    }
-    
+	@ManyToOne
+	private Field field;
+
+	public FieldFacetDefinition(Field field) {
+		this.field = field;
+	}
+
 }

@@ -1,4 +1,87 @@
-	${result}
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
 
-	
-	
+	<form>
+
+		<div class="row" id="column-top">
+			<div class="hero-unit" id="search-bar">
+
+				<jsp:directive.page contentType="text/html;charset=UTF-8" />
+				<jsp:output omit-xml-declaration="yes" />
+
+				<div class="row">
+					<a href="#">
+						<div id="logo-wrapper" class="col-md-3">
+							<div id="logo">
+								<img src="/searchbox/img/searchbox-logo-big.png" alt="Searchbox"
+									id="logo-image" />
+							</div>
+						</div>
+					</a>
+					<div class="col-md-7">
+						<c:forEach items="${result.getElements('QUERY')}" var="element">
+							<c:set scope="request" var="element" value="${element }" />
+							<c:set scope="request" var="result" value="${result }" />
+							<c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName()}.jspx</c:set>
+							<jsp:include page="${elementInset }" />
+						</c:forEach>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" id="first-row">
+			<c:if test="${true == true}">
+				<jsp:include page="/WEB-INF/partials/statusbar.jspx" />
+			</c:if>
+		</div>
+
+
+		<div class="row">
+
+			<div class="col-md-3 col-left" id="main-col-left">
+				<c:forEach items="${result.getElements('FACET')}" var="element">
+					<c:set scope="request" var="element" value="${element }" />
+					<c:set scope="request" var="result" value="${result }" />
+					<c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName() }.jspx</c:set>
+					<jsp:include page="${elementInset }" />
+				</c:forEach>
+				<div style="clear: all">
+					<!-- afsfd -->
+				</div>
+			</div>
+
+
+			<div class="col-md-7" id="main-col-center">
+				<c:if test="${query.collq}">
+					<c:set var="forceParams" value="${cleanedParams.clone()}" />
+					<!-- ${forceParams.q = query.collq} -->
+					<!-- ${forceParams.f = 1} -->
+					<div class="alert alert-info">
+						<button type="button" class="close" data-dismiss="alert">×</button>
+						Displaying results for <a href="#"> <strong>${query.q}</strong>
+						</a> <br /> <small>Show me results for <a href="#"> <strong>${forceParams.q}</strong>
+						</a> anyway!
+						</small>
+					</div>
+				</c:if>
+				<jsp:include page="/WEB-INF/partials/searchresults.jspx" />
+			</div>
+
+			<div class="col-md-2" id="main-col-right">
+				<!-- right col -->
+			</div>
+			<c:if test="${request.xhr}">
+				<script type="text/javascript">
+					var queryTerm = '${query.q}';
+					bindFacetEvents();
+				</script>
+			</c:if>
+		</div>
+	</form>
+</div>

@@ -12,12 +12,32 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 public class SearchResult {
 
+	public SearchResult(){
+		
+	}
+	
 	List<String> fields = new ArrayList<String>();
 	SortedSet<Hit> hits = new TreeSet<Hit>();
-	SortedSet<Facet> facets = new TreeSet<Facet>();
-	
+	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
+//	SortedSet<Facet> facets = new TreeSet<Facet>();
+
 	public void addHit(Hit hit) {
 		this.hits.add(hit);
 	}
+
+	public void addElement(SearchElement element) {
+		element.setPosition(this.elements.size() + 1);
+		this.elements.add(element);
+	}
 	
+	public SortedSet<SearchElement> getElements(SearchElementType type){
+		TreeSet<SearchElement> typedElements = new TreeSet<SearchElement>();
+		for(SearchElement element:this.elements){
+			if(element.type.equals(type)){
+				typedElements.add(element);
+			}
+		}
+		return typedElements;
+	}
+
 }

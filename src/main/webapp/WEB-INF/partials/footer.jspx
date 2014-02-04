@@ -1,0 +1,17 @@
+<footer id="footer" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page">
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div class="container">
+		<p>
+			<span>Powered by - </span> <a href="http://www.searchbox.com/"
+				target="_blank"> <img
+				src="/searchbox/img/searchbox-logo-small.png" alt="searchbox logo" />
+			</a>
+		</p>
+	</div>
+</footer>

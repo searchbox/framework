@@ -1,4 +1,5 @@
 package com.searchbox.domain.engine;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,9 +16,7 @@ import com.searchbox.domain.dm.Collection;
 @RooJpaActiveRecord
 public abstract class SearchEngine {
 
-	@OneToMany(mappedBy="engine",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "engine", cascade = CascadeType.ALL)
 	private List<Collection> collections;
-	
-	
-  
+
 }

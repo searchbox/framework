@@ -11,8 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class LayoutInterceptor extends HandlerInterceptorAdapter {
-	
-	private static Logger logger = LoggerFactory.getLogger(LayoutInterceptor.class);
+
+	private static Logger logger = LoggerFactory
+			.getLogger(LayoutInterceptor.class);
 
 	private static final String DEFAULT_LAYOUT_BASE = "layouts/";
 	private static final String DEFAULT_LAYOUT = "default";
@@ -35,38 +36,46 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		
-		if (modelAndView==null || !modelAndView.hasView()) {
+
+		if (modelAndView == null || !modelAndView.hasView()) {
 			return;
 		}
 		String originalViewName = modelAndView.getViewName();
 		if (isRedirectOrForward(originalViewName)) {
 			return;
 		}
-		
-		logger.debug("PRE: Layout solves to: " + modelAndView.getViewName() + " with view: " +  modelAndView.getModel().get(this.viewAttributeName));
+
+		logger.debug("PRE: Layout solves to: " + modelAndView.getViewName()
+				+ " with view: "
+				+ modelAndView.getModel().get(this.viewAttributeName));
 		String layoutName = getLayoutName(handler);
-		modelAndView.setViewName(DEFAULT_LAYOUT_BASE+layoutName);
-		//modelAndView.addObject(this.viewAttributeName, "/WEB-INF/views/"+originalViewName+".jspx");
+		modelAndView.setViewName(DEFAULT_LAYOUT_BASE + layoutName);
+		// modelAndView.addObject(this.viewAttributeName,
+		// "/WEB-INF/views/"+originalViewName+".jspx");
 		modelAndView.addObject(this.viewAttributeName, originalViewName);
-		logger.debug("POST: Layout solves to: " + modelAndView.getViewName() + " with view: " +  modelAndView.getModel().get(this.viewAttributeName));
+		logger.debug("POST: Layout solves to: " + modelAndView.getViewName()
+				+ " with view: "
+				+ modelAndView.getModel().get(this.viewAttributeName));
 	}
 
 	private boolean isRedirectOrForward(String viewName) {
-		return viewName.startsWith("redirect:") || viewName.startsWith("forward:");
+		return viewName.startsWith("redirect:")
+				|| viewName.startsWith("forward:");
 	}
 
 	private String getLayoutName(Object handler) {
-		try{
-		HandlerMethod handlerMethod = (HandlerMethod) handler;
-		Layout layout = getMethodOrTypeAnnotation(handlerMethod);
-		if (layout == null) {
-			return this.defaultLayout;
+		if (handler instanceof HandlerMethod) {
+			HandlerMethod handlerMethod = (HandlerMethod) handler;
+			Layout layout = getMethodOrTypeAnnotation(handlerMethod);
+			if (layout == null) {
+				return this.defaultLayout;
+			} else {
+				return layout.value();
+			}
 		} else {
-			return layout.value();
-		}
-		} catch (Exception e){
-			//e.printStackTrace();
+			// logger.debug("In interceptor. Got handler of type: " +
+			// handler.getClass());
+			// e.printStackTrace();
 			return this.defaultLayout;
 		}
 	}

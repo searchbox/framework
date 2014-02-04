@@ -1,16 +1,104 @@
 package com.searchbox.domain.search.facet;
-import com.searchbox.domain.search.Facet;
 
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+
+import com.searchbox.ann.search.SearchComponent;
+import com.searchbox.domain.search.ConditionalValueElement;
+import com.searchbox.domain.search.SearchCondition;
+import com.searchbox.domain.search.SearchElementType;
+import com.searchbox.domain.search.SearchElementWithValues;
+import com.searchbox.domain.search.ValueElement;
+import com.searchbox.ref.Order;
+import com.searchbox.ref.Sort;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord
-public class FieldFacet extends Facet {
+@SearchComponent(prefix="ff", condition=FieldFacetValueCondition.class)
+public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 
-    /**
-     */
-    private String fieldName;
+	private final String fieldName;
+
+	public FieldFacet(String label, String fieldName) {
+		super(label);
+		this.fieldName = fieldName;
+		this.setType(SearchElementType.FACET);
+	}
+	
+	public FieldFacet addValueElement(String label, Integer count){
+		return this.addValueElement(label, label, count);
+	}
+	
+	public FieldFacet addValueElement(String label, String value, Integer count){
+		this.addValueElement(new FieldFacet.Value(label, value, count));
+		return this;
+	}
+	
+	public class Value extends ConditionalValueElement<String> implements Comparable<Value>{
+
+		private Integer count;
+		private Boolean selected;
+
+		public Value(String label, String value, Integer count) {
+			super(label, value);
+			this.count = count;
+		}
+
+		public Value(String label, String value) {
+			super(label, value);
+		}
+		
+		public Integer getCount(){
+			return this.count;
+		}
+		
+		public Boolean getSelected(){
+			return this.selected;
+		}
+		
+		public Value setSelected(Boolean selected){
+			this.selected = selected;
+			return this;
+		}
+
+		@Override
+		public SearchCondition getSearchCondition() {
+			return new FieldFacetValueCondition(fieldName, this.value);
+		}
+
+		@Override
+		public String geParamValue() {
+			return fieldName+"["+this.value+"]";
+		}
+
+		@Override
+		public int compareTo(Value o) {
+			int diff = 0;
+			if(order.equals(Order.KEY)){
+				diff = this.getLabel().compareTo(o.getLabel());
+			} else {
+				diff = this.getCount().compareTo(o.getCount());
+			}
+			return diff*((sort.equals(Sort.ASC))?1:-1);
+		}
+	}
+}
+
+class FieldFacetValueCondition extends SearchCondition {
+
+	String fieldName;
+	String value;
+
+	FieldFacetValueCondition(String fieldName, String value) {
+		this.fieldName = fieldName;
+		this.value = value;
+	}
+
+	@Override
+	protected Query getConditionalQuery() {
+		return new TermQuery(new Term(fieldName, value));
+	}
 }

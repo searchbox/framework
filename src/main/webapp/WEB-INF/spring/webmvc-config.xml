@@ -9,8 +9,7 @@
 		annotation. -->
 	<context:component-scan base-package="com.searchbox"
 		use-default-filters="false">
-		<context:include-filter expression="org.springframework.stereotype.Controller"
-			type="annotation" />
+		<context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
 	</context:component-scan>
 
 	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
@@ -20,10 +19,10 @@
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
-<!-- 	<mvc:resources location="/, classpath:/META-INF/web-resources/" mapping="/resources/**" />
- -->	<mvc:resources location="/images/" mapping="/images/**" />
+	<mvc:resources location="/, classpath:/META-INF/web-resources/" mapping="/resources/**" />
+	<mvc:resources location="/images/" mapping="/images/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
-    
+
 
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
@@ -31,17 +30,18 @@
 
 	<!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
 	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" p:paramName="lang" />
-		<bean class="com.searchbox.web.LayoutInterceptor" />
+    <bean class="com.searchbox.web.LayoutInterceptor" />
+    <bean class="com.searchbox.web.SearchConditionInterceptor" />
+    <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+			p:paramName="lang" />
 	</mvc:interceptors>
 
 	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->
 	<!-- <mvc:view-controller path="/" view-name="index" /> -->
-	<mvc:view-controller path="/uncaughtException" />
-	<mvc:view-controller path="/resourceNotFound" />
-	<mvc:view-controller path="/dataAccessFailure" />
+	<!-- <mvc:view-controller path="/uncaughtException" /> -->	<!-- <mvc:view-controller path="/resourceNotFound" /> <mvc:view-controller 
+		path="/dataAccessFailure" /> -->
 
 	<!-- Resolves localized messages*.properties and application.properties 
 		files in the application to allow for internationalization. The messages*.properties 
@@ -59,18 +59,19 @@
 
 	<!-- Resolves localized <theme_name>.properties files in the classpath to 
 		allow for theme support -->
-	<bean class="org.springframework.ui.context.support.ResourceBundleThemeSource" 
+	<bean
+		class="org.springframework.ui.context.support.ResourceBundleThemeSource"
 		id="themeSource" />
 
 	<!-- Store preferred theme configuration in a cookie -->
-	<bean class="org.springframework.web.servlet.theme.CookieThemeResolver" 
+	<bean class="org.springframework.web.servlet.theme.CookieThemeResolver"
 		id="themeResolver" p:cookieName="theme" p:defaultThemeName="standard" />
 
 	<!-- This bean resolves specific types of exceptions to corresponding logical 
 		- view names for error views. The default behaviour of DispatcherServlet 
 		- is to propagate all exceptions to the servlet container: this will happen 
 		- here with all other types of exceptions. -->
-	<!-- <bean
+	<bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
 		p:defaultErrorView="uncaughtException">
 		<property name="exceptionMappings">
@@ -81,37 +82,28 @@
 				<prop key=".MissingServletRequestParameterException">resourceNotFound</prop>
 			</props>
 		</property>
-	</bean> -->
+	</bean>
 
 	<!-- Enable this for integration of file upload functionality -->
-	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+	<bean
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		id="multipartResolver" />
-	
-	
+
+
 	<!-- **************************************************************** -->
-  	<!--  THYMELEAF-SPECIFIC ARTIFACTS                                    -->
-  	<!--  TemplateResolver <- TemplateEngine <- ViewResolver              -->
-  	<!-- **************************************************************** 
-  
-	<bean id="templateResolver"
-        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-	    <property name="prefix" value="/WEB-INF/views/" />
-	    <property name="suffix" value=".xhtml" />
-	    <property name="templateMode" value="HTML5" />
-  	</bean>
-    
-	<bean id="templateEngine"
-	     class="org.thymeleaf.spring3.SpringTemplateEngine">
-		<property name="templateResolver" ref="templateResolver" />
-	</bean>
-	   
-	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
-		<property name="templateEngine" ref="templateEngine" />
-	</bean>  
-	-->
+	<!-- THYMELEAF-SPECIFIC ARTIFACTS -->
+	<!-- TemplateResolver <- TemplateEngine <- ViewResolver -->
+	<!-- **************************************************************** <bean 
+		id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver"> 
+		<property name="prefix" value="/WEB-INF/views/" /> <property name="suffix" 
+		value=".xhtml" /> <property name="templateMode" value="HTML5" /> </bean> 
+		<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine"> 
+		<property name="templateResolver" ref="templateResolver" /> </bean> <bean 
+		class="org.thymeleaf.spring3.view.ThymeleafViewResolver"> <property name="templateEngine" 
+		ref="templateEngine" /> </bean> -->
 
 
-	<!-- Enable this for integration of file upload functionality-->
+	<!-- Enable this for integration of file upload functionality -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
@@ -120,7 +112,7 @@
 		<property name="suffix">
 			<value>.jspx</value>
 		</property>
-	</bean> 
+	</bean>
 
 	<!-- <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
 		id="tilesViewResolver"> <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/> 

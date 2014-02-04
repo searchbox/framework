@@ -1,0 +1,37 @@
+<div id="search-status-bar" class="container"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div class="col-md-3 col-left" style="top: 0.5em">
+		<span class="status-text">found <span class="search-info-count">11'667'435</span>
+			results in 686 ms.
+		</span>
+	</div>
+
+	<div class="col-md-7 last" id="main-col-status-bar">
+		<div style="float: right">
+			<div class="btn-group">
+				<button class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
+					Sort by <span class="caret"></span>
+				</button>
+				<ul id="sort-combo" class="dropdown-menu">
+					<li class="selected"><a data-field="score asc" href="#"
+						onclick="sortComboClicked()">Relevancy</a></li>
+					<li class=""><a data-field="article-completion-date asc"
+						href="#"
+						onclick="sortComboClicked('article-completion-date','asc')">article-completion-date
+							ASC</a></li>
+					<li class=""><a data-field="article-completion-date desc"
+						href="#"
+						onclick="sortComboClicked('article-completion-date','desc')">article-completion-date
+							DESC</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

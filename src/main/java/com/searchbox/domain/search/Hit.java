@@ -8,14 +8,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-public class Hit implements Comparable<Hit>{
-	
+public class Hit implements Comparable<Hit> {
+
 	private Float score;
 
 	private Map<String, String> fields = new HashMap<String, String>();
-	
+
 	@Override
-	public int compareTo(Hit hit) {	
-		return score.compareTo(hit.getScore())*-1;
+	public int compareTo(Hit hit) {
+		return score.compareTo(hit.getScore()) * -1;
 	}
 }

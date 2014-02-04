@@ -1,4 +1,5 @@
 package com.searchbox.domain.dm;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -8,12 +9,12 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord
 public class FieldType {
 
-    /**
+	/**
      */
-    private String label;
+	private String label;
 
-    /**
+	/**
      */
-    private Class clazz;
-    
+	private Class clazz;
+
 }
