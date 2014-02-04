@@ -24,10 +24,6 @@
     <jsp:include page="/WEB-INF/partials/header.jspx" />
     <div id="main-content" role="main">
 
-      <div class="row" id="column-top">
-        <jsp:include page="/WEB-INF/partials/searchbar.jspx" />
-      </div>
-
       <div class="row" id="main-search-content">
         <jsp:include page="/WEB-INF/views/${view}.jspx" />
         <p>${exception}</p>

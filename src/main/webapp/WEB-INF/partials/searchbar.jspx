@@ -18,23 +18,10 @@
 			</div>
 		</a>
 		<div class="col-md-7">
-			<form action="/all-publications/search" method="get"
-				class="form-search">
 
-				<div style="position: relative;" class="clear_input_div">
-					<input autocomplete="off" style="float: left;"
-						placeholder="search pubmed/medline" id="search-field" name="q"
-						type="text"
-						class="left col-md-5 search-query"
-						value="test search" />
-						<a style="position: absolute; font-size: 20px; cursor: pointer; display: none; top: 6px; left: 428px;"
-						class="clear_input">×</a>
-				</div>
 
-				<button type="submit" class="btn btn-black btn-large">
-					<span class="glyphicon glyphicon-search"><!-- dsffasd --></span>
-				</button>
-			</form>
+			
+
 		</div>
 	</div>
 </div>

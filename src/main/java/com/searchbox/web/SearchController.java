@@ -15,6 +15,7 @@ import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
 import com.searchbox.domain.search.facet.FieldFacet.Value;
+import com.searchbox.domain.search.query.SimpleQuery;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
@@ -68,10 +69,11 @@ public class SearchController {
 		facet2.addValueElement("European Molecular Biology Laboratory, Heidelberg, Germany.",543);
 		facet2.addValueElement("ARC", 525);
 		
+		SimpleQuery query = new SimpleQuery();
+		
+		result.addElement(query);
 		result.addElement(facet);
 		result.addElement(facet2);
-
-		logger.info("XOXOXO got : " + result.getElements(SearchElementType.FACET).size());
 		
 		model.addObject("result", result);
 		return model;
