@@ -12,11 +12,11 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	
 	protected SearchElementType type = SearchElementType.FILTER;
 	
-	SearchElement(String label){
+	protected SearchElement(String label){
 		this.label = label;
 	}
 	
-	SearchElement(String label, Integer position){
+	protected SearchElement(String label, Integer position){
 		this.label = label;
 		this.position = position;
 	}
