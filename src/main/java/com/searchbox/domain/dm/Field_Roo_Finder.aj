@@ -3,6 +3,8 @@
 
 package com.searchbox.domain.dm;
 
+import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.dm.Field;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 

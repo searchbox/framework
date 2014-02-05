@@ -3,9 +3,10 @@
 
 package com.searchbox.domain.dm;
 
-import java.util.List;
-
+import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.dm.Field;
 import com.searchbox.domain.engine.SearchEngine;
+import java.util.List;
 
 privileged aspect Collection_Roo_JavaBean {
     

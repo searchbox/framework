@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.engine;
 
+import com.searchbox.domain.engine.SolrEngine;
 
 privileged aspect SolrEngine_Roo_JavaBean {
     

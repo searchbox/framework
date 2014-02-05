@@ -3,9 +3,9 @@
 
 package com.searchbox.domain.engine;
 
-import java.util.List;
-
 import com.searchbox.domain.dm.Collection;
+import com.searchbox.domain.engine.SearchEngine;
+import java.util.List;
 
 privileged aspect SearchEngine_Roo_JavaBean {
     

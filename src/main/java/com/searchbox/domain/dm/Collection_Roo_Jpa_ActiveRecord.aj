@@ -3,11 +3,10 @@
 
 package com.searchbox.domain.dm;
 
+import com.searchbox.domain.dm.Collection;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Collection_Roo_Jpa_ActiveRecord {

@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.app;
 
+import com.searchbox.domain.app.FacetDefinition;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect FacetDefinition_Roo_Configurable {
