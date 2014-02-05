@@ -10,7 +10,7 @@
   <!-- Mobile version -->
   <div class="btn-group facet-mobile">
     <button type="button" class="btn btn-default dropdown-toggle"
-      data-toggle="dropdown"> ${element.label} <span class="caret"></span>
+      data-toggle="dropdown"> ${element.label} <span class="caret"><!-- empty --></span>
     </button>
     <ul class="dropdown-menu" role="menu">
       <c:forEach items="${element.values}" var="facetValue" varStatus="i">

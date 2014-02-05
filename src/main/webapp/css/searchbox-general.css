@@ -205,6 +205,10 @@ a.clear_input:hover {
 /*************************************************************/
 
 /*******************     CSS Checkbox      *******************/
+#main-col-left{
+  z-index:1000;
+}
+
 #main-col-left h3.panel-title {
   text-transform: uppercase;
 }
