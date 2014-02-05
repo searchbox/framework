@@ -3,6 +3,7 @@ package com.searchbox.domain.search.facet;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
@@ -17,7 +18,7 @@ import com.searchbox.ref.Sort;
 
 @RooJavaBean
 @RooToString
-@SearchComponent(prefix="ff", condition=FieldFacetValueCondition.class)
+@SearchComponent(prefix="ff", condition=FieldFacet.ValueCondition.class)
 public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 
 	private final String fieldName;
@@ -66,7 +67,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 
 		@Override
 		public SearchCondition getSearchCondition() {
-			return new FieldFacetValueCondition(fieldName, this.value);
+			return new FieldFacet.ValueCondition(fieldName, this.value);
 		}
 
 		@Override
@@ -84,21 +85,28 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 			}
 			return diff*((sort.equals(Sort.ASC))?1:-1);
 		}
-	}
-}
 
-class FieldFacetValueCondition extends SearchCondition {
-
-	String fieldName;
-	String value;
-
-	FieldFacetValueCondition(String fieldName, String value) {
-		this.fieldName = fieldName;
-		this.value = value;
+		@Override
+		public Converter<String, FieldFacet.ValueCondition> getConverter() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
-	@Override
-	protected Query getConditionalQuery() {
-		return new TermQuery(new Term(fieldName, value));
+
+	public class ValueCondition extends SearchCondition {
+	
+		String fieldName;
+		String value;
+	
+		ValueCondition(String fieldName, String value) {
+			this.fieldName = fieldName;
+			this.value = value;
+		}
+	
+		@Override
+		protected Query getConditionalQuery() {
+			return new TermQuery(new Term(fieldName, value));
+		}
 	}
 }

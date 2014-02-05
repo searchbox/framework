@@ -31,9 +31,9 @@ public class SearchConditionInterceptor extends HandlerInterceptorAdapter {
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
 		for(String paramName:parameters.keySet()){
 			if(searchComponentService.isSearchConditionParam(paramName)){
-				List<SearchCondition> currentConditions = searchComponentService.getSearchCondition(paramName, parameters.get(paramName));
-				conditions.addAll(conditions);
-				request.removeAttribute(paramName);
+//				List<SearchCondition> currentConditions = searchComponentService.getSearchCondition(paramName, parameters.get(paramName));
+//				conditions.addAll(conditions);
+//				request.removeAttribute(paramName);
 			}
 		}
 		//TODO extract literal

@@ -1,5 +1,6 @@
 package com.searchbox.service;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +15,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.SearchCondition;
+import com.searchbox.web.ApplicationConversionServiceFactoryBean;
 
 @Service
 public class SearchComponentService implements ApplicationListener<ContextRefreshedEvent> {
@@ -26,7 +29,8 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 	private static Logger logger = LoggerFactory.getLogger(SearchComponentService.class);
 
 	@Autowired
-	private WebApplicationContext applicationContext;
+	private ApplicationConversionServiceFactoryBean conversionService;
+	
 
 	private Map<String, Class<?>> searchComponents;
 	private Map<String, Class<?>> searchConditions;
@@ -58,6 +62,9 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 				logger.error("Could not find class for: "+ beanDefinition.getBeanClassName());
 			}
 		}
+		
+		logger.info("XOXOXOXOXOXOX : " + conversionService.getObject());
+		//formaterRegistry.
 	}
 	
 	public boolean isSearchConditionParam(String paramName){
@@ -75,6 +82,14 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 
 	public Set<String> getSearchConditionParams() {
 		return this.searchConditions.keySet();
+	}
+
+	public Class<?> getSearchConditionClass(String param) {
+		return this.searchConditions.get(param);
+	}
+
+	public Collection<Class<?>> getConditionClasses() {
+		return this.searchConditions.values(); 
 	}
 
 }
