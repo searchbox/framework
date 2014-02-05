@@ -42,7 +42,7 @@
 		</div>
 
 
-		<div class="row">
+		<div class="row container">
 
 			<div class="col-md-3 col-left" id="main-col-left">
 				<c:forEach items="${result.getElements('FACET')}" var="element">
@@ -57,7 +57,7 @@
 			</div>
 
 
-			<div class="col-md-7" id="main-col-center">
+			<div class="col-md-8" id="main-col-center">
 				<c:if test="${query.collq}">
 					<c:set var="forceParams" value="${cleanedParams.clone()}" />
 					<!-- ${forceParams.q = query.collq} -->
