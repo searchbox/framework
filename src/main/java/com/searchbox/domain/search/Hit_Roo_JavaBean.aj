@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.search;
 
-import com.searchbox.domain.search.Hit;
 import java.util.Map;
 
 privileged aspect Hit_Roo_JavaBean {

@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.FieldType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

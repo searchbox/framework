@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.FieldType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

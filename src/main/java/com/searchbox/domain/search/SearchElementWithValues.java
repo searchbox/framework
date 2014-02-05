@@ -1,6 +1,5 @@
 package com.searchbox.domain.search;
 
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

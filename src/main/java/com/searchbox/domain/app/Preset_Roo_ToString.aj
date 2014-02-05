@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.Preset;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

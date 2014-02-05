@@ -3,8 +3,6 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.FacetDefinition;
-import com.searchbox.domain.app.Preset;
 
 privileged aspect FacetDefinition_Roo_JavaBean {
     
