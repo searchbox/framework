@@ -3,8 +3,6 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.Collection;
-import com.searchbox.domain.dm.Field;
 
 privileged aspect Field_Roo_JavaBean {
     

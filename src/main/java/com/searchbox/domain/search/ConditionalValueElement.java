@@ -1,11 +1,9 @@
 package com.searchbox.domain.search;
 
-import com.searchbox.domain.search.facet.FieldFacet.Value;
-
-
-public abstract class ConditionalValueElement<K extends Comparable<K>> extends ValueElement<K> implements
-		GenerateSearchCondition {
-
+public abstract class ConditionalValueElement<K extends Comparable<K>, T extends SearchCondition> 
+	extends ValueElement<K> implements
+		GenerateSearchCondition<T> {
+	
 	public ConditionalValueElement(String label) {
 		super(label);
 	}
@@ -15,5 +13,5 @@ public abstract class ConditionalValueElement<K extends Comparable<K>> extends V
 	}
 	
 	@Override
-	public abstract SearchCondition getSearchCondition();
+	public abstract T getSearchCondition();
 }

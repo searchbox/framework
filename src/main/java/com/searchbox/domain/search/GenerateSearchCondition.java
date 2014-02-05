@@ -1,9 +1,10 @@
 package com.searchbox.domain.search;
 
 
-public interface GenerateSearchCondition {
+public interface GenerateSearchCondition<K extends SearchCondition> {
 	
-	public SearchCondition getSearchCondition();
+	public K getSearchCondition();
 	
+	//TODO remove that goes to the conversion package...
 	public String geParamValue();
 }

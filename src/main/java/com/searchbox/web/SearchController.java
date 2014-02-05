@@ -6,18 +6,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.domain.search.Hit;
-import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
-import com.searchbox.domain.search.facet.FieldFacet.Value;
 import com.searchbox.domain.search.query.SimpleQuery;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
+import com.searchbox.service.SearchComponentService;
 
 @Controller
 @RequestMapping("/search")
@@ -25,11 +26,29 @@ public class SearchController {
 
 	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+
+	@Autowired
+	ConversionService conversionService;
+	
+	@Autowired
+	SearchComponentService searchComponentService;
+	
 	public SearchController() {
 	}
 	
 	@RequestMapping
+//	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
 	public ModelAndView search(HttpServletRequest request) {
+		
+		for(String param:searchComponentService.getSearchConditionParams()){
+			if(request.getParameterValues(param) != null){
+				for(String value:request.getParameterValues(param)){
+					if(value != null && !value.isEmpty())
+						conversionService.convert(value, searchComponentService.getSearchConditionClass(param));
+				}
+			}
+		}
+		
 		
 		ModelAndView model = new ModelAndView("search/index");
 
@@ -76,7 +95,6 @@ public class SearchController {
 		result.addElement(facet2);
 		
 		model.addObject("result", result);
-		return model;
+		return model;		
 	}
-
 }

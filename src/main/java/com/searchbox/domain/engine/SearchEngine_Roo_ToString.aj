@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.engine;
 
-import com.searchbox.domain.engine.SearchEngine;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

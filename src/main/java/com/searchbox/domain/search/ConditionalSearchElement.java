@@ -1,12 +1,9 @@
 package com.searchbox.domain.search;
 
 
-public abstract class ConditionalSearchElement extends SearchElement implements GenerateSearchCondition {
+public abstract class ConditionalSearchElement<K extends SearchCondition> 
+	extends SearchElement implements GenerateSearchCondition<K> {
 
-	public ConditionalSearchElement() {
-		super(null);
-	}
-	
 	public ConditionalSearchElement(String label) {
 		super(label);
 	}
@@ -16,5 +13,5 @@ public abstract class ConditionalSearchElement extends SearchElement implements 
 	}
 
 	@Override
-	public abstract SearchCondition getSearchCondition();
+	public abstract K getSearchCondition();
 }
