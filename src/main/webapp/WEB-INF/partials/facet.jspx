@@ -21,6 +21,7 @@
         <h2>Blammy</h2>
       </c:when>
       <c:otherwise>
+      
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">${facet.label}</h3>

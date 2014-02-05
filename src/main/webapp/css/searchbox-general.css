@@ -19,7 +19,32 @@
 
 .col-left {
   /*max-width: 300px;*/
-  min-width:280px;
+  min-width: 285px;
+}
+
+/*************************************************************/
+/* Mobile related rules - responsive layout */
+/*************************************************************/
+@media ( min-width : 768px) {
+  #main-col-left .panel {
+    display: block;
+  }
+  #main-col-left .facet-mobile {
+    display: none;
+  }
+}
+
+@media ( max-width : 768px) {
+  #main-col-left .panel {
+    display: none;
+  }
+  #main-col-left .facet-mobile {
+    width: 100%;
+    display: block;
+  }
+  #main-col-left .facet-mobile:after {
+    clear: both;
+  }
 }
 
 /*************************************************************/
@@ -101,6 +126,7 @@ input:focus,textarea:focus {
 
 #search-bar #logo-wrapper {
   width: 270px;
+  margin-right: 25px;
 }
 
 #search-bar #search-field {
@@ -158,7 +184,7 @@ a.clear_input:hover {
   margin-bottom: 10px;
   padding-left: 15px;
   padding-right: 15px;
-  float:left;
+  float: left;
 }
 
 #search-status-bar .status-text {
@@ -221,6 +247,10 @@ a.clear_input:hover {
   background-image: url(/searchbox/img/lite-gray-check.png);
 }
 
+#main-col-left .facet-mobile button {
+  width: 100%;
+  margin-bottom: 10px;
+}
 /** attribute and style of elements when in the col-left **/
 
 /** SB stylesheet **/
