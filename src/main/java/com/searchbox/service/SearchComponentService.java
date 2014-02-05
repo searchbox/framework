@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,12 +65,16 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 		return this.searchConditions.keySet().contains(paramName);
 	}
 	
-	public List<SearchCondition> getSearchCondition(String paramName, String... values){
+	public List<SearchCondition> getSearchCondition(String paramName, String values){
 		logger.info("Creating a " + searchConditions.get(paramName).getSimpleName() +
 				" for component: " + searchComponents.get(paramName).getSimpleName());
 		
 		//TODO use Component to generate the condition
 		return Collections.emptyList();
+	}
+
+	public Set<String> getSearchConditionParams() {
+		return this.searchConditions.keySet();
 	}
 
 }
