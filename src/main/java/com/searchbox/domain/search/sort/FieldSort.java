@@ -1,7 +1,6 @@
 package com.searchbox.domain.search.sort;
 
 import org.apache.lucene.search.Query;
-import org.springframework.core.convert.converter.Converter;
 
 import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalSearchElement;
@@ -17,6 +16,7 @@ public class FieldSort extends ConditionalSearchElement {
 	private Sort sort;
 
 	public FieldSort(String FieldName) {
+		super("Sort Component");
 		this.setType(SearchElementType.SORT);
 	}
 
@@ -28,12 +28,6 @@ public class FieldSort extends ConditionalSearchElement {
 	@Override
 	public SearchCondition getSearchCondition() {
 		return new FieldSort.Condition(fieldName, sort);
-	}
-
-	@Override
-	public Converter<String, FieldSort.Condition> getConverter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public class Condition extends SearchCondition {

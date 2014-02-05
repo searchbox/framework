@@ -15,11 +15,11 @@ privileged aspect FieldType_Roo_JavaBean {
         this.label = label;
     }
     
-    public Class FieldType.getClazz() {
+    public Class<?> FieldType.getClazz() {
         return this.clazz;
     }
     
-    public void FieldType.setClazz(Class clazz) {
+    public void FieldType.setClazz(Class<?> clazz) {
         this.clazz = clazz;
     }
     

@@ -1,24 +1,20 @@
 package com.searchbox.domain.search.facet;
 
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermRangeQuery;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
 import com.searchbox.ann.search.SearchComponent;
-import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.ConditionalSearchElementWithValues;
+import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.ValueElement;
-import com.searchbox.domain.search.query.SimpleQuery;
 
 @RooJavaBean
 @RooToString
 @SearchComponent(prefix = "fr", condition = RangeFacet.Condition.class)
 public class RangeFacet extends
-		ConditionalSearchElementWithValues<RangeFacet.Value> {
+		ConditionalSearchElementWithValues<RangeFacet.Value,  RangeFacet.Condition> {
 
 	private final String fieldName;
 	private final String lowerElement = null;
@@ -40,7 +36,7 @@ public class RangeFacet extends
 	}
 	
 	@Override
-	public SearchCondition getSearchCondition() {
+	public  RangeFacet.Condition getSearchCondition() {
 		return new RangeFacet.Condition(this.fieldName, this.lowerElement,
 				this.upperElement);
 	}
@@ -49,12 +45,6 @@ public class RangeFacet extends
 	public String geParamValue() {
 		return this.fieldName + "[" + this.lowerElement + "##"
 				+ this.upperElement + "]";
-	}
-
-	@Override
-	public Converter<String, RangeFacet.Condition> getConverter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public class Value extends ValueElement<String> {

@@ -9,39 +9,34 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.SearchCondition;
-import com.searchbox.web.ApplicationConversionServiceFactoryBean;
 
-@Service
+@Service("SearchComponentService")
 public class SearchComponentService implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger logger = LoggerFactory.getLogger(SearchComponentService.class);
 
-	@Autowired
-	private ApplicationConversionServiceFactoryBean conversionService;
-	
-
 	private Map<String, Class<?>> searchComponents;
 	private Map<String, Class<?>> searchConditions;
+	private Map<String, Class<?>> conditionConverters;
 	
 	public SearchComponentService() {
 		this.searchComponents = new HashMap<String, Class<?>>();
 		this.searchConditions = new HashMap<String, Class<?>>();
+		this.conditionConverters = new HashMap<String, Class<?>>();
 	}
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+		
 		
 		logger.info("Scanning for SearchComponents");
 
@@ -52,19 +47,20 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 				Class<?> searchComponent = Class.forName(beanDefinition.getBeanClassName());
 				String prefix = ((SearchComponent) searchComponent.getAnnotation(SearchComponent.class)).prefix();
 				Class<?> searchCondition = ((SearchComponent) searchComponent.getAnnotation(SearchComponent.class)).condition();
+				Class<?> conditionConverter = ((SearchComponent) searchComponent.getAnnotation(SearchComponent.class)).converter();
 				
-				logger.info("Found "+prefix+":"+searchComponent.getSimpleName()+" with filter["+searchCondition.getSimpleName()+"]");
+				logger.info("Found "+prefix+":"+searchComponent.getSimpleName()+" with filter["+searchCondition.getName()+"]");
 				
 				searchComponents.put(prefix, searchComponent);
 				searchConditions.put(prefix, searchCondition);
+				conditionConverters.put(prefix, conditionConverter);
+				
+				
 
 			} catch (ClassNotFoundException e) {
 				logger.error("Could not find class for: "+ beanDefinition.getBeanClassName());
 			}
 		}
-		
-		logger.info("XOXOXOXOXOXOX : " + conversionService.getObject());
-		//formaterRegistry.
 	}
 	
 	public boolean isSearchConditionParam(String paramName){
@@ -86,6 +82,10 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 
 	public Class<?> getSearchConditionClass(String param) {
 		return this.searchConditions.get(param);
+	}
+	
+	public Class<?> getConditionConverterClass(String param) {
+		return this.conditionConverters.get(param);
 	}
 
 	public Collection<Class<?>> getConditionClasses() {

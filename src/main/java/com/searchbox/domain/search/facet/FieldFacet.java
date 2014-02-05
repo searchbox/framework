@@ -3,7 +3,6 @@ package com.searchbox.domain.search.facet;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
@@ -11,15 +10,14 @@ import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalValueElement;
 import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchElementType;
-import com.searchbox.domain.search.SearchElementWithValues;
-import com.searchbox.domain.search.ValueElement;
+import com.searchbox.domain.search.SearchElementWithConditionalValues;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
 @RooJavaBean
 @RooToString
-@SearchComponent(prefix="ff", condition=FieldFacet.ValueCondition.class)
-public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
+@SearchComponent(prefix="ff", condition=FieldFacet.ValueCondition.class, converter=FieldFacet.Converter.class)
+public class FieldFacet extends SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
 
 	private final String fieldName;
 
@@ -38,7 +36,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		return this;
 	}
 	
-	public class Value extends ConditionalValueElement<String> implements Comparable<Value>{
+	public class Value extends ConditionalValueElement<String, FieldFacet.ValueCondition> implements Comparable<Value>{
 
 		private Integer count;
 		private Boolean selected;
@@ -66,7 +64,7 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		}
 
 		@Override
-		public SearchCondition getSearchCondition() {
+		public FieldFacet.ValueCondition getSearchCondition() {
 			return new FieldFacet.ValueCondition(fieldName, this.value);
 		}
 
@@ -85,16 +83,10 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 			}
 			return diff*((sort.equals(Sort.ASC))?1:-1);
 		}
-
-		@Override
-		public Converter<String, FieldFacet.ValueCondition> getConverter() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 
-	public class ValueCondition extends SearchCondition {
+	public static class ValueCondition extends SearchCondition {
 	
 		String fieldName;
 		String value;
@@ -108,5 +100,16 @@ public class FieldFacet extends SearchElementWithValues<FieldFacet.Value> {
 		protected Query getConditionalQuery() {
 			return new TermQuery(new Term(fieldName, value));
 		}
+	}
+	
+	public static class Converter implements 
+		org.springframework.core.convert.converter.Converter<String, ValueCondition>{
+
+		@Override
+		public ValueCondition convert(String source) {
+			System.out.println(" ~+~+~+~+~+ this is my converter for FF with value: " + source);
+			return null;
+		}
+		
 	}
 }

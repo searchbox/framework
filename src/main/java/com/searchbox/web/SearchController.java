@@ -1,31 +1,20 @@
 package com.searchbox.web;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.domain.search.Hit;
-import com.searchbox.domain.search.SearchCondition;
-import com.searchbox.domain.search.SearchElementType;
 import com.searchbox.domain.search.SearchResult;
 import com.searchbox.domain.search.facet.FieldFacet;
-import com.searchbox.domain.search.facet.FieldFacet.Value;
 import com.searchbox.domain.search.query.SimpleQuery;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;

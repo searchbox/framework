@@ -15,7 +15,7 @@ public abstract class SearchCondition {
 	private List<SearchCondition> innerConditions = new ArrayList<SearchCondition>();
 	
 	protected abstract Query getConditionalQuery();
-		
+			
 	public Query getQuery(){
 		/** for later
 		BooleanQuery q = new BooleanQuery();
