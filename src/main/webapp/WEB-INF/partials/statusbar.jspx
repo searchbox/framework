@@ -1,4 +1,4 @@
-<div id="search-status-bar" class="container"
+<div id="search-status-bar"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
