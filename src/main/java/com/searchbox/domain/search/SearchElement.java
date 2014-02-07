@@ -12,6 +12,8 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	
 	protected SearchElementType type = SearchElementType.FILTER;
 	
+	public SearchElement(){}
+	
 	protected SearchElement(String label){
 		this.label = label;
 	}

@@ -1,6 +1,8 @@
 package com.searchbox.domain.search.query;
 
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 
 import com.searchbox.ann.search.SearchComponent;
 import com.searchbox.domain.search.ConditionalSearchElement;
@@ -10,21 +12,35 @@ import com.searchbox.domain.search.SearchElementType;
 @SearchComponent(prefix = "q", condition = SimpleQuery.Condition.class, converter=SimpleQuery.Converter.class)
 public class SimpleQuery extends ConditionalSearchElement<SimpleQuery.Condition> {
 
-	private String q;
+	private String query;
 
 	public SimpleQuery() {
 		super("query component");
 		this.setType(SearchElementType.QUERY);
 	}
+	
+	public SimpleQuery(String query) {
+		super("query component");
+		this.setType(SearchElementType.QUERY);
+		this.query = query;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
 
 	@Override
 	public String geParamValue() {
-		return q;
+		return query;
 	}
 
 	@Override
 	public SimpleQuery.Condition getSearchCondition() {
-		return new SimpleQuery.Condition(q);
+		return new SimpleQuery.Condition(query);
 	}
 	
 	public static class Condition extends SearchCondition {
@@ -37,8 +53,8 @@ public class SimpleQuery extends ConditionalSearchElement<SimpleQuery.Condition>
 
 		@Override
 		protected Query getConditionalQuery() {
-			// TODO use DM service to generate the required edismax Query.
-			return null;
+			//TODO must fix this. This is wrong
+			return new TermQuery(new Term("id",q));
 		}
 	}
 	
@@ -48,8 +64,15 @@ public class SimpleQuery extends ConditionalSearchElement<SimpleQuery.Condition>
 	
 		@Override
 		public SimpleQuery.Condition convert(String source) {
-			System.out.println(" ~+~+~+~+~+ this is my converter for Q with value: " + source);
-			return null;
+			return new SimpleQuery.Condition(source);
+		}
+	}
+
+
+	@Override
+	public void mergeSearchCondition(SearchCondition condition) {
+		if(SimpleQuery.Condition.class.equals(condition.getClass())){
+			this.query = ((SimpleQuery.Condition)condition).q;
 		}
 	}
 }

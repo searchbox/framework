@@ -3,9 +3,6 @@
 
 package com.searchbox.domain.search;
 
-import com.searchbox.domain.search.Hit;
-import com.searchbox.domain.search.SearchElement;
-import com.searchbox.domain.search.SearchResult;
 import java.util.List;
 import java.util.SortedSet;
 

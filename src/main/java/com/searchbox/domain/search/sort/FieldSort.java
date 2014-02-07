@@ -47,4 +47,10 @@ public class FieldSort extends ConditionalSearchElement {
 		}
 
 	}
+
+	@Override
+	public void mergeSearchCondition(SearchCondition condition) {
+		// TODO Auto-generated method stub
+		
+	}
 }

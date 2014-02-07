@@ -3,13 +3,10 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.FacetDefinition;
-import com.searchbox.domain.app.FieldDefinition;
-import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.app.Searchbox;
+import java.util.List;
+
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
-import java.util.List;
 
 privileged aspect Preset_Roo_JavaBean {
     
@@ -101,20 +98,20 @@ privileged aspect Preset_Roo_JavaBean {
         this.fields = fields;
     }
     
-    public List<FacetDefinition> Preset.getFacets() {
-        return this.facets;
+    public List<SearchElementDefinition> Preset.getSearchElements() {
+        return this.searchElements;
     }
     
-    public void Preset.setFacets(List<FacetDefinition> facets) {
-        this.facets = facets;
+    public void Preset.setSearchElements(List<SearchElementDefinition> searchElements) {
+        this.searchElements = searchElements;
     }
     
-    public List<Collection> Preset.getCollections() {
-        return this.collections;
+    public Collection Preset.getCollection() {
+        return this.collection;
     }
     
-    public void Preset.setCollections(List<Collection> collections) {
-        this.collections = collections;
+    public void Preset.setCollection(Collection collection) {
+        this.collection = collection;
     }
     
     public List<Field> Preset.getSpells() {

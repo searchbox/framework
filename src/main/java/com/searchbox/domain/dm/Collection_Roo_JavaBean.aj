@@ -3,10 +3,10 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.Collection;
-import com.searchbox.domain.dm.Field;
-import com.searchbox.domain.engine.SearchEngine;
 import java.util.List;
+
+import com.searchbox.domain.app.Preset;
+import com.searchbox.domain.engine.SearchEngine;
 
 privileged aspect Collection_Roo_JavaBean {
     
@@ -24,6 +24,14 @@ privileged aspect Collection_Roo_JavaBean {
     
     public void Collection.setEngine(SearchEngine engine) {
         this.engine = engine;
+    }
+    
+    public List<Preset> Collection.getPresets() {
+        return this.presets;
+    }
+    
+    public void Collection.setPresets(List<Preset> presets) {
+        this.presets = presets;
     }
     
     public List<Field> Collection.getFields() {

@@ -3,6 +3,7 @@ package com.searchbox.domain.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
@@ -35,7 +36,7 @@ public class Searchbox {
      */
 	private String description;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "searchbox", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	private List<Preset> presets = new ArrayList<Preset>();
 

@@ -84,4 +84,10 @@ public class RangeFacet extends
 						// true, true);
 		}
 	}
+
+	@Override
+	public void mergeSearchCondition(SearchCondition condition) {
+		// TODO Auto-generated method stub
+		
+	}
 }

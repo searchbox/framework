@@ -6,12 +6,15 @@ import java.util.TreeSet;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
-public class SearchElementWithConditionalValues<K extends ConditionalValueElement<?,T>, T extends SearchCondition> extends SearchElement {
+public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<?,T>, T extends SearchCondition> 
+	extends SearchElement implements SearchConditionToElementMerger {
 	
 	protected Order order;
 	protected Sort sort;
 	
 	SortedSet<K> values;
+	
+	public abstract void mergeSearchCondition(SearchCondition condition);
 
 	public SearchElementWithConditionalValues() {
 		super(null);

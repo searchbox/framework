@@ -20,6 +20,10 @@ import com.searchbox.ref.Sort;
 public class FieldFacet extends SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
 
 	private final String fieldName;
+	
+	public FieldFacet(){
+		fieldName = "";
+	}
 
 	public FieldFacet(String label, String fieldName) {
 		super(label);
@@ -85,17 +89,32 @@ public class FieldFacet extends SearchElementWithConditionalValues<FieldFacet.Va
 		}
 	}
 
-
 	public static class ValueCondition extends SearchCondition {
 	
 		String fieldName;
 		String value;
 	
-		ValueCondition(String fieldName, String value) {
+		public ValueCondition(String fieldName, String value) {
 			this.fieldName = fieldName;
 			this.value = value;
 		}
 	
+		public String getFieldName() {
+			return fieldName;
+		}
+
+		public void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
 		@Override
 		protected Query getConditionalQuery() {
 			return new TermQuery(new Term(fieldName, value));
@@ -107,9 +126,23 @@ public class FieldFacet extends SearchElementWithConditionalValues<FieldFacet.Va
 
 		@Override
 		public ValueCondition convert(String source) {
-			System.out.println(" ~+~+~+~+~+ this is my converter for FF with value: " + source);
-			return null;
+			String field = source.split("\\[")[0];
+			String value = source.split("\\[")[1].split("]")[0];
+			return new ValueCondition(field, value);
 		}
 		
+	}
+
+	@Override
+	public void mergeSearchCondition(SearchCondition condition) {
+		if(FieldFacet.ValueCondition.class.equals(condition.getClass())){
+			if(this.fieldName.equals(((FieldFacet.ValueCondition)condition).getFieldName())){
+				for(FieldFacet.Value value:this.getValues()){
+					if(value.getValue().equals(((FieldFacet.ValueCondition)condition).getValue())){
+						value.setSelected(true);
+					}
+				}
+			}
+		}
 	}
 }

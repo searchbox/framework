@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.Collection;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect Collection_Roo_Configurable {

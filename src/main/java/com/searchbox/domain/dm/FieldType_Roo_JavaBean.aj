@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.dm;
 
-import com.searchbox.domain.dm.FieldType;
 
 privileged aspect FieldType_Roo_JavaBean {
     

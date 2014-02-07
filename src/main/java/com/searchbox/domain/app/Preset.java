@@ -66,10 +66,10 @@ public class Preset implements Comparable<Preset> {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
-	private List<FacetDefinition> facets = new ArrayList<FacetDefinition>();
+	private List<SearchElementDefinition> searchElements = new ArrayList<SearchElementDefinition>();
 
-	@ManyToMany
-	private List<Collection> collections;
+	@ManyToOne
+	private Collection collection;
 
 	@ManyToMany
 	private List<Field> spells;
@@ -77,19 +77,14 @@ public class Preset implements Comparable<Preset> {
 	public Preset(String label, Collection collection) {
 		this.label = label;
 	}
-
-	public void addCollection(Collection collection) {
-		this.collections.add(collection);
-	}
-
-	public void addFacetDefinition(FacetDefinition facetDefinition) {
-		facetDefinition.setPosition(this.facets.size());
-		this.facets.add(facetDefinition);
+	
+	public void addSearchElement(SearchElementDefinition searchElements) {
+		searchElements.setPosition(this.searchElements.size());
+		this.searchElements.add(searchElements);
 	}
 
 	@Override
 	public int compareTo(Preset o) {
 		return o.getPosition().compareTo(this.getPosition());
 	}
-
 }

@@ -11,6 +11,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.engine.SearchEngine;
 
 @RooJavaBean
@@ -24,6 +25,9 @@ public class Collection {
 
 	@ManyToOne
 	private SearchEngine engine;
+	
+	@OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+	private List<Preset> presets = new ArrayList<Preset>();
 
 	@OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
 	private List<Field> fields = new ArrayList<Field>();

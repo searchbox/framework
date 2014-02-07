@@ -2,7 +2,7 @@ package com.searchbox.domain.search;
 
 
 public abstract class ConditionalSearchElement<K extends SearchCondition> 
-	extends SearchElement implements GenerateSearchCondition<K> {
+	extends SearchElement implements GenerateSearchCondition<K>, SearchConditionToElementMerger {
 
 	public ConditionalSearchElement(String label) {
 		super(label);
@@ -14,4 +14,6 @@ public abstract class ConditionalSearchElement<K extends SearchCondition>
 
 	@Override
 	public abstract K getSearchCondition();
+	
+	public abstract void mergeSearchCondition(SearchCondition condition);
 }

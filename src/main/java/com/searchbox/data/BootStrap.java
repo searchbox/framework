@@ -13,24 +13,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.domain.app.Preset;
+import com.searchbox.domain.app.SearchElementDefinition;
 import com.searchbox.domain.app.Searchbox;
-import com.searchbox.domain.app.facet.FieldFacetDefinition;
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
 import com.searchbox.domain.engine.SolrCloudEngine;
+import com.searchbox.domain.search.facet.FieldFacet;
+import com.searchbox.domain.search.query.SimpleQuery;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	public static boolean bootstraped = false;
 
-	Logger log = LoggerFactory.getLogger(BootStrap.class);
+	Logger logger = LoggerFactory.getLogger(BootStrap.class);
 
 	@Override
 	@Transactional
 	synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
 
-		log.info("Bootstraping application");
+		logger.info("Bootstraping application");
 
 		if (bootstraped)
 			return;
@@ -54,12 +56,19 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collection.persist();
 
 		Preset searchAll = new Preset("Search All", collection);
+		searchAll.setCollection(collection);
 		testSearchbox.addPreset(searchAll);
-		searchAll.addFacetDefinition(new FieldFacetDefinition(Field
-				.findFieldsByKeyEqualsAndCollectionEquals("id", collection)
-				.getSingleResult()));
-		searchAll.persist();
+		
+		
+		//Create & add a query SearchComponent to the preset;
+		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+		searchAll.addSearchElement(query);
 
+		//Create & add a facet to the preset.
+		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
+		fieldFacet.setAttributeValue("fieldName", "my_field");
+		searchAll.addSearchElement(fieldFacet);
+		
 		Preset searchVideos = new Preset("Videos", collection);
 		testSearchbox.addPreset(searchVideos);
 
@@ -69,16 +78,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		testSearchbox.persist();
 
 		for (Preset preset : testSearchbox.getPresets()) {
-			log.info("Addded preset: " + preset.getLabel() + " with position: "
+			logger.info("Addded preset: " + preset.getLabel() + " with position: "
 					+ preset.getPosition());
 		}
 
 		for (Collection cc : Collection.findAllCollections()) {
-			log.info("Got Collection: " + collection.getName()
+			logger.info("Got Collection: " + collection.getName()
 					+ " with engine: " + collection.getEngine().getClass());
 		}
 
-		log.info("Bootstraping");
+		logger.info("Bootstraping");
 
 		bootstraped = true;
 	}

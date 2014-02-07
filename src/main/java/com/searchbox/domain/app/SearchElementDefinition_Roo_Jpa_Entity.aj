@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.app;
 
+import com.searchbox.domain.app.SearchElementDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,32 +11,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-privileged aspect FacetDefinition_Roo_Jpa_Entity {
+privileged aspect SearchElementDefinition_Roo_Jpa_Entity {
     
-    declare @type: FacetDefinition: @Entity;
+    declare @type: SearchElementDefinition: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long FacetDefinition.id;
+    private Long SearchElementDefinition.id;
     
     @Version
     @Column(name = "version")
-    private Integer FacetDefinition.version;
+    private Integer SearchElementDefinition.version;
     
-    public Long FacetDefinition.getId() {
+    public SearchElementDefinition.new() {
+        super();
+    }
+
+    public Long SearchElementDefinition.getId() {
         return this.id;
     }
     
-    public void FacetDefinition.setId(Long id) {
+    public void SearchElementDefinition.setId(Long id) {
         this.id = id;
     }
     
-    public Integer FacetDefinition.getVersion() {
+    public Integer SearchElementDefinition.getVersion() {
         return this.version;
     }
     
-    public void FacetDefinition.setVersion(Integer version) {
+    public void SearchElementDefinition.setVersion(Integer version) {
         this.version = version;
     }
     
