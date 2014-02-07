@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.search.facet;
 
-import com.searchbox.domain.search.facet.FieldFacet;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.engine;
 
-import com.searchbox.domain.engine.SolrCloudEngine;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect SolrCloudEngine_Roo_Configurable {

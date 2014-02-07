@@ -3,7 +3,6 @@
 
 package com.searchbox.domain.search.facet;
 
-import com.searchbox.domain.search.facet.FieldFacet;
 
 privileged aspect FieldFacet_Roo_JavaBean {
     

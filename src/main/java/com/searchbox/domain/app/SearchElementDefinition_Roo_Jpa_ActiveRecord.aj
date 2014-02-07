@@ -3,10 +3,11 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.SearchElementDefinition;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect SearchElementDefinition_Roo_Jpa_ActiveRecord {

@@ -3,9 +3,6 @@
 
 package com.searchbox.domain.app;
 
-import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.app.SearchElementDefinition;
-import com.searchbox.domain.app.SearchElementDefinitionAttribute;
 import java.util.List;
 
 privileged aspect SearchElementDefinition_Roo_JavaBean {
