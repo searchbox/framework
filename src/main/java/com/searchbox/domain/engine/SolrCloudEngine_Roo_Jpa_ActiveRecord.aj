@@ -3,8 +3,8 @@
 
 package com.searchbox.domain.engine;
 
+import com.searchbox.domain.engine.SolrCloudEngine;
 import java.util.List;
-
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect SolrCloudEngine_Roo_Jpa_ActiveRecord {

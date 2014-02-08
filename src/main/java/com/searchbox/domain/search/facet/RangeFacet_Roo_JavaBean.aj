@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.search.facet;
 
+import com.searchbox.domain.search.facet.RangeFacet;
 
 privileged aspect RangeFacet_Roo_JavaBean {
     

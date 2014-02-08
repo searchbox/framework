@@ -3,10 +3,13 @@
 
 package com.searchbox.domain.app;
 
-import java.util.List;
-
+import com.searchbox.domain.app.FieldDefinition;
+import com.searchbox.domain.app.Preset;
+import com.searchbox.domain.app.SearchElementDefinition;
+import com.searchbox.domain.app.Searchbox;
 import com.searchbox.domain.dm.Collection;
 import com.searchbox.domain.dm.Field;
+import java.util.List;
 
 privileged aspect Preset_Roo_JavaBean {
     

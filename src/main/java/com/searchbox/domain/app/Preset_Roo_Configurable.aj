@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.app;
 
+import com.searchbox.domain.app.Preset;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect Preset_Roo_Configurable {

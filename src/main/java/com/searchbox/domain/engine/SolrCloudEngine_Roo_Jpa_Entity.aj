@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.engine;
 
+import com.searchbox.domain.engine.SolrCloudEngine;
 import javax.persistence.Entity;
 
 privileged aspect SolrCloudEngine_Roo_Jpa_Entity {

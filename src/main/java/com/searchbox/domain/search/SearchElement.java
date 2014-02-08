@@ -53,6 +53,7 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		
 	}
 	
+	//TODO this should not be here...
 	public String getParamPrefix(){
 		SearchComponent a = this.getClass().getAnnotation(SearchComponent.class);
 		if(a==null){

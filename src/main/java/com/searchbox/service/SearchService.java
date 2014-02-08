@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.SearchElementDefinition;
 import com.searchbox.domain.search.GenerateSearchCondition;
-import com.searchbox.domain.search.Hit;
+import com.searchbox.domain.search.HitList;
 import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchConditionToElementMerger;
 //import com.searchbox.domain.app.SearchElementDefinition;
@@ -70,19 +70,21 @@ public class SearchService {
 		
 		SearchResult result = new SearchResult();
 		
+		HitList hitList = new HitList();
 		String[] fields = { "title", "description" };
-		result.setFields(Arrays.asList(fields));
+		hitList.setFields(Arrays.asList(fields));
 		for (int i = 0; i < 10; i++) {
-			Hit hit = new Hit();
-			hit.getFields().put("title", "here's my " + i + "th Title");
+			HitList.Hit hit = new HitList.Hit();
+			hit.getValue().put("title", "here's my " + i + "th Title");
 			String desc = "";
 			for (int t = 0; t < Math.random() * 20; t++) {
 				desc += "lorem Ipsum dolores invictus amenentum centri. ";
 			}
-			hit.getFields().put("description", desc);
+			hit.getValue().put("description", desc);
 			hit.setScore(new Float(Math.random() + (10 - i)));
-			result.addHit(hit);
+			hitList.addHit(hit);
 		}
+		result.addElement(hitList);
 		
 		FieldFacet facet = new FieldFacet("Keyword", "keyword");
 		facet.setOrder(Order.VALUE);

@@ -17,13 +17,9 @@ public class SearchResult {
 	}
 	
 	List<String> fields = new ArrayList<String>();
-	SortedSet<Hit> hits = new TreeSet<Hit>();
 	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
 //	SortedSet<Facet> facets = new TreeSet<Facet>();
 
-	public void addHit(Hit hit) {
-		this.hits.add(hit);
-	}
 
 	public void addElement(SearchElement element) {
 		element.setPosition(this.elements.size() + 1);
@@ -38,6 +34,10 @@ public class SearchResult {
 			}
 		}
 		return typedElements;
+	}
+
+	public SortedSet<SearchElement> getElements() {
+		return this.elements;
 	}
 
 }

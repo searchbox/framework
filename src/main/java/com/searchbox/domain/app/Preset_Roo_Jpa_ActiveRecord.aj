@@ -3,11 +3,10 @@
 
 package com.searchbox.domain.app;
 
+import com.searchbox.domain.app.Preset;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Preset_Roo_Jpa_ActiveRecord {

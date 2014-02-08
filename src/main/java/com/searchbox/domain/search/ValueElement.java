@@ -1,7 +1,7 @@
 package com.searchbox.domain.search;
 
 
-public class ValueElement<K extends Comparable<?>> {
+public class ValueElement<K> {
 	
 	protected String label;
 	

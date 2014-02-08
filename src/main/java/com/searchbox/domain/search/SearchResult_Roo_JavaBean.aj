@@ -3,6 +3,8 @@
 
 package com.searchbox.domain.search;
 
+import com.searchbox.domain.search.SearchElement;
+import com.searchbox.domain.search.SearchResult;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -14,18 +16,6 @@ privileged aspect SearchResult_Roo_JavaBean {
     
     public void SearchResult.setFields(List<String> fields) {
         this.fields = fields;
-    }
-    
-    public SortedSet<Hit> SearchResult.getHits() {
-        return this.hits;
-    }
-    
-    public void SearchResult.setHits(SortedSet<Hit> hits) {
-        this.hits = hits;
-    }
-    
-    public SortedSet<SearchElement> SearchResult.getElements() {
-        return this.elements;
     }
     
     public void SearchResult.setElements(SortedSet<SearchElement> elements) {

@@ -3,6 +3,7 @@
 
 package com.searchbox.domain.app;
 
+import com.searchbox.domain.app.SearchElementDefinitionAttribute;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect SearchElementDefinitionAttribute_Roo_Configurable {
