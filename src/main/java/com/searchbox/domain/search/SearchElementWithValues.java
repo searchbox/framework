@@ -11,7 +11,7 @@ public class SearchElementWithValues<K extends ValueElement<?>> extends SearchEl
 	protected Order order;
 	protected Sort sort;
 	
-	SortedSet<K> values;
+	protected SortedSet<K> values;
 
 	public SearchElementWithValues() {
 		super(null);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.domain.app.Preset;
 import com.searchbox.domain.app.SearchElementDefinition;
 import com.searchbox.domain.search.GenerateSearchCondition;
-import com.searchbox.domain.search.HitList;
+import com.searchbox.domain.search.result.HitList;
 import com.searchbox.domain.search.SearchCondition;
 import com.searchbox.domain.search.SearchConditionToElementMerger;
 //import com.searchbox.domain.app.SearchElementDefinition;
