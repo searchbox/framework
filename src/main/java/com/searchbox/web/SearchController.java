@@ -13,9 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.search.SearchCondition;
-import com.searchbox.domain.search.SearchResult;
+import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchResult;
+import com.searchbox.domain.Preset;
 import com.searchbox.service.SearchComponentService;
 import com.searchbox.service.SearchService;
 

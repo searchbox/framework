@@ -3,8 +3,8 @@ package com.searchbox.domain.search;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.searchbox.domain.search.facet.FieldFacet;
-import com.searchbox.domain.search.facet.FieldFacet.Converter;
+import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.facet.FieldFacet.Converter;
 
 public class FieldFacetTest {
 	

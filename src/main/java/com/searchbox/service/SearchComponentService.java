@@ -16,8 +16,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.ann.search.SearchComponent;
-import com.searchbox.domain.search.SearchCondition;
+import com.searchbox.anno.SearchComponent;
+import com.searchbox.core.search.SearchCondition;
 
 @Service("SearchComponentService")
 public class SearchComponentService implements ApplicationListener<ContextRefreshedEvent> {
@@ -42,7 +42,7 @@ public class SearchComponentService implements ApplicationListener<ContextRefres
 
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
-		for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.searchbox.domain.search")) {
+		for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.searchbox")) {
 			try {
 				Class<?> searchComponent = Class.forName(beanDefinition.getBeanClassName());
 				String prefix = ((SearchComponent) searchComponent.getAnnotation(SearchComponent.class)).prefix();

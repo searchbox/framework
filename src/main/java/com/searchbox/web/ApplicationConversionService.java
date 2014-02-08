@@ -9,7 +9,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Component;
 
-import com.searchbox.ann.search.SearchComponent;
+import com.searchbox.anno.SearchComponent;
 
 @Component("conversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService  { 
@@ -27,7 +27,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 				false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
 		for (BeanDefinition beanDefinition : scanner
-				.findCandidateComponents("com.searchbox.domain.search")) {
+				.findCandidateComponents("com.searchbox")) {
 			try {
 				Class<?> searchComponent = Class.forName(beanDefinition
 						.getBeanClassName());

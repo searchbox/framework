@@ -8,17 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.app.SearchElementDefinition;
-import com.searchbox.domain.search.GenerateSearchCondition;
-import com.searchbox.domain.search.result.HitList;
-import com.searchbox.domain.search.SearchCondition;
-import com.searchbox.domain.search.SearchConditionToElementMerger;
+import com.searchbox.core.search.GenerateSearchCondition;
+import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchConditionToElementMerger;
+import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.search.SearchResult;
+import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.core.search.result.HitList;
+import com.searchbox.domain.Preset;
+import com.searchbox.domain.SearchElementDefinition;
 //import com.searchbox.domain.app.SearchElementDefinition;
-import com.searchbox.domain.search.SearchElement;
-import com.searchbox.domain.search.SearchResult;
-import com.searchbox.domain.search.facet.FieldFacet;
-import com.searchbox.domain.search.query.SimpleQuery;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 

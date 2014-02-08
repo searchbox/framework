@@ -4,8 +4,8 @@ package com.searchbox.domain.search;
 import org.junit.Test;
 import org.junit.Assert;
 
-import com.searchbox.domain.search.facet.FieldFacet;
-import com.searchbox.domain.search.query.SimpleQuery;
+import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.query.SimpleQuery;
 
 public class SearchConditionTest {
 	
