@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
@@ -40,15 +41,28 @@ public class SearchService {
 	public SearchResult execute(Preset preset, List<SearchCondition> conditions) {
 		
 		List<SearchCondition> presetConditions = new ArrayList<SearchCondition>();
+		
+		//TODO we have to get this from the preset's collection
+		SolrQuery query = new SolrQuery();
+		
 		for(SearchElementDefinition element:preset.getSearchElements()){
+			//Weave in all element conditions in query
+			
 			if(element.getSearchElement().getClass().isAssignableFrom(GenerateSearchCondition.class)){
 				logger.debug("This is a filter right here.");
+				//Weave in all presetConditions in query
 				presetConditions.add(((GenerateSearchCondition<?>)element).getSearchCondition());
 			}
 		}
 		
+		//Weave in all UI Conditions in query
+		for(SearchCondition condition:conditions){
+			;;
+		}
+		
 		SearchResult result = this.executeSearch(preset, presetConditions, conditions);
 		
+		//Executing a merge on all SearchConditions
 		for(SearchElement element:result.getElements()){
 			if(SearchConditionToElementMerger.class.isAssignableFrom(element.getClass())){
 				for(SearchCondition condition:conditions){
@@ -58,7 +72,6 @@ public class SearchService {
 				}
 			}
 		}
-		//Executing a merge on all SearchConditions
 		
 		
 		return result;

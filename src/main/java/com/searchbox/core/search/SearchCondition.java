@@ -17,23 +17,6 @@ public abstract class SearchCondition {
 	
 	private List<SearchCondition> innerConditions = new ArrayList<SearchCondition>();
 	
-	protected abstract Query getConditionalQuery();
-			
-	public Query getQuery(){
-		/** for later
-		BooleanQuery q = new BooleanQuery();
-		for(SearchCondition ic:this.innerConditions){
-			q.add(ic.getQuery(),ic.getClause().getOccur());
-		}
-		*/
-		Query q = this.getConditionalQuery();
-		//TODO check that Q is not null, and if it is throws an exception
-		if(q != null){
-			q.setBoost(this.getBoost());
-		}
-		return q;
-	}
-
 	public Float getBoost() {
 		return boost;
 	}

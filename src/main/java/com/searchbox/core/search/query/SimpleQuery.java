@@ -45,16 +45,14 @@ public class SimpleQuery extends ConditionalSearchElement<SimpleQuery.Condition>
 	
 	public static class Condition extends SearchCondition {
 
-		String q;
+		String query;
 
 		Condition(String query) {
-			this.q = query;
+			this.query = query;
 		}
 
-		@Override
-		protected Query getConditionalQuery() {
-			//TODO must fix this. This is wrong
-			return new TermQuery(new Term("id",q));
+		public String getQuery() {
+			return query;
 		}
 	}
 	
@@ -72,7 +70,7 @@ public class SimpleQuery extends ConditionalSearchElement<SimpleQuery.Condition>
 	@Override
 	public void mergeSearchCondition(SearchCondition condition) {
 		if(SimpleQuery.Condition.class.equals(condition.getClass())){
-			this.query = ((SimpleQuery.Condition)condition).q;
+			this.query = ((SimpleQuery.Condition)condition).getQuery();
 		}
 	}
 }

@@ -118,11 +118,6 @@ public class FieldFacet
 		public void setValue(String value) {
 			this.value = value;
 		}
-
-		@Override
-		protected Query getConditionalQuery() {
-			return new TermQuery(new Term(fieldName, value));
-		}
 	}
 
 	public static class Converter
@@ -135,9 +130,8 @@ public class FieldFacet
 			String value = source.split("\\[")[1].split("]")[0];
 			return new ValueCondition(field, value);
 		}
-
 	}
-
+	
 	@Override
 	public void mergeSearchCondition(SearchCondition condition) {
 		if (FieldFacet.ValueCondition.class.equals(condition.getClass())) {

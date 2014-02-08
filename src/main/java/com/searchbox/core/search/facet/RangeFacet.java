@@ -73,12 +73,6 @@ public class RangeFacet extends
 			this.lowerElement = from;
 			this.upperElement = to;
 		}
-
-		@Override
-		protected Query getConditionalQuery() {
-			return null;// new TermRangeQuery(fieldName, fromValue, toValue,
-						// true, true);
-		}
 	}
 
 	@Override

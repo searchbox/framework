@@ -39,13 +39,6 @@ public class FieldSort extends ConditionalSearchElement<FieldSort.Condition> {
 			this.fieldName = fieldName;
 			this.sort = sort;
 		}
-
-		@Override
-		protected Query getConditionalQuery() {
-			// TODO use DM service to generate the required edismax Query.
-			return null;
-		}
-
 	}
 
 	@Override

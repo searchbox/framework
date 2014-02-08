@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.domain.Preset;
-import com.searchbox.service.SearchComponentService;
 import com.searchbox.service.SearchService;
 
 @Controller
@@ -29,7 +28,7 @@ public class SearchController {
 	ConversionService conversionService;
 	
 	@Autowired
-	SearchComponentService searchComponentService;
+	ApplicationConversionService searchComponentService;
 	
 	@Autowired
 	SearchService searchService;
