@@ -40,7 +40,11 @@ public class SearchElementDefinition {
 	public SearchElement getSearchElement(){
 		try {
 			SearchElement element = (SearchElement) searchElementClass.newInstance();
-			//TODO need to populate the elements here.
+			for(SearchElementDefinitionAttribute attribute:attributes){
+				Field field = searchElementClass.getDeclaredField(attribute.getName());
+				field.setAccessible(true);
+				field.set(element, attribute.getValue());
+			}
 			return element;
 		} catch (Exception e){
 			e.printStackTrace(System.out);
