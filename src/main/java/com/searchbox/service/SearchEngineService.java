@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.searchbox.domain.dm.Collection;
-import com.searchbox.domain.dm.Field;
-import com.searchbox.domain.search.SearchResult;
+import com.searchbox.core.search.SearchResult;
+import com.searchbox.domain.Collection;
+import com.searchbox.domain.Field;
 
 @Service
 public interface SearchEngineService {

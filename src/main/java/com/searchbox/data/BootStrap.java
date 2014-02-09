@@ -1,7 +1,13 @@
 package com.searchbox.data;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,25 +18,30 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.domain.app.Preset;
-import com.searchbox.domain.app.Searchbox;
-import com.searchbox.domain.app.facet.FieldFacetDefinition;
-import com.searchbox.domain.dm.Collection;
-import com.searchbox.domain.dm.Field;
-import com.searchbox.domain.engine.SolrCloudEngine;
+import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.core.engine.solr.SolrCloudEngine;
+import com.searchbox.core.search.debug.QueryToString;
+import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
+import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.domain.Collection;
+import com.searchbox.domain.Field;
+import com.searchbox.domain.Preset;
+import com.searchbox.domain.SearchElementDefinition;
+import com.searchbox.domain.Searchbox;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	public static boolean bootstraped = false;
 
-	Logger log = LoggerFactory.getLogger(BootStrap.class);
+	Logger logger = LoggerFactory.getLogger(BootStrap.class);
 
 	@Override
 	@Transactional
 	synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
 
-		log.info("Bootstraping application");
+		logger.info("Bootstraping application");
 
 		if (bootstraped)
 			return;
@@ -39,46 +50,56 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 				"this is a test Searchbox");
 		testSearchbox.persist();
 
-		SolrCloudEngine solr = new SolrCloudEngine();
-		solr.setName("test-collection");
-		try {
-			solr.setZkHost(new URL("http://www.zk.com/"));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		solr.persist();
+//		SolrCloudEngine solr = new SolrCloudEngine();
+//		solr.setName("test-collection");
+//		try {
+//			solr.setZkHost(new URL("http://www.zk.com/"));
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		solr.persist();
 
-		Collection collection = new Collection("Test", solr);
-		collection.addField(new Field("id"));
-		collection.persist();
+//		CollectionDefinition collection = new CollectionDefinition("Test");
+//		collection.addField(new Field("id"));
+//		collection.persist();
 
-		Preset searchAll = new Preset("Search All", collection);
+		Preset searchAll = new Preset("Search All", null);
+//		searchAll.setCollection(collection);
 		testSearchbox.addPreset(searchAll);
-		searchAll.addFacetDefinition(new FieldFacetDefinition(Field
-				.findFieldsByKeyEqualsAndCollectionEquals("id", collection)
-				.getSingleResult()));
-		searchAll.persist();
+		
+		//Create & add a querydebug SearchComponent to the preset;
+		SearchElementDefinition querydebug = new SearchElementDefinition(QueryToString.class);
+		searchAll.addSearchElement(querydebug);
+		
+		//Create & add a query SearchComponent to the preset;
+		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+		searchAll.addSearchElement(query);
 
-		Preset searchVideos = new Preset("Videos", collection);
-		testSearchbox.addPreset(searchVideos);
-
-		Preset searchDoc = new Preset("Documents", collection);
-		testSearchbox.addPreset(searchDoc);
+		//Create & add a facet to the preset.
+		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
+		fieldFacet.setAttributeValue("fieldName", "my_field");
+		searchAll.addSearchElement(fieldFacet);
+//		
+//		Preset searchVideos = new Preset("Videos", collection);
+//		testSearchbox.addPreset(searchVideos);
+//
+//		Preset searchDoc = new Preset("Documents", collection);
+//		testSearchbox.addPreset(searchDoc);
 
 		testSearchbox.persist();
 
 		for (Preset preset : testSearchbox.getPresets()) {
-			log.info("Addded preset: " + preset.getLabel() + " with position: "
+			logger.info("Addded preset: " + preset.getLabel() + " with position: "
 					+ preset.getPosition());
 		}
 
-		for (Collection cc : Collection.findAllCollections()) {
-			log.info("Got Collection: " + collection.getName()
-					+ " with engine: " + collection.getEngine().getClass());
-		}
+//		for (Collection cc : Collection.findAllCollections()) {
+//			logger.info("Got Collection: " + collection.getName()
+//					+ " with engine: " + collection.getEngine().getClass());
+//		}
 
-		log.info("Bootstraping");
+		logger.info("Bootstraping");
 
 		bootstraped = true;
 	}
@@ -158,6 +179,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	public static void main(String... args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"classpath*:META-INF/spring/applicationContext.xml");
+		
 
 		System.out.println("Hello");
 	}

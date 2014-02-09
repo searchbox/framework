@@ -7,7 +7,7 @@
 
   <div style="position: relative;" class="clear_input_div">
     <input autocomplete="off" style="float: left;" id="search-field" name="q" type="text"
-    class="left col-md-5 search-query"/>
+    class="left col-md-5 search-query" value="${element.query }"/>
     <a style="position: absolute; font-size: 20px; cursor: pointer; display: none; top: 6px; left: 428px;"
       class="clear_input">x</a>
   </div>
