@@ -17,6 +17,7 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
+import com.searchbox.core.search.debug.QueryToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
@@ -46,16 +47,16 @@ public class SearchService {
 		SolrQuery query = new SolrQuery();
 		
 		for(SearchElementDefinition element:preset.getSearchElements()){
-			
+			SearchElement selement = element.getSearchElement();
 			//Weave in all element conditions in query
-			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(element.getSearchElement());
+			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(selement);
 			if(elementAdapter != null){
-				elementAdapter.doAdapt(preset.getCollection(), element.getSearchElement(), query);
+				logger.info("Adapting condition from Element: " + selement);
+				elementAdapter.doAdapt(preset.getCollection(), selement, query);
 			}
 			
 			if(element.getSearchElement().getClass().isAssignableFrom(GenerateSearchCondition.class)){
 				logger.debug("This is a filter right here.");
-				//TODO Weave in all presetConditions in query
 				presetConditions.add(((GenerateSearchCondition<?>)element).getSearchCondition());
 			}
 		}
@@ -69,12 +70,29 @@ public class SearchService {
 			}
 		}
 		
+		//Weave in all presetConditions in query
+		for(SearchCondition condition:presetConditions){
+			logger.info("Adapting condition from Preset: " + condition);
+			SearchConditionAdaptor conditionAdaptor = adapterService.getAdaptor(condition);
+			if(conditionAdaptor != null){
+				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
+			}
+		}
+		
 		logger.info("This is the query: " + query.toString());
 		
 		SearchResult result = this.executeSearch(preset, presetConditions, conditions);
 		
 		//Executing a merge on all SearchConditions
 		for(SearchElement element:result.getElements()){
+			
+			//POST Weave in all elements
+			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(element);
+			if(elementAdapter != null){
+				logger.info("Adapting condition from Element: " + element);
+				elementAdapter.doAdapt(preset.getCollection(), element, query);
+			}
+			
 			if(SearchConditionToElementMerger.class.isAssignableFrom(element.getClass())){
 				for(SearchCondition condition:conditions){
 					if(condition != null){
@@ -132,6 +150,9 @@ public class SearchService {
 		
 		SimpleQuery query = new SimpleQuery();
 		
+		QueryToString queryDebug = new QueryToString();
+		
+		result.addElement(queryDebug);
 		result.addElement(query);
 		result.addElement(facet);
 		result.addElement(facet2);

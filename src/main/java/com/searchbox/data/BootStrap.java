@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
+import com.searchbox.core.search.debug.QueryToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
@@ -67,6 +68,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //		searchAll.setCollection(collection);
 		testSearchbox.addPreset(searchAll);
 		
+		//Create & add a querydebug SearchComponent to the preset;
+		SearchElementDefinition querydebug = new SearchElementDefinition(QueryToString.class);
+		searchAll.addSearchElement(querydebug);
 		
 		//Create & add a query SearchComponent to the preset;
 		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);

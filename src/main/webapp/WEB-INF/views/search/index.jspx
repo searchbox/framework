@@ -79,7 +79,12 @@
 			</div>
 
 			<div class="col-md-2" id="main-col-right">
-				<!-- right col -->
+				<c:forEach items="${result.getElements('DEBUG')}" var="element">
+          <c:set scope="request" var="element" value="${element }" />
+          <c:set scope="request" var="result" value="${result }" />
+          <c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName() }.jspx</c:set>
+          <jsp:include page="${elementInset }" />
+        </c:forEach>
 			</div>
 			<c:if test="${request.xhr}">
 				<script type="text/javascript">

@@ -13,11 +13,9 @@ import org.springframework.beans.factory.annotation.Required;
 @Documented
 public @interface SearchComponent {
 	
-	@Required
-	String prefix();
+	String prefix() default "";
 	
-	@Required
-	Class<?> condition();
+	Class<?> condition() default Object.class;
 	
 	Class<?> converter() default Object.class;
 }
