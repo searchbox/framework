@@ -9,29 +9,35 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SearchConditionAdaptor;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
+import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.SearchCondition;
 
 @Component("conversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService  { 
 
+	@Autowired
+    private ApplicationContext context;
+	
 	private static Logger logger = LoggerFactory.getLogger(ApplicationConversionService.class);
 	
 	private Map<String, Class<?>> searchComponents;
 	private Map<String, Class<?>> searchConditions;
 	private Map<String, Class<?>> conditionConverters;
-	private Map<Class<?>, SearchElementAdaptor<?,?>> elementAdapters;
-	private Map<Class<?>, SearchConditionAdaptor<?,?>> conditionAdapters;	
+	
 	
     public ApplicationConversionService(){
         super();
@@ -39,8 +45,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
         this.searchComponents = new HashMap<String, Class<?>>();
 		this.searchConditions = new HashMap<String, Class<?>>();
 		this.conditionConverters = new HashMap<String, Class<?>>();
-		this.elementAdapters = new HashMap<Class<?>, SearchElementAdaptor<?,?>>();
-		this.conditionAdapters = new HashMap<Class<?>, SearchConditionAdaptor<?,?>>();
+
 		
     	logger.info("Scanning for SearchComponents");
 
@@ -71,17 +76,17 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 					
 					if(conditionConverter!=null && Converter.class.isAssignableFrom(conditionConverter)){
 		
-						logger.info("XOXOXOXO Found " + prefix + ":"
+						logger.info("~~ Found " + prefix + ":"
 								+ searchComponent.getSimpleName() + " with filter["
 								+ searchCondition.getName() + "]");
 		
 						this.addConverter((Converter<?, ?>) conditionConverter.newInstance());
 					}
 				} else if(SearchElementAdaptor.class.isAssignableFrom(searchComponent)){
-					logger.info("~~~~~ Found Adaptor: " + searchComponent);
+					logger.info("~~ Found Adaptor: " + searchComponent);
 
 				} else if(SearchConditionAdaptor.class.isAssignableFrom(searchComponent)){
-					logger.info("~~~~~ Found Adaptor: " + searchComponent);
+					logger.info("~~ Found Adaptor: " + searchComponent);
 				}
 				
 			} catch (ClassNotFoundException e) {

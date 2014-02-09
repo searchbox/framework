@@ -7,6 +7,6 @@ import com.searchbox.core.search.SearchElement;
 import com.searchbox.domain.Collection;
 
 @Component
-public interface SearchElementAdaptor<K extends SearchElement, T extends SearchQuery> {
+public interface SearchElementAdaptor<K extends SearchElement, T extends SearchQuery> {	
 	public T doAdapt(Collection collection, K SearchElement, T query);
 }

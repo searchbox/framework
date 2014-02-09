@@ -1,7 +1,13 @@
 package com.searchbox.data;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +18,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
 import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.domain.Collection;
 import com.searchbox.domain.Field;
@@ -167,6 +175,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	public static void main(String... args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"classpath*:META-INF/spring/applicationContext.xml");
+		
 
 		System.out.println("Hello");
 	}

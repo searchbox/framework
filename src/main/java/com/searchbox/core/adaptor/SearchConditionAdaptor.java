@@ -8,7 +8,5 @@ import com.searchbox.domain.Collection;
 
 @Component
 public interface SearchConditionAdaptor<K extends SearchCondition, T extends SearchQuery> {
-	
 	public T doAdapt(Collection collection, K condition, T query);
-
 }

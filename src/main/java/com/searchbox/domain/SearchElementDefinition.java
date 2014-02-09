@@ -40,6 +40,7 @@ public class SearchElementDefinition {
 	public SearchElement getSearchElement(){
 		try {
 			SearchElement element = (SearchElement) searchElementClass.newInstance();
+			//TODO need to populate the elements here.
 			return element;
 		} catch (Exception e){
 			e.printStackTrace(System.out);

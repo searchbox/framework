@@ -1,11 +1,13 @@
 package com.searchbox.core.search.facet;
 
+import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SearchConditionAdaptor;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
 import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
 import com.searchbox.domain.Collection;
 
+@SearchAdaptor
 public class FieldFacetSolrAdaptor 
 	implements SearchElementAdaptor<FieldFacet, SolrQuery>,
 	SearchConditionAdaptor<FieldFacet.ValueCondition, SolrQuery> {

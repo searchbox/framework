@@ -6,8 +6,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.adaptor.SearchConditionAdaptor;
+import com.searchbox.core.adaptor.SearchElementAdaptor;
 import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
@@ -28,12 +31,9 @@ public class SearchService {
 	
 	private static Logger logger = LoggerFactory.getLogger(SearchService.class);
 	
-//	@Autowired
-//	private SearchEngineService searchEngineService;
-//	
-//	@Autowired
-//	private SearchComponentService searchComponentService;
-
+	@Autowired
+	private SearchAdapterService adapterService;
+	
 	public SearchService() {
 		// TODO Auto-generated constructor stub
 	}
@@ -46,19 +46,30 @@ public class SearchService {
 		SolrQuery query = new SolrQuery();
 		
 		for(SearchElementDefinition element:preset.getSearchElements()){
+			
 			//Weave in all element conditions in query
+			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(element.getSearchElement());
+			if(elementAdapter != null){
+				elementAdapter.doAdapt(preset.getCollection(), element.getSearchElement(), query);
+			}
 			
 			if(element.getSearchElement().getClass().isAssignableFrom(GenerateSearchCondition.class)){
 				logger.debug("This is a filter right here.");
-				//Weave in all presetConditions in query
+				//TODO Weave in all presetConditions in query
 				presetConditions.add(((GenerateSearchCondition<?>)element).getSearchCondition());
 			}
 		}
 		
 		//Weave in all UI Conditions in query
 		for(SearchCondition condition:conditions){
-			;;
+			logger.info("Adapting condition from UI: " + condition);
+			SearchConditionAdaptor conditionAdaptor = adapterService.getAdaptor(condition);
+			if(conditionAdaptor != null){
+				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
+			}
 		}
+		
+		logger.info("This is the query: " + query.toString());
 		
 		SearchResult result = this.executeSearch(preset, presetConditions, conditions);
 		
