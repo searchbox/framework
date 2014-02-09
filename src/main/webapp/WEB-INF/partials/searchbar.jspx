@@ -12,7 +12,7 @@
 		<a href="#">
 			<div id="logo-wrapper" class="col-md-3">
 				<div id="logo">
-					<img src="/searchbox/img/searchbox-logo-big.png" alt="Searchbox"
+					<img src="resources/img/searchbox-logo-big.png" alt="Searchbox"
 						id="logo-image" />
 				</div>
 			</div>
