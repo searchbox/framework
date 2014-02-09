@@ -3,7 +3,8 @@
   xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
   xmlns:spring="http://www.springframework.org/tags"
   xmlns:jsp="http://java.sun.com/JSP/Page"
-  style="border-radius: 10px; border: dashed 1px red; padding-left: 10px; background-color: yellow">
+  style="border-radius: 10px; border: dashed 1px red; padding-left: 10px; 
+  background-color: yellow; overflow: hidden; text-overflow: ellipsis;">
   <h4>Solr Params</h4>
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:output omit-xml-declaration="yes" />
