@@ -534,12 +534,18 @@
                     </goals>
                     <configuration>
                         <artifactItems>
-                            <artifactItem>
+                        <artifactItem>
+                                <groupId>com.github.jsimone</groupId>
+                                <artifactId>webapp-runner</artifactId>
+                                <version>7.0.40.0</version>
+                                <destFileName>webapp-runner.jar</destFileName>
+                            </artifactItem>
+                            <!-- <artifactItem>
                                 <groupId>org.mortbay.jetty</groupId>
                                 <artifactId>jetty-runner</artifactId>
-                                <version>8.1.14.v20131031</version>
+                                <version>7.6.14.v20131031</version>
                                 <destFileName>jetty-runner.jar</destFileName>
-                            </artifactItem>
+                            </artifactItem> -->
                         </artifactItems>
                     </configuration>
                 </execution>
