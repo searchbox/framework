@@ -762,3 +762,7 @@ button.btn.btn-large,input[type="submit"].btn.btn-large {
   height: 40px;
   padding: 9px 15px;
 }
+
+#debug{
+	display: none;
+}

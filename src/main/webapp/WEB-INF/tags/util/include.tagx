@@ -1,0 +1,30 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:output omit-xml-declaration="yes" />
+  
+  <jsp:directive.attribute name="page" type="java.lang.String"
+    required="true" rtexprvalue="true"
+    description="JSPx page to include" />
+    
+  <c:choose>
+    <c:when test="${not empty param.debug}">
+      <div id="debug_wrapper_${element.getClass().getSimpleName()}">
+        <jsp:include page="${page}"/>
+      </div>
+      <script>
+      $("#debug_wrapper_${element.getClass().getSimpleName()}").popover(
+          {trigger: "hover", 
+            title: "Element Debug", 
+            placement: "bottom", 
+            content: "<c:out value="${element}"/>"
+          });
+      </script>
+    </c:when>
+    <c:otherwise>
+      <jsp:include page="${page}"/>
+    </c:otherwise>
+  </c:choose>    
+    
+</jsp:root>

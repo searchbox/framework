@@ -7,6 +7,9 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<form>
+	 <c:if test="${not empty param.debug}">
+        <input type="hidden" name="debug" value="${param.debug }" />
+   </c:if>
 
 		<div class="row" id="column-top">
 			<div class="hero-unit" id="search-bar">
@@ -28,7 +31,7 @@
 							<c:set scope="request" var="element" value="${element }" />
 							<c:set scope="request" var="result" value="${result }" />
 							<c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName()}.jspx</c:set>
-							<jsp:include page="${elementInset }" />
+							<util:include page="${elementInset }" />
 						</c:forEach>
 					</div>
 				</div>
@@ -49,7 +52,7 @@
 					<c:set scope="request" var="element" value="${element }" />
 					<c:set scope="request" var="result" value="${result }" />
 					<c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName() }.jspx</c:set>
-					<jsp:include page="${elementInset }" />
+					<util:include page="${elementInset }" />
 				</c:forEach>
 				<div style="clear: all">
 					<!-- afsfd -->
@@ -74,7 +77,7 @@
           <c:set scope="request" var="element" value="${element }" />
           <c:set scope="request" var="result" value="${result }" />
           <c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName() }.jspx</c:set>
-          <jsp:include page="${elementInset }" />
+          <util:include page="${elementInset }" />
         </c:forEach>
 			</div>
 
@@ -83,7 +86,7 @@
           <c:set scope="request" var="element" value="${element }" />
           <c:set scope="request" var="result" value="${result }" />
           <c:set var="elementInset">/WEB-INF/partials/${element.getClass().getSimpleName() }.jspx</c:set>
-          <jsp:include page="${elementInset }" />
+          <util:include page="${elementInset }" />
         </c:forEach>
 			</div>
 			${result }
