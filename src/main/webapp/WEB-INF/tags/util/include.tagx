@@ -10,15 +10,16 @@
     
   <c:choose>
     <c:when test="${not empty param.debug}">
-      <div id="debug_wrapper_${element.getClass().getSimpleName()}">
+      <div id="debug_wrapper_${element.getClass().getSimpleName()}" style="border: dashed 1px aqua;
+display: inherit; padding: 2px;background-color: lightcyan;">
         <jsp:include page="${page}"/>
       </div>
       <script>
       $("#debug_wrapper_${element.getClass().getSimpleName()}").popover(
           {trigger: "hover", 
             title: "Element Debug", 
-            placement: "bottom", 
-            content: "<c:out value="${element}"/>"
+            content: "<c:out value="${element}"/>",
+            placement: "auto"
           });
       </script>
     </c:when>
