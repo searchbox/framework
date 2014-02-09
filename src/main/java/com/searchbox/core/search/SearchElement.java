@@ -2,6 +2,9 @@ package com.searchbox.core.search;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.searchbox.anno.SearchComponent;
 
 public abstract class SearchElement implements Comparable<SearchElement>{
@@ -69,4 +72,9 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		System.out.println("XOXOXOXOXOX: " + this.getClass().getResource("view.jspx"));
 		return this.getClass().getResource("view.jspx");
 	}
+	
+	@Override
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

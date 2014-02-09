@@ -19,6 +19,7 @@ import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SearchConditionAdaptor;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
 import com.searchbox.core.engine.SolrQuery;
+import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.web.ApplicationConversionService;
@@ -32,7 +33,7 @@ public class SearchAdapterService implements ApplicationListener<ContextRefreshe
 	ApplicationContext context;
 	
 	//TODO for now only discovering with SolrQuery
-		private Map<Class<?>, SearchElementAdaptor<?,SolrQuery>> elementAdapters;
+		private Map<Class<?>, SearchElementAdaptor<?,SolrQuery, SolrResponse>> elementAdapters;
 		private Map<Class<?>, SearchConditionAdaptor<?,SolrQuery>> conditionAdapters;	
 
 	public SearchAdapterService(){
@@ -42,7 +43,7 @@ public class SearchAdapterService implements ApplicationListener<ContextRefreshe
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		
-		this.elementAdapters = new HashMap<Class<?>, SearchElementAdaptor<?,SolrQuery>>();
+		this.elementAdapters = new HashMap<Class<?>, SearchElementAdaptor<?,SolrQuery, SolrResponse>>();
 		this.conditionAdapters = new HashMap<Class<?>, SearchConditionAdaptor<?,SolrQuery>>();
 
 		for(Entry<String, Object> bean:context.getBeansWithAnnotation(SearchAdaptor.class).entrySet()){
@@ -52,7 +53,7 @@ public class SearchAdapterService implements ApplicationListener<ContextRefreshe
 				//TODO integrate SearchQuery type which is [1]
 				if(SearchElement.class.isAssignableFrom(parent)){
 					logger.info("Adding Element Adapter for " + parent.getSimpleName());
-					this.elementAdapters.put(parent, (SearchElementAdaptor<?, SolrQuery>) bean.getValue());
+					this.elementAdapters.put(parent, (SearchElementAdaptor<?, SolrQuery, SolrResponse>) bean.getValue());
 				} else  if(SearchCondition.class.isAssignableFrom(parent)){
 					logger.info("Adding Condition Adapter for " + parent.getSimpleName());
 					this.conditionAdapters.put(parent, (SearchConditionAdaptor<?, SolrQuery>) bean.getValue());

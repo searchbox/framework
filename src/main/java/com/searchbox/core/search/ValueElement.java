@@ -1,5 +1,8 @@
 package com.searchbox.core.search;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 
 public class ValueElement<K> {
 	
@@ -31,4 +34,9 @@ public class ValueElement<K> {
 	public void setValue(K value) {
 		this.value = value;
 	}
+	
+	@Override
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

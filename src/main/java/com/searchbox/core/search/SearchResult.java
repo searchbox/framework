@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.roo.addon.tostring.RooToString;
+
 public class SearchResult {
 
 	public SearchResult(){
@@ -34,5 +38,10 @@ public class SearchResult {
 	public SortedSet<SearchElement> getElements() {
 		return this.elements;
 	}
+	
+	@Override
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 
 }

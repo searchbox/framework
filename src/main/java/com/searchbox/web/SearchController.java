@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.domain.Preset;
 import com.searchbox.service.SearchService;
@@ -55,7 +56,11 @@ public class SearchController {
 			}
 		}
 		
-		SearchResult result = searchService.execute(preset, conditions);
+		SearchResult result = new SearchResult();
+		for(SearchElement element:searchService.execute(preset, conditions)){
+			logger.info("Adding to result view element: " + element);
+			result.addElement(element);
+		}
 		
 		ModelAndView model = new ModelAndView("search/index");
 		model.addObject("result", result);

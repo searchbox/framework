@@ -86,6 +86,7 @@
           <jsp:include page="${elementInset }" />
         </c:forEach>
 			</div>
+			${result }
 			<c:if test="${request.xhr}">
 				<script type="text/javascript">
 					var queryTerm = '${query.q}';

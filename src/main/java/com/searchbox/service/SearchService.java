@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.adaptor.SearchConditionAdaptor;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
+import com.searchbox.core.engine.SearchResponse;
 import com.searchbox.core.engine.SolrQuery;
+import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
@@ -39,15 +41,19 @@ public class SearchService {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SearchResult execute(Preset preset, List<SearchCondition> conditions) {
+	public List<SearchElement> execute(Preset preset, List<SearchCondition> conditions) {
 		
 		List<SearchCondition> presetConditions = new ArrayList<SearchCondition>();
+		List<SearchElement> elements = new ArrayList<SearchElement>();
 		
 		//TODO we have to get this from the preset's collection
 		SolrQuery query = new SolrQuery();
 		
 		for(SearchElementDefinition element:preset.getSearchElements()){
+			
 			SearchElement selement = element.getSearchElement();
+			elements.add(selement);
+			
 			//Weave in all element conditions in query
 			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(selement);
 			if(elementAdapter != null){
@@ -78,19 +84,18 @@ public class SearchService {
 				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
 			}
 		}
-		
-		logger.info("This is the query: " + query.toString());
-		
-		SearchResult result = this.executeSearch(preset, presetConditions, conditions);
+				
+		SearchResponse result = this.executeSearch(preset, presetConditions, conditions);
 		
 		//Executing a merge on all SearchConditions
-		for(SearchElement element:result.getElements()){
+		for(SearchElement element:elements){
 			
-			//POST Weave in all elements
-			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(element);
-			if(elementAdapter != null){
-				logger.info("Adapting condition from Element: " + element);
-				elementAdapter.doAdapt(preset.getCollection(), element, query);
+			//Weave in SearchResponse to element
+			SearchElementAdaptor elementAdaptor = adapterService.getAdaptor(element);
+			if(elementAdaptor != null){
+				logger.info("Adapting element from Preset: " + element + " for response");
+				//TODO the casting here is because we only suport Solr now.
+				elementAdaptor.doAdapt(preset, element, query, (SolrResponse) result);
 			}
 			
 			if(SearchConditionToElementMerger.class.isAssignableFrom(element.getClass())){
@@ -102,61 +107,66 @@ public class SearchService {
 			}
 		}
 		
-		
-		return result;
+		logger.info("we got: " + elements.size() + " elements");
+
+		return elements;
 	}
 	
-	private SearchResult executeSearch(Preset preset,
+	private SearchResponse executeSearch(Preset preset,
 			List<SearchCondition> presetConditions,
 			List<SearchCondition> conditions) {
 		
-		SearchResult result = new SearchResult();
+		SolrResponse response = new SolrResponse();
 		
-		HitList hitList = new HitList();
-		String[] fields = { "title", "description" };
-		hitList.setFields(Arrays.asList(fields));
-		for (int i = 0; i < 10; i++) {
-			HitList.Hit hit = new HitList.Hit();
-			hit.getValue().put("title", "here's my " + i + "th Title");
-			String desc = "";
-			for (int t = 0; t < Math.random() * 20; t++) {
-				desc += "lorem Ipsum dolores invictus amenentum centri. ";
-			}
-			hit.getValue().put("description", desc);
-			hit.setScore(new Float(Math.random() + (10 - i)));
-			hitList.addHit(hit);
-		}
-		result.addElement(hitList);
-		
-		FieldFacet facet = new FieldFacet("Keyword", "keyword");
-		facet.setOrder(Order.VALUE);
-		facet.setSort(Sort.DESC);
-		facet.addValueElement(facet.new Value("Population", "Population", 29862));
-		facet.addValueElement("Demographic Factors", 40833);
-		facet.addValueElement("Developing Countries",27923);
-		facet.addValueElement("Research Methodology",25246);
-		facet.addValueElement("Family Planning", 23287);
-		facet.addValueElement("Population Dynamics", 20919);
-		
-		FieldFacet facet2 = new FieldFacet("Institution", "institution");
-		facet2.setOrder(Order.KEY);
-		facet2.setSort(Sort.ASC);
-		facet2.addValueElement("Department of Biology, MIT", 647);
-		facet2.addValueElement("Department of Molecular and Cell Biology, University of California, Berkeley.",609);
-		facet2.addValueElement("Division of "
-				+ "Biology, California Institute of Technology, Pasadena.",558);
-		facet2.addValueElement("European Molecular Biology Laboratory, Heidelberg, Germany.",543);
-		facet2.addValueElement("ARC", 525);
-		
-		SimpleQuery query = new SimpleQuery();
-		
-		QueryToString queryDebug = new QueryToString();
-		
-		result.addElement(queryDebug);
-		result.addElement(query);
-		result.addElement(facet);
-		result.addElement(facet2);
-		
-		return result;
+//		//response.setResponse(res);
+//		
+//		SearchResult result = new SearchResult();
+//		
+//		HitList hitList = new HitList();
+//		String[] fields = { "title", "description" };
+//		hitList.setFields(Arrays.asList(fields));
+//		for (int i = 0; i < 10; i++) {
+//			HitList.Hit hit = new HitList.Hit();
+//			hit.getValue().put("title", "here's my " + i + "th Title");
+//			String desc = "";
+//			for (int t = 0; t < Math.random() * 20; t++) {
+//				desc += "lorem Ipsum dolores invictus amenentum centri. ";
+//			}
+//			hit.getValue().put("description", desc);
+//			hit.setScore(new Float(Math.random() + (10 - i)));
+//			hitList.addHit(hit);
+//		}
+//		result.addElement(hitList);
+//		
+//		FieldFacet facet = new FieldFacet("Keyword", "keyword");
+//		facet.setOrder(Order.VALUE);
+//		facet.setSort(Sort.DESC);
+//		facet.addValueElement(facet.new Value("Population", "Population", 29862));
+//		facet.addValueElement("Demographic Factors", 40833);
+//		facet.addValueElement("Developing Countries",27923);
+//		facet.addValueElement("Research Methodology",25246);
+//		facet.addValueElement("Family Planning", 23287);
+//		facet.addValueElement("Population Dynamics", 20919);
+//		
+//		FieldFacet facet2 = new FieldFacet("Institution", "institution");
+//		facet2.setOrder(Order.KEY);
+//		facet2.setSort(Sort.ASC);
+//		facet2.addValueElement("Department of Biology, MIT", 647);
+//		facet2.addValueElement("Department of Molecular and Cell Biology, University of California, Berkeley.",609);
+//		facet2.addValueElement("Division of "
+//				+ "Biology, California Institute of Technology, Pasadena.",558);
+//		facet2.addValueElement("European Molecular Biology Laboratory, Heidelberg, Germany.",543);
+//		facet2.addValueElement("ARC", 525);
+//		
+//		SimpleQuery query = new SimpleQuery();
+//		
+//		QueryToString queryDebug = new QueryToString();
+//		
+//		result.addElement(queryDebug);
+//		result.addElement(query);
+//		result.addElement(facet);
+//		result.addElement(facet2);
+//		
+		return response;
 	}
 }

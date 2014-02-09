@@ -5,9 +5,11 @@ import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
 import com.searchbox.core.engine.SolrQuery;
+import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.domain.Collection;
+import com.searchbox.domain.Preset;
 
 @SearchComponent
 public class QueryToString extends SearchElement  {
@@ -27,12 +29,21 @@ public class QueryToString extends SearchElement  {
 	}
 
 	@SearchAdaptor
-	public static class SolrAdaptor implements SearchElementAdaptor<QueryToString, SolrQuery>{
+	public static class SolrAdaptor implements SearchElementAdaptor<QueryToString, SolrQuery, SolrResponse>{
+
 		@Override
-		public SolrQuery doAdapt(Collection collection, QueryToString searchElement,
-				SolrQuery query) {
-			searchElement.setQuery(query.toString());
+		public SolrQuery doAdapt(Collection collection,
+				QueryToString SearchElement, SolrQuery query) {
+			query.set("debug","true");
 			return query;
+		}
+
+		@Override
+		public QueryToString doAdapt(Preset preset,
+				QueryToString searchElement, SolrQuery query,
+				SolrResponse response) {
+			searchElement.setQuery(query.toString());
+			return searchElement;
 		}
 	}
 }

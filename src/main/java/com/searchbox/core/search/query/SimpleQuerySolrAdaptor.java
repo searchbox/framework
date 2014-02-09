@@ -7,30 +7,35 @@ import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SearchConditionAdaptor;
 import com.searchbox.core.adaptor.SearchElementAdaptor;
 import com.searchbox.core.engine.SolrQuery;
+import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.query.SimpleQuery.Condition;
 import com.searchbox.domain.Collection;
+import com.searchbox.domain.Preset;
 import com.searchbox.web.ApplicationConversionService;
 
 @SearchAdaptor
-public class SimpleQuerySolrAdaptor implements SearchElementAdaptor<SimpleQuery, SolrQuery>,
-		SearchConditionAdaptor<SimpleQuery.Condition, SolrQuery> {
+public class SimpleQuerySolrAdaptor implements SearchConditionAdaptor<SimpleQuery.Condition, SolrQuery>,
+	SearchElementAdaptor<SimpleQuery, SolrQuery, SolrResponse> {
 
 	private static Logger logger = LoggerFactory.getLogger(SimpleQuerySolrAdaptor.class);
-
-	@Override
-	public SolrQuery doAdapt(Collection collection, Condition condition,
-			SolrQuery query) {
-		logger.info("Setting query to: " + condition.getQuery());
-		//TODO use collection to populate QF (QueryFields)
-		query.setQuery(condition.getQuery());
-		
-		return query;
-	}
-
 	@Override
 	public SolrQuery doAdapt(Collection collection, SimpleQuery SearchElement,
 			SolrQuery query) {
 		query.setQuery("*:*");
+		return query;
+	}
+
+	@Override
+	public SimpleQuery doAdapt(Preset preset, SimpleQuery searchElement,
+			SolrQuery query, SolrResponse response) {
+		searchElement.setQuery(query.getQuery());
+		return searchElement;
+	}
+
+	@Override
+	public SolrQuery doAdapt(Collection collection, Condition condition,
+			SolrQuery query) {
+		query.setQuery(condition.getQuery());
 		return query;
 	}
 
