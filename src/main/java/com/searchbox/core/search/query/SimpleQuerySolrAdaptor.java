@@ -21,7 +21,8 @@ public class SimpleQuerySolrAdaptor implements SearchConditionAdaptor<SimpleQuer
 	@Override
 	public SolrQuery doAdapt(Collection collection, SimpleQuery SearchElement,
 			SolrQuery query) {
-		query.setQuery("*:*");
+		query.setQuery(SearchElement.getQuery());
+		query.set("q.alt", "*:*");
 		return query;
 	}
 
