@@ -1,12 +1,13 @@
 package com.searchbox.service;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,8 @@ import org.springframework.stereotype.Service;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
-import com.searchbox.core.engine.SolrQuery;
-import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.web.ApplicationConversionService;
 
 @Service
 public class SearchAdapterService implements ApplicationListener<ContextRefreshedEvent> {

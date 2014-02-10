@@ -1,9 +1,5 @@
 package com.searchbox.core.search.facet;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
@@ -21,6 +17,7 @@ public class FieldFacet
 
 	public FieldFacet() {
 		fieldName = "";
+		this.setType(SearchElementType.FACET);
 	}
 
 	public FieldFacet(String label, String fieldName) {
@@ -85,9 +82,12 @@ public class FieldFacet
 		public int compareTo(Value o) {
 			int diff = 0;
 			if (order.equals(Order.KEY)) {
-				diff = this.getLabel().compareTo(o.getLabel());
+				diff = this.getLabel().compareTo(o.getLabel())*10;
+			} else if(!this.getCount().equals(o.getCount())){
+				diff = this.getCount().compareTo(o.getCount())*10;
 			} else {
-				diff = this.getCount().compareTo(o.getCount());
+				diff = this.getCount().compareTo(o.getCount())*10+
+						(this.getLabel().compareTo(o.getLabel())*((sort.equals(Sort.ASC)) ? 1 : -1));
 			}
 			return diff * ((sort.equals(Sort.ASC)) ? 1 : -1);
 		}

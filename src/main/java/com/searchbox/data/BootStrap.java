@@ -1,5 +1,6 @@
 package com.searchbox.data;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -9,8 +10,12 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -20,35 +25,69 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
-import com.searchbox.core.search.debug.QueryToString;
+import com.searchbox.core.engine.solr.SolrEngine;
+import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.Collection;
 import com.searchbox.domain.Field;
 import com.searchbox.domain.Preset;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
+import com.searchbox.service.SearchEngineService;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
-	public static boolean bootstraped = false;
-
 	Logger logger = LoggerFactory.getLogger(BootStrap.class);
+	
+	@Autowired
+	private SearchEngineService searchEngineService;
 
 	@Override
 	@Transactional
 	synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
 
 		logger.info("Bootstraping application");
-
-		if (bootstraped)
-			return;
-
+		
 		Searchbox testSearchbox = new Searchbox("test",
 				"this is a test Searchbox");
 		testSearchbox.persist();
+		
+		
+		SolrServer engine = searchEngineService.getServer("example");
+		for(int i=0; i<50; i++){
+			SolrInputDocument doc = new SolrInputDocument();
+			doc.setField("id", "doc#"+i);
+			doc.setField("title", "this is my "+i+"th title");
+			if(i<20) {
+				doc.setField("author","Jonathan");
+			} else {
+				doc.setField("author", "Stephane");
+			}
+			if(i%4==0){
+				doc.setField("cat","Alpine");
+			} else if(i%4==1){
+				doc.setField("cat","Wood");
+			} else if(i%4==2){
+				doc.setField("cat","Abercrombie");
+			} else if(i%4==3){
+				doc.setField("cat","Searchbox");
+			} 
+			String desc = "lorem Ipsum dolores invictus amenentum centri. ";
+			for (int t = 0; t < Math.random() * 10; t++) {
+				desc += "lorem Ipsum dolores invictus amenentum centri. ";
+			}
+			doc.setField("description", desc);
+			try {
+				engine.add(doc, 1000);
+			} catch (Exception e) {
+				logger.error("Could not updload document",e);
+			}
+		}
+		
 
 //		SolrCloudEngine solr = new SolrCloudEngine();
 //		solr.setName("test-collection");
@@ -63,13 +102,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //		CollectionDefinition collection = new CollectionDefinition("Test");
 //		collection.addField(new Field("id"));
 //		collection.persist();
+		
+		
+		
+		
 
 		Preset searchAll = new Preset("Search All", null);
 //		searchAll.setCollection(collection);
 		testSearchbox.addPreset(searchAll);
 		
+		
+		//Create & add a basicSearchStat SearchComponent to the preset;
+		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
+		searchAll.addSearchElement(basicStatus);
+		
 		//Create & add a querydebug SearchComponent to the preset;
-		SearchElementDefinition querydebug = new SearchElementDefinition(QueryToString.class);
+		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
 		searchAll.addSearchElement(querydebug);
 		
 		//Create & add a query SearchComponent to the preset;
@@ -78,9 +126,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet.setAttributeValue("fieldName", "my_field");
+		fieldFacet.setAttributeValue("fieldName", "cat");
+		fieldFacet.setAttributeValue("label", "category");
 		searchAll.addSearchElement(fieldFacet);
-//		
+		
+		//Create & add a facet to the preset.
+		SearchElementDefinition fieldFacet2 = new SearchElementDefinition(FieldFacet.class);
+		fieldFacet2.setAttributeValue("fieldName", "author");
+		fieldFacet2.setAttributeValue("label", "category");
+		searchAll.addSearchElement(fieldFacet2);
+
 //		Preset searchVideos = new Preset("Videos", collection);
 //		testSearchbox.addPreset(searchVideos);
 //
@@ -101,7 +156,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 		logger.info("Bootstraping");
 
-		bootstraped = true;
 	}
 
 	// private void setSettings() {

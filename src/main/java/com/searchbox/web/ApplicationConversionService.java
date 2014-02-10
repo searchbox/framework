@@ -18,12 +18,10 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
-import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.SearchCondition;
 
 @Component("conversionService")

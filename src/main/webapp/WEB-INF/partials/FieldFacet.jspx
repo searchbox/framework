@@ -18,7 +18,6 @@
         </c:forEach>
     </ul>
   </div>
-
   <!-- Standard version -->
   <div class="panel panel-default">
     <div class="panel-heading">

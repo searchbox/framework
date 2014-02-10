@@ -9,8 +9,8 @@ import com.searchbox.ref.Sort;
 public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<?,T>, T extends SearchCondition> 
 	extends SearchElement implements SearchConditionToElementMerger {
 	
-	protected Order order;
-	protected Sort sort;
+	protected Order order = Order.VALUE;
+	protected Sort sort = Sort.DESC;
 	
 	SortedSet<K> values;
 	

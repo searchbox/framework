@@ -1,18 +1,21 @@
 package com.searchbox.core.search.facet;
 
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.FacetField.Count;
+import org.apache.solr.client.solrj.response.QueryResponse;
+
 import com.searchbox.anno.SearchAdaptor;
-import com.searchbox.core.adaptor.SearchConditionAdapter;
-import com.searchbox.core.adaptor.SearchElementAdapter;
-import com.searchbox.core.engine.SolrQuery;
-import com.searchbox.core.engine.SolrResponse;
+import com.searchbox.core.adaptor.SolrConditionAdapter;
+import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
 import com.searchbox.domain.Collection;
 import com.searchbox.domain.Preset;
 
 @SearchAdaptor
 public class FieldFacetSolrAdaptor 
-	implements SearchElementAdapter<FieldFacet, SolrQuery, SolrResponse>,
-	SearchConditionAdapter<FieldFacet.ValueCondition, SolrQuery> {
+	implements SolrElementAdapter<FieldFacet>,
+	SolrConditionAdapter<FieldFacet.ValueCondition> {
 	
 	@Override
 	public SolrQuery doAdapt(Collection collection,
@@ -29,8 +32,15 @@ public class FieldFacetSolrAdaptor
 
 	@Override
 	public FieldFacet doAdapt(Preset preset, FieldFacet searchElement,
-			SolrQuery query, SolrResponse response) {
-		// TODO Generate all FacetValues from response.
+			SolrQuery query, QueryResponse response) {
+		for(FacetField facet:response.getFacetFields()){
+			System.out.println(facet);
+			if(facet.getName().equals(searchElement.getFieldName())){
+				for(Count value:facet.getValues()){
+					searchElement.addValueElement(value.getName(), (int)value.getCount());
+				}
+			}
+		}
 		return searchElement;
 	}
 }

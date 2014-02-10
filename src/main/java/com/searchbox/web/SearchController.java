@@ -57,6 +57,7 @@ public class SearchController {
 		}
 		
 		SearchResult result = new SearchResult();
+		
 		for(SearchElement element:searchService.execute(preset, conditions)){
 			logger.info("Adding to result view element: " + element);
 			result.addElement(element);

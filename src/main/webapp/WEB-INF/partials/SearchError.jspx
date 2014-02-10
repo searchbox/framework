@@ -1,0 +1,11 @@
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1"
+	style="border-radius: 10px; border: dashed 1px red; padding-left: 10px; background-color: orange; overflow: hidden; text-overflow: ellipsis;">
+	<h4>${element.label }</h4>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+</div>

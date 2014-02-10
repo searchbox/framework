@@ -1,9 +1,10 @@
 package com.searchbox.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,14 @@ import org.springframework.stereotype.Service;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.engine.SearchResponse;
-import com.searchbox.core.engine.SolrQuery;
-import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchResult;
-import com.searchbox.core.search.debug.QueryToString;
-import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.query.SimpleQuery;
-import com.searchbox.core.search.result.HitList;
+import com.searchbox.core.search.debug.SearchError;
 import com.searchbox.domain.Preset;
 import com.searchbox.domain.SearchElementDefinition;
 //import com.searchbox.domain.app.SearchElementDefinition;
-import com.searchbox.ref.Order;
-import com.searchbox.ref.Sort;
 
 @Service
 public class SearchService {
@@ -36,6 +29,9 @@ public class SearchService {
 	
 	@Autowired
 	private SearchAdapterService adapterService;
+	
+	@Autowired
+	private SearchEngineService searchEngineService;
 	
 	public SearchService() {
 		// TODO Auto-generated constructor stub
@@ -85,7 +81,18 @@ public class SearchService {
 			}
 		}
 				
-		SearchResponse result = this.executeSearch(preset, presetConditions, conditions);
+		//Executing the query on the search engine!!! 
+		SolrResponse result = null;
+		try {
+			logger.info("Using: " + this.searchEngineService.server);
+			result = this.searchEngineService.getResponse(query);
+		} catch (Exception e) {
+			SearchElement error = new SearchError(e.getMessage(), e);
+			logger.info("Adding search element: " + error);
+			elements.add(error);
+			logger.error("Could not use searchEngine!!!", e);
+		}
+		
 		
 		//Executing a merge on all SearchConditions
 		for(SearchElement element:elements){
@@ -110,63 +117,5 @@ public class SearchService {
 		logger.info("we got: " + elements.size() + " elements");
 
 		return elements;
-	}
-	
-	private SearchResponse executeSearch(Preset preset,
-			List<SearchCondition> presetConditions,
-			List<SearchCondition> conditions) {
-		
-		SolrResponse response = new SolrResponse();
-		
-//		//response.setResponse(res);
-//		
-//		SearchResult result = new SearchResult();
-//		
-//		HitList hitList = new HitList();
-//		String[] fields = { "title", "description" };
-//		hitList.setFields(Arrays.asList(fields));
-//		for (int i = 0; i < 10; i++) {
-//			HitList.Hit hit = new HitList.Hit();
-//			hit.getValue().put("title", "here's my " + i + "th Title");
-//			String desc = "";
-//			for (int t = 0; t < Math.random() * 20; t++) {
-//				desc += "lorem Ipsum dolores invictus amenentum centri. ";
-//			}
-//			hit.getValue().put("description", desc);
-//			hit.setScore(new Float(Math.random() + (10 - i)));
-//			hitList.addHit(hit);
-//		}
-//		result.addElement(hitList);
-//		
-//		FieldFacet facet = new FieldFacet("Keyword", "keyword");
-//		facet.setOrder(Order.VALUE);
-//		facet.setSort(Sort.DESC);
-//		facet.addValueElement(facet.new Value("Population", "Population", 29862));
-//		facet.addValueElement("Demographic Factors", 40833);
-//		facet.addValueElement("Developing Countries",27923);
-//		facet.addValueElement("Research Methodology",25246);
-//		facet.addValueElement("Family Planning", 23287);
-//		facet.addValueElement("Population Dynamics", 20919);
-//		
-//		FieldFacet facet2 = new FieldFacet("Institution", "institution");
-//		facet2.setOrder(Order.KEY);
-//		facet2.setSort(Sort.ASC);
-//		facet2.addValueElement("Department of Biology, MIT", 647);
-//		facet2.addValueElement("Department of Molecular and Cell Biology, University of California, Berkeley.",609);
-//		facet2.addValueElement("Division of "
-//				+ "Biology, California Institute of Technology, Pasadena.",558);
-//		facet2.addValueElement("European Molecular Biology Laboratory, Heidelberg, Germany.",543);
-//		facet2.addValueElement("ARC", 525);
-//		
-//		SimpleQuery query = new SimpleQuery();
-//		
-//		QueryToString queryDebug = new QueryToString();
-//		
-//		result.addElement(queryDebug);
-//		result.addElement(query);
-//		result.addElement(facet);
-//		result.addElement(facet2);
-//		
-		return response;
 	}
 }

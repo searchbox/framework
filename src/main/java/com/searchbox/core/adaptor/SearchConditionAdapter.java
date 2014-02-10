@@ -7,6 +7,6 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.domain.Collection;
 
 @Component
-public interface SearchConditionAdapter<K extends SearchCondition, T extends SearchQuery> {
+public interface SearchConditionAdapter<K extends SearchCondition, T> {
 	public T doAdapt(Collection collection, K condition, T query);
 }
