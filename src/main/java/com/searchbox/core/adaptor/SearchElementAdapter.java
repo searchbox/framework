@@ -9,7 +9,7 @@ import com.searchbox.domain.Collection;
 import com.searchbox.domain.Preset;
 
 @Component
-public interface SearchElementAdaptor<K extends SearchElement, T extends SearchQuery, U extends SolrResponse> {	
+public interface SearchElementAdapter<K extends SearchElement, T extends SearchQuery, U extends SolrResponse> {	
 	
 	public T doAdapt(Collection collection, K searchElement, T query);
 	

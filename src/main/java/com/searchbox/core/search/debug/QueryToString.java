@@ -3,7 +3,7 @@ package com.searchbox.core.search.debug;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SearchElementAdaptor;
+import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.engine.SolrResponse;
 import com.searchbox.core.search.SearchElement;
@@ -29,7 +29,7 @@ public class QueryToString extends SearchElement  {
 	}
 
 	@SearchAdaptor
-	public static class SolrAdaptor implements SearchElementAdaptor<QueryToString, SolrQuery, SolrResponse>{
+	public static class SolrAdaptor implements SearchElementAdapter<QueryToString, SolrQuery, SolrResponse>{
 
 		@Override
 		public SolrQuery doAdapt(Collection collection,

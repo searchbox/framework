@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SearchConditionAdaptor;
-import com.searchbox.core.adaptor.SearchElementAdaptor;
+import com.searchbox.core.adaptor.SearchConditionAdapter;
+import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.search.SearchCondition;
 
@@ -52,8 +52,8 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(
 				false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
-		scanner.addIncludeFilter(new AssignableTypeFilter(SearchElementAdaptor.class));
-		scanner.addIncludeFilter(new AssignableTypeFilter(SearchConditionAdaptor.class));
+		scanner.addIncludeFilter(new AssignableTypeFilter(SearchElementAdapter.class));
+		scanner.addIncludeFilter(new AssignableTypeFilter(SearchConditionAdapter.class));
 		for (BeanDefinition beanDefinition : scanner
 				.findCandidateComponents("com.searchbox")) {
 			try {
@@ -82,10 +82,10 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 		
 						this.addConverter((Converter<?, ?>) conditionConverter.newInstance());
 					}
-				} else if(SearchElementAdaptor.class.isAssignableFrom(searchComponent)){
+				} else if(SearchElementAdapter.class.isAssignableFrom(searchComponent)){
 					logger.info("~~ Found Adaptor: " + searchComponent);
 
-				} else if(SearchConditionAdaptor.class.isAssignableFrom(searchComponent)){
+				} else if(SearchConditionAdapter.class.isAssignableFrom(searchComponent)){
 					logger.info("~~ Found Adaptor: " + searchComponent);
 				}
 				

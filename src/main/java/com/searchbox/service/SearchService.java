@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.adaptor.SearchConditionAdaptor;
-import com.searchbox.core.adaptor.SearchElementAdaptor;
+import com.searchbox.core.adaptor.SearchConditionAdapter;
+import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.engine.SearchResponse;
 import com.searchbox.core.engine.SolrQuery;
 import com.searchbox.core.engine.SolrResponse;
@@ -55,7 +55,7 @@ public class SearchService {
 			elements.add(selement);
 			
 			//Weave in all element conditions in query
-			SearchElementAdaptor elementAdapter = adapterService.getAdaptor(selement);
+			SearchElementAdapter elementAdapter = adapterService.getAdapter(selement);
 			if(elementAdapter != null){
 				logger.info("Adapting condition from Element: " + selement);
 				elementAdapter.doAdapt(preset.getCollection(), selement, query);
@@ -70,7 +70,7 @@ public class SearchService {
 		//Weave in all UI Conditions in query
 		for(SearchCondition condition:conditions){
 			logger.info("Adapting condition from UI: " + condition);
-			SearchConditionAdaptor conditionAdaptor = adapterService.getAdaptor(condition);
+			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
 				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
 			}
@@ -79,7 +79,7 @@ public class SearchService {
 		//Weave in all presetConditions in query
 		for(SearchCondition condition:presetConditions){
 			logger.info("Adapting condition from Preset: " + condition);
-			SearchConditionAdaptor conditionAdaptor = adapterService.getAdaptor(condition);
+			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
 				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
 			}
@@ -91,7 +91,7 @@ public class SearchService {
 		for(SearchElement element:elements){
 			
 			//Weave in SearchResponse to element
-			SearchElementAdaptor elementAdaptor = adapterService.getAdaptor(element);
+			SearchElementAdapter elementAdaptor = adapterService.getAdapter(element);
 			if(elementAdaptor != null){
 				logger.info("Adapting element from Preset: " + element + " for response");
 				//TODO the casting here is because we only suport Solr now.
