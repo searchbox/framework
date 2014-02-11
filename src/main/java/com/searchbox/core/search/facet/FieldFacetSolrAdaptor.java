@@ -20,13 +20,13 @@ public class FieldFacetSolrAdaptor
 	@Override
 	public SolrQuery doAdapt(Collection collection,
 			ValueCondition condition, SolrQuery query) {
-		query.add("fq", condition.fieldName+":"+condition.value);
+		query.addFilterQuery("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+condition.value);
 		return query;
 	}
 
 	@Override
 	public SolrQuery doAdapt(Collection collection, FieldFacet element, SolrQuery query) {
-		query.addFacetField(element.getFieldName());
+		query.addFacetField("{!ex="+element.getFieldName()+"}"+element.getFieldName());
 		return query;
 	}
 
