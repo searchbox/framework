@@ -1,5 +1,8 @@
 package com.searchbox.core.search.facet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -20,7 +23,21 @@ public class FieldFacetSolrAdaptor
 	@Override
 	public SolrQuery doAdapt(Collection collection,
 			ValueCondition condition, SolrQuery query) {
-		query.addFilterQuery("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+condition.value);
+		boolean isnew = true;
+		List<String> fqs = new ArrayList<String>();
+		if(query.getFilterQueries() != null){
+			for(String fq:query.getFilterQueries()){
+				if(fq.contains("{!tag="+condition.fieldName+"}"+condition.fieldName+":")){
+					isnew = false;
+					fq = fq+" OR " + condition.value;
+				}
+				fqs.add(fq);
+			}
+		}
+		if(isnew){
+			fqs.add("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+condition.value);			
+		}
+		query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
 		return query;
 	}
 
