@@ -95,6 +95,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add("article-abstract");
 		fields.add("author");
+		fields.add("publication-type");
+		fields.add("article-completion-date");
+		fields.add("article-revision-date");
 		hitList.setAttributeValue("fields", fields);
 		searchAll.addSearchElement(hitList);
 		
