@@ -17,6 +17,7 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.domain.Preset;
+import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
 
 @Controller
