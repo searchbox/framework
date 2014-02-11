@@ -10,8 +10,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrConfig;
@@ -41,8 +44,7 @@ public class SearchEngineService {
 	public SearchEngineService() {}
 	
 	@PostConstruct
-	public void init() throws ParserConfigurationException, IOException, SAXException{ 
-
+	public synchronized void init() throws ParserConfigurationException, IOException, SAXException{ 
 		
 		Resource solrHomeResource = context.getResource("classpath:META-INF/solr/");
 		System.setProperty("solr.solr.home", solrHomeResource.getURL().getPath());
@@ -59,21 +61,44 @@ public class SearchEngineService {
 		Resource schemaResource = context.getResource("classpath:META-INF/solr/conf/schema.xml");
 		IndexSchema schema = new IndexSchema(config, schemaResource.getFilename(), new InputSource(schemaResource.getInputStream()));
 
-		File dataDir = new File("target/data/example/");
+		File dataDir = new File("target/data/pubmed/");
 		if(dataDir.exists()){			
 			FileUtils.deleteDirectory(dataDir);
 		}
 		
 		String dataDirName = dataDir.getPath();
 		
-		CoreDescriptor cd = new CoreDescriptor(coreContainer, "example", coreInstanceDir);
-		SolrCore core = new SolrCore("example",dataDirName,config, schema, cd);
-		logger.info("XOXOXOXO Core config: " + core.getConfigResource());
-		logger.info("XOXOXOXO Instance dir: " + core.getIndexDir());
-		logger.info("XOXOXOXO Data dir: " + core.getDataDir());
+		CoreDescriptor cd = new CoreDescriptor(coreContainer, "pubmed", coreInstanceDir);
+		SolrCore core = new SolrCore("pubmed",dataDirName,config, schema, cd);
+		logger.info("Solr Core config: " + core.getConfigResource());
+		logger.info("Solr Instance dir: " + core.getIndexDir());
+		logger.info("Solr Data dir: " + core.getDataDir());
 		coreContainer.register(core, false);
 		
-		this.server = new EmbeddedSolrServer(coreContainer, "example");
+		this.server = new EmbeddedSolrServer(coreContainer, "pubmed");
+		
+		
+		//Now we might be able to load some PUBMED data.
+		//TODO remove that has nothing to do here!!!
+		
+		
+
+		try {
+			Resource rfile = context.getResource("classpath:META-INF/data/pubmedIndex.xml");
+			logger.error("FILE: " + rfile.getFile().getAbsolutePath());
+			ContentStreamBase contentstream = new ContentStreamBase.FileStream(rfile.getFile());
+			contentstream.setContentType("text/xml");
+			ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
+			request.addContentStream(contentstream);
+			request.process(this.server);
+			this.server.commit();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
