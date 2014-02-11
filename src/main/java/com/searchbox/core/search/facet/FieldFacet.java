@@ -44,7 +44,7 @@ public class FieldFacet
 			implements Comparable<Value> {
 
 		private Integer count;
-		private Boolean selected;
+		private Boolean selected = false;
 
 		public Value(String label, String value, Integer count) {
 			super(label, value);

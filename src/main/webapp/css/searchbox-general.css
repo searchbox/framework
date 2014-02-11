@@ -203,7 +203,12 @@ a.clear_input:hover {
 /*************************************************************/
 /*                  Left column / facets                     */
 /*************************************************************/
-
+.debug-wrapper{
+  border: dashed 1px aqua;
+  display: inherit; 
+  padding: 2px;
+  background-color: lightcyan;
+}
 /*******************     CSS Checkbox      *******************/
 #main-col-left{
   z-index:1000;
