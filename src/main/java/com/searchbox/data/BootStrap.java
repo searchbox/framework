@@ -94,6 +94,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		hitList.setAttributeValue("urlField", "article-title");
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add("article-abstract");
+		fields.add("author");
 		hitList.setAttributeValue("fields", fields);
 		searchAll.addSearchElement(hitList);
 		

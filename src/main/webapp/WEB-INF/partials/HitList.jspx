@@ -13,17 +13,13 @@
   
   <c:forEach items="${element.values}" var="hit">
     <c:if test="${hit != null}">
-      <c:set var="result_row_title" value="${hit.getTitle()}" />
-      <a href="${hit.getUrl()}"><h5 class="result-title">${hit.getTitle()}</h5></a>
-      
-      <p>${hit.value['description']}</p>
-      <i>${hit.score}</i>
-    </c:if>
-    
-    <div class="label label-default" title="Kafkafi N" data-filter="author:Kafkafi N">
-      Author: <span class="field_value value_Laboratory value_attributes full">Kafkafi N</span>
-    </div>
-    
+    <a href="${hit.getUrl()}"><h5 class="result-title">${hit.getTitle()}</h5></a>
+    <ul>
+	    <c:forEach items="${hit.value}" var="field">
+	      <li><strong>${field.key }</strong>${field.value }</li>
+	    </c:forEach>
+    </ul>
+    </c:if>    
   </c:forEach>  
 
 </jsp:root>
