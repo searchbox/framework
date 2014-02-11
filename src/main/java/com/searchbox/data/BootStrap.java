@@ -13,7 +13,9 @@ import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
@@ -47,6 +51,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	
 	@Autowired
 	private SearchEngineService searchEngineService;
+	
+	@Autowired
+	private ApplicationContext context;
 
 	@Override
 	@Transactional
@@ -57,38 +64,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		Searchbox testSearchbox = new Searchbox("test",
 				"this is a test Searchbox");
 		testSearchbox.persist();
-		
-		
-		SolrServer engine = searchEngineService.getServer("example");
-		for(int i=0; i<50; i++){
-			SolrInputDocument doc = new SolrInputDocument();
-			doc.setField("id", "doc#"+i);
-			doc.setField("title", "this is my "+i+"th title");
-			if(i<20) {
-				doc.setField("author","Jonathan");
-			} else {
-				doc.setField("author", "Stephane");
-			}
-			if(i%4==0){
-				doc.setField("cat","Alpine");
-			} else if(i%4==1){
-				doc.setField("cat","Wood");
-			} else if(i%4==2){
-				doc.setField("cat","Abercrombie");
-			} else if(i%4==3){
-				doc.setField("cat","Searchbox");
-			} 
-			String desc = "lorem Ipsum dolores invictus amenentum centri. ";
-			for (int t = 0; t < Math.random() * 10; t++) {
-				desc += "lorem Ipsum dolores invictus amenentum centri. ";
-			}
-			doc.setField("description", desc);
-			try {
-				engine.add(doc, 1000);
-			} catch (Exception e) {
-				logger.error("Could not updload document",e);
-			}
-		}
 		
 
 //		SolrCloudEngine solr = new SolrCloudEngine();
@@ -115,10 +90,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//Create & add a HitLIst SearchComponent to the preset;
 		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "title");
-		hitList.setAttributeValue("urlField", "title");
+		hitList.setAttributeValue("titleField", "article-title");
+		hitList.setAttributeValue("urlField", "article-title");
 		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("description");
+		fields.add("article-abstract");
 		hitList.setAttributeValue("fields", fields);
 		searchAll.addSearchElement(hitList);
 		
@@ -136,15 +111,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet.setAttributeValue("fieldName", "cat");
-		fieldFacet.setAttributeValue("label", "category");
+		fieldFacet.setAttributeValue("fieldName", "publication-type");
+		fieldFacet.setAttributeValue("label", "Type");
 		searchAll.addSearchElement(fieldFacet);
-		
-		//Create & add a facet to the preset.
-		SearchElementDefinition fieldFacet2 = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet2.setAttributeValue("fieldName", "author");
-		fieldFacet2.setAttributeValue("label", "category");
-		searchAll.addSearchElement(fieldFacet2);
 
 //		Preset searchVideos = new Preset("Videos", collection);
 //		testSearchbox.addPreset(searchVideos);
