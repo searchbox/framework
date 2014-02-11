@@ -1,7 +1,9 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:fn="http://java.sun.com/jsp/jstl/functions"
   xmlns:spring="http://www.springframework.org/tags"
-  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+  xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
+  
   <jsp:output omit-xml-declaration="yes" />
   
   <jsp:directive.attribute name="page" type="java.lang.String"
@@ -10,15 +12,14 @@
     
   <c:choose>
     <c:when test="${not empty param.debug}">
-      <div id="debug_wrapper_${element.getClass().getSimpleName()}" style="border: dashed 1px aqua;
-display: inherit; padding: 2px;background-color: lightcyan;">
+      <div id="debug-wrapper-${element.getClass().getSimpleName()}" class="debug-wrapper">
         <jsp:include page="${page}"/>
       </div>
       <script>
-      $("#debug_wrapper_${element.getClass().getSimpleName()}").popover(
+      $("#debug-wrapper-${element.getClass().getSimpleName()}").popover(
           {trigger: "hover", 
             title: "Element Debug", 
-            content: "<c:out value="${element}"/>",
+            content: "<str:decodeUrl>${fn:replace(element, ',', ', ')}</str:decodeUrl>",
             placement: "auto"
           });
       </script>

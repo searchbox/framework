@@ -19,12 +19,12 @@
 		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"
 		var="bootstrap_js_url" />
 
-	<spring:url value="resources/images/favicon.ico" var="favicon" />
+	<spring:url value="assets/images/favicon.ico" var="favicon" />
 
 	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
 	<!-- <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" /> -->
 	<link rel="stylesheet" type="text/css"
-		href="resources/css/searchbox-general.css" />
+		href="assets/css/searchbox-general.css" />
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
 
@@ -36,6 +36,6 @@
 
 	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
 	<script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-	<script src="resources/js/searchbox.js" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+	<script src="assets/js/searchbox.js" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>
