@@ -7,6 +7,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
@@ -23,19 +24,20 @@ public class FieldFacetSolrAdaptor
 	@Override
 	public SolrQuery doAdapt(Collection collection,
 			ValueCondition condition, SolrQuery query) {
+		String conditionValue = ClientUtils.escapeQueryChars(condition.value);
 		boolean isnew = true;
 		List<String> fqs = new ArrayList<String>();
 		if(query.getFilterQueries() != null){
 			for(String fq:query.getFilterQueries()){
 				if(fq.contains("{!tag="+condition.fieldName+"}"+condition.fieldName+":")){
 					isnew = false;
-					fq = fq+" OR " + condition.value;
+					fq = fq+" OR " + conditionValue;
 				}
 				fqs.add(fq);
 			}
 		}
 		if(isnew){
-			fqs.add("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+condition.value);			
+			fqs.add("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+conditionValue);			
 		}
 		query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
 		return query;
