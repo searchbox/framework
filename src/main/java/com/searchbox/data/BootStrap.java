@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,6 +31,7 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.Collection;
 import com.searchbox.domain.Field;
@@ -111,6 +113,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //		searchAll.setCollection(collection);
 		testSearchbox.addPreset(searchAll);
 		
+		//Create & add a HitLIst SearchComponent to the preset;
+		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+		hitList.setAttributeValue("titleField", "title");
+		hitList.setAttributeValue("urlField", "title");
+		ArrayList<String> fields = new ArrayList<String>();
+		fields.add("description");
+		hitList.setAttributeValue("fields", fields);
+		searchAll.addSearchElement(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);

@@ -5,15 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.core.search.ValueElement;
+import com.searchbox.core.search.result.HitList.Hit;
 
 
-
+@SearchComponent
 public class HitList extends SearchElementWithValues<HitList.Hit> {
 	
 	private List<String> fields;
+	private String titleField;
+	private String urlField;
 	
 	public HitList(){
 		super();
@@ -21,27 +25,20 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 		this.fields = new ArrayList<String>();
 	}
 	
-	public static class Hit extends ValueElement<Map<String, String>> implements Comparable<Hit> {
+	public String getTitleField() {
+		return titleField;
+	}
 
-		private Float score;
-		
-		public Hit(){
-			super("");
-			this.value = new HashMap<String, String>();
-		}
-		
-		public Float getScore(){
-			return this.score;
-		}
+	public void setTitleField(String titleField) {
+		this.titleField = titleField;
+	}
 
-		@Override
-		public int compareTo(Hit hit) {
-			return score.compareTo(hit.getScore()) * -1;
-		}
+	public String getUrlField() {
+		return urlField;
+	}
 
-		public void setScore(Float score) {
-			this.score = score;
-		}
+	public void setUrlField(String urlField) {
+		this.urlField = urlField;
 	}
 
 	public void setFields(List<String> fields) {
@@ -54,5 +51,58 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 
 	public void addHit(Hit hit) {
 		this.values.add(hit);
+	}
+
+	public Hit newHit(Float score) {
+		Hit hit = new Hit(score);
+		this.addHit(hit);
+		return hit;
+	}
+	
+	public class Hit extends ValueElement<Map<String, Object>> implements Comparable<Hit> {
+
+		private Float score;
+		private Map<String, Object> fieldValues;
+		
+		public Hit(Float score){
+			super("");
+			this.score = score;
+			this.value = new HashMap<String, Object>();
+		}
+		
+		public Float getScore(){
+			return this.score;
+		}
+
+		public void setScore(Float score) {
+			this.score = score;
+		}
+		
+		public void addFieldValue(String name, Object value){
+			this.value.put(name, value);
+		}
+		
+		public String getTitle(){
+			Object title = this.value.get(titleField);
+			if(List.class.isAssignableFrom(title.getClass())){
+				return ((List<String>)title).get(0);
+			} else {
+				return (String)title;
+			}
+		}
+		
+		public String getUrl(){
+			Object url = this.value.get(urlField);
+			if(List.class.isAssignableFrom(url.getClass())){
+				return ((List<String>)url).get(0);
+			} else {
+				return (String)url;
+			}
+		}
+		
+		@Override
+		public int compareTo(Hit hit) {
+			return score.compareTo(hit.getScore()+0.001f) * -1;
+		}
 	}
 }

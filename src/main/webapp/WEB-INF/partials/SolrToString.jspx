@@ -3,14 +3,42 @@
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1"
-	style="border-radius: 10px; border: dashed 1px red; padding-left: 10px; background-color: yellow; overflow: hidden; text-overflow: ellipsis;">
-	<h4>Solr Params</h4>
+	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
+
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	<c:forEach items="${fn:split(element.query,'&amp;')}" var="qparam">
-		<p><str:decodeUrl>${qparam}</str:decodeUrl></p>
-	</c:forEach>
-	 <h4>Solr Response</h4>
-	<pre>${element.response }</pre>
+
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapseOne"> Solr Params </a>
+				</h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse">
+				<div class="panel-body">
+					<c:forEach items="${fn:split(element.query,'&amp;')}" var="qparam">
+						<p>
+							<str:decodeUrl>${qparam}</str:decodeUrl>
+						</p>
+					</c:forEach>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapseTwo"> Solr Response </a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse">
+				<div class="panel-body">
+					<pre>${element.response }</pre>
+				</div>
+			</div>
+		</div>
+
+	</div>
 </div>

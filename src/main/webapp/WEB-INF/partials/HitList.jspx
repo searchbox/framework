@@ -12,10 +12,10 @@
   <!-- Standard version -->
   
   <c:forEach items="${element.values}" var="hit">
-
-    <c:if test="${hit.value['title'] != null}">
-      <c:set var="result_row_title" value="${hit.value['title']}" />
-      <a href="#"><h5 class="result-title">${hit.value['title']}</h5></a>
+    <c:if test="${hit != null}">
+      <c:set var="result_row_title" value="${hit.getTitle()}" />
+      <a href="${hit.getUrl()}"><h5 class="result-title">${hit.getTitle()}</h5></a>
+      
       <p>${hit.value['description']}</p>
       <i>${hit.score}</i>
     </c:if>
