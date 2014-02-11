@@ -62,7 +62,6 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	public class Hit extends ValueElement<Map<String, Object>> implements Comparable<Hit> {
 
 		private Float score;
-		private Map<String, Object> fieldValues;
 		
 		public Hit(Float score){
 			super("");
