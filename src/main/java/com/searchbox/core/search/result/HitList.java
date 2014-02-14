@@ -18,6 +18,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	private List<String> fields;
 	private String titleField;
 	private String urlField;
+	private String idField;
 	
 	public HitList(){
 		super("Result Set");
@@ -39,6 +40,14 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 
 	public void setUrlField(String urlField) {
 		this.urlField = urlField;
+	}
+
+	public String getIdField() {
+		return idField;
+	}
+
+	public void setIdField(String idField) {
+		this.idField = idField;
 	}
 
 	public void setFields(List<String> fields) {

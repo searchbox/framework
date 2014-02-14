@@ -69,6 +69,6 @@
 			<!-- push -->
 		</div>
 	</div>
-	<jsp:include page="/WEB-INF/partials/footer.jspx" />
+  <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
 </body>
 </html>

@@ -87,6 +87,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//Create & add a HitLIst SearchComponent to the preset;
 		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
 		hitList.setAttributeValue("titleField", "article-title");
+		hitList.setAttributeValue("idField", "id");
 		hitList.setAttributeValue("urlField", "article-title");
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add("article-abstract");

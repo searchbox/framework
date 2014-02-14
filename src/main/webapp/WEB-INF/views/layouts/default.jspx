@@ -21,7 +21,6 @@
 </head>
 <body>
   <div id="wrap">
-    <jsp:include page="/WEB-INF/partials/header.jspx" />
     <div id="main-content" role="main">
 
       <div class="row" id="main-search-content">
@@ -33,6 +32,6 @@
       <!-- push -->
     </div>
   </div>
-  <jsp:include page="/WEB-INF/partials/footer.jspx" />
+  <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
 </body>
 </html>

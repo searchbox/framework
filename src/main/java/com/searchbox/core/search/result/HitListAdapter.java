@@ -27,6 +27,9 @@ public class HitListAdapter implements SolrElementAdapter<HitList> {
 		if(!searchElement.getFields().contains(searchElement.getUrlField())){
 			query.addField(searchElement.getUrlField());
 		}
+		if(!searchElement.getFields().contains(searchElement.getIdField())){
+			query.addField(searchElement.getIdField());
+		}
 		query.addField("score");
 		return query;
 	}
