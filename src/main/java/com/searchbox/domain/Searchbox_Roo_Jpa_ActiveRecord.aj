@@ -14,7 +14,7 @@ privileged aspect Searchbox_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager Searchbox.entityManager;
     
-    public static final List<String> Searchbox.fieldNames4OrderClauseFilter = java.util.Arrays.asList("slug", "name", "description", "presets");
+    public static final List<String> Searchbox.fieldNames4OrderClauseFilter = java.util.Arrays.asList("slug", "name", "alias", "description", "presets");
     
     public static final EntityManager Searchbox.entityManager() {
         EntityManager em = new Searchbox().entityManager;

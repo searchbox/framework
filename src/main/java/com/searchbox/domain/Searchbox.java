@@ -34,6 +34,8 @@ public class Searchbox {
 	/**
      */
 	private String name;
+	
+	private String alias;
 
 	/**
      */

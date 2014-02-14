@@ -25,6 +25,14 @@ privileged aspect Searchbox_Roo_JavaBean {
         this.name = name;
     }
     
+    public String Searchbox.getAlias() {
+        return this.alias;
+    }
+    
+    public void Searchbox.setAlias(String alias) {
+        this.alias = alias;
+    }
+    
     public String Searchbox.getDescription() {
         return this.description;
     }
