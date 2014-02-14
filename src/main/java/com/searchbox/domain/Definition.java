@@ -35,7 +35,6 @@ public abstract class Definition<K> {
 	protected static void inspectAndSaveAttribute(Class<?> searchElement, List<DefinitionAttribute> attributes){
 		if(searchElement != null){
 			for(Field field:searchElement.getDeclaredFields()){
-				System.out.println("Adding attr: " + field.getName() + " as type: " + field.getType().getSimpleName());
 				//TODO might wanna type as DefinitionAttribute<Integer>(...)
 				attributes.add(new DefinitionAttribute(field.getType(), field.getName()));
 			}
@@ -68,7 +67,6 @@ public abstract class Definition<K> {
 			K element = (K) clazz.newInstance();
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
-					System.out.println("Setting field: " +  attribute.getName());
 					Field field = findUnderlying(clazz, attribute.getName());
 					field.setAccessible(true);
 					field.set(element, attribute.getValue());

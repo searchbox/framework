@@ -53,7 +53,6 @@ public class FieldFacetSolrAdaptor
 	public FieldFacet doAdapt(Preset preset, FieldFacet searchElement,
 			SolrQuery query, QueryResponse response) {
 		for(FacetField facet:response.getFacetFields()){
-			System.out.println(facet);
 			if(facet.getName().equals(searchElement.getFieldName())){
 				for(Count value:facet.getValues()){
 					searchElement.addValueElement(value.getName(), (int)value.getCount());
