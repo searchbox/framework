@@ -116,8 +116,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.addSearchElementDeifinition(fieldFacet);
 		
 		searchbox.addPresetDefinition(preset);
+		
+		PresetDefinition articles = new PresetDefinition(searchbox, collection);
+		articles.setAttributeValue("label", "Articles");
+		articles.setAttributeValue("slug", "articles");
+		searchbox.addPresetDefinition(articles);
 
-		//preset.persist();
+		PresetDefinition press = new PresetDefinition(searchbox, collection);
+		press.setAttributeValue("label", "Press");
+		press.setAttributeValue("slug", "press");
+		searchbox.addPresetDefinition(press);
 		
 		searchbox.persist();
 

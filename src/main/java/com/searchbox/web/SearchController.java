@@ -19,11 +19,13 @@ import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
+import com.searchbox.domain.Searchbox;
 import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
 
 @Controller
 @RequestMapping("/search")
+@Layout("search")
 public class SearchController {
 
 	private static Logger logger = LoggerFactory.getLogger(SearchController.class);
@@ -44,8 +46,18 @@ public class SearchController {
 //	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
 	public ModelAndView search(HttpServletRequest request) {
 		
-		PresetDefinition pDef =  PresetDefinition.findAllPresetDefinitions().get(0);
+		//That should come from the searchbox param/filter
+		Searchbox searchbox = Searchbox.findAllSearchboxes().get(0);
 		
+		List<Preset> presets = new ArrayList<Preset>();
+		Preset currentPreset;
+		for(PresetDefinition pdef:searchbox.getPresets()){
+			presets.add(pdef.getElement());
+		}
+		
+		//Get the current Preset
+		currentPreset = presets.get(0);
+					
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
 		
 		for(String param:searchComponentService.getSearchConditionParams()){
@@ -61,18 +73,17 @@ public class SearchController {
 		
 		SearchResult result = new SearchResult();
 		
-		if(pDef != null){
-			Preset preset = pDef.getElement();
-			if(preset != null){	
-				for(SearchElement element:searchService.execute(preset, conditions)){
-					logger.info("Adding to result view element: " + element);
-					result.addElement(element);
-				}
+		if(currentPreset != null){
+			for(SearchElement element:searchService.execute(currentPreset, conditions)){
+				logger.debug("Adding to result view element: " + element);
+				result.addElement(element);
 			}
 		}
 		
 		ModelAndView model = new ModelAndView("search/index");
 		model.addObject("result", result);
+		model.addObject("presets",presets);
+		model.addObject("currentPreset", currentPreset);
 		
 		return model;
 	}
