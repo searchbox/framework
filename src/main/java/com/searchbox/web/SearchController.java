@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,7 +25,7 @@ import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
 
 @Controller
-@RequestMapping("/search")
+@RequestMapping("/*")
 @Layout("search")
 public class SearchController {
 
@@ -43,20 +44,31 @@ public class SearchController {
 	}
 	
 	@RequestMapping
-//	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
 	public ModelAndView search(HttpServletRequest request) {
+		logger.info("No Slug given, select default Preset");
+		return search("wassup", request);
+	}
+	
+	@RequestMapping("{presetSlug}")
+//	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
+	public ModelAndView search(@PathVariable String presetSlug, HttpServletRequest request) {
 		
 		//That should come from the searchbox param/filter
 		Searchbox searchbox = Searchbox.findAllSearchboxes().get(0);
 		
 		List<Preset> presets = new ArrayList<Preset>();
-		Preset currentPreset;
+		Preset currentPreset = null;
 		for(PresetDefinition pdef:searchbox.getPresets()){
-			presets.add(pdef.getElement());
+			Preset pset = pdef.getElement();
+			if(pset.getSlug().equals(presetSlug)){
+				currentPreset = pset;
+			}
+			presets.add(pset);
 		}
 		
-		//Get the current Preset
-		currentPreset = presets.get(0);
+		if(currentPreset == null && presets.size() > 0){
+			currentPreset = presets.get(0);
+		}
 					
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
 		
