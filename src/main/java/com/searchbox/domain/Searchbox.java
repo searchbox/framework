@@ -23,6 +23,7 @@ public class Searchbox {
 
 	public Searchbox(String name, String description) {
 		this.name = name;
+		this.slug = name;
 		this.description = description;
 	}
 

@@ -129,6 +129,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		searchbox.addPresetDefinition(press);
 		
 		searchbox.persist();
+		
+		//Making another Searchbox for testing and UI.
+		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
+		anotherSearchbox.persist();
 
 
 

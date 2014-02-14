@@ -6,10 +6,13 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
-	<form>
+	<form id="searchForm">
 		<c:if test="${not empty param.debug}">
-			<input type="hidden" name="debug" value="${param.debug }" />
-		</c:if>
+      <input type="hidden" name="debug" value="${param.debug }" />
+    </c:if>
+    <c:if test="${not empty param.searchbox}">
+      <input type="hidden" name="searchbox" value="${param.searchbox }" />
+    </c:if>
 
 		<div class="row" id="column-top">
 			<div class="hero-unit" id="search-bar">

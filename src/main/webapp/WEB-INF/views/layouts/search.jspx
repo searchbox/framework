@@ -21,43 +21,9 @@
 </head>
 <body>
 	<div id="wrap">
-		<div class="navbar navbar-fixed-top navbar-inverse" id="navbar-top">
-			<div class="container" id="navbar-top-container">
-				<div class="navbar-header">
-					<button class="navbar-toggle" type="button" data-toggle="collapse"
-						data-target=".bs-navbar-collapse">
-						<span class="sr-only">Toggle navigation</span> <span
-							class="icon-bar">
-							<!-- Empty -->
-						</span> <span class="icon-bar">
-							<!-- Empty -->
-						</span> <span class="icon-bar">
-							<!-- Empty -->
-						</span>
-					</button>
-				</div>
-				<nav class="collapse navbar-collapse bs-navbar-collapse left"
-					role="navigation">
-					<ul class="nav navbar-nav" id="preset-bar">
-						<c:forEach var="preset" items="${presets}">
-							<c:choose>
-								<c:when test="${preset.slug.equals(currentPreset.slug)}">
-									<li class="active"><a href="${preset.slug }">${preset.label }</a></li>
-								</c:when>
-								<c:otherwise>
-									<li><a href="${preset.slug }">${preset.label }</a></li>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="about">About</a></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
 
-
+    <jsp:include page="/WEB-INF/views/common/_navbar.jspx"/>
+  
 		<div id="main-content" role="main">
 
 			<div class="row" id="main-search-content">
@@ -69,6 +35,6 @@
 			<!-- push -->
 		</div>
 	</div>
-  <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
+	<jsp:include page="/WEB-INF/views/common/_footer.jspx" />
 </body>
 </html>

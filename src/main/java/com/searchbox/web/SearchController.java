@@ -12,6 +12,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.core.dm.Preset;
@@ -44,17 +45,32 @@ public class SearchController {
 	}
 	
 	@RequestMapping
-	public ModelAndView search(HttpServletRequest request) {
+	public ModelAndView search(@RequestParam(value="searchbox", required=false) String searchboxSlug, 
+			HttpServletRequest request) {
 		logger.info("No Slug given, select default Preset");
-		return search("wassup", request);
+		return search(searchboxSlug, "", request);
 	}
 	
 	@RequestMapping("{presetSlug}")
 //	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
-	public ModelAndView search(@PathVariable String presetSlug, HttpServletRequest request) {
+	public ModelAndView search(@RequestParam(value="searchbox", required=false) String searchboxSlug, 
+			@PathVariable String presetSlug, HttpServletRequest request) {
 		
 		//That should come from the searchbox param/filter
-		Searchbox searchbox = Searchbox.findAllSearchboxes().get(0);
+		List<Searchbox> searchboxes = Searchbox.findAllSearchboxes();
+		Searchbox searchbox = null;
+		for(Searchbox sb:searchboxes){
+			if(sb.getSlug().equals(searchboxSlug)){
+				searchbox = sb;
+			}
+		}
+		
+		if(searchbox == null){
+			ModelAndView model = new ModelAndView("search/searchbox");
+			model.addObject("searchboxes",searchboxes);
+			return model;
+		}
+		
 		
 		List<Preset> presets = new ArrayList<Preset>();
 		Preset currentPreset = null;
@@ -95,6 +111,8 @@ public class SearchController {
 		ModelAndView model = new ModelAndView("search/index");
 		model.addObject("result", result);
 		model.addObject("presets",presets);
+		model.addObject("searchboxes",searchboxes);
+		model.addObject("currentSearchbox",searchbox);
 		model.addObject("currentPreset", currentPreset);
 		
 		return model;

@@ -17,7 +17,7 @@
     <ul>
 
 	    <c:forEach items="${hit.value}" var="field">
-	      <li><strong>${field.key }</strong>${field.value }</li>
+	      <li><strong>${field.key }:</strong> ${field.value }</li>
 	    </c:forEach>
     </ul>
     </c:if>    
