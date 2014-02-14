@@ -27,11 +27,11 @@ privileged aspect Definition_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT COUNT(o) FROM Definition o", Long.class).getSingleResult();
     }
     
-    public static List<Definition<Object>> Definition.findAllDefinitions() {
+    public static List<Definition> Definition.findAllDefinitions() {
         return entityManager().createQuery("SELECT o FROM Definition o", Definition.class).getResultList();
     }
     
-    public static List<Definition<Object>> Definition.findAllDefinitions(String sortFieldName, String sortOrder) {
+    public static List<Definition> Definition.findAllDefinitions(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Definition o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
@@ -42,16 +42,16 @@ privileged aspect Definition_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery(jpaQuery, Definition.class).getResultList();
     }
     
-    public static Definition<Object> Definition.findDefinition(Long id) {
+    public static Definition Definition.findDefinition(Long id) {
         if (id == null) return null;
         return entityManager().find(Definition.class, id);
     }
     
-    public static List<Definition<Object>> Definition.findDefinitionEntries(int firstResult, int maxResults) {
+    public static List<Definition> Definition.findDefinitionEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Definition o", Definition.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
-    public static List<Definition<Object>> Definition.findDefinitionEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+    public static List<Definition> Definition.findDefinitionEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Definition o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
