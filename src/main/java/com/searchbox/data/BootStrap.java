@@ -34,12 +34,15 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
 import com.searchbox.core.engine.solr.SolrEngine;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.stat.BasicSearchStats;
+import com.searchbox.domain.CollectionDefinition;
+import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
 import com.searchbox.service.SearchEngineService;
@@ -54,17 +57,65 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	
 	@Autowired
 	private ApplicationContext context;
+	
+	private static boolean BOOTSTRAPED = false;
 
 	@Override
 	@Transactional
 	synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
 
+		if(BOOTSTRAPED){
+			return;
+		} 
+		
+		BOOTSTRAPED = true;
+		
 		logger.info("Bootstraping application");
 		
-		Searchbox testSearchbox = new Searchbox("test",
-				"this is a test Searchbox");
-		testSearchbox.persist();
+		//The base Searchbox.
+		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
 		
+		//The base collection for searchbox
+		CollectionDefinition collection = new CollectionDefinition();
+		
+		//SearchAll preset
+		PresetDefinition preset = new PresetDefinition(searchbox, collection);
+		preset.setAttributeValue("label", "Search All");
+		preset.setAttributeValue("slug", "all");
+
+		
+		//Create & add a HitLIst SearchComponent to the preset;
+		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+		hitList.setAttributeValue("titleField", "article-title");
+		hitList.setAttributeValue("urlField", "article-title");
+		ArrayList<String> fields = new ArrayList<String>();
+		fields.add("article-abstract");
+		fields.add("author");
+		fields.add("publication-type");
+		fields.add("article-completion-date");
+		fields.add("article-revision-date");
+		hitList.setAttributeValue("fields", fields);
+		preset.addSearchElementDeifinition(hitList);
+		
+		//Create & add a basicSearchStat SearchComponent to the preset;
+		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
+		preset.addSearchElementDeifinition(basicStatus);
+		
+		//Create & add a querydebug SearchComponent to the preset;
+		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
+		preset.addSearchElementDeifinition(querydebug);
+		
+		//Create & add a query SearchComponent to the preset;
+		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+		preset.addSearchElementDeifinition(query);
+		
+		searchbox.addPresetDefinition(preset);
+
+		//preset.persist();
+		
+		searchbox.persist();
+
+
 
 //		SolrCloudEngine solr = new SolrCloudEngine();
 //		solr.setName("test-collection");
@@ -137,7 +188,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 ////					+ " with engine: " + collection.getEngine().getClass());
 ////		}
 
-		logger.info("Bootstraping");
 
 	}
 
@@ -217,8 +267,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"classpath*:META-INF/spring/applicationContext.xml");
 		
+		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+		System.out.println("List: " + Searchbox.findAllSearchboxes());
+		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+		Searchbox sb = Searchbox.findAllSearchboxes().get(0);
+		System.out.println("Searchbox: " + sb);
+		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+		System.out.println("Searchbox: " + sb.getPresets());
+		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
 
-		System.out.println("Hello");
+		for(PresetDefinition pdef:sb.getPresets()){
+			Preset preset = pdef.getElement();
+			System.out.println("Preset: " + preset.getSlug());
+			for(SearchElement element:preset.getSearchElements()){
+				System.out.println("\tElement: " + element.getType()+"\t"+element.getLabel());
+			}
+		}
 	}
 
 }

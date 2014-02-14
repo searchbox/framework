@@ -3,11 +3,11 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.SearchElementDefinition;
-import javax.persistence.Entity;
+import com.searchbox.domain.Definition;
+import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect SearchElementDefinition_Roo_Jpa_Entity {
+privileged aspect Definition_Roo_Configurable {
     
-    declare @type: SearchElementDefinition: @Entity;
+    declare @type: Definition: @Configurable;
     
 }

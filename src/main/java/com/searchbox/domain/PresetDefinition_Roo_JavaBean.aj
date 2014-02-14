@@ -7,7 +7,7 @@ import com.searchbox.domain.CollectionDefinition;
 import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
-import java.util.List;
+import java.util.Set;
 
 privileged aspect PresetDefinition_Roo_JavaBean {
     
@@ -27,11 +27,11 @@ privileged aspect PresetDefinition_Roo_JavaBean {
         this.collection = collection;
     }
     
-    public List<SearchElementDefinition> PresetDefinition.getSearchElements() {
+    public Set<SearchElementDefinition> PresetDefinition.getSearchElements() {
         return this.searchElements;
     }
     
-    public void PresetDefinition.setSearchElements(List<SearchElementDefinition> searchElements) {
+    public void PresetDefinition.setSearchElements(Set<SearchElementDefinition> searchElements) {
         this.searchElements = searchElements;
     }
     

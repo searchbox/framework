@@ -1,11 +1,17 @@
 package com.searchbox.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -28,12 +34,13 @@ public class PresetDefinition extends Definition<Preset> {
 	@ManyToOne
 	private CollectionDefinition collection;
 
-	@OneToMany(mappedBy="preset")
-	private List<SearchElementDefinition> searchElements;
+	@OneToMany(mappedBy="preset", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<SearchElementDefinition> searchElements;
 
 	public PresetDefinition(Searchbox searchbox, CollectionDefinition collection) {
 		super(Preset.class);
-		searchElements = new ArrayList<SearchElementDefinition>();
+		searchElements = new HashSet<SearchElementDefinition>();
 	}
 	
 	@Override
@@ -45,7 +52,8 @@ public class PresetDefinition extends Definition<Preset> {
 		return preset;
 	}
 	
-	private void addSearchElementDeifinition(SearchElementDefinition definition) {
+	public void addSearchElementDeifinition(SearchElementDefinition definition) {
+		definition.setPreset(this);
 		this.searchElements.add(definition);
 		
 	}

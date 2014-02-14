@@ -9,9 +9,9 @@ import com.searchbox.core.dm.Collection;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class CollectionDefinition extends Definition<Collection>{
+public class CollectionDefinition extends Definition{
 
 	public CollectionDefinition() {
-		super(Collection.class);
+		super();
 	}
 }

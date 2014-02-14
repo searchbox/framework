@@ -38,11 +38,11 @@ public class Searchbox {
      */
 	private String description;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
-//	@Sort(type = SortType.NATURAL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
 	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 
 	public void addPresetDefinition(PresetDefinition preset) {
+		preset.setSearchbox(this);
 		this.presets.add(preset);
 	}
 }

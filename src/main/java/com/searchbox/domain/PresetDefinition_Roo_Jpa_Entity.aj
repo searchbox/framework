@@ -4,44 +4,14 @@
 package com.searchbox.domain;
 
 import com.searchbox.domain.PresetDefinition;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
 privileged aspect PresetDefinition_Roo_Jpa_Entity {
     
     declare @type: PresetDefinition: @Entity;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long PresetDefinition.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer PresetDefinition.version;
-    
     public PresetDefinition.new() {
         super();
     }
 
-    public Long PresetDefinition.getId() {
-        return this.id;
-    }
-    
-    public void PresetDefinition.setId(Long id) {
-        this.id = id;
-    }
-    
-    public Integer PresetDefinition.getVersion() {
-        return this.version;
-    }
-    
-    public void PresetDefinition.setVersion(Integer version) {
-        this.version = version;
-    }
-    
 }

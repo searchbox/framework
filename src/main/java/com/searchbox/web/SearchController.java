@@ -17,6 +17,8 @@ import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
+import com.searchbox.domain.PresetDefinition;
+import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
 
@@ -42,7 +44,7 @@ public class SearchController {
 //	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
 	public ModelAndView search(HttpServletRequest request) {
 		
-		Preset preset =  null;//Preset.findAllPresets().get(0);
+		PresetDefinition pDef =  PresetDefinition.findAllPresetDefinitions().get(0);
 		
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
 		
@@ -59,9 +61,14 @@ public class SearchController {
 		
 		SearchResult result = new SearchResult();
 		
-		for(SearchElement element:searchService.execute(preset, conditions)){
-			logger.info("Adding to result view element: " + element);
-			result.addElement(element);
+		if(pDef != null){
+			Preset preset = pDef.getElement();
+			if(preset != null){	
+				for(SearchElement element:searchService.execute(preset, conditions)){
+					logger.info("Adding to result view element: " + element);
+					result.addElement(element);
+				}
+			}
 		}
 		
 		ModelAndView model = new ModelAndView("search/index");

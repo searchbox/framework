@@ -12,7 +12,7 @@ import com.searchbox.core.dm.Preset;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class FieldDefinition extends Definition<Field> {
+public class FieldDefinition extends Definition<Field>{
 
 	public FieldDefinition() {
 		super(Field.class);

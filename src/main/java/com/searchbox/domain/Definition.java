@@ -7,17 +7,21 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
+@RooJpaActiveRecord
 public abstract class Definition<K> {
 	
 	private Class<?> clazz;
 	
 	@OneToMany(targetEntity=DefinitionAttribute.class, cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<DefinitionAttribute> attributes;
 
 	public Definition(){}
