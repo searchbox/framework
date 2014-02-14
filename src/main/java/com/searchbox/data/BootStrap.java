@@ -109,6 +109,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
 		preset.addSearchElementDeifinition(query);
 		
+		//Create & add a facet to the preset.
+		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
+		fieldFacet.setAttributeValue("fieldName", "publication-type");
+		fieldFacet.setAttributeValue("label", "Type");
+		preset.addSearchElementDeifinition(fieldFacet);
+		
 		searchbox.addPresetDefinition(preset);
 
 		//preset.persist();
