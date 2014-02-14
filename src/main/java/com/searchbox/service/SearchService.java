@@ -52,7 +52,7 @@ public class SearchService {
 			//Weave in all element conditions in query
 			SearchElementAdapter elementAdapter = adapterService.getAdapter(element);
 			if(elementAdapter != null){
-				logger.info("Adapting condition from Element: " + element);
+				logger.debug("Adapting condition from Element: " + element);
 				elementAdapter.doAdapt(preset.getCollection(), element, query);
 			}
 			
@@ -64,7 +64,7 @@ public class SearchService {
 		
 		//Weave in all UI Conditions in query
 		for(SearchCondition condition:conditions){
-			logger.info("Adapting condition from UI: " + condition);
+			logger.debug("Adapting condition from UI: " + condition);
 			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
 				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
@@ -73,7 +73,7 @@ public class SearchService {
 		
 		//Weave in all presetConditions in query
 		for(SearchCondition condition:presetConditions){
-			logger.info("Adapting condition from Preset: " + condition);
+			logger.debug("Adapting condition from Preset: " + condition);
 			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
 				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
@@ -83,11 +83,11 @@ public class SearchService {
 		//Executing the query on the search engine!!! 
 		SolrResponse result = null;
 		try {
-			logger.info("Using: " + this.searchEngineService.server);
+			logger.debug("Using: " + this.searchEngineService.server);
 			result = this.searchEngineService.getResponse(query);
 		} catch (Exception e) {
 			SearchElement error = new SearchError(e.getMessage(), e);
-			logger.info("Adding search element: " + error);
+			logger.debug("Adding search element: " + error);
 			elements.add(error);
 			logger.error("Could not use searchEngine!!!", e);
 		}
@@ -99,7 +99,7 @@ public class SearchService {
 			//Weave in SearchResponse to element
 			SearchElementAdapter elementAdaptor = adapterService.getAdapter(element);
 			if(elementAdaptor != null){
-				logger.info("Adapting element from Preset: " + element + " for response");
+				logger.debug("Adapting element from Preset: " + element + " for response");
 				//TODO the casting here is because we only suport Solr now.
 				elementAdaptor.doAdapt(preset, element, query, (SolrResponse) result);
 			}
@@ -113,7 +113,7 @@ public class SearchService {
 			}
 		}
 		
-		logger.info("we got: " + elements.size() + " elements");
+		logger.debug("we got: " + elements.size() + " elements");
 
 		return elements;
 	}
