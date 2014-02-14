@@ -3,7 +3,7 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Preset;
+import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.Searchbox;
 import java.util.List;
 
@@ -33,11 +33,11 @@ privileged aspect Searchbox_Roo_JavaBean {
         this.description = description;
     }
     
-    public List<Preset> Searchbox.getPresets() {
+    public List<PresetDefinition> Searchbox.getPresets() {
         return this.presets;
     }
     
-    public void Searchbox.setPresets(List<Preset> presets) {
+    public void Searchbox.setPresets(List<PresetDefinition> presets) {
         this.presets = presets;
     }
     

@@ -18,86 +18,17 @@ import com.searchbox.core.search.facet.FieldFacet;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class SearchElementDefinition {
+public class SearchElementDefinition extends Definition<SearchElement> {
 	
-	@ManyToOne
-	private Preset preset;
+	@ManyToOne(targetEntity=PresetDefinition.class)
+	private PresetDefinition preset;
 	
-	private Integer position;
-	
-	private Class<?> searchElementClass;
-	
-	@OneToMany(targetEntity=SearchElementDefinitionAttribute.class, cascade=CascadeType.ALL)
-	private List<SearchElementDefinitionAttribute> attributes;
-	
-	public SearchElementDefinition(Class<?> searchElement){
-		this.searchElementClass = searchElement;
-		attributes = new ArrayList<SearchElementDefinitionAttribute>();
-		inspectAndSaveAttribute(searchElement, attributes);
+	public SearchElementDefinition(){
+		super(SearchElement.class);
 	}
-
-	private static void inspectAndSaveAttribute(Class<?> searchElement, List<SearchElementDefinitionAttribute> attributes){
-		if(SearchElement.class.isAssignableFrom(searchElement)){
-			for(Field field:searchElement.getDeclaredFields()){
-				attributes.add(new SearchElementDefinitionAttribute(field.getType(), field.getName()));
-			}
-			inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);
-		} else{
-			return;
-		}
-	}
-	
-	public static Field findUnderlying(Class<?> searchElement, String fieldName) {
-		if(SearchElement.class.isAssignableFrom(searchElement)){
-			Field field = null;
-			try {
-				field = searchElement.getDeclaredField(fieldName);
-			} catch (Exception e) {
 				
-			}
-			if(field!=null) {
-				return field;
-			} else {
-				return findUnderlying(searchElement.getSuperclass(), fieldName);
-			}
-		} else {
-			return null;
-		}
-	}
-	
-	public SearchElement getSearchElement(){
-		try {
-			SearchElement element = (SearchElement) searchElementClass.newInstance();
-			for(SearchElementDefinitionAttribute attribute:attributes){
-				if(attribute.getValue() != null){
-					Field field = findUnderlying(searchElementClass, attribute.getName());
-					field.setAccessible(true);
-					field.set(element, attribute.getValue());
-				}
-			}
-			return element;
-		} catch (Exception e){
-			e.printStackTrace(System.out);
-		}
-		return null;
-	}
-	
-	public List<SearchElementDefinitionAttribute> getAttributes(){
-		return this.attributes;
-	}
-	
-	public SearchElementDefinitionAttribute getAttributeByName(String name){
-		for(SearchElementDefinitionAttribute attr:this.attributes){
-			if(attr.getName().equals(name)){
-				return attr;
-			}
-		}
-		return null;
-	}
-	
-	public SearchElementDefinition setAttributeValue(String name, Object value) {
-		this.getAttributeByName(name).setValue(value);
-		return this;
+	public SearchElementDefinition(Class<?> searchElement){
+		super(searchElement);
 	}
 	
 	//TODO put that in a JUNIT
@@ -107,11 +38,11 @@ public class SearchElementDefinition {
 		fdef.setAttributeValue("fieldName", "MyField");
 		fdef.setAttributeValue("label", "Hello World");
 		
-		for(SearchElementDefinitionAttribute attr:fdef.getAttributes()){
+		for(DefinitionAttribute attr:fdef.getAttributes()){
 			System.out.println("Field["+attr.getType().getSimpleName()+"]\t" + attr.getName()+"\t"+attr.getValue());
 		}
 		
-		SearchElement elem = fdef.getSearchElement();
+		SearchElement elem = fdef.getElement();
 		System.out.println("element Label: " + elem.getLabel());
 	}
 }

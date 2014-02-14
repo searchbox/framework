@@ -24,10 +24,6 @@ privileged aspect SearchElementDefinition_Roo_Jpa_Entity {
     @Column(name = "version")
     private Integer SearchElementDefinition.version;
     
-    public SearchElementDefinition.new() {
-        super();
-    }
-
     public Long SearchElementDefinition.getId() {
         return this.id;
     }

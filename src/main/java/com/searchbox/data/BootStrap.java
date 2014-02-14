@@ -29,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
 import com.searchbox.core.engine.solr.SolrEngine;
 import com.searchbox.core.search.debug.SolrToString;
@@ -37,9 +40,6 @@ import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.stat.BasicSearchStats;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Field;
-import com.searchbox.domain.Preset;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
 import com.searchbox.service.SearchEngineService;
@@ -84,58 +84,58 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		
 
-		Preset searchAll = new Preset("Search All", null);
-//		searchAll.setCollection(collection);
-		testSearchbox.addPreset(searchAll);
-		
-		//Create & add a HitLIst SearchComponent to the preset;
-		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "article-title");
-		hitList.setAttributeValue("urlField", "article-title");
-		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("article-abstract");
-		fields.add("author");
-		fields.add("publication-type");
-		fields.add("article-completion-date");
-		fields.add("article-revision-date");
-		hitList.setAttributeValue("fields", fields);
-		searchAll.addSearchElement(hitList);
-		
-		//Create & add a basicSearchStat SearchComponent to the preset;
-		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-		searchAll.addSearchElement(basicStatus);
-		
-		//Create & add a querydebug SearchComponent to the preset;
-		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-		searchAll.addSearchElement(querydebug);
-		
-		//Create & add a query SearchComponent to the preset;
-		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
-		searchAll.addSearchElement(query);
-
-		//Create & add a facet to the preset.
-		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet.setAttributeValue("fieldName", "publication-type");
-		fieldFacet.setAttributeValue("label", "Type");
-		searchAll.addSearchElement(fieldFacet);
-
-//		Preset searchVideos = new Preset("Videos", collection);
-//		testSearchbox.addPreset(searchVideos);
+//		Preset searchAll = new Preset("Search All", null);
+////		searchAll.setCollection(collection);
+//		testSearchbox.addPreset(searchAll);
+//		
+//		//Create & add a HitLIst SearchComponent to the preset;
+//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+//		hitList.setAttributeValue("titleField", "article-title");
+//		hitList.setAttributeValue("urlField", "article-title");
+//		ArrayList<String> fields = new ArrayList<String>();
+//		fields.add("article-abstract");
+//		fields.add("author");
+//		fields.add("publication-type");
+//		fields.add("article-completion-date");
+//		fields.add("article-revision-date");
+//		hitList.setAttributeValue("fields", fields);
+//		searchAll.addSearchElement(hitList);
+//		
+//		//Create & add a basicSearchStat SearchComponent to the preset;
+//		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
+//		searchAll.addSearchElement(basicStatus);
+//		
+//		//Create & add a querydebug SearchComponent to the preset;
+//		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
+//		searchAll.addSearchElement(querydebug);
+//		
+//		//Create & add a query SearchComponent to the preset;
+//		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+//		searchAll.addSearchElement(query);
 //
-//		Preset searchDoc = new Preset("Documents", collection);
-//		testSearchbox.addPreset(searchDoc);
-
-		testSearchbox.persist();
-
-		for (Preset preset : testSearchbox.getPresets()) {
-			logger.info("Addded preset: " + preset.getLabel() + " with position: "
-					+ preset.getPosition());
-		}
-
-//		for (Collection cc : Collection.findAllCollections()) {
-//			logger.info("Got Collection: " + collection.getName()
-//					+ " with engine: " + collection.getEngine().getClass());
+//		//Create & add a facet to the preset.
+//		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
+//		fieldFacet.setAttributeValue("fieldName", "publication-type");
+//		fieldFacet.setAttributeValue("label", "Type");
+//		searchAll.addSearchElement(fieldFacet);
+//
+////		Preset searchVideos = new Preset("Videos", collection);
+////		testSearchbox.addPreset(searchVideos);
+////
+////		Preset searchDoc = new Preset("Documents", collection);
+////		testSearchbox.addPreset(searchDoc);
+//
+//		testSearchbox.persist();
+//
+//		for (Preset preset : testSearchbox.getPresets()) {
+//			logger.info("Addded preset: " + preset.getLabel() + " with position: "
+//					+ preset.getPosition());
 //		}
+//
+////		for (Collection cc : Collection.findAllCollections()) {
+////			logger.info("Got Collection: " + collection.getName()
+////					+ " with engine: " + collection.getEngine().getClass());
+////		}
 
 		logger.info("Bootstraping");
 

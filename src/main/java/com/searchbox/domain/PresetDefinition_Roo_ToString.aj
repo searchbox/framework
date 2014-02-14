@@ -3,13 +3,13 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.FieldType;
+import com.searchbox.domain.PresetDefinition;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-privileged aspect FieldType_Roo_ToString {
+privileged aspect PresetDefinition_Roo_ToString {
     
-    public String FieldType.toString() {
+    public String PresetDefinition.toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
     

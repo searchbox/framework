@@ -3,11 +3,11 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.FieldType;
+import com.searchbox.domain.PresetDefinition;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect FieldType_Roo_Configurable {
+privileged aspect PresetDefinition_Roo_Configurable {
     
-    declare @type: FieldType: @Configurable;
+    declare @type: PresetDefinition: @Configurable;
     
 }

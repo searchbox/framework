@@ -2,9 +2,9 @@ package com.searchbox.core.adaptor;
 
 import org.springframework.stereotype.Component;
 
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
 
 @Component
 public interface SearchElementAdapter<K extends SearchElement, T, U> {	

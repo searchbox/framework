@@ -7,10 +7,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementType;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
 
 @SearchComponent
 public class SolrToString extends SearchElement  {

@@ -13,10 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
-import com.searchbox.domain.Preset;
 import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
 
@@ -42,7 +42,7 @@ public class SearchController {
 //	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
 	public ModelAndView search(HttpServletRequest request) {
 		
-		Preset preset = Preset.findAllPresets().get(0);
+		Preset preset =  null;//Preset.findAllPresets().get(0);
 		
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
 		

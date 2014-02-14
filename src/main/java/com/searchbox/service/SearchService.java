@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.SearchResponse;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
-import com.searchbox.domain.Preset;
 import com.searchbox.domain.SearchElementDefinition;
 //import com.searchbox.domain.app.SearchElementDefinition;
 
@@ -45,19 +45,18 @@ public class SearchService {
 		//TODO we have to get this from the preset's collection
 		SolrQuery query = new SolrQuery();
 		
-		for(SearchElementDefinition element:preset.getSearchElements()){
+		for(SearchElement element:preset.getSearchElements()){
 			
-			SearchElement selement = element.getSearchElement();
-			elements.add(selement);
+			elements.add(element);
 			
 			//Weave in all element conditions in query
-			SearchElementAdapter elementAdapter = adapterService.getAdapter(selement);
+			SearchElementAdapter elementAdapter = adapterService.getAdapter(element);
 			if(elementAdapter != null){
-				logger.info("Adapting condition from Element: " + selement);
-				elementAdapter.doAdapt(preset.getCollection(), selement, query);
+				logger.info("Adapting condition from Element: " + element);
+				elementAdapter.doAdapt(preset.getCollection(), element, query);
 			}
 			
-			if(element.getSearchElement().getClass().isAssignableFrom(GenerateSearchCondition.class)){
+			if(element.getClass().isAssignableFrom(GenerateSearchCondition.class)){
 				logger.debug("This is a filter right here.");
 				presetConditions.add(((GenerateSearchCondition<?>)element).getSearchCondition());
 			}

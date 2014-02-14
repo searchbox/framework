@@ -13,6 +13,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.searchbox.core.dm.Preset;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findSearchboxesBySlugEquals",
@@ -37,11 +39,10 @@ public class Searchbox {
 	private String description;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
-	@Sort(type = SortType.NATURAL)
-	private List<Preset> presets = new ArrayList<Preset>();
+//	@Sort(type = SortType.NATURAL)
+	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 
-	public void addPreset(Preset preset) {
-		preset.setPosition(this.presets.size());
+	public void addPresetDefinition(PresetDefinition preset) {
 		this.presets.add(preset);
 	}
 }

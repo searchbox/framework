@@ -3,9 +3,9 @@ package com.searchbox.core.adaptor;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
 
 public interface SolrElementAdapter<K extends SearchElement> 
 	extends SearchElementAdapter<K, SolrQuery, QueryResponse> {

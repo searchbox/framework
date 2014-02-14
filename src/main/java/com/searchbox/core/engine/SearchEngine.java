@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
-import com.searchbox.domain.Collection;
+import com.searchbox.core.dm.Collection;
 
 public abstract class SearchEngine<K extends SearchQuery> {
 

@@ -3,11 +3,11 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Field;
+import com.searchbox.domain.CollectionDefinition;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect Field_Roo_Configurable {
+privileged aspect CollectionDefinition_Roo_Configurable {
     
-    declare @type: Field: @Configurable;
+    declare @type: CollectionDefinition: @Configurable;
     
 }

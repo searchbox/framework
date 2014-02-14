@@ -5,8 +5,8 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 
 @SearchAdaptor
 public class BasicSearchStatsAdapter implements SolrElementAdapter<BasicSearchStats>{

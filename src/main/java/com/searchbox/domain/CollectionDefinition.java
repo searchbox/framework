@@ -4,17 +4,14 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.searchbox.core.dm.Collection;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class FieldType {
+public class CollectionDefinition extends Definition<Collection>{
 
-	/**
-     */
-	private String label;
-
-	/**
-     */
-	private Class<?> clazz;
-
+	public CollectionDefinition() {
+		super(Collection.class);
+	}
 }

@@ -20,7 +20,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	private String urlField;
 	
 	public HitList(){
-		super();
+		super("Result Set");
 		this.type = SearchElementType.VIEW;
 		this.fields = new ArrayList<String>();
 	}

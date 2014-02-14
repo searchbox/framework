@@ -12,9 +12,9 @@ import org.apache.solr.client.solrj.util.ClientUtils;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
 
 @SearchAdaptor
 public class FieldFacetSolrAdaptor 

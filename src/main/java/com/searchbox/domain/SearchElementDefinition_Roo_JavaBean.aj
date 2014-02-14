@@ -3,39 +3,17 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Preset;
+import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
-import com.searchbox.domain.SearchElementDefinitionAttribute;
-import java.util.List;
 
 privileged aspect SearchElementDefinition_Roo_JavaBean {
     
-    public Preset SearchElementDefinition.getPreset() {
+    public PresetDefinition SearchElementDefinition.getPreset() {
         return this.preset;
     }
     
-    public void SearchElementDefinition.setPreset(Preset preset) {
+    public void SearchElementDefinition.setPreset(PresetDefinition preset) {
         this.preset = preset;
-    }
-    
-    public Integer SearchElementDefinition.getPosition() {
-        return this.position;
-    }
-    
-    public void SearchElementDefinition.setPosition(Integer position) {
-        this.position = position;
-    }
-    
-    public Class<?> SearchElementDefinition.getSearchElementClass() {
-        return this.searchElementClass;
-    }
-    
-    public void SearchElementDefinition.setSearchElementClass(Class<?> searchElementClass) {
-        this.searchElementClass = searchElementClass;
-    }
-    
-    public void SearchElementDefinition.setAttributes(List<SearchElementDefinitionAttribute> attributes) {
-        this.attributes = attributes;
     }
     
 }

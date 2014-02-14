@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.query.SimpleQuery.Condition;
-import com.searchbox.domain.Collection;
-import com.searchbox.domain.Preset;
 
 @SearchAdaptor
 public class SimpleQuerySolrAdaptor implements SolrConditionAdapter<SimpleQuery.Condition>,
