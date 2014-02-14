@@ -21,7 +21,6 @@ public class BasicSearchStatsAdapter implements SolrElementAdapter<BasicSearchSt
 	public BasicSearchStats doAdapt(Preset preset,
 			BasicSearchStats searchElement, SolrQuery query,
 			QueryResponse response) {
-		System.out.println("XOXOXOXOXOXOXO");
 		searchElement.setHitCount(response.getResults().getNumFound());
 		searchElement.setSearchTime(response.getElapsedTime());
 		return searchElement;
