@@ -92,8 +92,12 @@ public class SearchController {
 			if(request.getParameterValues(param) != null){
 				for(String value:request.getParameterValues(param)){
 					if(value != null && !value.isEmpty()){
+						try {
 						SearchCondition cond = (SearchCondition) conversionService.convert(value, searchComponentService.getSearchConditionClass(param));
 						conditions.add(cond);
+						} catch (Exception e) {
+							logger.error("Could not convert " + value, e);
+						}
 					}
 				}
 			}
