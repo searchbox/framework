@@ -146,4 +146,8 @@ public class Preset implements Comparable<Preset> {
 	public void setFieldAttributes(List<PresetFieldAttribute> fieldAttributes) {
         this.fieldAttributes = fieldAttributes;
     }
+
+	public void addFieldAttribute(PresetFieldAttribute fieldAttribute) {
+		this.fieldAttributes.add(fieldAttribute);
+	}
 }
