@@ -33,18 +33,6 @@
               </c:otherwise>
             </c:choose>
           </c:forEach>
-          <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"><!-- dssdads --></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
-              <li class="divider"><!-- dsdsds --></li>
-              <li><a href="#">One more separated link</a></li>
-            </ul>
-           </li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
@@ -61,22 +49,6 @@
             </c:forEach>
           </ul></li>
         </ul>
-        <!-- Small button group -->
-         <div class="btn-group nav navbar-nav navbar-right">
-          <button class="btn btn-default btn-sm dropdown-toggle"
-            type="button" data-toggle="dropdown">
-            Options <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="about">About ${currentSearchbox.getName() }</a></li>
-            <li><a href="about">Login</a></li>
-            <li class="divider"></li>
-            <c:forEach var="searchbox" items="${searchboxes}">
-              <li><a href="?searchbox=${searchbox.getSlug() }">${searchbox.getName() }</a></li>
-            </c:forEach>
-          </ul>
-        </div> 
-
       </nav>
     </div>
   </header>

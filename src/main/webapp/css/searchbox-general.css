@@ -65,7 +65,7 @@ body #main-content {
 
 /**  Top navbar **/
 #navbar-top-container{
-  padding: 0 10px 0px 10px;
+  padding: 0 20px 0px 20px;
 }
 
 #navbar-top {
@@ -285,108 +285,6 @@ a.clear_input:hover {
 
 #main-col-left .list-group {
   margin-bottom: 0;
-}
-
-.col-left .field.attributes {
-  margin-bottom: 15px;
-  float: left;
-  width: 100%;
-}
-
-.col-left .field.attributes>.field_label {
-  float: left;
-  font-weight: bold;
-  clear: both;
-  width: 100%;
-}
-
-.col-left .field.attributes>.field_value {
-  float: left;
-  clear: both;
-  width: 100%;
-  line-height: 1.2em;
-  font-size: 13px;
-  color: #666;
-}
-
-.nav form {
-  margin: 0;
-}
-
-.nav .nav .nav-header {
-  font-size: 12px;
-  padding-left: 15px;
-}
-
-.nav .nav-list li label,.nav .labelus {
-  display: inline-block;
-  font-size: 12px;
-  color: #555;
-}
-
-.nav input[type="checkbox"] {
-  margin: 0 2px 0 0;
-}
-
-.nav .nav-list li label.selected {
-  font-weight: bold;
-}
-
-.nav .nav-list li label span.count {
-  font-weight: normal;
-}
-
-.nav li {
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 16px;
-  padding-left: 1px;
-}
-
-.nav ul {
-  margin-bottom: 6px;
-}
-
-.nav .show-more {
-  padding-left: 15px;
-  padding-right: 15px;
-  font-size: 11px;
-}
-
-.nav li.nav-header .view-all-link {
-  text-transform: none;
-  float: right;
-  font-size: 10px;
-}
-
-.nav ul.nav .view-all-link {
-  display: none;
-}
-
-.nav ul.nav:hover  .view-all-link {
-  display: block;
-}
-
-.nav .slider-range {
-  width: 192px;
-  margin: 9px auto auto 13px;
-}
-
-.nav .from-value {
-  float: left;
-}
-
-.nav .to-value {
-  float: right;
-}
-
-.nav .autocomplete-box,.sidebar-nav .geocomplete-box {
-  width: 192px;
-  margin: 9px auto auto 13px;
-  height: 16px;
-  line-height: 1.2em;
-  color: #878787;
-  font-size: 12px;
 }
 
 /*************************************************************/
