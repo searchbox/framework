@@ -64,6 +64,10 @@ body #main-content {
 /*************************************************************/
 
 /**  Top navbar **/
+#navbar-top-container{
+  padding: 0 10px 0px 10px;
+}
+
 #navbar-top {
   border-bottom: 5px solid #1EBBC0;
   height: 20px;
