@@ -40,11 +40,13 @@ import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
+import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.CollectionDefinition;
 import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
+import com.searchbox.ref.Sort;
 import com.searchbox.service.SearchEngineService;
 
 @Component
@@ -83,7 +85,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.setAttributeValue("label", "Search All");
 		preset.setAttributeValue("slug", "all");
 
-		
+		//Create & add a FieldSort SearchComponent to the preset;
+		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
+		ArrayList<FieldSort.Value> sortFields = new ArrayList<FieldSort.Value>();
+		sortFields.add(new FieldSort.Value("article-completion-date", Sort.DESC));
+		sortFields.add(new FieldSort.Value("article-revision-date", Sort.DESC));
+		fieldSort.setAttributeValue("values", sortFields);
+		preset.addSearchElementDeifinition(fieldSort);
+				
 		//Create & add a HitLIst SearchComponent to the preset;
 		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
 		hitList.setAttributeValue("titleField", "article-title");

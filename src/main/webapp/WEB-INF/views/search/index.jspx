@@ -8,11 +8,11 @@
 
 	<form id="searchForm">
 		<c:if test="${not empty param.debug}">
-      <input type="hidden" name="debug" value="${param.debug }" />
-    </c:if>
-    <c:if test="${not empty param.searchbox}">
-      <input type="hidden" name="searchbox" value="${param.searchbox }" />
-    </c:if>
+			<input type="hidden" name="debug" value="${param.debug }" />
+		</c:if>
+		<c:if test="${not empty param.searchbox}">
+			<input type="hidden" name="searchbox" value="${param.searchbox }" />
+		</c:if>
 
 		<div class="row" id="column-top">
 			<div class="hero-unit" id="search-bar">
@@ -49,27 +49,15 @@
 					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
 					<util:include page="${elementInset }" />
 				</c:forEach>
+
 				<div class="col-md-7 last" id="main-col-status-bar">
 					<div style="float: right">
-						<div class="btn-group">
-							<button class="btn btn-default dropdown-toggle"
-								data-toggle="dropdown">
-								Sort by <span class="caret"> <!-- Empty -->
-								</span>
-							</button>
-							<ul id="sort-combo" class="dropdown-menu">
-								<li class="selected"><a data-field="score asc" href="#"
-									onclick="sortComboClicked()">Relevancy</a></li>
-								<li class=""><a data-field="article-completion-date asc"
-									href="#"
-									onclick="sortComboClicked('article-completion-date','asc')">article-completion-date
-										ASC</a></li>
-								<li class=""><a data-field="article-completion-date desc"
-									href="#"
-									onclick="sortComboClicked('article-completion-date','desc')">article-completion-date
-										DESC</a></li>
-							</ul>
-						</div>
+						<c:forEach items="${result.getElements('SORT')}" var="element">
+							<c:set scope="request" var="element" value="${element}" />
+							<c:set scope="request" var="result" value="${result}" />
+							<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
+							<util:include page="${elementInset}" />
+						</c:forEach>
 					</div>
 				</div>
 			</div>
@@ -120,8 +108,8 @@
 				</c:forEach>
 			</div>
 
-			<div class="col-md-2" id="main-col-right"/>
-			
+			<div class="col-md-2" id="main-col-right" />
+
 			<c:if test="${request.xhr}">
 				<script type="text/javascript">
 					var queryTerm = '${query.q}';
