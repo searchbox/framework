@@ -16,7 +16,7 @@
     <a href="${hit.getUrl()}"><h5 class="result-title">${hit.getTitle()}</h5></a>
     <ul>
 
-	    <c:forEach items="${hit.value}" var="field">
+	    <c:forEach items="${hit.fieldValues}" var="field">
 	      <li><strong>${field.key }:</strong> ${field.value }</li>
 	    </c:forEach>
     </ul>

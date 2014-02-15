@@ -68,14 +68,15 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 		return hit;
 	}
 	
-	public class Hit extends ValueElement<Map<String, Object>> implements Comparable<Hit> {
+	public class Hit extends ValueElement  {
 
+		public Map<String, Object> fieldValues;
 		private Float score;
 		
 		public Hit(Float score){
 			super("");
 			this.score = score;
-			this.value = new HashMap<String, Object>();
+			this.fieldValues = new HashMap<String, Object>();
 		}
 		
 		public Float getScore(){
@@ -87,11 +88,11 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 		}
 		
 		public void addFieldValue(String name, Object value){
-			this.value.put(name, value);
+			this.fieldValues.put(name, value);
 		}
 		
 		public String getTitle(){
-			Object title = this.value.get(titleField);
+			Object title = this.fieldValues.get(titleField);
 			if(List.class.isAssignableFrom(title.getClass())){
 				return ((List<String>)title).get(0);
 			} else {
@@ -100,7 +101,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 		}
 		
 		public String getUrl(){
-			Object url = this.value.get(urlField);
+			Object url = this.fieldValues.get(urlField);
 			if(List.class.isAssignableFrom(url.getClass())){
 				return ((List<String>)url).get(0);
 			} else {
@@ -108,9 +109,14 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 			}
 		}
 		
-		@Override
-		public int compareTo(Hit hit) {
-			return score.compareTo(hit.getScore()+0.001f) * -1;
+		public Map<String, Object> getFieldValues(){
+			return this.fieldValues;
 		}
+
+		@Override
+		public int compareTo(ValueElement other) {
+			return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
+		}
+		
 	}
 }
