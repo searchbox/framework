@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -15,6 +17,8 @@ import org.springframework.util.SerializationUtils;
 @RooToString
 @RooJpaActiveRecord
 public class DefinitionAttribute {
+	
+	private static Logger logger = LoggerFactory.getLogger(DefinitionAttribute.class);
 
 	private Class<?> type;
 	private String name;
@@ -47,7 +51,12 @@ public class DefinitionAttribute {
 
 	@Transient
 	public Object getValue() {
-		return (Object) SerializationUtils.deserialize(valueAsByteArray);
+		try {
+			return (Object) SerializationUtils.deserialize(valueAsByteArray);
+		} catch (Exception e){
+			logger.error("Could not deserialize value: " + this, e);
+			return null;
+		}
 	}
 
 	public void setValue(Object value) {

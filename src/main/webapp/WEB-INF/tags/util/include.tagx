@@ -15,6 +15,7 @@
       <div id="debug-wrapper-${element.getClass().getSimpleName()}" class="debug-wrapper">
         <jsp:include page="${page}"/>
       </div>
+      <c:catch var ="catchException">
       <script>
       $("#debug-wrapper-${element.getClass().getSimpleName()}").popover(
           {trigger: "hover", 
@@ -23,6 +24,7 @@
             placement: "auto"
           });
       </script>
+      </c:catch>
     </c:when>
     <c:otherwise>
       <jsp:include page="${page}"/>

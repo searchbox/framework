@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -22,11 +24,14 @@ import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
+import com.searchbox.web.SearchController;
 
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
 public class PresetDefinition extends Definition<Preset> {
+
+	private static Logger logger = LoggerFactory.getLogger(PresetDefinition.class);
 
 	@ManyToOne
 	private Searchbox searchbox;
@@ -47,7 +52,11 @@ public class PresetDefinition extends Definition<Preset> {
 	public Preset getElement(){
 		Preset preset = super.getElement();
 		for(SearchElementDefinition elementDef:searchElements){
-			preset.addSearchElement(elementDef.getElement());
+			try {
+				preset.addSearchElement(elementDef.getElement());
+			} catch (Exception e){
+				logger.error("Could not get searchElement with def: " + elementDef, e);
+			}
 		}
 		return preset;
 	}
