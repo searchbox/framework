@@ -13,10 +13,11 @@ import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.facet.FieldFacet.Value;
+import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
-@SearchComponent(prefix = "fs", condition = FieldSort.Condition.class)
+@SearchComponent(prefix = "fs", condition = FieldSort.Condition.class, converter=FieldSort.Converter.class)
 public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
 	
 	public FieldSort() {
@@ -27,7 +28,6 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	public static class Value extends ConditionalValueElement<FieldSort.Condition>
 		implements Serializable {
 
-		public String label;
 		public String fieldName;
 		public Sort sort;
 		public Boolean selected;
@@ -41,6 +41,30 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 			this.fieldName = field;
 			this.sort = sort;
 			this.selected = false;
+		}
+		
+		public String getFieldName() {
+			return fieldName;
+		}
+
+		public void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
+		}
+
+		public Sort getSort() {
+			return sort;
+		}
+
+		public void setSort(Sort sort) {
+			this.sort = sort;
+		}
+
+		public Boolean getSelected() {
+			return selected;
+		}
+
+		public void setSelected(Boolean selected) {
+			this.selected = selected;
 		}
 
 		@Override
@@ -85,5 +109,20 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 
 	public static FieldSort.Value getRelevancySort() {
 		return new FieldSort.Value("Relevancy", "score", Sort.DESC);
+	}
+	
+	public static class Converter implements
+	org.springframework.core.convert.converter.Converter<String, Condition> {
+
+		@Override
+		public Condition convert(String source) {
+			String field = source.split("##")[0];
+			String sort = source.split("##")[1];
+			if(sort.equalsIgnoreCase(Sort.DESC.toString())){
+				return new Condition(field, Sort.DESC);				
+			} else {
+				return new Condition(field, Sort.ASC);				
+			}
+		}
 	}
 }

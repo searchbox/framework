@@ -13,13 +13,21 @@
     </button>
     <ul id="sort-combo" class="dropdown-menu">
       <c:forEach items="${element.values }" var="sort">
-         <li class=""><a data-field="article-completion-date asc"
-        href="#" onclick="">${sort.getLabel()}</a></li>
+        <c:set var="cssSelect" value=""/>
+        <c:if test="${sort.getSelected() }">
+          <c:set var="cssSelect" value="active"/>
+        </c:if>
+         <li class="${cssSelect }"><a data-field="article-completion-date asc"
+        href="#" onclick="${element.getClass().getSimpleName()}_submit('${sort.geParamValue()}')">${sort.getLabel()}</a></li>
       </c:forEach>
     </ul>
   </div>
+  <input id="${element.getClass().getSimpleName()}_field" type="hidden" name="${element.getParamPrefix()}"/>
   <script>
-      
+      function ${element.getClass().getSimpleName()}_submit(param){
+    	  $("#${element.getClass().getSimpleName()}_field").val(param);
+    	  $("form").submit();
+      }
   </script>
 
 </jsp:root>
