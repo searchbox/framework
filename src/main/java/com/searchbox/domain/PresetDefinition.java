@@ -1,12 +1,9 @@
 package com.searchbox.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -18,21 +15,19 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
-import com.searchbox.web.SearchController;
 
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class PresetDefinition extends Definition<Preset> {
+public class PresetDefinition {
 
 	private static Logger logger = LoggerFactory.getLogger(PresetDefinition.class);
-
+	
 	@ManyToOne
 	private Searchbox searchbox;
 
@@ -42,22 +37,59 @@ public class PresetDefinition extends Definition<Preset> {
 	@OneToMany(mappedBy="preset", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<SearchElementDefinition> searchElements;
+	
+	@OneToMany(targetEntity=PresetFieldAttributeDefinition.class, cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<PresetFieldAttributeDefinition> fieldAttributes;
+	
+	/**
+     */
+	private String slug;
+
+	/**
+     */
+	private String label;
+
+	/**
+     */
+	private String description;
+
+	/**
+     */
+	private Boolean global;
+
+	/**
+     */
+	private Boolean visible;
+
+	/**
+     */
+	private Integer position;
 
 	public PresetDefinition(Searchbox searchbox, CollectionDefinition collection) {
-		super(Preset.class);
+		this.searchbox = searchbox;
+		this.collection = collection;
 		searchElements = new HashSet<SearchElementDefinition>();
+		fieldAttributes = new HashSet<PresetFieldAttributeDefinition>(); 
 	}
 	
-	@Override
 	public Preset getElement(){
-		Preset preset = super.getElement();
-		for(SearchElementDefinition elementDef:searchElements){
-			try {
-				preset.addSearchElement(elementDef.getElement());
-			} catch (Exception e){
-				logger.error("Could not get searchElement with def: " + elementDef, e);
-			}
-		}
+		//Merge field values here. Use Reflection since I am a laxy bastard...
+		Preset preset = new Preset();
+//		for(SearchElementDefinition elementDef:searchElements){
+//			try {
+//				preset.addSearchElement(elementDef.getElement());
+//			} catch (Exception e){
+//				logger.error("Could not get searchElement with def: " + elementDef, e);
+//			}
+//		}
+//		for(PresetFieldAttributeDefinition fieldDef:fieldAttributes){
+//			try {
+//				preset.addFieldAttribute(fieldDef.getElement());
+//			} catch (Exception e){
+//				logger.error("Could not get searchElement with def: " + fieldDef, e);
+//			}
+//		}
 		return preset;
 	}
 	
@@ -66,11 +98,17 @@ public class PresetDefinition extends Definition<Preset> {
 		this.searchElements.add(definition);
 		
 	}
+	
+	public void addFieldAttributeDefinition(PresetFieldAttributeDefinition definition) {
+		definition.setPreset(this);
+		this.fieldAttributes.add(definition);
+		
+	}
 
 	public static PresetDefinition BasicPreset(Searchbox sb, CollectionDefinition collection){
 		PresetDefinition pdef = new PresetDefinition(sb, collection);
-		pdef.setAttributeValue("slug", "all");
-		pdef.setAttributeValue("label", "Basic Preset");
+		pdef.slug = "all";
+		pdef.label = "Basic Preset";
 		
 		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
 		pdef.addSearchElementDeifinition(query);
@@ -90,14 +128,8 @@ public class PresetDefinition extends Definition<Preset> {
 		
 		PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
 
-		pdef.setAttributeValue("slug", "search-all");
-		pdef.setAttributeValue("label", "Hello World");
-
-		for (DefinitionAttribute attr : pdef.getAttributes()) {
-			System.out.println("Field[" + attr.getType().getSimpleName()
-					+ "]\t" + attr.getName() + "\t" + attr.getValue());
-		}
-
+		pdef.slug = "search-all";
+		pdef.label = "Hello World";
 		
 		SearchElementDefinition fdef = new SearchElementDefinition(FieldFacet.class);
 		fdef.setAttributeValue("fieldName", "MyField");

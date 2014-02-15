@@ -3,7 +3,6 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.FieldDefinition;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect FieldDefinition_Roo_Configurable {

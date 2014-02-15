@@ -32,7 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.dm.Collection;
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.solr.SolrCloudEngine;
 import com.searchbox.core.engine.solr.SolrEngine;
@@ -45,6 +44,8 @@ import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.CollectionDefinition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
+import com.searchbox.domain.FieldDefinition;
 import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
@@ -81,11 +82,24 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The base collection for searchbox
 		CollectionDefinition collection = new CollectionDefinition();
+		collection.setName("pubmed");
+		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
+		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		collectionFields.add(FieldDefinition.StringFieldDef("title"));
+		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+		collection.setFieldDefinitions(collectionFields);
+
+		
+		
 		
 		//SearchAll preset
 		PresetDefinition preset = new PresetDefinition(searchbox, collection);
-		preset.setAttributeValue("label", "Search All");
-		preset.setAttributeValue("slug", "all");
+		preset.setLabel("Search All");
+		preset.setSlug("all");
+//		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
+//		fieldAttr.setAttributeValue("searchbale", true);
+//		preset.addFieldAttributeDefinition(fieldAttr);
+		
 
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
@@ -131,13 +145,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		searchbox.addPresetDefinition(preset);
 		
 		PresetDefinition articles = new PresetDefinition(searchbox, collection);
-		articles.setAttributeValue("label", "Articles");
-		articles.setAttributeValue("slug", "articles");
+		articles.setLabel("Articles");
+		articles.setSlug("articles");
 		searchbox.addPresetDefinition(articles);
 
 		PresetDefinition press = new PresetDefinition(searchbox, collection);
-		press.setAttributeValue("label", "Press");
-		press.setAttributeValue("slug", "press");
+		press.setLabel("Press");
+		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
 		searchbox.persist();

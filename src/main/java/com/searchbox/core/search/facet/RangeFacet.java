@@ -1,7 +1,5 @@
 package com.searchbox.core.search.facet;
 
-import org.apache.lucene.search.Query;
-
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalSearchElementWithValues;
 import com.searchbox.core.search.SearchCondition;

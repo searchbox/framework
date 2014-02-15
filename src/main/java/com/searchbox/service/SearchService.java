@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.engine.SearchResponse;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
-import com.searchbox.domain.SearchElementDefinition;
 //import com.searchbox.domain.app.SearchElementDefinition;
 
 @Service

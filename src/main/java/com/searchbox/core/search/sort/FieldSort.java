@@ -1,20 +1,13 @@
 package com.searchbox.core.search.sort;
 
 import java.io.Serializable;
-import java.util.List;
-
-import org.apache.lucene.search.Query;
 
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
-import com.searchbox.core.search.facet.FieldFacet.Value;
-import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
-import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
 @SearchComponent(prefix = "fs", condition = FieldSort.Condition.class, converter=FieldSort.Converter.class)

@@ -3,7 +3,7 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Definition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,32 +11,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-privileged aspect Definition_Roo_Jpa_Entity {
+privileged aspect PresetFieldAttributeDefinition_Roo_Jpa_Entity {
     
-    declare @type: Definition: @Entity;
+    declare @type: PresetFieldAttributeDefinition: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long Definition.id;
+    private Long PresetFieldAttributeDefinition.id;
     
     @Version
     @Column(name = "version")
-    private Integer Definition.version;
+    private Integer PresetFieldAttributeDefinition.version;
     
-    public Long Definition.getId() {
+    public PresetFieldAttributeDefinition.new() {
+        super();
+    }
+
+    public Long PresetFieldAttributeDefinition.getId() {
         return this.id;
     }
     
-    public void Definition.setId(Long id) {
+    public void PresetFieldAttributeDefinition.setId(Long id) {
         this.id = id;
     }
     
-    public Integer Definition.getVersion() {
+    public Integer PresetFieldAttributeDefinition.getVersion() {
         return this.version;
     }
     
-    public void Definition.setVersion(Integer version) {
+    public void PresetFieldAttributeDefinition.setVersion(Integer version) {
         this.version = version;
     }
     

@@ -2,10 +2,12 @@ package com.searchbox.core.dm;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+
 import com.searchbox.core.search.SearchElement;
 
 @RooJavaBean
@@ -36,14 +38,11 @@ public class Preset implements Comparable<Preset> {
      */
 	private Integer position;
 
-
-	private List<SearchElement> searchElements = new ArrayList<SearchElement>();
-
 	private Collection collection;
 
-	private Field<?> idField;
+	private List<SearchElement> searchElements = new ArrayList<SearchElement>();
 	
-	private List<PresetFieldAttribute> fieldAttributes = new ArrayList<PresetFieldAttribute>();;
+	private List<PresetFieldAttribute> fieldAttributes = new ArrayList<PresetFieldAttribute>();
 	
 	public Preset(){
 		
@@ -129,14 +128,6 @@ public class Preset implements Comparable<Preset> {
 
 	public void setCollection(Collection collection) {
         this.collection = collection;
-    }
-
-	public Field<?> getIdField() {
-        return this.idField;
-    }
-
-	public void setIdField(Field<?> idField) {
-        this.idField = idField;
     }
 
 	public List<PresetFieldAttribute> getFieldAttributes() {

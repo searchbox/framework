@@ -3,13 +3,25 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.SearchElementDefinition;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect SearchElementDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> SearchElementDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("preset");
+    @PersistenceContext
+    transient EntityManager SearchElementDefinition.entityManager;
+    
+    public static final List<String> SearchElementDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("clazz", "preset", "attributes");
+    
+    public static final EntityManager SearchElementDefinition.entityManager() {
+        EntityManager em = new SearchElementDefinition().entityManager;
+        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
+        return em;
+    }
     
     public static long SearchElementDefinition.countSearchElementDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM SearchElementDefinition o", Long.class).getSingleResult();
@@ -48,6 +60,35 @@ privileged aspect SearchElementDefinition_Roo_Jpa_ActiveRecord {
             }
         }
         return entityManager().createQuery(jpaQuery, SearchElementDefinition.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    @Transactional
+    public void SearchElementDefinition.persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+    }
+    
+    @Transactional
+    public void SearchElementDefinition.remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        if (this.entityManager.contains(this)) {
+            this.entityManager.remove(this);
+        } else {
+            SearchElementDefinition attached = SearchElementDefinition.findSearchElementDefinition(this.id);
+            this.entityManager.remove(attached);
+        }
+    }
+    
+    @Transactional
+    public void SearchElementDefinition.flush() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.flush();
+    }
+    
+    @Transactional
+    public void SearchElementDefinition.clear() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.clear();
     }
     
     @Transactional

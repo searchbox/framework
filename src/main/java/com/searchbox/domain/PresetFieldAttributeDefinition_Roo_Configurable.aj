@@ -3,11 +3,10 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Definition;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect Definition_Roo_Configurable {
+privileged aspect PresetFieldAttributeDefinition_Roo_Configurable {
     
-    declare @type: Definition: @Configurable;
+    declare @type: PresetFieldAttributeDefinition: @Configurable;
     
 }

@@ -3,10 +3,6 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.CollectionDefinition;
-import com.searchbox.domain.PresetDefinition;
-import com.searchbox.domain.SearchElementDefinition;
-import com.searchbox.domain.Searchbox;
 import java.util.Set;
 
 privileged aspect PresetDefinition_Roo_JavaBean {
@@ -33,6 +29,62 @@ privileged aspect PresetDefinition_Roo_JavaBean {
     
     public void PresetDefinition.setSearchElements(Set<SearchElementDefinition> searchElements) {
         this.searchElements = searchElements;
+    }
+    
+    public Set<PresetFieldAttributeDefinition> PresetDefinition.getFieldAttributes() {
+        return this.fieldAttributes;
+    }
+    
+    public void PresetDefinition.setFieldAttributes(Set<PresetFieldAttributeDefinition> fieldAttributes) {
+        this.fieldAttributes = fieldAttributes;
+    }
+    
+    public String PresetDefinition.getSlug() {
+        return this.slug;
+    }
+    
+    public void PresetDefinition.setSlug(String slug) {
+        this.slug = slug;
+    }
+    
+    public String PresetDefinition.getLabel() {
+        return this.label;
+    }
+    
+    public void PresetDefinition.setLabel(String label) {
+        this.label = label;
+    }
+    
+    public String PresetDefinition.getDescription() {
+        return this.description;
+    }
+    
+    public void PresetDefinition.setDescription(String description) {
+        this.description = description;
+    }
+    
+    public Boolean PresetDefinition.getGlobal() {
+        return this.global;
+    }
+    
+    public void PresetDefinition.setGlobal(Boolean global) {
+        this.global = global;
+    }
+    
+    public Boolean PresetDefinition.getVisible() {
+        return this.visible;
+    }
+    
+    public void PresetDefinition.setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+    
+    public Integer PresetDefinition.getPosition() {
+        return this.position;
+    }
+    
+    public void PresetDefinition.setPosition(Integer position) {
+        this.position = position;
     }
     
 }

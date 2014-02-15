@@ -5,8 +5,6 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.searchbox.core.search.facet.FieldFacet.Value;
-
 
 public abstract class ValueElement implements Serializable, Comparable<ValueElement>{
 	

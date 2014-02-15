@@ -11,6 +11,8 @@ public class PresetFieldAttribute {
 	
 	private Field field;
 	
+	private String label;
+	
 	private Boolean searchable;
 	
 	private Boolean highlight;
@@ -34,6 +36,14 @@ public class PresetFieldAttribute {
 	public void setField(Field field) {
         this.field = field;
     }
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
 	public Boolean getSearchable() {
         return this.searchable;

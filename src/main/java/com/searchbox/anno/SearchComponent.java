@@ -6,8 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.beans.factory.annotation.Required;
-
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

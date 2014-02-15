@@ -1,6 +1,5 @@
 package com.searchbox.core.search.stat;
 
-import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementType;

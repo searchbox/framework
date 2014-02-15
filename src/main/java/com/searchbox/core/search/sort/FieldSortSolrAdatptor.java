@@ -5,13 +5,10 @@ import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdaptor;
-import com.searchbox.core.adaptor.SearchConditionAdapter;
-import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.sort.FieldSort.Condition;
 import com.searchbox.ref.Sort;
 

@@ -3,13 +3,25 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.PresetDefinition;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect PresetDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> PresetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("searchbox", "collection", "searchElements");
+    @PersistenceContext
+    transient EntityManager PresetDefinition.entityManager;
+    
+    public static final List<String> PresetDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("logger", "searchbox", "collection", "searchElements", "fieldAttributes", "slug", "label", "description", "global", "visible", "position");
+    
+    public static final EntityManager PresetDefinition.entityManager() {
+        EntityManager em = new PresetDefinition().entityManager;
+        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
+        return em;
+    }
     
     public static long PresetDefinition.countPresetDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM PresetDefinition o", Long.class).getSingleResult();
@@ -48,6 +60,35 @@ privileged aspect PresetDefinition_Roo_Jpa_ActiveRecord {
             }
         }
         return entityManager().createQuery(jpaQuery, PresetDefinition.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    @Transactional
+    public void PresetDefinition.persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+    }
+    
+    @Transactional
+    public void PresetDefinition.remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        if (this.entityManager.contains(this)) {
+            this.entityManager.remove(this);
+        } else {
+            PresetDefinition attached = PresetDefinition.findPresetDefinition(this.id);
+            this.entityManager.remove(attached);
+        }
+    }
+    
+    @Transactional
+    public void PresetDefinition.flush() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.flush();
+    }
+    
+    @Transactional
+    public void PresetDefinition.clear() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.clear();
     }
     
     @Transactional

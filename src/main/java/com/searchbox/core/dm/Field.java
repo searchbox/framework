@@ -1,35 +1,30 @@
 package com.searchbox.core.dm;
 
-import javax.persistence.ManyToOne;
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-public class Field<K> {
+public class Field {
 
+	private Class clazz;
 	/**
      */
 	private String key;
 
 	/**
      */
-	private String label;
-	
-	private K value;
-	
+		
 	private Boolean multivalue = false;
 
-	public Field(String key) {
+	public Field(Class clazz, String key) {
+		this.clazz = clazz;
 		this.key = key;
 	}
-
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
 
 	public String getKey() {
         return this.key;
@@ -39,22 +34,6 @@ public class Field<K> {
         this.key = key;
     }
 
-	public String getLabel() {
-        return this.label;
-    }
-
-	public void setLabel(String label) {
-        this.label = label;
-    }
-
-	public K getValue() {
-        return this.value;
-    }
-
-	public void setValue(K value) {
-        this.value = value;
-    }
-
 	public Boolean getMultivalue() {
         return this.multivalue;
     }
@@ -62,4 +41,24 @@ public class Field<K> {
 	public void setMultivalue(Boolean multivalue) {
         this.multivalue = multivalue;
     }
+
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+	
+	public static Field StringField(String key){
+		return new Field(String.class, key);
+	}
+	
+	public static Field DateField(String key){
+		return new Field(Date.class, key);
+	}
+	
+	public static Field IntField(String key){
+		return new Field(Integer.class, key);
+	}
+	
+	public static Field FloatField(String key){
+		return new Field(Float.class, key);
+	}
 }

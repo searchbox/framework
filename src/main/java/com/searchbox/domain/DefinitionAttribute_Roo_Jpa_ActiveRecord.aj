@@ -3,10 +3,11 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.DefinitionAttribute;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect DefinitionAttribute_Roo_Jpa_ActiveRecord {
@@ -14,7 +15,7 @@ privileged aspect DefinitionAttribute_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager DefinitionAttribute.entityManager;
     
-    public static final List<String> DefinitionAttribute.fieldNames4OrderClauseFilter = java.util.Arrays.asList("type", "name", "valueAsByteArray");
+    public static final List<String> DefinitionAttribute.fieldNames4OrderClauseFilter = java.util.Arrays.asList("logger", "type", "name", "valueAsByteArray");
     
     public static final EntityManager DefinitionAttribute.entityManager() {
         EntityManager em = new DefinitionAttribute().entityManager;
