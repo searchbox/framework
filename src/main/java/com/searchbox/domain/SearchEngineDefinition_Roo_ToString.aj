@@ -3,13 +3,13 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.CollectionDefinition;
+import com.searchbox.domain.SearchEngineDefinition;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-privileged aspect CollectionDefinition_Roo_ToString {
+privileged aspect SearchEngineDefinition_Roo_ToString {
     
-    public String CollectionDefinition.toString() {
+    public String SearchEngineDefinition.toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
     

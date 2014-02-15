@@ -3,9 +3,10 @@
 
 package com.searchbox.domain;
 
+import com.searchbox.domain.CollectionDefinition;
+import com.searchbox.domain.FieldDefinition;
+import com.searchbox.domain.SearchEngineDefinition;
 import java.util.List;
-
-import com.searchbox.core.engine.SearchEngine;
 
 privileged aspect CollectionDefinition_Roo_JavaBean {
     
@@ -17,11 +18,11 @@ privileged aspect CollectionDefinition_Roo_JavaBean {
         this.name = name;
     }
     
-    public SearchEngine CollectionDefinition.getEngine() {
+    public SearchEngineDefinition CollectionDefinition.getEngine() {
         return this.engine;
     }
     
-    public void CollectionDefinition.setEngine(SearchEngine engine) {
+    public void CollectionDefinition.setEngine(SearchEngineDefinition engine) {
         this.engine = engine;
     }
     

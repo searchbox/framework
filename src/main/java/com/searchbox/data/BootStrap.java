@@ -1,23 +1,9 @@
 package com.searchbox.data;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +11,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.searchbox.anno.SearchAdaptor;
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.engine.solr.SolrCloudEngine;
-import com.searchbox.core.engine.solr.SolrEngine;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.facet.FieldFacetSolrAdaptor;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.CollectionDefinition;
-import com.searchbox.domain.PresetFieldAttributeDefinition;
 import com.searchbox.domain.FieldDefinition;
 import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.SearchElementDefinition;
@@ -88,7 +66,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collectionFields.add(FieldDefinition.StringFieldDef("title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
 		collection.setFieldDefinitions(collectionFields);
-
+		collection.persist();
 		
 		
 		

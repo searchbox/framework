@@ -21,6 +21,7 @@ public class DefinitionAttribute {
 	private static Logger logger = LoggerFactory.getLogger(DefinitionAttribute.class);
 
 	private Class<?> type;
+	
 	private String name;
 
 	@Lob

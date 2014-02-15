@@ -3,6 +3,10 @@ package com.searchbox.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -18,8 +22,10 @@ public class CollectionDefinition {
      */
 	private String name;
 
-	private SearchEngine engine;
+	@ManyToOne
+	private SearchEngineDefinition engine;
 
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
 	
 	public CollectionDefinition(String name) {
