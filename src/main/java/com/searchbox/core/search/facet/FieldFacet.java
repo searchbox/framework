@@ -5,6 +5,7 @@ import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
+import com.searchbox.core.search.ValueElement;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
@@ -39,20 +40,21 @@ public class FieldFacet
 		return this;
 	}
 
-	public class Value extends
-			ConditionalValueElement<String, FieldFacet.ValueCondition>
-			implements Comparable<Value> {
+	public class Value extends ConditionalValueElement<FieldFacet.ValueCondition>{
 
-		private Integer count;
-		private Boolean selected = false;
+		public String value;
+		public Integer count;
+		public Boolean selected = false;
 
 		public Value(String label, String value, Integer count) {
-			super(label, value);
+			super(label);
+			this.value = value;
 			this.count = count;
 		}
 
 		public Value(String label, String value) {
-			super(label, value);
+			super(label);
+			this.value = value;
 		}
 
 		public Integer getCount() {
@@ -61,6 +63,10 @@ public class FieldFacet
 
 		public Boolean getSelected() {
 			return this.selected;
+		}
+		
+		public String getValue(){
+			return this.value;
 		}
 
 		public Value setSelected(Boolean selected) {
@@ -79,7 +85,8 @@ public class FieldFacet
 		}
 
 		@Override
-		public int compareTo(Value o) {
+		public int compareTo(ValueElement other) {
+			FieldFacet.Value o = (FieldFacet.Value)other;
 			int diff = 0;
 			if (order.equals(Order.KEY)) {
 				diff = this.getLabel().compareTo(o.getLabel())*10;
@@ -138,7 +145,7 @@ public class FieldFacet
 			if (this.fieldName.equals(((FieldFacet.ValueCondition) condition)
 					.getFieldName())) {
 				for (FieldFacet.Value value : this.getValues()) {
-					if (value.getValue().equals(
+					if (value.value.equals(
 							((FieldFacet.ValueCondition) condition).getValue())) {
 						value.setSelected(true);
 					}

@@ -11,6 +11,9 @@ import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
+import com.searchbox.core.search.ValueElement;
+import com.searchbox.core.search.facet.FieldFacet.Value;
+import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
 @SearchComponent(prefix = "fs", condition = FieldSort.Condition.class)
@@ -21,30 +24,38 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 		this.setType(SearchElementType.SORT);
 	}
 		
-	public static class Value extends ConditionalValueElement<String, FieldSort.Condition> 
-		implements Serializable{
+	public static class Value extends ConditionalValueElement<FieldSort.Condition>
+		implements Serializable {
 
+		public String label;
+		public String fieldName;
 		public Sort sort;
 		public Boolean selected;
 		
 		public Value() {
-			super();
+			super("");
 		}
 		
-		public Value(String field, Sort sort) {
-			super("Sort Condition");
-			this.value = field;
+		public Value(String label, String field, Sort sort) {
+			super(label);
+			this.fieldName = field;
 			this.sort = sort;
+			this.selected = false;
 		}
 
 		@Override
 		public String geParamValue() {
-			return value + "##" + sort;
+			return fieldName + "##" + sort;
 		}
 
 		@Override
 		public Condition getSearchCondition() {
-			return new FieldSort.Condition(this.value, this.sort);
+			return new FieldSort.Condition(this.fieldName, this.sort);
+		}
+
+		@Override
+		public int compareTo(ValueElement other) {
+			return this.fieldName.compareTo(((FieldSort.Value)other).fieldName);
 		}
 	}
 
@@ -64,11 +75,15 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 		if(FieldSort.Condition.class.isAssignableFrom(condition.getClass())){
 			FieldSort.Condition sortCondition = (FieldSort.Condition)condition;
 			for(FieldSort.Value value:this.getValues()){
-				if(value.getValue().equals(sortCondition.fieldName) &&
+				if(value.fieldName.equals(sortCondition.fieldName) &&
 						value.sort.equals(sortCondition.sort)){
 					value.selected = true;
 				}
 			}
 		}
+	}
+
+	public static FieldSort.Value getRelevancySort() {
+		return new FieldSort.Value("Relevancy", "score", Sort.DESC);
 	}
 }

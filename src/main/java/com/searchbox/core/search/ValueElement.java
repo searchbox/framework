@@ -1,22 +1,24 @@
 package com.searchbox.core.search;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.searchbox.core.search.facet.FieldFacet.Value;
 
-public class ValueElement<K> {
+
+public abstract class ValueElement implements Serializable, Comparable<ValueElement>{
 	
+	/**
+	 * 
+	 */
+	protected static final long serialVersionUID = 1L;
+
 	protected String label;
 	
-	protected K value;
-
 	public ValueElement(String label) {
 		this.label = label;
-	}
-	
-	public ValueElement(String label, K value){
-		this.label = label;
-		this.value = value;
 	}
 
 	public String getLabel() {
@@ -26,17 +28,12 @@ public class ValueElement<K> {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-
-	public K getValue() {
-		return value;
-	}
-
-	public void setValue(K value) {
-		this.value = value;
-	}
 	
 	@Override
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
+
+	@Override
+	public abstract int compareTo(ValueElement other);
 }

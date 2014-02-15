@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -87,9 +89,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
-		ArrayList<FieldSort.Value> sortFields = new ArrayList<FieldSort.Value>();
-		sortFields.add(new FieldSort.Value("article-completion-date", Sort.DESC));
-		sortFields.add(new FieldSort.Value("article-revision-date", Sort.DESC));
+		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
+		sortFields.add(FieldSort.getRelevancySort());
+		sortFields.add(new FieldSort.Value("Latest Article", "article-completion-date", Sort.DESC));
+		sortFields.add(new FieldSort.Value("Latest Reviewed", "article-revision-date", Sort.DESC));
 		fieldSort.setAttributeValue("values", sortFields);
 		preset.addSearchElementDeifinition(fieldSort);
 				

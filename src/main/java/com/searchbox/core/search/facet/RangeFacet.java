@@ -43,21 +43,30 @@ public class RangeFacet extends
 				+ this.upperElement + "]";
 	}
 
-	public class Value extends ValueElement<String> {
+	public class Value extends ValueElement {
 
+		private String value;
 		private Integer count;
 
 		public Value(String label, String value, Integer count) {
-			super(label, value);
+			super(label);
+			this.value = value;
 			this.count = count;
 		}
 
 		public Value(String label, String value) {
-			super(label, value);
+			super(label);
+			this.value = value;
 		}
 
 		public Integer getCount() {
 			return this.count;
+		}
+
+		@Override
+		public int compareTo(ValueElement other) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 
 	}

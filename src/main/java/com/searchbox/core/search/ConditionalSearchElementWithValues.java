@@ -1,6 +1,6 @@
 package com.searchbox.core.search;
 
-public abstract class ConditionalSearchElementWithValues<K extends ValueElement<?>, T extends SearchCondition> 
+public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends SearchCondition> 
 		extends SearchElementWithValues<K>
 		implements GenerateSearchCondition<T>, SearchConditionToElementMerger {
 

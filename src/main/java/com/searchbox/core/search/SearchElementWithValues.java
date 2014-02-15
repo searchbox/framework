@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
-public class SearchElementWithValues<K extends ValueElement<?>> extends SearchElement {
+public class SearchElementWithValues<K extends ValueElement> extends SearchElement {
 	
 	protected Order order;
 	protected Sort sort;
