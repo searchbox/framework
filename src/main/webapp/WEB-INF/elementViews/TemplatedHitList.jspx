@@ -13,8 +13,19 @@
 
   <c:forEach items="${element.values}" var="hit">
     <c:if test="${hit != null}">
-    <a href="${hit.getUrl()}"><h5 class="result-title">${hit.getTitle()}</h5></a>
-      ${element.template}
+      <c:catch var="includeException">
+      <jsp:include page="${element.getTemplatePath()}"/>
+      ${element.getTemplatePath()}
+      </c:catch>
+      <c:if test="${includeException != null}">
+        <div class="alert alert-danger">
+          <h3>${includeException.message }</h3>
+	        <c:forEach items="${hit.fieldValues}" var="field">
+	          <li><strong>${field.key }:</strong> ${field.value }</li>
+	        </c:forEach>
+        </div>
+      </c:if>
+      
     </c:if>    
   </c:forEach>  
 

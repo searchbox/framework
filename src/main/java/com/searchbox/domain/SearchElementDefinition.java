@@ -7,9 +7,16 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -17,11 +24,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.ref.ReflectionUtils;
+import com.searchbox.service.SearchService;
 
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class SearchElementDefinition {
+public class SearchElementDefinition implements ApplicationContextAware{
+	
+	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinition.class);
 	
 	private Class<?> clazz;
 
@@ -32,16 +42,26 @@ public class SearchElementDefinition {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<DefinitionAttribute> attributes;
 	
+	@Transient
+	ApplicationContext context;
+	
 	public SearchElementDefinition(Class<?> searchElementClass){
 		this.clazz = searchElementClass;
 		this.attributes = new ArrayList<DefinitionAttribute>();
 		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
 	}
 	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.context = applicationContext;
+	}
 
 	public SearchElement getElement(){
 		try {
-			SearchElement element = (SearchElement) clazz.newInstance();
+			AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
+			SearchElement element = (SearchElement) beanFactory.createBean(clazz,AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, false);
+//			SearchElement element = (SearchElement) clazz.newInstance();
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
 					Field field = ReflectionUtils.findUnderlying(clazz, attribute.getName());
@@ -51,9 +71,9 @@ public class SearchElementDefinition {
 			}
 			return element;
 		} catch (Exception e){
-			e.printStackTrace(System.out);
+			logger.error("Could not get Element for class: " + clazz, e);
 		}
-		return null;
+		throw new RuntimeException("Could not construct element for class: " + clazz);
 	}
 	
 	public List<DefinitionAttribute> getAttributes(){
@@ -88,5 +108,4 @@ public class SearchElementDefinition {
 		SearchElement elem = fdef.getElement();
 		System.out.println("element Label: " + elem.getLabel());
 	}
-
 }

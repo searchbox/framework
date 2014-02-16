@@ -6,8 +6,7 @@
 
 	<display-name>searchbox</display-name>
 
-	<description>Roo generated searchbox application</description>
-
+	<description>Searchbox Framework</description>
 
 	<!-- Enable escaping of form submission contents -->
 	<context-param>

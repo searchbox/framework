@@ -83,7 +83,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr2.setSearchable(true);
 		preset.addFieldAttributeDefinition(fieldAttr2);
 
-		
+		//Create & add a TemplatedHitLIst SearchComponent to the preset;
+		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
+		templatedHitList.setAttributeValue("titleField", "article-title");
+		templatedHitList.setAttributeValue("idField", "id");
+		templatedHitList.setAttributeValue("urlField", "article-title");
+		templatedHitList.setAttributeValue("template", "<h1>Hello ${hit.getTitle()}</h1>");
+		preset.addSearchElementDeifinition(templatedHitList);
 
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
@@ -95,13 +101,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.addSearchElementDeifinition(fieldSort);
 				
 		
-		//Create & add a TemplatedHitLIst SearchComponent to the preset;
-		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
-		templatedHitList.setAttributeValue("titleField", "article-title");
-		templatedHitList.setAttributeValue("idField", "id");
-		templatedHitList.setAttributeValue("urlField", "article-title");
-		templatedHitList.setAttributeValue("template", "<h1>Hello ${hit.getTitle()}</h1>");
-		preset.addSearchElementDeifinition(templatedHitList);
+		
+
 				
 		//Create & add a HitLIst SearchComponent to the preset;
 //		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);

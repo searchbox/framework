@@ -1,26 +1,58 @@
 package com.searchbox.core.search.result;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.util.WebUtils;
 
+import com.google.common.io.Files;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.result.HitList.Hit;
+import com.searchbox.service.DirectoryService;
+import com.searchbox.service.SearchService;
 
 @SearchComponent
-public class TemplatedHitList extends HitList {
-
+public class TemplatedHitList extends HitList  {
+	
+	@Autowired
+	DirectoryService directoryService;
+	
+	private static Logger logger = LoggerFactory.getLogger(TemplatedHitList.class);
+		
 	private String template;
+	
+	private File templateFile;
+	
+	public TemplatedHitList(){
+		super();
+	}
 	
 	public String getTemplate(){
 		return this.template;
 	}
 	
+	public String getTemplatePath(){
+		if(templateFile == null){
+			this.templateFile = directoryService.createTempFile("tempalte",".jspx");
+			if(templateFile == null){
+				throw new RuntimeException("Could not load templateFile");
+			}
+		}
+		return templateFile.getAbsolutePath();
+	}	
 }
 
 @SearchAdaptor

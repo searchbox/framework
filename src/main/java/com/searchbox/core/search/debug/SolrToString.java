@@ -18,6 +18,7 @@ public class SolrToString extends SearchElement  {
 	private QueryResponse response;
 	
 	public SolrToString(){
+		super("Solr Debug");
 		this.type = SearchElementType.DEBUG;
 	}
 	
