@@ -146,7 +146,7 @@ input:focus,textarea:focus {
 }
 
 #search-bar {
-  margin: -20px 0 10px -20px;
+  margin: -10px 0 10px -20px;
   border-radius: 0;
   padding: 40px 30px 20px 40px;
   border-bottom: 1px solid #BCBCBC;
