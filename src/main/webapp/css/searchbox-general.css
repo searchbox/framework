@@ -65,8 +65,13 @@ body #main-content {
 
 /**  Top navbar **/
 #navbar-top-container{
-  padding: 0 20px 0px 20px;
+  padding: 0 15px 0px 15px;
   background-color:black;
+}
+
+#navbar-top-container .navbar-collapse {
+  margin-right: -15px;
+  margin-left: -15px;
 }
 
 #navbar-top {
