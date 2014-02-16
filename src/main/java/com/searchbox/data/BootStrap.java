@@ -25,6 +25,7 @@ import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.CollectionDefinition;
 import com.searchbox.domain.FieldDefinition;
 import com.searchbox.domain.PresetDefinition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
 import com.searchbox.ref.Sort;
@@ -63,7 +64,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collection.setName("pubmed");
 		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
-		collectionFields.add(FieldDefinition.StringFieldDef("title"));
+		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
 		collection.setFieldDefinitions(collectionFields);
 		collection.persist();
@@ -74,9 +75,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		PresetDefinition preset = new PresetDefinition(searchbox, collection);
 		preset.setLabel("Search All");
 		preset.setSlug("all");
-//		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
-//		fieldAttr.setAttributeValue("searchbale", true);
-//		preset.addFieldAttributeDefinition(fieldAttr);
+		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("article-title"));
+		fieldAttr.setSearchable(true);
+		preset.addFieldAttributeDefinition(fieldAttr);
+		PresetFieldAttributeDefinition fieldAttr2 = new PresetFieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
+		fieldAttr2.setSearchable(true);
+		preset.addFieldAttributeDefinition(fieldAttr2);
+
 		
 
 		//Create & add a FieldSort SearchComponent to the preset;

@@ -1,5 +1,6 @@
 package com.searchbox.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +17,12 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 import com.searchbox.core.dm.Preset;
+import com.searchbox.core.dm.PresetFieldAttribute;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.SimpleQuery;
 import com.searchbox.core.search.result.HitList;
+import com.searchbox.ref.ReflectionUtils;
 
 @RooJavaBean
 @RooToString
@@ -74,22 +77,22 @@ public class PresetDefinition {
 	}
 	
 	public Preset getElement(){
-		//Merge field values here. Use Reflection since I am a laxy bastard...
 		Preset preset = new Preset();
-//		for(SearchElementDefinition elementDef:searchElements){
-//			try {
-//				preset.addSearchElement(elementDef.getElement());
-//			} catch (Exception e){
-//				logger.error("Could not get searchElement with def: " + elementDef, e);
-//			}
-//		}
-//		for(PresetFieldAttributeDefinition fieldDef:fieldAttributes){
-//			try {
-//				preset.addFieldAttribute(fieldDef.getElement());
-//			} catch (Exception e){
-//				logger.error("Could not get searchElement with def: " + fieldDef, e);
-//			}
-//		}
+		ReflectionUtils.copyAllFields(this, preset);
+		for(SearchElementDefinition elementDef:searchElements){
+			try {
+				preset.addSearchElement(elementDef.getElement());
+			} catch (Exception e){
+				logger.error("Could not get searchElement with def: " + elementDef, e);
+			}
+		}
+		for(PresetFieldAttributeDefinition fieldDef:fieldAttributes){
+			try {
+				preset.addFieldAttribute(fieldDef.getElement());
+			} catch (Exception e){
+				logger.error("Could not get presetFieldAttribute with def: " + fieldDef, e);
+			}
+		}
 		return preset;
 	}
 	
@@ -124,8 +127,15 @@ public class PresetDefinition {
 		Searchbox sb = new Searchbox();
 		sb.setSlug("pubmed");
 		
+		//The base collection for searchbox
 		CollectionDefinition collection = new CollectionDefinition();
-		
+		collection.setName("pubmed");
+		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
+		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		collectionFields.add(FieldDefinition.StringFieldDef("title"));
+		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+		collection.setFieldDefinitions(collectionFields);
+
 		PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
 
 		pdef.slug = "search-all";
@@ -134,8 +144,11 @@ public class PresetDefinition {
 		SearchElementDefinition fdef = new SearchElementDefinition(FieldFacet.class);
 		fdef.setAttributeValue("fieldName", "MyField");
 		fdef.setAttributeValue("label", "Categories");
+		pdef.addSearchElementDeifinition(fdef);
 		
-		pdef.searchElements.add(fdef);
+		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
+		fieldAttr.setSearchable(true);
+		pdef.addFieldAttributeDefinition(fieldAttr);
 		
 		Preset elem = pdef.getElement();
 		System.out.println("Preset label: " + elem.getLabel());
@@ -143,6 +156,10 @@ public class PresetDefinition {
 		
 		for(SearchElement element:elem.getSearchElements()){
 			System.out.println("SearchElement label: " + element.getLabel());
+		}
+		
+		for(PresetFieldAttribute element:elem.getFieldAttributes()){
+			System.out.println("PresetFieldAttribute: " + element);
 		}
 	}
 }

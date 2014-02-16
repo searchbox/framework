@@ -12,7 +12,6 @@ import org.apache.solr.client.solrj.util.ClientUtils;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.facet.FieldFacet.ValueCondition;
 
@@ -22,7 +21,7 @@ public class FieldFacetSolrAdaptor
 	SolrConditionAdapter<FieldFacet.ValueCondition> {
 	
 	@Override
-	public SolrQuery doAdapt(Collection collection,
+	public SolrQuery doAdapt(Preset preset,
 			ValueCondition condition, SolrQuery query) {
 		String conditionValue = ClientUtils.escapeQueryChars(condition.value);
 		boolean isnew = true;
@@ -44,7 +43,7 @@ public class FieldFacetSolrAdaptor
 	}
 
 	@Override
-	public SolrQuery doAdapt(Collection collection, FieldFacet element, SolrQuery query) {
+	public SolrQuery doAdapt(Preset preset, FieldFacet element, SolrQuery query) {
 		query.addFacetField("{!ex="+element.getFieldName()+"}"+element.getFieldName());
 		return query;
 	}

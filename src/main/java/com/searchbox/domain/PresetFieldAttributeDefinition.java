@@ -6,6 +6,10 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.searchbox.core.dm.Preset;
+import com.searchbox.core.dm.PresetFieldAttribute;
+import com.searchbox.ref.ReflectionUtils;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
@@ -34,5 +38,13 @@ public class PresetFieldAttributeDefinition {
 	
 	public PresetFieldAttributeDefinition(FieldDefinition field){
 		this.field = field;
+	}
+
+
+	public PresetFieldAttribute getElement() {
+			PresetFieldAttribute element = new PresetFieldAttribute();
+			ReflectionUtils.copyAllFields(this, element);
+			element.setField(this.field.getElement());
+			return element;
 	}
 }

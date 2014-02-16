@@ -3,6 +3,9 @@
 
 package com.searchbox.domain;
 
+import com.searchbox.domain.FieldDefinition;
+import com.searchbox.domain.PresetDefinition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
 
 privileged aspect PresetFieldAttributeDefinition_Roo_JavaBean {
     

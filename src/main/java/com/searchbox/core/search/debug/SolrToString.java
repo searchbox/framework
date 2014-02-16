@@ -7,7 +7,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementType;
@@ -42,7 +41,7 @@ public class SolrToString extends SearchElement  {
 	public static class SolrAdaptor implements SolrElementAdapter<SolrToString>{
 
 		@Override
-		public SolrQuery doAdapt(Collection collection,
+		public SolrQuery doAdapt(Preset preset,
 				SolrToString SearchElement, SolrQuery query) {
 			query.set("debug","true");
 			return query;

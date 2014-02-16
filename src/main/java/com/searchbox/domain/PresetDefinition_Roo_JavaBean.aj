@@ -3,6 +3,11 @@
 
 package com.searchbox.domain;
 
+import com.searchbox.domain.CollectionDefinition;
+import com.searchbox.domain.PresetDefinition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
+import com.searchbox.domain.SearchElementDefinition;
+import com.searchbox.domain.Searchbox;
 import java.util.Set;
 
 privileged aspect PresetDefinition_Roo_JavaBean {

@@ -3,11 +3,10 @@
 
 package com.searchbox.domain;
 
+import com.searchbox.domain.PresetFieldAttributeDefinition;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect PresetFieldAttributeDefinition_Roo_Jpa_ActiveRecord {
