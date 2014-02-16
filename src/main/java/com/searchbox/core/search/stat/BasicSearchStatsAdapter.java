@@ -5,14 +5,13 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Preset;
 
 @SearchAdaptor
 public class BasicSearchStatsAdapter implements SolrElementAdapter<BasicSearchStats>{
 
 	@Override
-	public SolrQuery doAdapt(Collection collection,
+	public SolrQuery doAdapt(Preset preset,
 			BasicSearchStats searchElement, SolrQuery query) {
 		return query;
 	}

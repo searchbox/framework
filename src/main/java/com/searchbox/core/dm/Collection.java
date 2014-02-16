@@ -2,14 +2,12 @@ package com.searchbox.core.dm;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+
 import com.searchbox.core.engine.SearchEngine;
 
 @RooJavaBean
@@ -22,7 +20,7 @@ public class Collection {
 
 	private SearchEngine engine;
 
-	private List<Field<?>> fields = new ArrayList<Field<?>>();
+	private List<Field> fields = new ArrayList<Field>();
 
 	public Collection(String name) {
 		this.name = name;
@@ -53,11 +51,11 @@ public class Collection {
         this.engine = engine;
     }
 
-	public List<Field<?>> getFields() {
+	public List<Field> getFields() {
         return this.fields;
     }
 
-	public void setFields(List<Field<?>> fields) {
+	public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 

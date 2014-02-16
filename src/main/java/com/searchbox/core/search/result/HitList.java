@@ -9,7 +9,6 @@ import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.core.search.ValueElement;
-import com.searchbox.core.search.result.HitList.Hit;
 
 
 @SearchComponent

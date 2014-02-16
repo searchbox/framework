@@ -5,11 +5,22 @@ package com.searchbox.domain;
 
 import com.searchbox.domain.CollectionDefinition;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect CollectionDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> CollectionDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("");
+    @PersistenceContext
+    transient EntityManager CollectionDefinition.entityManager;
+    
+    public static final List<String> CollectionDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("name", "engine", "fieldDefinitions");
+    
+    public static final EntityManager CollectionDefinition.entityManager() {
+        EntityManager em = new CollectionDefinition().entityManager;
+        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
+        return em;
+    }
     
     public static long CollectionDefinition.countCollectionDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM CollectionDefinition o", Long.class).getSingleResult();
@@ -48,6 +59,35 @@ privileged aspect CollectionDefinition_Roo_Jpa_ActiveRecord {
             }
         }
         return entityManager().createQuery(jpaQuery, CollectionDefinition.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    @Transactional
+    public void CollectionDefinition.persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+    }
+    
+    @Transactional
+    public void CollectionDefinition.remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        if (this.entityManager.contains(this)) {
+            this.entityManager.remove(this);
+        } else {
+            CollectionDefinition attached = CollectionDefinition.findCollectionDefinition(this.id);
+            this.entityManager.remove(attached);
+        }
+    }
+    
+    @Transactional
+    public void CollectionDefinition.flush() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.flush();
+    }
+    
+    @Transactional
+    public void CollectionDefinition.clear() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.clear();
     }
     
     @Transactional

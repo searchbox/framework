@@ -3,8 +3,6 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.PresetDefinition;
-import com.searchbox.domain.Searchbox;
 import java.util.List;
 
 privileged aspect Searchbox_Roo_JavaBean {

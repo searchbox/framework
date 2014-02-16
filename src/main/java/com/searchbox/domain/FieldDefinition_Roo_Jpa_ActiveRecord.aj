@@ -5,11 +5,22 @@ package com.searchbox.domain;
 
 import com.searchbox.domain.FieldDefinition;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect FieldDefinition_Roo_Jpa_ActiveRecord {
     
-    public static final List<String> FieldDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("");
+    @PersistenceContext
+    transient EntityManager FieldDefinition.entityManager;
+    
+    public static final List<String> FieldDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("clazz", "key");
+    
+    public static final EntityManager FieldDefinition.entityManager() {
+        EntityManager em = new FieldDefinition().entityManager;
+        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
+        return em;
+    }
     
     public static long FieldDefinition.countFieldDefinitions() {
         return entityManager().createQuery("SELECT COUNT(o) FROM FieldDefinition o", Long.class).getSingleResult();
@@ -48,6 +59,35 @@ privileged aspect FieldDefinition_Roo_Jpa_ActiveRecord {
             }
         }
         return entityManager().createQuery(jpaQuery, FieldDefinition.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    @Transactional
+    public void FieldDefinition.persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+    }
+    
+    @Transactional
+    public void FieldDefinition.remove() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        if (this.entityManager.contains(this)) {
+            this.entityManager.remove(this);
+        } else {
+            FieldDefinition attached = FieldDefinition.findFieldDefinition(this.id);
+            this.entityManager.remove(attached);
+        }
+    }
+    
+    @Transactional
+    public void FieldDefinition.flush() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.flush();
+    }
+    
+    @Transactional
+    public void FieldDefinition.clear() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.clear();
     }
     
     @Transactional

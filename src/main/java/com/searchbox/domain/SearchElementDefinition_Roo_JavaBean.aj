@@ -3,10 +3,17 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.PresetDefinition;
-import com.searchbox.domain.SearchElementDefinition;
+import java.util.List;
 
 privileged aspect SearchElementDefinition_Roo_JavaBean {
+    
+    public Class<?> SearchElementDefinition.getClazz() {
+        return this.clazz;
+    }
+    
+    public void SearchElementDefinition.setClazz(Class<?> clazz) {
+        this.clazz = clazz;
+    }
     
     public PresetDefinition SearchElementDefinition.getPreset() {
         return this.preset;
@@ -14,6 +21,10 @@ privileged aspect SearchElementDefinition_Roo_JavaBean {
     
     public void SearchElementDefinition.setPreset(PresetDefinition preset) {
         this.preset = preset;
+    }
+    
+    public void SearchElementDefinition.setAttributes(List<DefinitionAttribute> attributes) {
+        this.attributes = attributes;
     }
     
 }

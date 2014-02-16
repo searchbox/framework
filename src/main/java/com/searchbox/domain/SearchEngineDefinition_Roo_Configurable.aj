@@ -3,11 +3,11 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Definition;
+import com.searchbox.domain.SearchEngineDefinition;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect Definition_Roo_Configurable {
+privileged aspect SearchEngineDefinition_Roo_Configurable {
     
-    declare @type: Definition: @Configurable;
+    declare @type: SearchEngineDefinition: @Configurable;
     
 }

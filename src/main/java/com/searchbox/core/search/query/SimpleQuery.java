@@ -1,9 +1,5 @@
 package com.searchbox.core.search.query;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchCondition;

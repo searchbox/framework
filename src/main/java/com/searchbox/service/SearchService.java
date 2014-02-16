@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.engine.SearchResponse;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
-import com.searchbox.domain.SearchElementDefinition;
 //import com.searchbox.domain.app.SearchElementDefinition;
 
 @Service
@@ -53,7 +51,7 @@ public class SearchService {
 			SearchElementAdapter elementAdapter = adapterService.getAdapter(element);
 			if(elementAdapter != null){
 				logger.debug("Adapting condition from Element: " + element);
-				elementAdapter.doAdapt(preset.getCollection(), element, query);
+				elementAdapter.doAdapt(preset, element, query);
 			}
 			
 			if(element.getClass().isAssignableFrom(GenerateSearchCondition.class)){
@@ -67,7 +65,7 @@ public class SearchService {
 			logger.debug("Adapting condition from UI: " + condition);
 			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
-				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
+				conditionAdaptor.doAdapt(preset, condition, query);
 			}
 		}
 		
@@ -76,7 +74,7 @@ public class SearchService {
 			logger.debug("Adapting condition from Preset: " + condition);
 			SearchConditionAdapter conditionAdaptor = adapterService.getAdapter(condition);
 			if(conditionAdaptor != null){
-				conditionAdaptor.doAdapt(preset.getCollection(), condition, query);
+				conditionAdaptor.doAdapt(preset, condition, query);
 			}
 		}
 				

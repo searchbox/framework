@@ -3,7 +3,7 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.Definition;
+import com.searchbox.domain.SearchEngineDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,32 +11,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-privileged aspect Definition_Roo_Jpa_Entity {
+privileged aspect SearchEngineDefinition_Roo_Jpa_Entity {
     
-    declare @type: Definition: @Entity;
+    declare @type: SearchEngineDefinition: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long Definition.id;
+    private Long SearchEngineDefinition.id;
     
     @Version
     @Column(name = "version")
-    private Integer Definition.version;
+    private Integer SearchEngineDefinition.version;
     
-    public Long Definition.getId() {
+    public Long SearchEngineDefinition.getId() {
         return this.id;
     }
     
-    public void Definition.setId(Long id) {
+    public void SearchEngineDefinition.setId(Long id) {
         this.id = id;
     }
     
-    public Integer Definition.getVersion() {
+    public Integer SearchEngineDefinition.getVersion() {
         return this.version;
     }
     
-    public void Definition.setVersion(Integer version) {
+    public void SearchEngineDefinition.setVersion(Integer version) {
         this.version = version;
     }
     

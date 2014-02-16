@@ -20,7 +20,6 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.domain.PresetDefinition;
-import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
 import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;

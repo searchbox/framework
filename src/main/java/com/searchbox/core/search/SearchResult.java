@@ -7,7 +7,6 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.roo.addon.tostring.RooToString;
 
 public class SearchResult {
 

@@ -3,7 +3,7 @@
 
 package com.searchbox.domain;
 
-import com.searchbox.domain.SearchElementDefinition;
+import com.searchbox.domain.PresetFieldAttributeDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,36 +11,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-privileged aspect SearchElementDefinition_Roo_Jpa_Entity {
+privileged aspect PresetFieldAttributeDefinition_Roo_Jpa_Entity {
     
-    declare @type: SearchElementDefinition: @Entity;
+    declare @type: PresetFieldAttributeDefinition: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long SearchElementDefinition.id;
+    private Long PresetFieldAttributeDefinition.id;
     
     @Version
     @Column(name = "version")
-    private Integer SearchElementDefinition.version;
+    private Integer PresetFieldAttributeDefinition.version;
     
-    public SearchElementDefinition.new() {
+    public PresetFieldAttributeDefinition.new() {
         super();
     }
 
-    public Long SearchElementDefinition.getId() {
+    public Long PresetFieldAttributeDefinition.getId() {
         return this.id;
     }
     
-    public void SearchElementDefinition.setId(Long id) {
+    public void PresetFieldAttributeDefinition.setId(Long id) {
         this.id = id;
     }
     
-    public Integer SearchElementDefinition.getVersion() {
+    public Integer PresetFieldAttributeDefinition.getVersion() {
         return this.version;
     }
     
-    public void SearchElementDefinition.setVersion(Integer version) {
+    public void PresetFieldAttributeDefinition.setVersion(Integer version) {
         this.version = version;
     }
     
