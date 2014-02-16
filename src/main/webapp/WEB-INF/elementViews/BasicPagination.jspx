@@ -1,0 +1,8 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+  This is my pagination.
+</jsp:root>

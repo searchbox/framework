@@ -18,6 +18,7 @@ import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.result.TemplatedHitList;
@@ -136,6 +137,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldFacet.setAttributeValue("fieldName", "publication-type");
 		fieldFacet.setAttributeValue("label", "Type");
 		preset.addSearchElementDeifinition(fieldFacet);
+		
+		
+		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
+		preset.addSearchElementDeifinition(pagination);
+		
+		
 		
 		searchbox.addPresetDefinition(preset);
 		
