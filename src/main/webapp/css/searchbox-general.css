@@ -66,6 +66,7 @@ body #main-content {
 /**  Top navbar **/
 #navbar-top-container{
   padding: 0 20px 0px 20px;
+  background-color:black;
 }
 
 #navbar-top {
@@ -89,6 +90,13 @@ body #main-content {
   position: relative;
   background: none;
   box-shadow: none;
+}
+
+.navbar-collapse.in #preset-bar li.active a, .navbar-collapse.collapsing #preset-bar li.active a{
+  background-color:gray;
+}
+.navbar-collapse.in #preset-bar li.active>a:after, .navbar-collapse.collapsing #preset-bar li.active>a:after{
+  display:none;
 }
 
 #preset-bar a {
@@ -156,6 +164,9 @@ input:focus,textarea:focus {
   border-radius: 3px;
   padding-right: 35px;
   border: 1px solid rgb(204, 204, 204);
+}
+#search-bar button.btn {
+  padding: 10px 15px;
 }
 /*
 #search-bar #logo #logo-text {
