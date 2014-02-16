@@ -53,7 +53,6 @@ public class Preset implements Comparable<Preset> {
 	}
 	
 	public void addSearchElement(SearchElement element) {
-		element.setPosition(this.searchElements.size());
 		this.searchElements.add(element);
 	}
 

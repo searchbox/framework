@@ -27,6 +27,7 @@
 			</c:catch>
 		</c:when>
 		<c:otherwise>
+		${element.position}
 			<jsp:include page="${page}" />
 		</c:otherwise>
 	</c:choose>

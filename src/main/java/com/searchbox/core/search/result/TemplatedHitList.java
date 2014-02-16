@@ -61,8 +61,8 @@ public class TemplatedHitList extends HitList  {
 			}
 		}
 		String relativePath = directoryService.getApplicationRelativePath(templateFile);
-		logger.info("Tempalte AbsolutePath: " + templateFile.getAbsolutePath());
-		logger.info("Tempalte RealtivePath: " + relativePath);
+		logger.debug("Tempalte AbsolutePath: " + templateFile.getAbsolutePath());
+		logger.debug("Tempalte RealtivePath: " + relativePath);
 		return relativePath;
 	}	
 }

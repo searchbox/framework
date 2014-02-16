@@ -23,11 +23,6 @@ public class SearchElementWithValues<K extends ValueElement> extends SearchEleme
 		values = new TreeSet<K>();
 	}
 
-	public SearchElementWithValues(String label, Integer position) {
-		super(label, position);
-		values = new TreeSet<K>();
-	}
-	
 	public SearchElementWithValues<K> addValueElement(K valueElement){
 		this.values.add(valueElement);
 		return this;

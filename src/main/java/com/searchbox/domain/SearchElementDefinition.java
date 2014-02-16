@@ -29,11 +29,13 @@ import com.searchbox.service.SearchService;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class SearchElementDefinition implements ApplicationContextAware{
+public class SearchElementDefinition implements ApplicationContextAware, Comparable<SearchElementDefinition>{
 	
 	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinition.class);
 	
 	private Class<?> clazz;
+	
+	private Integer position;
 
 	@ManyToOne(targetEntity=PresetDefinition.class)
 	private PresetDefinition preset;
@@ -61,7 +63,7 @@ public class SearchElementDefinition implements ApplicationContextAware{
 		try {
 			AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
 			SearchElement element = (SearchElement) beanFactory.createBean(clazz,AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, false);
-//			SearchElement element = (SearchElement) clazz.newInstance();
+			element.setPosition(this.getPosition());
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
 					Field field = ReflectionUtils.findUnderlying(clazz, attribute.getName());
@@ -107,5 +109,10 @@ public class SearchElementDefinition implements ApplicationContextAware{
 		
 		SearchElement elem = fdef.getElement();
 		System.out.println("element Label: " + elem.getLabel());
+	}
+
+	@Override
+	public int compareTo(SearchElementDefinition o) {
+		return this.position.compareTo(o.getPosition());
 	}
 }

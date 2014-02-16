@@ -75,6 +75,7 @@ public class SearchController {
 		Preset currentPreset = null;
 		for(PresetDefinition pdef:searchbox.getPresets()){
 			Preset pset = pdef.getElement();
+			
 			if(pset.getSlug().equals(presetSlug)){
 				currentPreset = pset;
 			}
@@ -106,7 +107,7 @@ public class SearchController {
 		
 		if(currentPreset != null){
 			for(SearchElement element:searchService.execute(currentPreset, conditions)){
-				logger.debug("Adding to result view element: " + element);
+				logger.debug("Adding to result view element["+element.getPosition()+ "] = " + element.getLabel());
 				result.addElement(element);
 			}
 		}

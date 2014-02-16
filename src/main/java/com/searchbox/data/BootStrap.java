@@ -142,8 +142,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
 		preset.addSearchElementDeifinition(pagination);
 		
-		
-		
 		searchbox.addPresetDefinition(preset);
 		
 		PresetDefinition articles = new PresetDefinition(searchbox, collection);

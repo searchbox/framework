@@ -12,6 +12,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -39,6 +40,7 @@ public class PresetDefinition {
 
 	@OneToMany(mappedBy="preset", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@Order
 	private Set<SearchElementDefinition> searchElements;
 	
 	@OneToMany(targetEntity=PresetFieldAttributeDefinition.class, cascade=CascadeType.ALL)
@@ -98,6 +100,7 @@ public class PresetDefinition {
 	
 	public void addSearchElementDeifinition(SearchElementDefinition definition) {
 		definition.setPreset(this);
+		definition.setPosition(this.searchElements.size()+1);
 		this.searchElements.add(definition);
 		
 	}

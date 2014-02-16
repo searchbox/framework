@@ -41,11 +41,6 @@ public class BasicSearchStats extends SearchElement {
 		super(label);
 		this.setType(SearchElementType.STAT);
 	}
-
-	public BasicSearchStats(String label, Integer position) {
-		super(label, position);
-		this.setType(SearchElementType.STAT);
-	}
 }
 
 @SearchAdaptor

@@ -16,11 +16,8 @@ public class SearchResult {
 	
 	List<String> fields = new ArrayList<String>();
 	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
-//	SortedSet<Facet> facets = new TreeSet<Facet>();
-
 
 	public void addElement(SearchElement element) {
-		element.setPosition(this.elements.size() + 1);
 		this.elements.add(element);
 	}
 	

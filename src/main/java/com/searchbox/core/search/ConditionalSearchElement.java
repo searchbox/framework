@@ -8,10 +8,6 @@ public abstract class ConditionalSearchElement<K extends SearchCondition>
 		super(label);
 	}
 	
-	public ConditionalSearchElement(String label, Integer position) {
-		super(label, position);
-	}
-
 	@Override
 	public abstract K getSearchCondition();
 	

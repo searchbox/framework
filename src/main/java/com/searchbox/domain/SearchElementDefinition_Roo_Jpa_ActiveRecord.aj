@@ -14,7 +14,7 @@ privileged aspect SearchElementDefinition_Roo_Jpa_ActiveRecord {
     @PersistenceContext
     transient EntityManager SearchElementDefinition.entityManager;
     
-    public static final List<String> SearchElementDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("clazz", "preset", "attributes");
+    public static final List<String> SearchElementDefinition.fieldNames4OrderClauseFilter = java.util.Arrays.asList("logger", "clazz", "position", "preset", "attributes", "context");
     
     public static final EntityManager SearchElementDefinition.entityManager() {
         EntityManager em = new SearchElementDefinition().entityManager;

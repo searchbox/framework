@@ -4,5 +4,15 @@
   xmlns:form="http://www.springframework.org/tags/form"
   xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
-  This is my pagination.
+  <div id="Pagination">
+  <span class="currentStep">1</span>
+  <a href="/all-publications/search?q=&amp;offset=10&amp;max=10" class="step">2</a>
+  <a href="/all-publications/search?q=&amp;offset=20&amp;max=10" class="step">3</a>
+  <a href="/all-publications/search?q=&amp;offset=30&amp;max=10" class="step">4</a>
+  <a href="/all-publications/search?q=&amp;offset=40&amp;max=10" class="step">5</a>
+  <a href="/all-publications/search?q=&amp;offset=50&amp;max=10" class="step">6</a>
+  <a href="/all-publications/search?q=&amp;offset=60&amp;max=10" class="step">7</a>
+  <span class="step gap">..</span>
+  <a href="/all-publications/search?q=&amp;offset=10&amp;max=10" class="nextLink">Next</a>
+ </div>
 </jsp:root>

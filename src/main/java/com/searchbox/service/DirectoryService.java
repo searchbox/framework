@@ -33,7 +33,7 @@ public class DirectoryService {
 	
 	public String getApplicationRelativePath(File file){
 		try {
-			logger.info("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
+			logger.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
 			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
 			return relative;
 		} catch (IOException e) {

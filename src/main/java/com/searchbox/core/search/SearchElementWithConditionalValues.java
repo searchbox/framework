@@ -26,11 +26,6 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
 		values = new TreeSet<K>();
 	}
 
-	public SearchElementWithConditionalValues(String label, Integer position) {
-		super(label, position);
-		values = new TreeSet<K>();
-	}
-	
 	public SearchElementWithConditionalValues<K,T> addValueElement(K valueElement){
 		this.values.add(valueElement);
 		return this;
