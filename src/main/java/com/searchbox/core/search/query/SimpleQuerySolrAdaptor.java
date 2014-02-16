@@ -1,14 +1,11 @@
 package com.searchbox.core.search.query;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.params.DisMaxParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +25,9 @@ public class SimpleQuerySolrAdaptor implements SolrConditionAdapter<SimpleQuery.
 	@Override
 	public SolrQuery doAdapt(Preset preset, SimpleQuery SearchElement,
 			SolrQuery query) {
-		if(SearchElement.getQuery() == null || SearchElement.getQuery().isEmpty()){
-			query.setQuery("*:*");
-		} else {
-			query.setQuery(SearchElement.getQuery());
-		}
+		
+		query.setQuery(SearchElement.getQuery());
+		
 		query.setRequestHandler("edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
 		
@@ -51,22 +46,15 @@ public class SimpleQuerySolrAdaptor implements SolrConditionAdapter<SimpleQuery.
 	@Override
 	public SimpleQuery doAdapt(Preset preset, SimpleQuery searchElement,
 			SolrQuery query, QueryResponse response) {
-		if(query.getQuery().equals("*:*")){
-			searchElement.setQuery("");
-		} else {
-			searchElement.setQuery(query.getQuery());			
-		}
+		searchElement.setQuery(query.getQuery());			
 		return searchElement;
 	}
 
 	@Override
 	public SolrQuery doAdapt(Preset preset, Condition condition,
 			SolrQuery query) {
-		if(condition.getQuery() == null || condition.getQuery().isEmpty()){
-			query.setQuery("*:*");
-		} else {
-			query.setQuery(condition.getQuery());
-		}
+		
+		query.setQuery(condition.getQuery());
 		return query;
 	}
 
