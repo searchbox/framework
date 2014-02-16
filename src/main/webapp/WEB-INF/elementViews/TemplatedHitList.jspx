@@ -19,7 +19,15 @@
       </c:catch>
       <c:if test="${includeException != null}">
         <div class="alert alert-danger">
-          <h3>${includeException.message }</h3>
+          <h4>Exception</h4>
+          <pre><c:out value="${includeException.message }"/></pre>
+          <h4>Template</h4>
+          <pre><c:out value="${element.getTemplate()}"/></pre>
+          <h4>Template File</h4>
+          <pre><c:out value="${element.getTemplatePath()}"/></pre>
+          <h4>Hit</h4>
+          <pre><c:out value="${hit}"/></pre>
+          <h4>Fields</h4>
 	        <c:forEach items="${hit.fieldValues}" var="field">
 	          <li><strong>${field.key }:</strong> ${field.value }</li>
 	        </c:forEach>

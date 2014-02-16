@@ -46,9 +46,12 @@ public class TemplatedHitList extends HitList  {
 	
 	public String getTemplatePath(){
 		if(templateFile == null){
-			this.templateFile = directoryService.createTempFile("tempalte",".jspx");
+			this.templateFile = directoryService.createTempFile("tempalte_",".jspx");
 			try {
-				FileUtils.writeStringToFile(this.templateFile, template);
+				String fragment = "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
+									"version=\"2.0\">"+
+									this.template+"</jsp:root>";
+				FileUtils.writeStringToFile(this.templateFile, fragment);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
