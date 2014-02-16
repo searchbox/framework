@@ -7,15 +7,27 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.result.HitList.Hit;
 
+@SearchComponent
+public class TemplatedHitList extends HitList {
+
+	private String template;
+	
+	public String getTemplate(){
+		return this.template;
+	}
+	
+}
+
 @SearchAdaptor
-public class HitListAdapter implements SolrElementAdapter<HitList> {
+class TemplatedHitListAdapter implements SolrElementAdapter<TemplatedHitList> {
 
 	@Override
-	public SolrQuery doAdapt(Preset preset, HitList searchElement,
+	public SolrQuery doAdapt(Preset preset, TemplatedHitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
 			query.addField(field);
@@ -34,7 +46,7 @@ public class HitListAdapter implements SolrElementAdapter<HitList> {
 	}
 
 	@Override
-	public HitList doAdapt(Preset preset, HitList element,
+	public TemplatedHitList doAdapt(Preset preset, TemplatedHitList element,
 			SolrQuery query, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();

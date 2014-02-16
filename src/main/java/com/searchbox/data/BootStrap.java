@@ -18,8 +18,9 @@ import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
+import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.domain.CollectionDefinition;
@@ -93,19 +94,28 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldSort.setAttributeValue("values", sortFields);
 		preset.addSearchElementDeifinition(fieldSort);
 				
+		
+		//Create & add a TemplatedHitLIst SearchComponent to the preset;
+		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
+		templatedHitList.setAttributeValue("titleField", "article-title");
+		templatedHitList.setAttributeValue("idField", "id");
+		templatedHitList.setAttributeValue("urlField", "article-title");
+		templatedHitList.setAttributeValue("template", "<h1>Hello ${hit.getTitle()}</h1>");
+		preset.addSearchElementDeifinition(templatedHitList);
+				
 		//Create & add a HitLIst SearchComponent to the preset;
-		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "article-title");
-		hitList.setAttributeValue("idField", "id");
-		hitList.setAttributeValue("urlField", "article-title");
-		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("article-abstract");
-		fields.add("author");
-		fields.add("publication-type");
-		fields.add("article-completion-date");
-		fields.add("article-revision-date");
-		hitList.setAttributeValue("fields", fields);
-		preset.addSearchElementDeifinition(hitList);
+//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+//		hitList.setAttributeValue("titleField", "article-title");
+//		hitList.setAttributeValue("idField", "id");
+//		hitList.setAttributeValue("urlField", "article-title");
+//		ArrayList<String> fields = new ArrayList<String>();
+//		fields.add("article-abstract");
+//		fields.add("author");
+//		fields.add("publication-type");
+//		fields.add("article-completion-date");
+//		fields.add("article-revision-date");
+//		hitList.setAttributeValue("fields", fields);
+//		preset.addSearchElementDeifinition(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
@@ -116,7 +126,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.addSearchElementDeifinition(querydebug);
 		
 		//Create & add a query SearchComponent to the preset;
-		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
 		preset.addSearchElementDeifinition(query);
 		
 		//Create & add a facet to the preset.
