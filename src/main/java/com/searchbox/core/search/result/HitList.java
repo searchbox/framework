@@ -2,10 +2,18 @@ package com.searchbox.core.search.result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+
+import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.core.adaptor.SolrElementAdapter;
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.core.search.ValueElement;
@@ -117,5 +125,44 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 			return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
 		}
 		
+	}
+}
+
+@SearchAdaptor
+class HitListAdapter implements SolrElementAdapter<HitList> {
+
+	@Override
+	public SolrQuery doAdapt(Preset preset, HitList searchElement,
+			SolrQuery query) {
+		for(String field:searchElement.getFields()){
+			query.addField(field);
+		}
+		if(!searchElement.getFields().contains(searchElement.getTitleField())){
+			query.addField(searchElement.getTitleField());
+		}
+		if(!searchElement.getFields().contains(searchElement.getUrlField())){
+			query.addField(searchElement.getUrlField());
+		}
+		if(!searchElement.getFields().contains(searchElement.getIdField())){
+			query.addField(searchElement.getIdField());
+		}
+		query.addField("score");
+		return query;
+	}
+
+	@Override
+	public HitList doAdapt(Preset preset, HitList element,
+			SolrQuery query, QueryResponse response) {
+		
+		Iterator<SolrDocument> documents = response.getResults().iterator();
+		while(documents.hasNext()){
+			SolrDocument document = documents.next();
+			HitList.Hit hit = element.newHit((Float) document.get("score"));
+			for(String field:document.getFieldNames()){
+				Object value = document.get(field);
+				hit.addFieldValue(field, document.get(field));
+			}
+		}
+		return element;
 	}
 }

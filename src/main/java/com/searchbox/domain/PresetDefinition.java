@@ -20,7 +20,7 @@ import com.searchbox.core.dm.Preset;
 import com.searchbox.core.dm.PresetFieldAttribute;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.query.SimpleQuery;
+import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
 import com.searchbox.ref.ReflectionUtils;
 
@@ -113,7 +113,7 @@ public class PresetDefinition {
 		pdef.slug = "all";
 		pdef.label = "Basic Preset";
 		
-		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
+		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
 		pdef.addSearchElementDeifinition(query);
 		
 		SearchElementDefinition result = new SearchElementDefinition(HitList.class);
