@@ -14,8 +14,8 @@
   <c:forEach items="${element.values}" var="hit">
     <c:if test="${hit != null}">
       <c:catch var="includeException">
-      <jsp:include page="${element.getTemplatePath()}"/>
-      ${element.getTemplatePath()}
+      <c:set scope="request" var="hit" value="${hit }" />
+      <jsp:include page="/${element.getTemplatePath()}"/>
       </c:catch>
       <c:if test="${includeException != null}">
         <div class="alert alert-danger">

@@ -47,11 +47,20 @@ public class TemplatedHitList extends HitList  {
 	public String getTemplatePath(){
 		if(templateFile == null){
 			this.templateFile = directoryService.createTempFile("tempalte",".jspx");
+			try {
+				FileUtils.writeStringToFile(this.templateFile, template);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if(templateFile == null){
 				throw new RuntimeException("Could not load templateFile");
 			}
 		}
-		return templateFile.getAbsolutePath();
+		String relativePath = directoryService.getApplicationRelativePath(templateFile);
+		logger.info("Tempalte AbsolutePath: " + templateFile.getAbsolutePath());
+		logger.info("Tempalte RealtivePath: " + relativePath);
+		return relativePath;
 	}	
 }
 
