@@ -69,6 +69,12 @@ body #main-content {
   background-color:black;
 }
 
+#navbar-top-container .navbar-toggle{
+  margin-top:4px;
+  margin-bottom:4px;
+  border:none;
+}
+
 #navbar-top-container>.navbar-header, #navbar-top-container>.navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
@@ -140,7 +146,7 @@ input:focus,textarea:focus {
 }
 
 #search-bar {
-  margin: -20px -20px 10px -20px;
+  margin: -20px 0 10px -20px;
   border-radius: 0;
   padding: 40px 30px 20px 40px;
   border-bottom: 1px solid #BCBCBC;
