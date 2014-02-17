@@ -2,11 +2,14 @@ package com.searchbox.domain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -106,10 +109,19 @@ public class PresetDefinition {
 		
 	}
 	
+	
 	public void addFieldAttributeDefinition(PresetFieldAttributeDefinition definition) {
-		definition.setPreset(this);
-		this.fieldAttributes.add(definition);
-		
+		boolean exists = false;
+		for(PresetFieldAttributeDefinition attr:fieldAttributes){
+			if(attr.getField().equals(definition)){
+				BeanUtils.copyProperties(definition, attr);
+				exists = true;
+			}
+		}
+		if(!exists){
+			definition.setPreset(this);
+			this.fieldAttributes.add(definition);
+		}
 	}
 	
 	public PresetFieldAttributeDefinition getFieldAttributeDefinitionByKey(String key){
@@ -142,6 +154,22 @@ public class PresetDefinition {
 		pdef.addSearchElementDeifinition(result);
 		
 		return pdef;
+	}
+	
+	@PrePersist
+	public void checkPresetAttributes(){
+		//THis is for a SearchEngine Managed Collection!!!
+		for(FieldDefinition fdef:collection.getFieldDefinitions()){
+			boolean exists = false;
+			for(PresetFieldAttributeDefinition attr:fieldAttributes){
+				if(attr.getField().equals(fdef)){
+					exists = true;
+				}
+			}
+			if(!exists){
+				this.addFieldAttributeDefinition(new PresetFieldAttributeDefinition(fdef));
+			}
+		}
 	}
 
 	// TODO put that in a JUNIT

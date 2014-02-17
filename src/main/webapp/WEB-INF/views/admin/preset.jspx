@@ -2,7 +2,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:jsp="http://java.sun.com/JSP/Page">
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:form="http://www.springframework.org/tags/form">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 
@@ -51,6 +52,7 @@
 							${elementDef.getClazz().getSimpleName()}</h4>
 					</div>
 					<div class="modal-body">
+					 
 						<form class="form-horizontal" role="form">
 
 							<c:forEach items="${elementDef.attributes }" var="attribute"
@@ -268,57 +270,48 @@
 					</div>
 					<div class="tab-pane" id="filter">Preset Filters go here.</div>
 					<div class="tab-pane" id="field">
-
-
+					<script>
+              function setFieldPrefValue(prefId, attr){
+            	  var value = $("#FieldAttrValue_"+prefId+"_"+attr).val();
+                alert("prefId: " + prefId + ", attr: " + attr + ", value: " + value);
+              }
+            </script>
 						<table class="table">
 							<thead>
 								<tr>
 									<th></th>
-									<th>Key</th>
-									<th>Type</th>
-									<th>Label</th>
-									<th>Search</th>
+									<th>key</th>
+									<th>type</th>
+									<th>label</th>
+									<th>search</th>
 									<th>highlight</th>
-									<th>sortable</th>
-									<th>spelling</th>
-									<th>suggestion</th>
+									<th>sort</th>
+									<th>spell</th>
+									<th>suggest</th>
 									<th>boost</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach
-									items="${currentPresetDefinition.collection.fieldDefinitions }"
-									var="collectionField" varStatus="item">
-									<c:set var="fdef"
-										value="${currentPresetDefinition.getFieldAttributeDefinitionByField(collectionField)}" />
+									items="${currentPresetDefinition.fieldAttributes }"
+									var="attr" varStatus="item">
+									
 									<c:set var="trclass" value="" />
-									<c:if test="${fdef != null}">
-										<c:set var="trclass" value="success" />
-									</c:if>
-									<tr class="${trclass}">
+									<form:form modelAttribute="currentPresetDefinition.fieldAttributes[${item.index}]"> 
+									
+									<tr>
 										<td>${item.count }</td>
-										<td>${collectionField.getKey() }</td>
-										<td>${collectionField.getClazz().getSimpleName() }</td>
-										<td>${fdef.label}</td>
-										<td><c:if test="${fdef.searchable}">
-												<span class="glyphicon glyphicon-ok"></span>
-											</c:if></td>
-										<td><c:if test="${fdef.highlight}">
-												<span class="glyphicon glyphicon-ok"></span>
-											</c:if></td>
-										<td><c:if test="${fdef.sortable}">
-												<span class="glyphicon glyphicon-ok"></span>
-											</c:if></td>
-										<td><c:if test="${fdef.spelling}">
-												<span class="glyphicon glyphicon-ok"></span>
-											</c:if></td>
-										<td><c:if test="${fdef.suggestion}">
-												<span class="glyphicon glyphicon-ok"></span>
-											</c:if></td>
-										<td><c:if test="${fdef.boost}">
-                        ${fdef.boost}
-                      </c:if></td>
+										<td nowrap="nowrap" class="nowrap">${attr.field.getKey() }</td>
+										<td>${attr.field.getClazz().getSimpleName() }</td>
+										<td><input type="text" /></td>
+										<td><form:checkbox path="searchable"/></td>
+										<td><form:checkbox path="highlight"/></td>
+                    <td><form:checkbox path="sortable"/></td>
+                    <td><form:checkbox path="spelling"/></td>
+                    <td><form:checkbox path="suggestion"/></td>
+                    <td><form:input path="boost" size="4"/></td>
 									</tr>
+									</form:form>
 								</c:forEach>
 							</tbody>
 						</table>

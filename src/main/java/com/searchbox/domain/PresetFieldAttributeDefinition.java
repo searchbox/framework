@@ -21,19 +21,19 @@ public class PresetFieldAttributeDefinition {
 	@ManyToOne
 	private FieldDefinition field;
 		
-	private String label;
+	private String label = "";
 	
-	private Boolean searchable;
+	private Boolean searchable = false;
 	
-	private Boolean highlight;
+	private Boolean highlight = false;
 	
-	private Boolean sortable;
+	private Boolean sortable = false;
 	
-	private Boolean spelling;
+	private Boolean spelling = false;
 	
-	private Boolean suggestion;
+	private Boolean suggestion = false;
 	
-	private Float boost;
+	private Float boost = 1.0f;
  
 	
 	public PresetFieldAttributeDefinition(FieldDefinition field){
