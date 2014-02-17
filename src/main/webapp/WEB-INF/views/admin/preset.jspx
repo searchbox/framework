@@ -5,63 +5,77 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page">
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
-	
-	
-<c:forEach items="${currentPresetDefinition.getSearchElements() }" var="elementDef">
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteModal_${elementDef.getClazz().getSimpleName()}_${elementDef.getPosition()}" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <span class="glyphicon glyphicon-remove"></span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel">Delete ${elementDef.getClazz().getSimpleName()}</h4>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this element. You cannot go back!!!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
-<!-- Update Modal -->
-<div class="modal fade" id="updateModal_${elementDef.getClazz().getSimpleName()}_${elementDef.getPosition()}" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <span class="glyphicon glyphicon-remove"></span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel">Update ${elementDef.getClazz().getSimpleName()}</h4>
-      </div>
-      <div class="modal-body">
-      <form class="form-horizontal" role="form">
-  
-      <c:forEach items="${elementDef.attributes }" var="attribute" varStatus="stat">
-        <div class="form-group">
-            <label for="${attribute.name}" class="col-sm-2 control-label">${attribute.name}</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control" id="${attribute.name}" value="${attribute.value}" placeholder="${attribute.name}" />
-            </div>
-          </div>        
-      </c:forEach>
-      </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save Changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-</c:forEach>
-	
+	<c:forEach items="${currentPresetDefinition.getSearchElements() }"
+		var="elementDef">
+		<!-- Delete Modal -->
+		<div class="modal fade"
+			id="deleteModal_${elementDef.getClazz().getSimpleName()}_${elementDef.getPosition()}"
+			tabindex="-1" role="dialog" aria-labelledby="deleteModal"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Delete
+							${elementDef.getClazz().getSimpleName()}</h4>
+					</div>
+					<div class="modal-body">Are you sure you want to delete this
+						element. You cannot go back!!!</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Delete</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Update Modal -->
+		<div class="modal fade"
+			id="updateModal_${elementDef.getClazz().getSimpleName()}_${elementDef.getPosition()}"
+			tabindex="-1" role="dialog" aria-labelledby="deleteModal"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Update
+							${elementDef.getClazz().getSimpleName()}</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+
+							<c:forEach items="${elementDef.attributes }" var="attribute"
+								varStatus="stat">
+								<div class="form-group">
+									<label for="${attribute.name}" class="col-sm-2 control-label">${attribute.name}</label>
+									<div class="col-sm-10">
+										<input type="email" class="form-control"
+											id="${attribute.name}" value="${attribute.value}"
+											placeholder="${attribute.name}" />
+									</div>
+								</div>
+							</c:forEach>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save
+							Changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</c:forEach>
+
 
 	<form id="searchForm">
 		<c:if test="${not empty param.debug}">
@@ -119,64 +133,66 @@
 
 		<div class="row" id="first-row">
 			<div id="search-status-bar">
-			 
-			 <div class="col-md-3">
-				<c:forEach items="${result.getElements('STAT')}" var="element">
-					<c:set scope="request" var="element" value="${element }" />
-					<c:set scope="request" var="result" value="${result }" />
-					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
-					<div class="panel panel-default">
-						<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
-							<div class="btn-group btn-group-xs pull-right" role="toolbar">
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-edit"></span>
-								</button>
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
+
+				<div class="col-md-3">
+					<c:forEach items="${result.getElements('STAT')}" var="element">
+						<c:set scope="request" var="element" value="${element }" />
+						<c:set scope="request" var="result" value="${result }" />
+						<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
+						<div class="panel panel-default">
+							<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
+								<div class="btn-group btn-group-xs pull-right" role="toolbar">
+									<button type="button" class="btn btn-default"
+										data-toggle="modal"
+										data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+										<span class="glyphicon glyphicon-edit"></span>
+									</button>
+									<button type="button" class="btn btn-default"
+										data-toggle="modal"
+										data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</div>
+							</div>
+							<div class="panel-body">
+								<jsp:include page="${elementInset}" />
 							</div>
 						</div>
-						<div class="panel-body">
-							<jsp:include page="${elementInset}" />
+					</c:forEach>
+				</div>
+
+				<div class="col-md-6">
+					<!-- HERE COMES TAGS -->
+				</div>
+
+				<div class="col-md-3 last" id="main-col-status-bar">
+					<c:forEach items="${result.getElements('SORT')}" var="element">
+						<c:set scope="request" var="element" value="${element}" />
+						<c:set scope="request" var="result" value="${result}" />
+						<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
+						<div class="panel panel-default">
+							<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
+								<div class="btn-group btn-group-xs pull-right" role="toolbar">
+									<button type="button" class="btn btn-default"
+										data-toggle="modal"
+										data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+										<span class="glyphicon glyphicon-edit"></span>
+									</button>
+									<button type="button" class="btn btn-default"
+										data-toggle="modal"
+										data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</div>
+							</div>
+							<div class="panel-body">
+								<jsp:include page="${elementInset}" />
+							</div>
 						</div>
-					</div>
-				</c:forEach>
-        </div>
-        
-        <div class="col-md-6"><!-- HERE COMES TAGS --></div>
+					</c:forEach>
+				</div>
 
-        <div class="col-md-3 last" id="main-col-status-bar">
-            <c:forEach items="${result.getElements('SORT')}" var="element">
-              <c:set scope="request" var="element" value="${element}" />
-              <c:set scope="request" var="result" value="${result}" />
-              <c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
-              <div class="panel panel-default">
-                <div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
-                  <div class="btn-group btn-group-xs pull-right" role="toolbar">
-                    <button type="button" class="btn btn-default"
-                      data-toggle="modal"
-                      data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-                      <span class="glyphicon glyphicon-edit"></span>
-                    </button>
-                    <button type="button" class="btn btn-default"
-                      data-toggle="modal"
-                      data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-                      <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                  </div>
-                </div>
-                <div class="panel-body">
-                  <jsp:include page="${elementInset}" />
-                </div>
-              </div>
-            </c:forEach>
-        </div>
-
-		  </div>
+			</div>
 		</div>
 
 
@@ -212,71 +228,118 @@
 			</div>
 
 
-			<div class="col-md-7 col-sm-7" id="main-col-center">
-				<c:if test="${query.collq}">
-					<c:set var="forceParams" value="${cleanedParams.clone()}" />
-					<!-- ${forceParams.q = query.collq} -->
-					<!-- ${forceParams.f = 1} -->
-					<div class="alert alert-info">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						Displaying results for <a href="#"> <strong>${query.q}</strong>
-						</a> <br /> <small>Show me results for <a href="#"> <strong>${forceParams.q}</strong>
-						</a> anyway!
-						</small>
-					</div>
-				</c:if>
+			<div class="col-md-8 col-sm-8" id="main-col-center">
 
-				<c:forEach items="${result.getElements('VIEW')}" var="element">
-					<c:set scope="request" var="element" value="${element }" />
-					<c:set scope="request" var="result" value="${result }" />
-					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName() }.jspx</c:set>
-					<div class="panel panel-default">
-						<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
-							<div class="btn-group btn-group-xs pull-right" role="toolbar">
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-edit"></span>
-								</button>
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
-							</div>
-						</div>
-						<div class="panel-body">
-							<jsp:include page="${elementInset}" />
-						</div>
-					</div>
-				</c:forEach>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs nav-justified">
+					<li class="active"><a href="#view" data-toggle="tab">View
+							Element<span class="badge pull-right">${result.getElements('VIEW').size()}</span>
+					</a></li>
+					<li><a href="#filter" data-toggle="tab">Preset Filters <span
+							class="badge pull-right">${result.getElements('FILTER').size()}</span></a></li>
+					<li><a href="#field" data-toggle="tab">Fields Definition <span
+							class="badge pull-right">${currentPresetDefinition.fieldAttributes.size()}</span></a></li>
 
-				<c:forEach items="${result.getElements('DEBUG')}" var="element">
-					<c:set scope="request" var="element" value="${element }" />
-					<c:set scope="request" var="result" value="${result }" />
-					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName() }.jspx</c:set>
-					<div class="panel panel-default">
-						<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
-							<div class="btn-group btn-group-xs pull-right" role="toolbar">
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-edit"></span>
-								</button>
-								<button type="button" class="btn btn-default"
-									data-toggle="modal"
-									data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="view">
+						<c:forEach items="${result.getElements('VIEW')}" var="element">
+							<c:set scope="request" var="element" value="${element }" />
+							<c:set scope="request" var="result" value="${result }" />
+							<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName() }.jspx</c:set>
+							<div class="panel panel-default">
+								<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
+									<div class="btn-group btn-group-xs pull-right" role="toolbar">
+										<button type="button" class="btn btn-default"
+											data-toggle="modal"
+											data-target="#updateModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+											<span class="glyphicon glyphicon-edit"></span>
+										</button>
+										<button type="button" class="btn btn-default"
+											data-toggle="modal"
+											data-target="#deleteModal_${element.getClass().getSimpleName()}_${element.getPosition()}">
+											<span class="glyphicon glyphicon-remove"></span>
+										</button>
+									</div>
+								</div>
+								<div class="panel-body">
+									<jsp:include page="${elementInset}" />
+								</div>
 							</div>
-						</div>
-						<div class="panel-body">
-							<jsp:include page="${elementInset}" />
-						</div>
+						</c:forEach>
 					</div>
-				</c:forEach>
+					<div class="tab-pane" id="filter">Preset Filters go here.</div>
+					<div class="tab-pane" id="field">
+ 
+
+						<table class="table">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Key</th>
+									<th>Type</th>
+									<th>Label</th>
+									<th>Search</th>
+                  <th>highlight</th>
+                  <th>sortable</th>
+                  <th>spelling</th>
+                  <th>suggestion</th>
+                  <th>boost</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach
+									items="${currentPresetDefinition.collection.fieldDefinitions }"
+									var="collectionField" varStatus="item">
+                  <c:set var="fdef" value="${currentPresetDefinition.getFieldAttributeDefinitionByField(collectionField)}"/>
+									<tr>
+										<td>
+										  <c:if test="${fdef != null}">
+										    <span class="glyphicon glyphicon-edit"></span>
+										  </c:if>
+										</td>
+										<td>${collectionField.getKey() }</td>
+										<td>${collectionField.getClazz().getSimpleName() }</td>
+										<td>${fdef.label}</td>
+										<td>
+                      <c:if test="${fdef.searchable}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </c:if>
+                    </td>
+                    <td>
+                      <c:if test="${fdef.highlight}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </c:if>
+                    </td>
+                    <td>
+                      <c:if test="${fdef.sortable}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </c:if>
+                    </td>
+                    <td>
+                      <c:if test="${fdef.spelling}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </c:if>
+                    </td>
+                    <td>
+                      <c:if test="${fdef.suggestion}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </c:if>
+                    </td>
+                    <td>
+                      <c:if test="${fdef.boost}">
+                        ${fdef.boost}
+                      </c:if>
+                    </td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
-
 			<div class="col-md-2" id="main-col-right" />
 
 			<c:if test="${request.xhr}">

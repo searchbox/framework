@@ -19,7 +19,7 @@ public class SolrToString extends SearchElement  {
 	
 	public SolrToString(){
 		super("Solr Debug");
-		this.type = SearchElementType.DEBUG;
+		this.type = SearchElementType.VIEW;
 	}
 	
 	public String getQuery() {
