@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,27 @@ public class DirectoryService {
 		}
 		try {
 			return File.createTempFile(prefix, suffix, tempDir.getFile());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public File createFile(String fname) {
+		Resource tempDir = context.getResource("WEB-INF/temp/");
+		if(!tempDir.exists()){
+			try {
+				tempDir.getFile().mkdirs();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			File newFile =  new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
+			newFile.deleteOnExit();
+			return newFile;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

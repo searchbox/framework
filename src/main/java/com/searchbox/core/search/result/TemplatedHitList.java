@@ -46,7 +46,7 @@ public class TemplatedHitList extends HitList  {
 	
 	public String getTemplatePath(){
 		if(templateFile == null){
-			this.templateFile = directoryService.createTempFile("tempalte_",".jspx");
+			this.templateFile = directoryService.createFile("tempalte_"+template.hashCode()+".jspx");
 			try {
 				String fragment = "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
 									"version=\"2.0\">"+

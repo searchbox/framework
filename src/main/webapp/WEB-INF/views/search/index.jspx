@@ -93,14 +93,14 @@
 					</div>
 				</c:if>
 
-				<c:forEach items="${result.getElements('DEBUG')}" var="element">
+				<c:forEach items="${result.getElements('VIEW')}" var="element">
 					<c:set scope="request" var="element" value="${element }" />
 					<c:set scope="request" var="result" value="${result }" />
 					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName() }.jspx</c:set>
 					<util:include page="${elementInset }" />
 				</c:forEach>
 
-				<c:forEach items="${result.getElements('VIEW')}" var="element">
+				<c:forEach items="${result.getElements('DEBUG')}" var="element">
 					<c:set scope="request" var="element" value="${element }" />
 					<c:set scope="request" var="result" value="${result }" />
 					<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName() }.jspx</c:set>
