@@ -111,6 +111,24 @@ public class PresetDefinition {
 		this.fieldAttributes.add(definition);
 		
 	}
+	
+	public PresetFieldAttributeDefinition getFieldAttributeDefinitionByKey(String key){
+		for(PresetFieldAttributeDefinition adef:this.fieldAttributes){
+			if(adef.getField().getKey().equals(key)){
+				return adef;
+			}
+		}
+		return null;
+	}
+	
+	public PresetFieldAttributeDefinition getFieldAttributeDefinitionByField(FieldDefinition field){
+		for(PresetFieldAttributeDefinition adef:this.fieldAttributes){
+			if(adef.getField().equals(field)){
+				return adef;
+			}
+		}
+		return null;
+	}
 
 	public static PresetDefinition BasicPreset(Searchbox sb, CollectionDefinition collection){
 		PresetDefinition pdef = new PresetDefinition(sb, collection);
