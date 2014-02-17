@@ -9,8 +9,10 @@
 	<div class="container">
 		<p>
 			<span>Powered by - </span> <a href="http://www.searchbox.com/"
-				target="_blank"> <img
-				src="assets/img/searchbox-logo-small.png" alt="searchbox logo" />
+				target="_blank"> <spring:url
+					value="/assets/img/searchbox-logo-small.png"
+					var="searchbox_logo_small" /> 
+				<img src="${searchbox_logo_small }" alt="searchbox logo" />
 			</a>
 		</p>
 	</div>
