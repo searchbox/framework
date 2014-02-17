@@ -5,9 +5,9 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
 	<jsp:output omit-xml-declaration="yes" />
-  <div class="col-md-3 col-left" style="top: 0.5em">
-    <span class="status-text">found <span class="search-info-count">${element.hitCount }</span>
+	
+    <h4><span class="status-text">found <span class="search-info-count">${element.hitCount }</span>
       results in ${element.searchTime } ms.
-    </span>
-  </div>
+    </span></h4>
+    
 </jsp:root>
