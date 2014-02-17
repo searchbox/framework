@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -23,6 +25,7 @@ import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.result.HitList.Hit;
+import com.searchbox.ref.StringUtils;
 import com.searchbox.service.DirectoryService;
 import com.searchbox.service.SearchService;
 
@@ -47,8 +50,8 @@ public class TemplatedHitList extends HitList {
 	}
 	
 	public void setTemplate(String template){
-		//TODO Infer list of fields from the template...
 		this.template = template;
+		this.getFields().addAll(StringUtils.extractHitFields(template));
 	}
 	
 	public String getTemplatePath(){
