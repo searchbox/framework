@@ -21,6 +21,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.google.common.io.Files;
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
@@ -37,8 +38,10 @@ public class TemplatedHitList extends HitList {
 	
 	private static Logger logger = LoggerFactory.getLogger(TemplatedHitList.class);
 		
+	@SearchAttribute
 	private String template;
 	
+	@SearchAttribute
 	private File templateFile;
 	
 	public TemplatedHitList(){

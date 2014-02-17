@@ -8,8 +8,11 @@ import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
@@ -27,6 +30,7 @@ public class FieldFacet
 		extends
 		SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
 
+	@SearchAttribute
 	private String fieldName;
 
 	public FieldFacet() {

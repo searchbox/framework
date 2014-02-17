@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.domain.DefinitionAttribute;
 
 public class ReflectionUtils {
@@ -28,8 +29,10 @@ public class ReflectionUtils {
 	public static void inspectAndSaveAttribute(Class<?> searchElement, List<DefinitionAttribute> attributes){
 		if(searchElement != null){
 			for(Field field:searchElement.getDeclaredFields()){
-				//TODO might wanna type as DefinitionAttribute<Integer>(...)
-				attributes.add(new DefinitionAttribute(field.getType(), field.getName()));
+				if(field.isAnnotationPresent(SearchAttribute.class)){
+					//TODO might wanna type as DefinitionAttribute<Integer>(...)
+					attributes.add(new DefinitionAttribute(field.getType(), field.getName()));
+				}
 			}
 			inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);
 		} else{

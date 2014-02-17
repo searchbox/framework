@@ -3,13 +3,17 @@ package com.searchbox.core.search;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
 public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends SearchCondition> 
 	extends SearchElement implements SearchConditionToElementMerger {
 	
+	@SearchAttribute
 	protected Order order = Order.VALUE;
+	
+	@SearchAttribute
 	protected Sort sort = Sort.DESC;
 	
 	SortedSet<K> values;

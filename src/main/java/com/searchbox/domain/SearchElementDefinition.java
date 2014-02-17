@@ -105,7 +105,12 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 	}
 	
 	public SearchElementDefinition setAttributeValue(String name, Object value) {
-		this.getAttributeByName(name).setValue(value);
+		DefinitionAttribute attr = this.getAttributeByName(name);
+		if(attr != null){
+			this.getAttributeByName(name).setValue(value);
+		} else {
+			logger.error("Could not set Attribute \""+name+"\" for element: " + this.clazz.getSimpleName());
+		}
 		return this;
 	}
 	

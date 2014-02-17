@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
@@ -22,9 +23,16 @@ import com.searchbox.core.search.ValueElement;
 @SearchComponent
 public class HitList extends SearchElementWithValues<HitList.Hit> {
 	
+	@SearchAttribute
 	private List<String> fields;
+	
+	@SearchAttribute
 	private String titleField;
+	
+	@SearchAttribute
 	private String urlField;
+	
+	@SearchAttribute
 	private String idField;
 	
 	public HitList(){

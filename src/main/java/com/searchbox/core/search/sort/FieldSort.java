@@ -1,12 +1,14 @@
 package com.searchbox.core.search.sort;
 
 import java.io.Serializable;
+import java.util.SortedSet;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
@@ -21,11 +23,14 @@ import com.searchbox.ref.Sort;
 @SearchComponent(prefix = "fs", condition = FieldSort.Condition.class, converter=FieldSort.Converter.class)
 public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
 	
+	@SearchAttribute
+	protected SortedSet<FieldSort.Value> values;
+	
 	public FieldSort() {
 		super("Sort Component");
 		this.setType(SearchElementType.SORT);
 	}
-		
+	
 	public static class Value extends ConditionalValueElement<FieldSort.Condition>
 		implements Serializable {
 

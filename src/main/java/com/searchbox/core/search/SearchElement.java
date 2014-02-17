@@ -4,11 +4,16 @@ import java.net.URL;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 
+@Configurable(autowire=Autowire.BY_TYPE)
 public abstract class SearchElement implements Comparable<SearchElement>{
 
+	@SearchAttribute
 	private String label;
 	
 	private Integer position;

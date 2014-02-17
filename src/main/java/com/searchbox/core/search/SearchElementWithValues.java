@@ -3,12 +3,16 @@ package com.searchbox.core.search;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
 public class SearchElementWithValues<K extends ValueElement> extends SearchElement {
 	
+	@SearchAttribute
 	protected Order order;
+	
+	@SearchAttribute
 	protected Sort sort;
 	
 	protected SortedSet<K> values;
