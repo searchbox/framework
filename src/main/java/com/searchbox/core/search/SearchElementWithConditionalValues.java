@@ -35,6 +35,10 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
 		return this.values;
 	}
 	
+	public void setValues(SortedSet<K> values){
+		this.values = values;
+	}
+	
 	public Order getOrder() {
 		return order;
 	}

@@ -3,6 +3,8 @@ package com.searchbox.core.search.result;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -25,7 +27,7 @@ import com.searchbox.service.DirectoryService;
 import com.searchbox.service.SearchService;
 
 @SearchComponent
-public class TemplatedHitList extends HitList  {
+public class TemplatedHitList extends HitList {
 	
 	@Autowired
 	DirectoryService directoryService;
@@ -42,6 +44,11 @@ public class TemplatedHitList extends HitList  {
 	
 	public String getTemplate(){
 		return this.template;
+	}
+	
+	public void setTemplate(String template){
+		//TODO Infer list of fields from the template...
+		this.template = template;
 	}
 	
 	public String getTemplatePath(){
@@ -64,7 +71,7 @@ public class TemplatedHitList extends HitList  {
 		logger.debug("Tempalte AbsolutePath: " + templateFile.getAbsolutePath());
 		logger.debug("Tempalte RealtivePath: " + relativePath);
 		return relativePath;
-	}	
+	}
 }
 
 @SearchAdaptor

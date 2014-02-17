@@ -27,7 +27,7 @@ public class FieldFacet
 		extends
 		SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
 
-	private final String fieldName;
+	private String fieldName;
 
 	public FieldFacet() {
 		fieldName = "";
@@ -42,6 +42,10 @@ public class FieldFacet
 
 	public String getFieldName() {
 		return fieldName;
+	}
+	
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
 	}
 
 	public FieldFacet addValueElement(String label, Integer count) {

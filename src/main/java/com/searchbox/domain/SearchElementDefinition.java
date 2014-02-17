@@ -1,6 +1,8 @@
 package com.searchbox.domain;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -66,9 +69,19 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 			element.setPosition(this.getPosition());
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
-					Field field = ReflectionUtils.findUnderlying(clazz, attribute.getName());
-					field.setAccessible(true);
-					field.set(element, attribute.getValue());
+					try {
+						Method setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
+						if(setter == null){
+							logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
+						} else {
+							setter.invoke(element, attribute.getValue());
+						}
+	//					Field field = ReflectionUtils.findUnderlying(clazz, attribute.getName());
+	//					field.setAccessible(true);
+	//					field.set(element, attribute.getValue());
+					} catch (Exception e) {
+						logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName(),e);
+					}
 				}
 			}
 			return element;

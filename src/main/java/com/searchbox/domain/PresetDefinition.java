@@ -12,6 +12,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -80,7 +81,7 @@ public class PresetDefinition {
 	
 	public Preset getElement(){
 		Preset preset = new Preset();
-		ReflectionUtils.copyAllFields(this, preset);
+		BeanUtils.copyProperties(this, preset);
 		for(SearchElementDefinition elementDef:searchElements){
 			try {
 				preset.addSearchElement(elementDef.getElement());
