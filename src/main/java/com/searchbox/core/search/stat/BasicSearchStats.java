@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
@@ -16,6 +17,28 @@ public class BasicSearchStats extends SearchElement {
 	private Long hitCount;
 	private Long searchTime;
 	
+	@SearchAttribute
+	private Boolean viewTime = true;
+	
+	@SearchAttribute
+	private Boolean viewCount = true;
+	
+	public Boolean getViewTime() {
+		return viewTime;
+	}
+
+	public void setViewTime(Boolean viewTime) {
+		this.viewTime = viewTime;
+	}
+
+	public Boolean getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(Boolean viewCount) {
+		this.viewCount = viewCount;
+	}
+
 	public long getHitCount() {
 		return hitCount;
 	}
