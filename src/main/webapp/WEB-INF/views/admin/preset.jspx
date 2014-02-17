@@ -272,7 +272,7 @@
 					</div>
 					<div class="tab-pane" id="filter">Preset Filters go here.</div>
 					<div class="tab-pane" id="field">
- 
+
 
 						<table class="table">
 							<thead>
@@ -282,57 +282,48 @@
 									<th>Type</th>
 									<th>Label</th>
 									<th>Search</th>
-                  <th>highlight</th>
-                  <th>sortable</th>
-                  <th>spelling</th>
-                  <th>suggestion</th>
-                  <th>boost</th>
+									<th>highlight</th>
+									<th>sortable</th>
+									<th>spelling</th>
+									<th>suggestion</th>
+									<th>boost</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach
 									items="${currentPresetDefinition.collection.fieldDefinitions }"
 									var="collectionField" varStatus="item">
-                  <c:set var="fdef" value="${currentPresetDefinition.getFieldAttributeDefinitionByField(collectionField)}"/>
-									<tr>
-										<td>
-										  <c:if test="${fdef != null}">
-										    <span class="glyphicon glyphicon-edit"></span>
-										  </c:if>
-										</td>
+									<c:set var="fdef"
+										value="${currentPresetDefinition.getFieldAttributeDefinitionByField(collectionField)}" />
+									<c:set var="trclass" value="" />
+									<c:if test="${fdef != null}">
+										<c:set var="trclass" value="success" />
+									</c:if>
+									<tr class="${trclass}">
+										<td><c:if test="${fdef != null}">
+												<span class="glyphicon glyphicon-edit"></span>
+											</c:if></td>
 										<td>${collectionField.getKey() }</td>
 										<td>${collectionField.getClazz().getSimpleName() }</td>
 										<td>${fdef.label}</td>
-										<td>
-                      <c:if test="${fdef.searchable}">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </c:if>
-                    </td>
-                    <td>
-                      <c:if test="${fdef.highlight}">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </c:if>
-                    </td>
-                    <td>
-                      <c:if test="${fdef.sortable}">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </c:if>
-                    </td>
-                    <td>
-                      <c:if test="${fdef.spelling}">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </c:if>
-                    </td>
-                    <td>
-                      <c:if test="${fdef.suggestion}">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </c:if>
-                    </td>
-                    <td>
-                      <c:if test="${fdef.boost}">
+										<td><c:if test="${fdef.searchable}">
+												<span class="glyphicon glyphicon-ok"></span>
+											</c:if></td>
+										<td><c:if test="${fdef.highlight}">
+												<span class="glyphicon glyphicon-ok"></span>
+											</c:if></td>
+										<td><c:if test="${fdef.sortable}">
+												<span class="glyphicon glyphicon-ok"></span>
+											</c:if></td>
+										<td><c:if test="${fdef.spelling}">
+												<span class="glyphicon glyphicon-ok"></span>
+											</c:if></td>
+										<td><c:if test="${fdef.suggestion}">
+												<span class="glyphicon glyphicon-ok"></span>
+											</c:if></td>
+										<td><c:if test="${fdef.boost}">
                         ${fdef.boost}
-                      </c:if>
-                    </td>
+                      </c:if></td>
 									</tr>
 								</c:forEach>
 							</tbody>
