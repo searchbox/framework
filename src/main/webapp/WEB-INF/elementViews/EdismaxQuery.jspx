@@ -1,20 +1,18 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-  xmlns:spring="http://www.springframework.org/tags"
-  xmlns:form="http://www.springframework.org/tags/form"
-  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
-  <jsp:output omit-xml-declaration="yes" />
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:output omit-xml-declaration="yes" />
 
-  <div style="position: relative;" class="clear_input_div">
-    <input autocomplete="off" style="float: left;" id="search-field" name="q" type="text"
-    class="left col-md-5 search-query" value="${element.query }"/>
-    <a style="position: absolute; font-size: 20px; cursor: pointer; display: none; top: 6px; left: 428px;"
-      class="clear_input">x</a>
-  </div>
 
-  <button type="submit" class="btn btn-black btn-large">
-    <span class="glyphicon glyphicon-search">
-      <!-- dsffasd -->
-    </span>
-  </button>
+	<div class="input-group input-group" style="padding-top: 10px">
+		<input type="text" class="form-control" placeholder="Query" name="q"
+			value="${element.query }" /> <span class="input-group-btn">
+			<button type="submit" class="btn btn-black">
+				<span class="glyphicon glyphicon-search"></span>
+			</button>
+		</span>
+	</div>
+
 </jsp:root>

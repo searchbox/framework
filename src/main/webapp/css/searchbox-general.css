@@ -145,10 +145,13 @@ input:focus,textarea:focus {
   border-color: rgba(30, 187, 192, 0.8) !important;
 }
 
-#search-bar {
-  margin: -10px 0 10px -20px;
+#column-top {
+  margin-bottom: 10px;
   border-radius: 0;
-  padding: 40px 30px 20px 40px;
+  padding-left: 0px;
+  padding-top: 40px;
+  padding-right: 0px;
+  padding-bottom: 40px;
   border-bottom: 1px solid #BCBCBC;
   /*background: url("/searchbox/img/texture-white.png") repeat scroll 0 0
 		rgba(0, 0, 0, 0);*/
@@ -183,9 +186,9 @@ input:focus,textarea:focus {
   padding-right: 35px;
   border: 1px solid rgb(204, 204, 204);
 }
-#search-bar button[type=submit].btn {
+/* #search-bar button[type=submit].btn {
   padding: 10px 15px;
-}
+} */
 /*
 #search-bar #logo #logo-text {
 	float: right;
