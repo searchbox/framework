@@ -35,8 +35,7 @@
 				        url : form.attr('action'),
 				        data : form.serialize(),
 				        success : function(data, status) {
-				        	//Here we reload the page by adding a openfocus
-				        	document.href = document.href+"#focus";
+				        	location.reload();
 				        }
 				      });
 				      event.preventDefault();

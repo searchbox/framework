@@ -31,6 +31,7 @@
 		<div id="main-content" role="main">
 
 			<div class="row" id="main-search-content">
+        <form id="searchForm">
 
 				<c:if test="${not empty param.debug}">
 					<input type="hidden" name="debug" value="${param.debug }" />
@@ -151,35 +152,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${currentPresetDefinition.fieldAttributes }"
-											var="attr" varStatus="item">
-
-											<c:set var="trclass" value="" />
-											<form:form role="form" class=".form-inline"
-												modelAttribute="currentPresetDefinition.fieldAttributes[${item.index}]">
-
-												<tr>
-													<td><p class="form-control-static">${item.count }</p></td>
-													<td nowrap="nowrap" class="nowrap"><p
-															class="form-control-static">${attr.field.getKey() }</p></td>
-													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-													<td><form:input class="input-sm form-control"
-															path="label" size="6" /></td>
-													<td><form:checkbox class="input-sm form-control"
-															path="searchable" /></td>
-													<td><form:checkbox class="input-sm form-control"
-															path="highlight" /></td>
-													<td><form:checkbox class="input-sm form-control"
-															path="sortable" /></td>
-													<td><form:checkbox class="input-sm form-control"
-															path="spelling" /></td>
-													<td><form:checkbox class="input-sm form-control"
-															path="suggestion" /></td>
-													<td><form:input class="input-sm form-control"
-															path="boost" size="4" /></td>
-												</tr>
-											</form:form>
-										</c:forEach>
+									
 									</tbody>
 								</table>
 							</div>
@@ -195,7 +168,7 @@
 					</c:if>
 				</div>
 
-
+        </form>
 
 			</div>
 		</div>
