@@ -15,7 +15,6 @@ import com.searchbox.domain.Searchbox;
 
 @Controller
 @RequestMapping("/about")
-@Layout("search")
 public class AboutController {
 
 	@RequestMapping

@@ -12,10 +12,12 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.util.SerializationUtils;
+import org.springframework.validation.annotation.Validated;
 
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@Validated
 public class DefinitionAttribute {
 	
 	private static Logger logger = LoggerFactory.getLogger(DefinitionAttribute.class);

@@ -12,10 +12,19 @@
       type="annotation" />
 	</context:component-scan>
 
+    <!-- Turns on support for mapping requests to Spring MVC @Controller methods
+         Also registers default Formatters and Validators for use across all @Controllers -->
+    
 	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
 		Also registers default Formatters and Validators for use across all @Controllers -->
+	
+	
 	<mvc:annotation-driven conversion-service="conversionService"/>
-<!--  	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+	<bean id="conversionService"
+      class="com.searchbox.service.ApplicationConversionService"/>
+<!--
+	
+  	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
  -->	
 
 
@@ -29,7 +38,6 @@
 
 	<!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
 	<mvc:interceptors>
-    <bean class="com.searchbox.web.LayoutInterceptor" />
     <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
 			p:paramName="lang" />
@@ -92,5 +100,4 @@
 			<value>.jspx</value>
 		</property>
 	</bean>
-
 </beans>

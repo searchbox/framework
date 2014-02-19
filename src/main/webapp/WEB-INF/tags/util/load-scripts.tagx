@@ -7,16 +7,16 @@
 
 	<spring:theme code="styleSheet" var="roo_css" />
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
 		var="bootstrap_css_url" />
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"
 		var="bootstrap_theme_css_url" />
 	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"
+		value="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"
 		var="jquery_url" />
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"
 		var="bootstrap_js_url" />
 
 	<spring:url value="/assets/images/favicon.ico" var="favicon" />
@@ -24,8 +24,8 @@
   <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
 
 	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+	<link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
-	<!-- <link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" /> -->
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
 

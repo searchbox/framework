@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -23,6 +24,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.validation.annotation.Validated;
 
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
@@ -32,6 +34,7 @@ import com.searchbox.service.SearchService;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@Validated
 public class SearchElementDefinition implements ApplicationContextAware, Comparable<SearchElementDefinition>{
 	
 	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinition.class);
@@ -40,6 +43,7 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 	
 	private Integer position;
 
+	@NotNull
 	@ManyToOne(targetEntity=PresetDefinition.class)
 	private PresetDefinition preset;
 	
@@ -67,6 +71,7 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 			AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
 			SearchElement element = (SearchElement) beanFactory.createBean(clazz,AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, false);
 			element.setPosition(this.getPosition());
+			element.setDefinitionId(this.getId());
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
 					try {

@@ -30,6 +30,7 @@ import com.searchbox.domain.PresetDefinition;
 import com.searchbox.domain.PresetFieldAttributeDefinition;
 import com.searchbox.domain.SearchElementDefinition;
 import com.searchbox.domain.Searchbox;
+import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 import com.searchbox.service.SearchEngineService;
 
@@ -136,6 +137,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
 		fieldFacet.setAttributeValue("fieldName", "publication-type");
 		fieldFacet.setAttributeValue("label", "Type");
+		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
 		preset.addSearchElementDeifinition(fieldFacet);
 		
 		

@@ -11,7 +11,7 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
 	extends SearchElement implements SearchConditionToElementMerger {
 	
 	@SearchAttribute
-	protected Order order = Order.VALUE;
+	protected Order order = Order.BY_VALUE;
 	
 	@SearchAttribute
 	protected Sort sort = Sort.DESC;

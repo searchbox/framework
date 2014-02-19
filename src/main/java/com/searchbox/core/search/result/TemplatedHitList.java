@@ -3,6 +3,7 @@ package com.searchbox.core.search.result;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.regex.Matcher;
@@ -37,11 +38,12 @@ public class TemplatedHitList extends HitList {
 	DirectoryService directoryService;
 	
 	private static Logger logger = LoggerFactory.getLogger(TemplatedHitList.class);
-		
+	
+	protected List<String> fields;
+	
 	@SearchAttribute
 	private String template;
 	
-	@SearchAttribute
 	private File templateFile;
 	
 	public TemplatedHitList(){

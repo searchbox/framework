@@ -24,7 +24,7 @@ import com.searchbox.core.search.ValueElement;
 public class HitList extends SearchElementWithValues<HitList.Hit> {
 	
 	@SearchAttribute
-	private List<String> fields;
+	protected List<String> fields;
 	
 	@SearchAttribute
 	private String titleField;

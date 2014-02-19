@@ -20,6 +20,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.validation.annotation.Validated;
 
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.dm.PresetFieldAttribute;
@@ -32,6 +33,7 @@ import com.searchbox.ref.ReflectionUtils;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@Validated
 public class PresetDefinition {
 
 	private static Logger logger = LoggerFactory.getLogger(PresetDefinition.class);

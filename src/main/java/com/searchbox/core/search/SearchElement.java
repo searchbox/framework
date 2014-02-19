@@ -13,6 +13,8 @@ import com.searchbox.anno.SearchComponent;
 @Configurable(autowire=Autowire.BY_TYPE)
 public abstract class SearchElement implements Comparable<SearchElement>{
 
+	private Long definitionId;
+	
 	@SearchAttribute
 	private String label;
 	
@@ -48,6 +50,14 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 
 	public void setType(SearchElementType type) {
 		this.type = type;
+	}
+
+	public Long getDefinitionId() {
+		return definitionId;
+	}
+
+	public void setDefinitionId(Long definitionId) {
+		this.definitionId = definitionId;
 	}
 
 	@Override

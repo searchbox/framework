@@ -1,0 +1,88 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:form="http://www.springframework.org/tags/form" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<!-- Update Form -->
+	<div
+		id="${searchElementDefinition.getClazz().name}_${searchElementDefinition.id }_content">
+
+		<spring:url value="/admin/searchElementDefinition/" var="formUpdate" />
+
+		<form:form class="form-horizontal" data-async="POST"
+			id="${searchElementDefinition.getClazz().name}_${searchElementDefinition.id }_form"
+			modelAttribute="searchElementDefinition" action="${formUpdate }"
+			method="post" commandName="SearchElementDefinitionForm">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
+				<h4 class="modal-title" id="modalTitle">Update
+					${searchElementDefinition.getClazz().getSimpleName()}
+					(SearchElement#${searchElementDefinition.getId()})</h4>
+			</div>
+
+
+			<div class="modal-body">
+
+				<input type="hidden" name="clazz"
+					value="${searchElementDefinition.getClazz().name}" />
+				<input type="hidden" name="preset" value="${searchElementDefinition.preset.id}"/>
+				<form:hidden path="position" />
+				<form:hidden path="id" />
+				<form:hidden path="version" />
+
+
+				<c:forEach items="${searchElementDefinition.attributes }"
+					var="attribute" varStatus="item">
+
+					<input type="hidden" name="attributes[${item.index }].type"
+						value="${attribute.type.name}" />
+					<form:hidden path="attributes[${item.index }].id" />
+					<form:hidden path="attributes[${item.index }].name" />
+					<form:hidden path="attributes[${item.index }].version" />
+
+
+					<div class="form-group">
+						<label for="${attribute.name}" class="col-sm-2 control-label">${attribute.name}</label>
+						<div class="col-sm-10">
+							<c:choose>
+								<c:when
+									test="${attribute.type.name == 'com.searchbox.ref.Order'}">
+									<form:select class="form-control" id="${attribute.name}"
+										path="attributes[${item.index }].value"
+										itemLabel="description" itemValue="name" items="${OrderEnum}">
+										<form:options />
+									</form:select>
+								</c:when>
+								<c:when
+									test="${attribute.type.name == 'com.searchbox.ref.Sort'}">
+									<form:select class="form-control" id="${attribute.name}"
+										path="attributes[${item.index }].value"
+										itemLabel="description" itemValue="name" items="${SortEnum}">
+										<form:options />
+									</form:select>
+								</c:when>
+								<c:otherwise>
+									<form:input class="form-control" id="${attribute.name}"
+										path="attributes[${item.index }].value"
+										placeholder="${attribute.name}" />
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</div>
+		</form:form>
+	</div>
+</jsp:root>

@@ -109,7 +109,7 @@ public class FieldFacet
 		public int compareTo(ValueElement other) {
 			FieldFacet.Value o = (FieldFacet.Value)other;
 			int diff = 0;
-			if (order.equals(Order.KEY)) {
+			if (order.equals(Order.BY_KEY)) {
 				diff = this.getLabel().compareTo(o.getLabel())*10;
 			} else if(!this.getCount().equals(o.getCount())){
 				diff = this.getCount().compareTo(o.getCount())*10;

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Configurable(autowire=Autowire.BY_TYPE)
 public @interface SearchComponent {
 	
 	String prefix() default "";

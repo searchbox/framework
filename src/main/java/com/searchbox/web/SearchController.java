@@ -26,7 +26,6 @@ import com.searchbox.service.SearchService;
 
 @Controller
 @RequestMapping("/*")
-@Layout("search")
 public class SearchController {
 
 	private static Logger logger = LoggerFactory.getLogger(SearchController.class);

@@ -382,11 +382,6 @@
 			<artifactId>solr-core</artifactId>
 			<version>${solr.version}</version>
 		</dependency>
-		<dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId></artifactId>
-      <version>${solr.version}</version>
-    </dependency>
 	</dependencies>
 	<build>
 		<plugins>

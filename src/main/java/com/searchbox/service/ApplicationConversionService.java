@@ -1,9 +1,11 @@
 package com.searchbox.service;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,15 +18,17 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.format.Formatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.search.SearchCondition;
+import com.searchbox.domain.PresetDefinition;
 
-@Component("conversionService")
+@Service("conversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService  { 
 
 	@Autowired
@@ -99,6 +103,51 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 			}
 
 		}
+		
+		this.addConverter(new Converter<String, PresetDefinition>() {
+            public PresetDefinition convert(String id) {
+                return PresetDefinition.findPresetDefinition(Long.parseLong(id));
+            }
+        });
+		
+		this.addConverter(new Converter<Long, PresetDefinition>() {
+            public PresetDefinition convert(java.lang.Long id) {
+                return PresetDefinition.findPresetDefinition(id);
+            }
+        });
+		
+        this.addConverter(new Converter<PresetDefinition, String>() {
+            public String convert(PresetDefinition presetDefinition) {
+                return new StringBuilder().append(presetDefinition.getSlug()).append(' ').append(presetDefinition.getLabel()).append(' ').append(presetDefinition.getDescription()).append(' ').append(presetDefinition.getPosition()).toString();
+            }
+        });
+		
+		this.addConverter(new Converter<Class, String>(){
+			@Override
+			public String convert(Class source) {
+				return source.getName();
+			}
+		});
+		
+		this.addConverter(new Converter<String, Class>(){
+
+			@Override
+			public Class convert(String source) {
+				try {
+					//TODO Such a bad hack...
+					if(source.contains("class")){
+						source = source.replace("class", "").trim();
+					}
+					return context.getClassLoader().loadClass(source);
+					//Class.forName(source);
+				} catch (ClassNotFoundException e) {
+					logger.error("Could not convert \""+source+"\" to class.",e);
+				}
+				return null;
+			}
+
+			
+		});
     }
     
     public boolean isSearchConditionParam(String paramName){

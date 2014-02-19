@@ -7,6 +7,7 @@
 	<jsp:output omit-xml-declaration="yes" />
 	<spring:message var="title" code="error_dataaccessfailure_title"
 		htmlEscape="false" />
+${exception }
 	<util:panel id="title" title="${title}">
 		<h2>${fn:escapeXml(title)}</h2>
 		<p>
