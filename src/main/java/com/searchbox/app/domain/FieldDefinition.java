@@ -32,6 +32,9 @@ public class FieldDefinition {
 	
 	private String key;
 
+	public FieldDefinition() {
+	}
+		
 	public FieldDefinition(Class clazz, String key) {
 		this.clazz = clazz;
 		this.key = key;

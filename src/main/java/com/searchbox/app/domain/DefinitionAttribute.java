@@ -40,8 +40,11 @@ public class DefinitionAttribute {
 	@Column(name = "value", length = Integer.MAX_VALUE - 1)
 	private byte[] valueAsByteArray;
 	
+	public DefinitionAttribute(){
+		
+	}
+	
 	public DefinitionAttribute(Class<?> type, String name) {
-		super();
 		this.type = type;
 		this.name = name;
 	}

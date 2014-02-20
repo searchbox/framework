@@ -67,6 +67,10 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 	@Transient
 	ApplicationContext context;
 	
+	public SearchElementDefinition(){
+		
+	}
+	
 	public SearchElementDefinition(Class<?> searchElementClass){
 		this.clazz = searchElementClass;
 		this.attributes = new ArrayList<DefinitionAttribute>();

@@ -87,6 +87,10 @@ public class PresetDefinition {
 	/**
      */
 	private Integer position;
+	
+	public PresetDefinition(){
+		
+	}
 
 	public PresetDefinition(Searchbox searchbox, CollectionDefinition collection) {
 		this.searchbox = searchbox;

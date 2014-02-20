@@ -47,6 +47,10 @@ public class PresetFieldAttributeDefinition {
 	
 	private Float boost = 1.0f;
  
+	public PresetFieldAttributeDefinition(){
+		
+	}
+	
 	public PresetFieldAttributeDefinition(FieldDefinition field){
 		this.field = field;
 	}

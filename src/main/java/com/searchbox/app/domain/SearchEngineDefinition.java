@@ -22,4 +22,8 @@ public class SearchEngineDefinition {
 	@Column(name="OPTLOCK")
 	private long version;
 	
+	public SearchEngineDefinition(){
+		
+	}
+	
 }

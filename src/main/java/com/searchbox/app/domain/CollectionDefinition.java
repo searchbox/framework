@@ -40,6 +40,9 @@ public class CollectionDefinition {
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
 	
+	public CollectionDefinition() {
+	}
+	
 	public CollectionDefinition(String name) {
 		this.name = name;
 	}
