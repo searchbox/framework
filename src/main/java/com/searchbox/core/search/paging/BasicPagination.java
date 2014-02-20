@@ -20,10 +20,11 @@ import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 @SearchComponent(prefix = "p", condition = BasicPagination.PageCondition.class, converter = BasicPagination.Converter.class)
 public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
 	
-	Integer hitsPerPage;
-	Long numberOfHits;
+	private Integer hitsPerPage;
 	
-	BasicPagination(){
+	private Long numberOfHits;
+	
+	public BasicPagination(){
 		super("Basic Pagination");
 		this.setType(SearchElementType.VIEW);
 	}
