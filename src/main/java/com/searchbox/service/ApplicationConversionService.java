@@ -27,11 +27,11 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.app.domain.DefinitionAttribute;
+import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.search.SearchCondition;
-import com.searchbox.domain.DefinitionAttribute;
-import com.searchbox.domain.PresetDefinition;
 import com.searchbox.ref.Order;
 
 @Service("conversionService")

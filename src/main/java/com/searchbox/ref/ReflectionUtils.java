@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.searchbox.anno.SearchAttribute;
-import com.searchbox.domain.DefinitionAttribute;
+import com.searchbox.app.domain.DefinitionAttribute;
 
 public class ReflectionUtils {
 

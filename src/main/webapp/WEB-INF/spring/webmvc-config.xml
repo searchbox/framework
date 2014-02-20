@@ -7,7 +7,7 @@
 
 	<!-- The controllers are autodetected POJOs labeled with the @Controller 
 		annotation. -->
-	<context:component-scan base-package="com.searchbox.web">
+	<context:component-scan base-package="com.searchbox.app.web">
 	 <context:include-filter expression="org.springframework.stereotype.Controller"
       type="annotation" />
 	</context:component-scan>
