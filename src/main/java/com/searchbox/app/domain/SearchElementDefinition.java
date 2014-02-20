@@ -17,6 +17,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
@@ -206,4 +208,9 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 //			}
 //			//System.out.println("element Label: " + ((FieldFacet)elem.getLabel()));
 		}
+		
+		@Override
+		public String toString() {
+	        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	    }
 }

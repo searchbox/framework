@@ -117,12 +117,7 @@
 
 						<div class="col-md-2" id="main-col-right" />
 
-						<c:if test="${request.xhr}">
-							<script type="text/javascript">
-								var queryTerm = '${query.q}';
-								bindFacetEvents();
-							</script>
-						</c:if>
+						
 					</div>
 				</form>
 

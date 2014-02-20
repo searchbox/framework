@@ -111,7 +111,7 @@
 									class="badge pull-right">${result.getElements('FILTER').size()}</span>
 							</a></li>
 							<li><a href="#field" data-toggle="tab">Fields Definition
-									<span class="badge pull-right">${currentPresetDefinition.fieldAttributes.size()}</span>
+									<span class="badge pull-right">${presetDefinition.fieldAttributes.size()}</span>
 							</a></li>
 
 						</ul>
@@ -159,13 +159,6 @@
 						</div>
 					</div>
 					<div class="col-md-2" id="main-col-right" />
-
-					<c:if test="${request.xhr}">
-						<script type="text/javascript">
-								var queryTerm = '${query.q}';
-								bindFacetEvents();
-							</script>
-					</c:if>
 				</div>
         </form>
 			</div>
