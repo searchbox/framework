@@ -8,11 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.dm.PresetFieldAttribute;
 import com.searchbox.ref.ReflectionUtils;
 
@@ -143,10 +138,10 @@ public class PresetFieldAttributeDefinition {
 		this.boost = boost;
 	}
 
-	public PresetFieldAttribute getElement() {
+	public PresetFieldAttribute toPresetFieldAttribute() {
 			PresetFieldAttribute element = new PresetFieldAttribute();
 			ReflectionUtils.copyAllFields(this, element);
-			element.setField(this.field.getElement());
+			element.setField(this.field.toField());
 			return element;
 	}
 }

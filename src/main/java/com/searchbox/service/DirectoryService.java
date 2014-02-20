@@ -2,21 +2,13 @@ package com.searchbox.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.searchbox.core.search.result.TemplatedHitList;
 
 @Service
 public class DirectoryService {

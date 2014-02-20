@@ -1,4 +1,4 @@
-package com.searchbox.app.web;
+package com.searchbox.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class AboutController {
 		List<Preset> presets = new ArrayList<Preset>();
 		Preset currentPreset = null;
 		for(PresetDefinition pdef:searchbox.getPresets()){
-			Preset pset = pdef.getElement();
+			Preset pset = pdef.toPreset(new Preset());
 			presets.add(pset);
 		}
 		

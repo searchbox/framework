@@ -1,7 +1,6 @@
 package com.searchbox.app.domain;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +21,14 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.validation.annotation.Validated;
 
+import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.ref.ReflectionUtils;
-import com.searchbox.service.SearchService;
 
 @Entity
 @Configurable
@@ -127,10 +119,8 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 		this.context = applicationContext;
 	}
 
-	public SearchElement getElement(){
+	public SearchElement toElement(Preset preset, SearchElement element){
 		try {
-			AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
-			SearchElement element = (SearchElement) beanFactory.createBean(clazz,AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, false);
 			element.setPosition(this.getPosition());
 			element.setDefinitionId(this.getId());
 			for(DefinitionAttribute attribute:attributes){
@@ -187,24 +177,33 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 		}
 		return this;
 	}
-	
-	//TODO put that in a JUNIT
-	public static void main(String... args){
-		SearchElementDefinition fdef = new SearchElementDefinition(FieldFacet.class);
-		
-		fdef.setAttributeValue("fieldName", "MyField");
-		fdef.setAttributeValue("label", "Hello World");
-		
-		for(DefinitionAttribute attr:fdef.getAttributes()){
-			System.out.println("Field["+attr.getType().getSimpleName()+"]\t" + attr.getName()+"\t"+attr.getValue());
-		}
-		
-		SearchElement elem = fdef.getElement();
-		System.out.println("element Label: " + elem.getLabel());
-	}
 
 	@Override
 	public int compareTo(SearchElementDefinition o) {
 		return this.position.compareTo(o.getPosition());
 	}
+	
+	//TODO put that in a JUNIT
+		public static void main(String... args){
+//			SearchElementDefinition fdef = new SearchElementDefinition(FieldFacet.class);
+//			
+//			fdef.setAttributeValue("fieldName", "MyField");
+//			fdef.setAttributeValue("label", "Hello World");
+//			
+//			for(DefinitionAttribute attr:fdef.getAttributes()){
+//				System.out.println("Field["+attr.getType().getSimpleName()+"]\t" + attr.getName()+"\t"+attr.getValue());
+//			}
+//			
+//			SearchElement elem;
+//			try {
+//				elem = (FieldFacet) fdef.toElement((SearchElement) fdef.getClazz().newInstance());
+//			} catch (InstantiationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IllegalAccessException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			//System.out.println("element Label: " + ((FieldFacet)elem.getLabel()));
+		}
 }

@@ -2,10 +2,8 @@ package com.searchbox.app.domain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,18 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.validation.annotation.Validated;
 
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.dm.PresetFieldAttribute;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
-import com.searchbox.ref.ReflectionUtils;
 
 @Entity
 public class PresetDefinition {
@@ -196,23 +187,8 @@ public class PresetDefinition {
 		this.position = position;
 	}
 
-	public Preset getElement(){
-		Preset preset = new Preset();
+	public Preset toPreset(Preset preset){
 		BeanUtils.copyProperties(this, preset);
-		for(SearchElementDefinition elementDef:searchElements){
-			try {
-				preset.addSearchElement(elementDef.getElement());
-			} catch (Exception e){
-				logger.error("Could not get searchElement with def: " + elementDef, e);
-			}
-		}
-		for(PresetFieldAttributeDefinition fieldDef:fieldAttributes){
-			try {
-				preset.addFieldAttribute(fieldDef.getElement());
-			} catch (Exception e){
-				logger.error("Could not get presetFieldAttribute with def: " + fieldDef, e);
-			}
-		}
 		return preset;
 	}
 	
@@ -315,16 +291,16 @@ public class PresetDefinition {
 		fieldAttr.setSearchable(true);
 		pdef.addFieldAttributeDefinition(fieldAttr);
 		
-		Preset elem = pdef.getElement();
-		System.out.println("Preset label: " + elem.getLabel());
-		System.out.println("Preset slug: " + elem.getSlug());
-		
-		for(SearchElement element:elem.getSearchElements()){
-			System.out.println("SearchElement label: " + element.getLabel());
-		}
-		
-		for(PresetFieldAttribute element:elem.getFieldAttributes()){
-			System.out.println("PresetFieldAttribute: " + element);
-		}
+//		Preset elem = pdef.getElement();
+//		System.out.println("Preset label: " + elem.getLabel());
+//		System.out.println("Preset slug: " + elem.getSlug());
+//		
+//		for(SearchElement element:elem.getSearchElements()){
+//			System.out.println("SearchElement label: " + element.getLabel());
+//		}
+//		
+//		for(PresetFieldAttribute element:elem.getFieldAttributes()){
+//			System.out.println("PresetFieldAttribute: " + element);
+//		}
 	}
 }

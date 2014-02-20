@@ -9,13 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-
 import com.searchbox.core.dm.Field;
-import com.searchbox.core.dm.PresetFieldAttribute;
-import com.searchbox.ref.ReflectionUtils;
 
 @Entity
 public class FieldDefinition {
@@ -72,7 +66,7 @@ public class FieldDefinition {
 		this.key = key;
 	}
 
-	public Field getElement() {
+	public Field toField() {
 		return new Field(clazz, key);
 	}
 	

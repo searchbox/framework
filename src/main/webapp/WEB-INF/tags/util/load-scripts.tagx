@@ -5,7 +5,6 @@
 
 	<jsp:output omit-xml-declaration="yes" />
 
-	<spring:theme code="styleSheet" var="roo_css" />
 	<spring:url
 		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
 		var="bootstrap_css_url" />

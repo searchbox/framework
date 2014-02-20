@@ -5,13 +5,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.tostring.RooToString;
 
 import com.searchbox.core.engine.SearchEngine;
 
-@RooJavaBean
-@RooToString
 public class Collection {
 
 	/**

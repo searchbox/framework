@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -16,11 +12,7 @@ import org.apache.solr.common.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.util.WebUtils;
 
-import com.google.common.io.Files;
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
@@ -29,7 +21,6 @@ import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.result.HitList.Hit;
 import com.searchbox.ref.StringUtils;
 import com.searchbox.service.DirectoryService;
-import com.searchbox.service.SearchService;
 
 @SearchComponent
 public class TemplatedHitList extends HitList {

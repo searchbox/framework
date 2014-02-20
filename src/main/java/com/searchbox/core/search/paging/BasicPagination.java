@@ -2,11 +2,8 @@ package com.searchbox.core.search.paging;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.params.CommonParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
@@ -18,7 +15,6 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElementType;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
-import com.searchbox.core.search.paging.BasicPagination.Page;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
 @SearchComponent(prefix = "p", condition = BasicPagination.PageCondition.class, converter = BasicPagination.Converter.class)

@@ -1,4 +1,4 @@
-package com.searchbox.app.web.admin;
+package com.searchbox.web.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +94,7 @@ public class PresetController {
 		Preset currentPreset = null;
 		PresetDefinition currentPresetDefinition = null;
 		for (PresetDefinition pdef : searchbox.getPresets()) {
-			Preset pset = pdef.getElement();
+			Preset pset = pdef.toPreset(new Preset());
 
 			if (pset.getSlug().equals(presetSlug)) {
 				currentPreset = pset;
