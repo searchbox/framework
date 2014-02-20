@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.app.domain.DefinitionAttribute;
 import com.searchbox.app.domain.PresetDefinition;
+import com.searchbox.app.repository.PresetDefinitionRepository;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.search.SearchCondition;
@@ -39,6 +40,9 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 
 	@Autowired
     private ApplicationContext context;
+	
+	@Autowired
+	private PresetDefinitionRepository presetRepository;
 	
 	private static Logger logger = LoggerFactory.getLogger(ApplicationConversionService.class);
 	
@@ -112,13 +116,13 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 		
 		this.addConverter(new Converter<String, PresetDefinition>() {
             public PresetDefinition convert(String id) {
-                return PresetDefinition.findPresetDefinition(Long.parseLong(id));
+                return presetRepository.findOne(Long.parseLong(id));
             }
         });
 		
 		this.addConverter(new Converter<Long, PresetDefinition>() {
             public PresetDefinition convert(java.lang.Long id) {
-                return PresetDefinition.findPresetDefinition(id);
+                return presetRepository.findOne(id);
             }
         });
 		

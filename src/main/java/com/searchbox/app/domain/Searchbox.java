@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
@@ -28,6 +30,10 @@ public class Searchbox {
 	@Column(name="OPTLOCK")
 	private long version;
 	
+	public Searchbox() {
+		
+	}
+
 	public Searchbox(String name, String description) {
 		this.name = name;
 		this.slug = name;
@@ -111,4 +117,9 @@ public class Searchbox {
 		preset.setSearchbox(this);
 		this.presets.add(preset);
 	}
+	
+	@Override
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

@@ -1,6 +1,7 @@
 package com.searchbox.app.web;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
+import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -39,6 +41,9 @@ public class SearchController {
 	@Autowired
 	SearchService searchService;
 	
+	@Autowired
+	SearchboxRepository searchboxRepository;
+	
 	public SearchController() {
 	}
 	
@@ -55,9 +60,10 @@ public class SearchController {
 			@PathVariable String presetSlug, HttpServletRequest request) {
 		
 		//That should come from the searchbox param/filter
-		List<Searchbox> searchboxes = Searchbox.findAllSearchboxes();
+		Iterator<Searchbox> searchboxes = searchboxRepository.findAll().iterator();
 		Searchbox searchbox = null;
-		for(Searchbox sb:searchboxes){
+		while(searchboxes.hasNext()){
+			Searchbox sb = searchboxes.next();
 			if(sb.getSlug().equals(searchboxSlug)){
 				searchbox = sb;
 			}

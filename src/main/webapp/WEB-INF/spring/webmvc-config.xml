@@ -8,29 +8,27 @@
 	<!-- The controllers are autodetected POJOs labeled with the @Controller 
 		annotation. -->
 	<context:component-scan base-package="com.searchbox.app.web">
-	 <context:include-filter expression="org.springframework.stereotype.Controller"
-      type="annotation" />
+		<context:include-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
 	</context:component-scan>
 
-    <!-- Turns on support for mapping requests to Spring MVC @Controller methods
-         Also registers default Formatters and Validators for use across all @Controllers -->
-    
 	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
 		Also registers default Formatters and Validators for use across all @Controllers -->
-	
-	
-	<mvc:annotation-driven conversion-service="conversionService"/>
-	<bean id="conversionService"
-      class="com.searchbox.service.ApplicationConversionService"/>
-<!--
-	
-  	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
- -->	
+
+	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
+		Also registers default Formatters and Validators for use across all @Controllers -->
+
+
+	<mvc:annotation-driven conversion-service="conversionService" />
+	<bean id="conversionService" class="com.searchbox.service.ApplicationConversionService" />
+	<!-- <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" 
+		/> -->
 
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
-	<mvc:resources location="/, classpath:/META-INF/web-resources/" mapping="/assets/**" />
+	<mvc:resources location="/, classpath:/META-INF/web-resources/"
+		mapping="/assets/**" />
 
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
@@ -38,7 +36,7 @@
 
 	<!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
 	<mvc:interceptors>
-    <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
+		<bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
 			p:paramName="lang" />
 	</mvc:interceptors>
@@ -54,7 +52,8 @@
 		files translate Roo generated messages which are part of the admin interface, 
 		the application.properties resource bundle localizes all application specific 
 		messages such as entity names and menu items. -->
-	<bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+	<bean
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
 		id="messageSource" p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application"
 		p:fallbackToSystemLocale="false" />
 
@@ -64,7 +63,8 @@
 
 	<!-- Resolves localized <theme_name>.properties files in the classpath to 
 		allow for theme support -->
-	<bean class="org.springframework.ui.context.support.ResourceBundleThemeSource"
+	<bean
+		class="org.springframework.ui.context.support.ResourceBundleThemeSource"
 		id="themeSource" />
 
 	<!-- Store preferred theme configuration in a cookie -->
@@ -75,7 +75,8 @@
 		- view names for error views. The default behaviour of DispatcherServlet 
 		- is to propagate all exceptions to the servlet container: this will happen 
 		- here with all other types of exceptions. -->
-	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
 		p:defaultErrorView="uncaughtException">
 		<property name="exceptionMappings">
 			<props>
@@ -88,11 +89,14 @@
 	</bean>
 
 	<!-- Enable this for integration of file upload functionality -->
-	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver" />
+	<bean
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		id="multipartResolver" />
 
 
 	<!-- Enable this for integration of file upload functionality -->
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/WEB-INF/views/</value>
 		</property>

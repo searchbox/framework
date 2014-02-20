@@ -4,12 +4,14 @@
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
 	        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
 	        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd         
 	        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd         
 	        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
-	        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+	        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
 <!--  	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
  --> 	
@@ -89,6 +91,11 @@
 		<property name="numTestsPerEvictionRun" value="3" />
 		<property name="minEvictableIdleTimeMillis" value="1800000" />
 	</bean>
+
+
+  <jpa:repositories base-package="com.searchbox.app.repository" />
+  
+  <!-- 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="transactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
@@ -101,4 +108,6 @@
 		<property name="persistenceUnitName" value="persistenceUnit" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	   -->
+	
 </beans>

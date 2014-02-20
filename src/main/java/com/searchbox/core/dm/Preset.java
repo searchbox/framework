@@ -56,15 +56,6 @@ public class Preset implements Comparable<Preset> {
 		this.searchElements.add(element);
 	}
 
-	@Override
-	public int compareTo(Preset o) {
-		return o.getPosition().compareTo((this.getPosition()));
-	}
-
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
 	public String getSlug() {
         return this.slug;
     }
@@ -140,4 +131,14 @@ public class Preset implements Comparable<Preset> {
 	public void addFieldAttribute(PresetFieldAttribute fieldAttribute) {
 		this.fieldAttributes.add(fieldAttribute);
 	}
+	
+	@Override
+	public int compareTo(Preset o) {
+		return o.getPosition().compareTo((this.getPosition()));
+	}
+	
+	@Override
+	public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

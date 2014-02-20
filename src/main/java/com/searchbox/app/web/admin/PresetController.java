@@ -2,6 +2,7 @@ package com.searchbox.app.web.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
+import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -31,54 +33,62 @@ import com.searchbox.service.SearchService;
 @Controller
 @RequestMapping("/admin")
 public class PresetController {
-	
-	private static Logger logger = LoggerFactory.getLogger(PresetController.class);
+
+	private static Logger logger = LoggerFactory
+			.getLogger(PresetController.class);
 
 	@Autowired
 	ConversionService conversionService;
-	
+
 	@Autowired
 	ApplicationConversionService searchComponentService;
-	
+
 	@Autowired
 	SearchService searchService;
-	
+
+	@Autowired
+	SearchboxRepository searchboxRepository;
+
 	@ModelAttribute("OrderEnum")
-    public List<Order> getReferenceOrder(){
-        return Arrays.asList(Order.values());
-    }
-	
+	public List<Order> getReferenceOrder() {
+		return Arrays.asList(Order.values());
+	}
+
 	@ModelAttribute("SortEnum")
-    public List<Sort> getReferenceSort(){
-        return Arrays.asList(Sort.values());
-    }
-	
+	public List<Sort> getReferenceSort() {
+		return Arrays.asList(Sort.values());
+	}
+
 	@RequestMapping("/")
-	public ModelAndView search(@RequestParam(value="searchbox", required=false) String searchboxSlug, 
+	public ModelAndView search(
+			@RequestParam(value = "searchbox", required = false) String searchboxSlug,
 			HttpServletRequest request) {
 		logger.info("No Slug given, select default Preset");
 		return search(searchboxSlug, "", request);
 	}
-	
+
 	@RequestMapping("/{presetSlug}")
 	public ModelAndView search(
 			@RequestParam(value = "searchbox", required = false) String searchboxSlug,
 			@PathVariable String presetSlug, HttpServletRequest request) {
 
 		// That should come from the searchbox param/filter
-		List<Searchbox> searchboxes = Searchbox.findAllSearchboxes();
-		Searchbox searchbox = searchboxes.get(0);
-		for (Searchbox sb : searchboxes) {
+		Iterator<Searchbox> searchboxes = searchboxRepository.findAll()
+				.iterator();
+		Searchbox searchbox = null;
+		while (searchboxes.hasNext()) {
+			Searchbox sb = searchboxes.next();
 			if (sb.getSlug().equals(searchboxSlug)) {
 				searchbox = sb;
 			}
 		}
-//
-//		if (searchbox == null) {
-//			ModelAndView model = new ModelAndView("search/searchbox");
-//			model.addObject("searchboxes", searchboxes);
-//			return model;
-//		}
+		
+		//
+		// if (searchbox == null) {
+		// ModelAndView model = new ModelAndView("search/searchbox");
+		// model.addObject("searchboxes", searchboxes);
+		// return model;
+		// }
 
 		List<Preset> presets = new ArrayList<Preset>();
 		Preset currentPreset = null;
@@ -136,8 +146,8 @@ public class PresetController {
 		model.addObject("currentSearchbox", searchbox);
 		model.addObject("currentPreset", currentPreset);
 		model.addObject("currentPresetDefinition", currentPresetDefinition);
-		model.addObject("searchElements", currentPresetDefinition.getSearchElements());
-		
+		model.addObject("searchElements",
+				currentPresetDefinition.getSearchElements());
 
 		return model;
 	}

@@ -1,7 +1,9 @@
 package com.searchbox.app.web.admin;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,8 @@ import org.springframework.web.util.WebUtils;
 import com.searchbox.app.domain.DefinitionAttribute;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
+import com.searchbox.app.repository.PresetDefinitionRepository;
+import com.searchbox.app.repository.SearchElementDefinitionRepository;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
@@ -44,6 +48,12 @@ public class SearchElementDefinitionController {
 	@Autowired
 	ConversionService conversionService;
 	
+	@Autowired
+	SearchElementDefinitionRepository repository;
+	
+	@Autowired
+	PresetDefinitionRepository presetRepository;
+	
 	@ModelAttribute("OrderEnum")
     public List<Order> getReferenceOrder(){
         return Arrays.asList(Order.values());
@@ -52,6 +62,16 @@ public class SearchElementDefinitionController {
 	@ModelAttribute("SortEnum")
     public List<Sort> getReferenceSort(){
         return Arrays.asList(Sort.values());
+    }
+	
+	@ModelAttribute("presetdefinitions")
+    public List<PresetDefinition> getPresetDefinitions(){
+		ArrayList<PresetDefinition> presetDefinitions = new ArrayList<PresetDefinition>();
+		Iterator<PresetDefinition> presets = presetRepository.findAll().iterator();
+		while(presets.hasNext()){
+			presetDefinitions.add(presets.next());
+		}
+        return presetDefinitions;
     }
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -69,15 +89,11 @@ public class SearchElementDefinitionController {
             return model;
         }
 		try {
-        if(elementDefinition.getId() != null){
-        	elementDefinition = elementDefinition.merge();
-        } else {
-        	elementDefinition.persist();
-        }
+			elementDefinition = repository.save(elementDefinition);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-        populateEditForm(model, elementDefinition);
+        model.addObject("searchElementDefinition", elementDefinition);
         return model;
 	}
 	
@@ -91,60 +107,12 @@ public class SearchElementDefinitionController {
 	@RequestMapping(value = "/{id}")
     public ModelAndView show(@PathVariable("id") Long id) {
 		logger.info("VIEW an filed element");
-		SearchElementDefinition elementDef =  SearchElementDefinition.findSearchElementDefinition(id);
-		
+		SearchElementDefinition elementDef =  repository.findOne(id);
 		ModelAndView model = new ModelAndView("admin/SearchElementDefinition/updateForm");
-        populateEditForm(model, elementDef);
+        model.addObject("searchElementDefinition", elementDef);
         return model;
     }
 
-	@RequestMapping()
-    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, @RequestParam(value = "sortFieldName", required = false) String sortFieldName, @RequestParam(value = "sortOrder", required = false) String sortOrder, Model uiModel) {
-        if (page != null || size != null) {
-            int sizeNo = size == null ? 10 : size.intValue();
-            final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("searchelementdefinitions", SearchElementDefinition.findSearchElementDefinitionEntries(firstResult, sizeNo, sortFieldName, sortOrder));
-            float nrOfPages = (float) SearchElementDefinition.countSearchElementDefinitions() / sizeNo;
-            uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
-        } else {
-            uiModel.addAttribute("searchelementdefinitions", SearchElementDefinition.findAllSearchElementDefinitions(sortFieldName, sortOrder));
-        }
-        return "/admin/searchElementDefinition/list";
-    }
-
-	@RequestMapping(value = "/{id}", params = "form")
-    public String updateForm(@PathVariable("id") Long id, Model uiModel) {
-        //populateEditForm(uiModel, SearchElementDefinition.findSearchElementDefinition(id));
-        return "/admin/searchElementDefinition/update";
-    }
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        SearchElementDefinition searchElementDefinition = SearchElementDefinition.findSearchElementDefinition(id);
-        searchElementDefinition.remove();
-        uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect://admin/searchElementDefinition";
-    }
-
-	void populateEditForm(ModelAndView uiModel, SearchElementDefinition searchElementDefinition) {
-        uiModel.addObject("searchElementDefinition", searchElementDefinition);
-        uiModel.addObject("definitionattributes", DefinitionAttribute.findAllDefinitionAttributes());
-        uiModel.addObject("presetdefinitions", PresetDefinition.findAllPresetDefinitions());
-    }
-
-	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
-        String enc = httpServletRequest.getCharacterEncoding();
-        if (enc == null) {
-            enc = WebUtils.DEFAULT_CHARACTER_ENCODING;
-        }
-        try {
-            pathSegment = UriUtils.encodePathSegment(pathSegment, enc);
-        } catch (UnsupportedEncodingException uee) {}
-        return pathSegment;
-    }
-	
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(new Validator(){

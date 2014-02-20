@@ -20,6 +20,7 @@ import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.PresetFieldAttributeDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.Searchbox;
+import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
@@ -45,6 +46,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
 	private ApplicationContext context;
 	
+	@Autowired
+	private SearchboxRepository repository;
+	
 	private static boolean BOOTSTRAPED = false;
 
 	@Override
@@ -63,15 +67,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
 		
 		//The base collection for searchbox
-		CollectionDefinition collection = new CollectionDefinition();
-		collection.setName("pubmed");
+		CollectionDefinition collection = new CollectionDefinition("pubmed");
 		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
-		collection.setFieldDefinitions(collectionFields);
-		collection.persist();
-		
+		collection.setFieldDefinitions(collectionFields);		
 		
 		
 		//SearchAll preset
@@ -157,12 +158,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
-		searchbox.persist();
+		repository.save(searchbox);
 		
 		//Making another Searchbox for testing and UI.
 		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
-		anotherSearchbox.persist();
-
+		repository.save(anotherSearchbox);
 
 
 //		SolrCloudEngine solr = new SolrCloudEngine();
@@ -315,22 +315,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"classpath*:META-INF/spring/applicationContext.xml");
 		
-		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-		System.out.println("List: " + Searchbox.findAllSearchboxes());
-		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-		Searchbox sb = Searchbox.findAllSearchboxes().get(0);
-		System.out.println("Searchbox: " + sb);
-		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-		System.out.println("Searchbox: " + sb.getPresets());
-		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-
-		for(PresetDefinition pdef:sb.getPresets()){
-			Preset preset = pdef.getElement();
-			System.out.println("Preset: " + preset.getSlug());
-			for(SearchElement element:preset.getSearchElements()){
-				System.out.println("\tElement: " + element.getType()+"\t"+element.getLabel());
-			}
-		}
+//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+//		System.out.println("List: " + Searchbox.findAllSearchboxes());
+//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+//		Searchbox sb = Searchbox.findAllSearchboxes().get(0);
+//		System.out.println("Searchbox: " + sb);
+//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+//		System.out.println("Searchbox: " + sb.getPresets());
+//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
+//
+//		for(PresetDefinition pdef:sb.getPresets()){
+//			Preset preset = pdef.getElement();
+//			System.out.println("Preset: " + preset.getSlug());
+//			for(SearchElement element:preset.getSearchElements()){
+//				System.out.println("\tElement: " + element.getType()+"\t"+element.getLabel());
+//			}
+//		}
 	}
 
 }
