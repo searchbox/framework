@@ -3,6 +3,7 @@ package com.searchbox.service;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,21 @@ public class DirectoryService {
 		//this.tempDir = new File
 	}
 	
+	public String getApplicationRelativePath(String fname){
+		Resource tempDir = context.getResource("WEB-INF/temp/");
+		File file;
+		try {
+			file = new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
+			logger.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
+			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
+			return relative;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public String getApplicationRelativePath(File file){
 		try {
 			logger.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
@@ -36,26 +52,30 @@ public class DirectoryService {
 		return null;
 	}
 	
-	public File createTempFile(String prefix, String suffix) {
-		
+	public Boolean fileExists(String fname){
 		Resource tempDir = context.getResource("WEB-INF/temp/");
-		if(!tempDir.exists()){
-			try {
-				tempDir.getFile().mkdirs();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		File newFile;
 		try {
-			return File.createTempFile(prefix, suffix, tempDir.getFile());
+			newFile = new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
+			return newFile.exists();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
-
+	
+	public File createFile(String fname, String content){
+		File file = this.createFile(fname);
+		try {
+			FileUtils.writeStringToFile(file, content);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return file;
+	}
+	
 	public File createFile(String fname) {
 		Resource tempDir = context.getResource("WEB-INF/temp/");
 		if(!tempDir.exists()){

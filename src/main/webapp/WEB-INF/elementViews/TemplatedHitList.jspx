@@ -15,7 +15,7 @@
 			<c:if test="${hit != null}">
 				<c:catch var="includeException">
 					<c:set scope="request" var="hit" value="${hit }" />
-					<jsp:include page="/${element.getTemplatePath()}" />
+					<jsp:include page="/${element.getTemplateFile()}" />
 				</c:catch>
 				<c:if test="${includeException != null}">
 					<div class="alert alert-danger">
@@ -29,7 +29,7 @@
 						</pre>
 						<h4>Template File</h4>
 						<pre>
-							<c:out value="${element.getTemplatePath()}" />
+							<c:out value="${element.getTemplateFile()}" />
 						</pre>
 						<h4>Hit</h4>
 						<pre>

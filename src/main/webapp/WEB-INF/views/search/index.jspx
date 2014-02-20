@@ -105,18 +105,6 @@
 
 
 						<div class="col-md-7 col-sm-7" id="main-col-center">
-							<c:if test="${query.collq}">
-								<c:set var="forceParams" value="${cleanedParams.clone()}" />
-								<!-- ${forceParams.q = query.collq} -->
-								<!-- ${forceParams.f = 1} -->
-								<div class="alert alert-info">
-									<button type="button" class="close" data-dismiss="alert">×</button>
-									Displaying results for <a href="#"> <strong>${query.q}</strong>
-									</a> <br /> <small>Show me results for <a href="#"> <strong>${forceParams.q}</strong>
-									</a> anyway!
-									</small>
-								</div>
-							</c:if>
 
 							<c:forEach items="${result.getElements('VIEW')}" var="element">
 								<c:set scope="request" var="element" value="${element }" />

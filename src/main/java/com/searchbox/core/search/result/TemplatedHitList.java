@@ -18,12 +18,13 @@ import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
+import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.result.HitList.Hit;
 import com.searchbox.ref.StringUtils;
 import com.searchbox.service.DirectoryService;
 
 @SearchComponent
-public class TemplatedHitList extends HitList {
+public class TemplatedHitList extends HitList implements CachedContent {
 	
 	@Autowired
 	DirectoryService directoryService;
@@ -35,7 +36,7 @@ public class TemplatedHitList extends HitList {
 	@SearchAttribute
 	private String template;
 	
-	private File templateFile;
+	private String templateFile;
 	
 	public TemplatedHitList(){
 		super();
@@ -50,26 +51,25 @@ public class TemplatedHitList extends HitList {
 		this.getFields().addAll(StringUtils.extractHitFields(template));
 	}
 	
-	public String getTemplatePath(){
-		if(templateFile == null){
-			this.templateFile = directoryService.createFile("tempalte_"+template.hashCode()+".jspx");
-			try {
-				String fragment = "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
-									"version=\"2.0\">"+
-									this.template+"</jsp:root>";
-				FileUtils.writeStringToFile(this.templateFile, fragment);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(templateFile == null){
-				throw new RuntimeException("Could not load templateFile");
-			}
-		}
-		String relativePath = directoryService.getApplicationRelativePath(templateFile);
-		logger.debug("Tempalte AbsolutePath: " + templateFile.getAbsolutePath());
-		logger.debug("Tempalte RealtivePath: " + relativePath);
-		return relativePath;
+	public String getTemplateFile(){
+		return this.templateFile;
+	}
+
+	@Override
+	public int getContentHash() {
+		return this.template.hashCode();
+	}
+
+	@Override
+	public String getContent() {
+		return "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
+				"version=\"2.0\">"+
+				this.template+"</jsp:root>";
+	}
+
+	@Override
+	public void setPath(String path) {
+		this.templateFile = path;
 	}
 }
 

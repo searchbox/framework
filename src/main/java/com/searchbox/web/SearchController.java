@@ -20,9 +20,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.WebConfig;
 import com.searchbox.app.domain.PresetDefinition;
+import com.searchbox.app.domain.PresetFieldAttributeDefinition;
+import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.PresetDefinitionRepository;
 import com.searchbox.app.repository.SearchboxRepository;
+import com.searchbox.core.dm.Preset;
+import com.searchbox.core.search.CachedContent;
+import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.search.SearchResult;
+import com.searchbox.service.DirectoryService;
 import com.searchbox.service.SearchService;
 
 @Controller
@@ -38,6 +46,9 @@ public class SearchController {
 	
 	@Autowired
 	SearchService searchService;
+	
+	@Autowired
+	DirectoryService directoryService;
 	
 	@Autowired
 	SearchboxRepository searchboxRepository;
@@ -58,28 +69,91 @@ public class SearchController {
 		return searchboxes;
 	}
 	
-	private ModelAndView executeSearch(Searchbox searchbox, PresetDefinition preset,
+	//FIXME this will fail if SB is null...
+	@ModelAttribute("presets")
+	public List<Preset> getAllPresets(@ModelAttribute("searchbox") Searchbox searchbox){
+		ArrayList<Preset> presets = new ArrayList<Preset>();
+		for(PresetDefinition pdef:presetDefinitionRepository.findAllBySearchbox(searchbox)){
+			presets.add(pdef.toPreset(new Preset()));
+		}
+		return presets;
+	}
+	
+	private ModelAndView executeSearch(Searchbox searchbox, PresetDefinition presetDefinition,
 			 HttpServletRequest request, ModelAndView model){
-		
-		model.setViewName("search/index");
-		
+
 		if(searchbox == null){
-			logger.info("Current searchbox is null...");
+			model.setViewName("search/searchbox");
+			return model;
 		} else {
-			logger.info("we're in searchbox: " + searchbox.getName());
+			model.setViewName("search/index");
 		}
 		
-		if(preset == null){
-			logger.info("Current preset is null...");
-		} else {
-			logger.info("we're in preset: " + preset.getLabel());
+		
+		if(presetDefinition == null){
+			logger.info("No preset, should forward to first preset");
+			presetDefinition = searchbox.getPresets().get(0);
+		}
+					
+		//Fetch all search Conditions within HTTP params
+		List<SearchCondition> conditions = new ArrayList<SearchCondition>();		
+		for(String param:searchComponentService.getSearchConditionParams()){
+			if(request.getParameterValues(param) != null){
+				for(String value:request.getParameterValues(param)){
+					if(value != null && !value.isEmpty()){
+						try {
+						SearchCondition cond = (SearchCondition) conversionService.convert(value, searchComponentService.getSearchConditionClass(param));
+						conditions.add(cond);
+						} catch (Exception e) {
+							logger.error("Could not convert " + value, e);
+						}
+					}
+				}
+			}
 		}
 		
-		for(Entry<String, Object> elem:model.getModelMap().entrySet()){
-			logger.info("in model: " + elem.getKey() + " value: " + elem.getValue());
+		SearchResult result = new SearchResult();
+		
+		//Build the Preset DTO with dependancies
+		Preset preset = presetDefinition.toPreset(new Preset());
+		for(SearchElementDefinition elementdefinition:presetDefinition.getSearchElements()){
+			try {
+				SearchElement searchElement = elementdefinition.toElement(preset,
+						(SearchElement)elementdefinition.getClazz().newInstance());
+				if(CachedContent.class.isAssignableFrom(searchElement.getClass())){
+					Integer hash = ((CachedContent)searchElement).getContentHash();
+					
+					String tempFile = searchElement.getClass().getSimpleName()+"_"+searchElement.getPosition()+"_"+hash+".jspx";
+					if(!directoryService.fileExists(tempFile)){
+						directoryService.createFile(tempFile,((CachedContent)searchElement).getContent());
+					}
+					((CachedContent)searchElement).setPath(directoryService.getApplicationRelativePath(tempFile));	
+				}
+				preset.addSearchElement(searchElement);
+			} catch (Exception e) {
+				logger.error("Could not get SearchElement for: " + elementdefinition);
+			}
+		}
+		for(PresetFieldAttributeDefinition fielddefinition:presetDefinition.getFieldAttributes()){
+			try {
+				preset.addFieldAttribute(fielddefinition.toPresetFieldAttribute());
+			} catch (Exception e) {
+				logger.error("Could not get SearchElement for: " + fielddefinition);
+			}
 		}
 		
-		logger.info("No Slug given, select default Preset");
+		
+		
+		if(preset != null){
+			for(SearchElement element:searchService.execute(preset, conditions)){
+				logger.debug("Adding to result view element["+element.getPosition()+ "] = " + element.getLabel());
+				result.addElement(element);
+			}
+		}
+		
+		model.addObject("result", result);
+		model.addObject("preset",preset);
+
 		return model;
 	}
 	
@@ -104,79 +178,4 @@ public class SearchController {
 
 		return this.executeSearch(searchbox, pdef, request, model);
 	}
-
-	
-	
-//	@RequestMapping("/{presetSlug}")
-////	public ModelAndView search(@RequestParam("ff") FieldFacet.ValueCondition condition) {
-//	public ModelAndView search(@RequestParam(value="searchbox", required=false) String searchboxSlug, 
-//			@PathVariable String presetSlug, HttpServletRequest request) {
-//		
-//		//That should come from the searchbox param/filter
-//		Iterator<Searchbox> searchboxes = searchboxRepository.findAll().iterator();
-//		Searchbox searchbox = null;
-//		while(searchboxes.hasNext()){
-//			Searchbox sb = searchboxes.next();
-//			if(sb.getSlug().equals(searchboxSlug)){
-//				searchbox = sb;
-//			}
-//		}
-//		
-//		if(searchbox == null){
-//			ModelAndView model = new ModelAndView("search/searchbox");
-//			model.addObject("searchboxes",searchboxes);
-//			return model;
-//		}
-//		
-//		
-//		List<Preset> presets = new ArrayList<Preset>();
-//		Preset currentPreset = null;
-//		for(PresetDefinition pdef:searchbox.getPresets()){
-//			Preset pset = pdef.toPreset(new Preset());
-//			
-//			if(pset.getSlug().equals(presetSlug)){
-//				currentPreset = pset;
-//			}
-//			presets.add(pset);
-//		}
-//		
-//		if(currentPreset == null && presets.size() > 0){
-//			currentPreset = presets.get(0);
-//		}
-//					
-//		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
-//		
-//		for(String param:searchComponentService.getSearchConditionParams()){
-//			if(request.getParameterValues(param) != null){
-//				for(String value:request.getParameterValues(param)){
-//					if(value != null && !value.isEmpty()){
-//						try {
-//						SearchCondition cond = (SearchCondition) conversionService.convert(value, searchComponentService.getSearchConditionClass(param));
-//						conditions.add(cond);
-//						} catch (Exception e) {
-//							logger.error("Could not convert " + value, e);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		SearchResult result = new SearchResult();
-//		
-//		if(currentPreset != null){
-//			for(SearchElement element:searchService.execute(currentPreset, conditions)){
-//				logger.debug("Adding to result view element["+element.getPosition()+ "] = " + element.getLabel());
-//				result.addElement(element);
-//			}
-//		}
-//		
-//		ModelAndView model = new ModelAndView("search/index");
-//		model.addObject("result", result);
-//		model.addObject("presets",presets);
-//		model.addObject("searchboxes",searchboxes);
-//		model.addObject("currentSearchbox",searchbox);
-//		model.addObject("currentPreset", currentPreset);
-//		
-//		return model;
-//	}
 }
