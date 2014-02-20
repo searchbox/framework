@@ -57,7 +57,7 @@
 									test="${attribute.type.name == 'com.searchbox.ref.Order'}">
 									<form:select class="form-control" id="${attribute.name}"
 										path="attributes[${item.index }].value"
-										itemLabel="description" itemValue="name" items="${OrderEnum}">
+										itemLabel="description" items="${OrderEnum}">
 										<form:options />
 									</form:select>
 								</c:when>
@@ -65,7 +65,7 @@
 									test="${attribute.type.name == 'com.searchbox.ref.Sort'}">
 									<form:select class="form-control" id="${attribute.name}"
 										path="attributes[${item.index }].value"
-										itemLabel="description" itemValue="name" items="${SortEnum}">
+										itemLabel="description" items="${SortEnum}">
 										<form:options />
 									</form:select>
 								</c:when>

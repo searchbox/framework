@@ -9,11 +9,17 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +39,10 @@ import com.searchbox.ref.Sort;
 @RequestMapping("/admin/searchElementDefinition")
 public class SearchElementDefinitionController {
 
-	private static Logger logger = LoggerFactory.getLogger(PresetController.class);
+	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinitionController.class);
+	
+	@Autowired
+	ConversionService conversionService;
 	
 	@ModelAttribute("OrderEnum")
     public List<Order> getReferenceOrder(){
@@ -49,7 +58,7 @@ public class SearchElementDefinitionController {
     public ModelAndView update(@Valid SearchElementDefinition elementDefinition, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
 		logger.info("Creating an filed element: " + elementDefinition.getClazz().getSimpleName() + 
 				" for preset: " + elementDefinition.getPreset().getSlug());
-		
+	
 		ModelAndView model = new ModelAndView("admin/SearchElementDefinition/updateForm");
 		
 		if (bindingResult.hasErrors()) {
@@ -135,4 +144,27 @@ public class SearchElementDefinitionController {
         } catch (UnsupportedEncodingException uee) {}
         return pathSegment;
     }
+	
+	@InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(new Validator(){
+
+			@Override
+			public boolean supports(Class<?> clazz) {
+				return SearchElementDefinition.class.isAssignableFrom(clazz);
+			}
+
+			@Override
+			public void validate(Object target, Errors errors) {
+				SearchElementDefinition element = (SearchElementDefinition)target;
+				for(DefinitionAttribute attr:element.getAttributes()){
+					if(!attr.getType().getName().equals(attr.getValue().getClass().getName())){
+						if(conversionService.canConvert(attr.getValue().getClass(), attr.getType())){
+							attr.setValue(conversionService.convert(attr.getValue(), attr.getType()));
+						}
+					}
+				}
+			}
+		});
+	}
 }

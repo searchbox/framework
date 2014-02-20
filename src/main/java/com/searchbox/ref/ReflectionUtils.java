@@ -30,7 +30,6 @@ public class ReflectionUtils {
 		if(searchElement != null){
 			for(Field field:searchElement.getDeclaredFields()){
 				if(field.isAnnotationPresent(SearchAttribute.class)){
-					//TODO might wanna type as DefinitionAttribute<Integer>(...)
 					attributes.add(new DefinitionAttribute(field.getType(), field.getName()));
 				}
 			}

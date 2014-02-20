@@ -55,7 +55,7 @@ public class DefinitionAttribute {
 	@Transient
 	public Object getValue() {
 		try {
-			return (Object) SerializationUtils.deserialize(valueAsByteArray);
+			return SerializationUtils.deserialize(valueAsByteArray);
 		} catch (Exception e){
 			logger.error("Could not deserialize value: " + this, e);
 			return null;

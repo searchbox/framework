@@ -138,6 +138,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldFacet.setAttributeValue("fieldName", "publication-type");
 		fieldFacet.setAttributeValue("label", "Type");
 		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
+		fieldFacet.setAttributeValue("sort", Sort.DESC);
 		preset.addSearchElementDeifinition(fieldFacet);
 		
 		

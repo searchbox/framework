@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.core.convert.converter.GenericConverter.ConvertiblePair;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.format.Formatter;
@@ -26,7 +30,9 @@ import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.search.SearchCondition;
+import com.searchbox.domain.DefinitionAttribute;
 import com.searchbox.domain.PresetDefinition;
+import com.searchbox.ref.Order;
 
 @Service("conversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService  { 

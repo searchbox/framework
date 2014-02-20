@@ -74,8 +74,9 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 			element.setDefinitionId(this.getId());
 			for(DefinitionAttribute attribute:attributes){
 				if(attribute.getValue() != null){
+					Method setter = null;
 					try {
-						Method setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
+						setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
 						if(setter == null){
 							logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
 						} else {
@@ -85,7 +86,14 @@ public class SearchElementDefinition implements ApplicationContextAware, Compara
 	//					field.setAccessible(true);
 	//					field.set(element, attribute.getValue());
 					} catch (Exception e) {
-						logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName(),e);
+						logger.error("Could not find setter: " + element.getClass().getName()+
+								"#"+attribute.getName()+"["+attribute.getType().getName()+"]");
+						logger.error("Attribute Value is: " + attribute.getValue());
+						logger.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
+						if(setter != null){
+							logger.error("\tsetter args: " + 
+								setter.getParameterTypes()[0].getName());
+						}
 					}
 				}
 			}
