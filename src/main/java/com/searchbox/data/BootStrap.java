@@ -20,6 +20,7 @@ import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.PresetFieldAttributeDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.Searchbox;
+import com.searchbox.app.repository.CollectionDefinitionRepository;
 import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
@@ -49,6 +50,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
 	private SearchboxRepository repository;
 	
+	@Autowired
+	private CollectionDefinitionRepository collectionRepository;
+	
 	private static boolean BOOTSTRAPED = false;
 
 	@Override
@@ -73,7 +77,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
 		collection.setFieldDefinitions(collectionFields);		
-		
+		collection = collectionRepository.save(collection);
 		
 		//SearchAll preset
 		PresetDefinition preset = new PresetDefinition(searchbox, collection);

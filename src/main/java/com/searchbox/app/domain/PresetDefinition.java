@@ -89,7 +89,8 @@ public class PresetDefinition {
 	private Integer position;
 	
 	public PresetDefinition(){
-		
+		searchElements = new HashSet<SearchElementDefinition>();
+		fieldAttributes = new HashSet<PresetFieldAttributeDefinition>();
 	}
 
 	public PresetDefinition(Searchbox searchbox, CollectionDefinition collection) {
