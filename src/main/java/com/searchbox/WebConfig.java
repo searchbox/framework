@@ -3,8 +3,9 @@ package com.searchbox;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -33,7 +34,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 
-	
+	@Bean(name="conversionService")
+    public ConversionService getConversionService() {
+		DefaultFormattingConversionService conversionService = 
+				new DefaultFormattingConversionService(true);
+        return conversionService;
+    }
 	
 	@Bean
 	public OpenEntityManagerInViewFilter getOpenEntityManagerInViewFilter(){

@@ -1,4 +1,4 @@
-package com.searchbox.service;
+package com.searchbox.web;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
@@ -21,19 +25,28 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.app.domain.PresetDefinition;
+import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.PresetDefinitionRepository;
+import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.search.SearchCondition;
 
 @Service("conversionService")
-public class ApplicationConversionService extends DefaultFormattingConversionService  { 
+@Configurable
+public class ApplicationConversionService  { 
 
 	@Autowired
     private ApplicationContext context;
 	
 	@Autowired
+	private DefaultFormattingConversionService conversionService;
+	
+	@Autowired
 	private PresetDefinitionRepository presetRepository;
+	
+	@Autowired
+	private SearchboxRepository searchboxRepository;
 	
 	private static Logger logger = LoggerFactory.getLogger(ApplicationConversionService.class);
 	
@@ -42,13 +55,14 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	private Map<String, Class<?>> conditionConverters;
 	
 	
-    public ApplicationConversionService(){
-        super();
-        
+    public ApplicationConversionService(){        
         this.searchComponents = new HashMap<String, Class<?>>();
 		this.searchConditions = new HashMap<String, Class<?>>();
 		this.conditionConverters = new HashMap<String, Class<?>>();
-
+    }
+    
+    @PostConstruct
+    public void init(){
 		
     	logger.info("Scanning for SearchComponents");
 
@@ -83,7 +97,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 								+ searchComponent.getSimpleName() + " with filter["
 								+ searchCondition.getName() + "]");
 		
-						this.addConverter((Converter<?, ?>) conditionConverter.newInstance());
+						conversionService.addConverter((Converter<?, ?>) conditionConverter.newInstance());
 					}
 				} else if(SearchElementAdapter.class.isAssignableFrom(searchComponent)){
 					logger.info("~~ Found Adaptor: " + searchComponent);
@@ -105,32 +119,57 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 
 		}
 		
-		this.addConverter(new Converter<String, PresetDefinition>() {
+		
+		conversionService.addConverter(new Converter<String, Searchbox>() {
+            public Searchbox convert(String slug) {
+                return searchboxRepository.findBySlug(slug);
+            }
+        });
+		
+		conversionService.addConverter(new Converter<Searchbox, String>() {
+            public String convert(Searchbox searchbox) {
+                return searchbox.getSlug();
+            }
+        });
+		
+		conversionService.addConverter(new Converter<Long, Searchbox>() {
+            public Searchbox convert(java.lang.Long id) {
+                return searchboxRepository.findOne(id);
+            }
+        });
+		
+		conversionService.addConverter(new Converter<Searchbox, Long>() {
+            public Long convert(Searchbox searchbox) {
+                return searchbox.getId();
+            }
+        });
+		
+		conversionService.addConverter(new Converter<String, PresetDefinition>() {
             public PresetDefinition convert(String id) {
                 return presetRepository.findOne(Long.parseLong(id));
             }
         });
 		
-		this.addConverter(new Converter<Long, PresetDefinition>() {
+		conversionService.addConverter(new Converter<Long, PresetDefinition>() {
             public PresetDefinition convert(java.lang.Long id) {
                 return presetRepository.findOne(id);
             }
         });
 		
-        this.addConverter(new Converter<PresetDefinition, String>() {
+		conversionService.addConverter(new Converter<PresetDefinition, String>() {
             public String convert(PresetDefinition presetDefinition) {
                 return new StringBuilder().append(presetDefinition.getSlug()).append(' ').append(presetDefinition.getLabel()).append(' ').append(presetDefinition.getDescription()).append(' ').append(presetDefinition.getPosition()).toString();
             }
         });
 		
-		this.addConverter(new Converter<Class, String>(){
+		conversionService.addConverter(new Converter<Class, String>(){
 			@Override
 			public String convert(Class source) {
 				return source.getName();
 			}
 		});
 		
-		this.addConverter(new Converter<String, Class>(){
+		conversionService.addConverter(new Converter<String, Class>(){
 
 			@Override
 			public Class convert(String source) {

@@ -15,7 +15,7 @@
 		value="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"
 		var="jquery_url" />
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"
+		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"
 		var="bootstrap_js_url" />
 
 	<spring:url value="/assets/images/favicon.ico" var="favicon" />

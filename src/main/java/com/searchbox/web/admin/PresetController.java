@@ -27,8 +27,8 @@ import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
-import com.searchbox.service.ApplicationConversionService;
 import com.searchbox.service.SearchService;
+import com.searchbox.web.ApplicationConversionService;
 
 @Controller
 @RequestMapping("/admin")
