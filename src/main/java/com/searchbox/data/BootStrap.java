@@ -1,6 +1,7 @@
 package com.searchbox.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -23,6 +24,7 @@ import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.SearchEngineDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.CollectionDefinitionRepository;
+import com.searchbox.app.repository.SearchEngineDefinitionRepository;
 import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.engine.solr.EmbeddedSolr;
 import com.searchbox.core.search.debug.SolrToString;
@@ -35,6 +37,7 @@ import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 import com.searchbox.service.SearchEngineService;
+import com.searchbox.service.SearchService;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -51,9 +54,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	private SearchboxRepository repository;
 	
 	@Autowired
+	private SearchEngineDefinitionRepository engineRepository;
+	
+	@Autowired
 	private CollectionDefinitionRepository collectionRepository;
 	
+	@Autowired
+	private SearchService searchService;
+	
 	private static boolean BOOTSTRAPED = false;
+	
+	private static boolean defaultData = true;
 
 	@Override
 	@Transactional
@@ -65,21 +76,27 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		BOOTSTRAPED = true;
 		
-		logger.info("Bootstraping application");
+		if(defaultData){
+		logger.info("Bootstraping application with default data...");
 		
 		//The base Searchbox.
+		logger.info("++ Creating pubmed searchbox");
 		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
 		
+		
 		//The embedded Solr SearchEngine
+		logger.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = new SearchEngineDefinition("embedded Solr",
 				EmbeddedSolr.class);
-		engine.setAttributeValue("coreName", "xoxoxox");
-		engine.setAttributeValue("solrHome", "xoxoxox");
-		engine.setAttributeValue("solrConfig", "xoxoxox");
-		engine.setAttributeValue("solrSchema", "xoxoxox");
-		engine.setAttributeValue("dataDir", "xoxoxox");
+		engine.setAttributeValue("coreName", "pubmed");
+		engine.setAttributeValue("solrHome", "classpath:META-INF/solr/");
+		engine.setAttributeValue("solrConfig", "classpath:META-INF/solr/conf/solrconfig.xml");
+		engine.setAttributeValue("solrSchema", "classpath:META-INF/solr/conf/schema.xml");
+		engine.setAttributeValue("dataDir", "target/data/pubmed/");
+		engineRepository.save(engine);
 		
 		//The base collection for searchbox
+		logger.info("++ Creating pubmed Collection");
 		CollectionDefinition collection = new CollectionDefinition("pubmed");
 		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
@@ -89,6 +106,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collection = collectionRepository.save(collection);
 		
 		//SearchAll preset
+		logger.info("++ Creating Search All preset");
 		PresetDefinition preset = new PresetDefinition(searchbox, collection);
 		preset.setLabel("Search All");
 		preset.setSlug("all");
@@ -176,80 +194,19 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//Making another Searchbox for testing and UI.
 		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
 		repository.save(anotherSearchbox);
-
-
-//		SolrCloudEngine solr = new SolrCloudEngine();
-//		solr.setName("test-collection");
-//		try {
-//			solr.setZkHost(new URL("http://www.zk.com/"));
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		solr.persist();
-
-//		CollectionDefinition collection = new CollectionDefinition("Test");
-//		collection.addField(new Field("id"));
-//		collection.persist();
 		
-		
-		
-		
+		logger.info("Bootstraping application with default data... done");
 
-//		Preset searchAll = new Preset("Search All", null);
-////		searchAll.setCollection(collection);
-//		testSearchbox.addPreset(searchAll);
-//		
-//		//Create & add a HitLIst SearchComponent to the preset;
-//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-//		hitList.setAttributeValue("titleField", "article-title");
-//		hitList.setAttributeValue("urlField", "article-title");
-//		ArrayList<String> fields = new ArrayList<String>();
-//		fields.add("article-abstract");
-//		fields.add("author");
-//		fields.add("publication-type");
-//		fields.add("article-completion-date");
-//		fields.add("article-revision-date");
-//		hitList.setAttributeValue("fields", fields);
-//		searchAll.addSearchElement(hitList);
-//		
-//		//Create & add a basicSearchStat SearchComponent to the preset;
-//		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-//		searchAll.addSearchElement(basicStatus);
-//		
-//		//Create & add a querydebug SearchComponent to the preset;
-//		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-//		searchAll.addSearchElement(querydebug);
-//		
-//		//Create & add a query SearchComponent to the preset;
-//		SearchElementDefinition query = new SearchElementDefinition(SimpleQuery.class);
-//		searchAll.addSearchElement(query);
-//
-//		//Create & add a facet to the preset.
-//		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-//		fieldFacet.setAttributeValue("fieldName", "publication-type");
-//		fieldFacet.setAttributeValue("label", "Type");
-//		searchAll.addSearchElement(fieldFacet);
-//
-////		Preset searchVideos = new Preset("Videos", collection);
-////		testSearchbox.addPreset(searchVideos);
-////
-////		Preset searchDoc = new Preset("Documents", collection);
-////		testSearchbox.addPreset(searchDoc);
-//
-//		testSearchbox.persist();
-//
-//		for (Preset preset : testSearchbox.getPresets()) {
-//			logger.info("Addded preset: " + preset.getLabel() + " with position: "
-//					+ preset.getPosition());
-//		}
-//
-////		for (Collection cc : Collection.findAllCollections()) {
-////			logger.info("Got Collection: " + collection.getName()
-////					+ " with engine: " + collection.getEngine().getClass());
-////		}
-
-
+		}
+		
+		logger.info("Starting all your engine");
+		//TODO check for lazyload or not ;)
+		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		while(engineDefinitions.hasNext()){
+			SearchEngineDefinition engineDefinition = engineDefinitions.next();
+			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
+			searchService.load(engineDefinition);
+		}
 	}
 
 	// private void setSettings() {

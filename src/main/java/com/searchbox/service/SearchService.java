@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.app.domain.SearchEngineDefinition;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.dm.Preset;
@@ -32,7 +33,12 @@ public class SearchService {
 	private SearchEngineService searchEngineService;
 	
 	public SearchService() {
-		// TODO Auto-generated constructor stub
+	}
+	
+	public void load(SearchEngineDefinition engineDefinition) {
+		//TODO Register searchEngine in hashmap and start it.
+//		SearchEngine engine = engineDefinition.
+		
 	}
 
 	public List<SearchElement> execute(Preset preset, List<SearchCondition> conditions) {
