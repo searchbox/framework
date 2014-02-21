@@ -237,10 +237,10 @@ public class PresetDefinition {
 		pdef.slug = "all";
 		pdef.label = "Basic Preset";
 		
-		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
+		SearchElementDefinition query = new SearchElementDefinition("EdismaxQuery", EdismaxQuery.class);
 		pdef.addSearchElementDeifinition(query);
 		
-		SearchElementDefinition result = new SearchElementDefinition(HitList.class);
+		SearchElementDefinition result = new SearchElementDefinition("HitList", HitList.class);
 		pdef.addSearchElementDeifinition(result);
 		
 		return pdef;
@@ -282,7 +282,7 @@ public class PresetDefinition {
 		pdef.slug = "search-all";
 		pdef.label = "Hello World";
 		
-		SearchElementDefinition fdef = new SearchElementDefinition(FieldFacet.class);
+		SearchElementDefinition fdef = new SearchElementDefinition("FieldFacet", FieldFacet.class);
 		fdef.setAttributeValue("fieldName", "MyField");
 		fdef.setAttributeValue("label", "Categories");
 		pdef.addSearchElementDeifinition(fdef);

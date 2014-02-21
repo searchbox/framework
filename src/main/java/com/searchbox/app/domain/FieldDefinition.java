@@ -12,70 +12,33 @@ import javax.persistence.Version;
 import com.searchbox.core.dm.Field;
 
 @Entity
-public class FieldDefinition {
+public class FieldDefinition extends DefinitionClass{
 	
-	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-	
-	@Version
-	@Column(name="OPTLOCK")
-	private long version;
-
-	private Class clazz;
-	
-	private String key;
-
 	public FieldDefinition() {
 	}
 		
 	public FieldDefinition(Class clazz, String key) {
-		this.clazz = clazz;
-		this.key = key;
+		super(key, clazz);
 	}
 	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public Class getClazz() {
-		return clazz;
-	}
-
-	public void setClazz(Class clazz) {
-		this.clazz = clazz;
-	}
-
 	public String getKey() {
-		return key;
+		return this.getName();
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.setName(key);
 	}
 
 	public Field toField() {
-		return new Field(clazz, key);
+		return new Field(getClazz(), getName());
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((clazz == null) ? 0 : clazz.getSimpleName().hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((getClazz() == null) ? 0 : getClazz().getSimpleName().hashCode());
+		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
 		return result;
 	}
 
@@ -88,15 +51,15 @@ public class FieldDefinition {
 		if (getClass() != obj.getClass())
 			return false;
 		FieldDefinition other = (FieldDefinition) obj;
-		if (clazz == null) {
-			if (other.clazz != null)
+		if (getClazz() == null) {
+			if (other.getClazz() != null)
 				return false;
-		} else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName()))
+		} else if (!getClazz().getSimpleName().equals(other.getClazz().getSimpleName()))
 			return false;
-		if (key == null) {
-			if (other.key != null)
+		if (getName() == null) {
+			if (other.getName() != null)
 				return false;
-		} else if (!key.equals(other.key))
+		} else if (!getName().equals(other.getName()))
 			return false;
 		return true;
 	}
