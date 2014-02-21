@@ -40,7 +40,24 @@ public abstract class SearchCondition {
 	public Boolean hasSubConditions(){
 		return this.innerConditions.size() > 0;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((boost == null) ? 0 : boost.hashCode());
+		result = prime * result + ((clause == null) ? 0 : clause.hashCode());
+		result = prime * result
+				+ ((innerConditions == null) ? 0 : innerConditions.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object other){
 		if(!this.getClass().equals(other.getClass())){
