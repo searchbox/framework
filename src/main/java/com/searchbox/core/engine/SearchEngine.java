@@ -6,10 +6,20 @@ import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Preset;
+import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchElement;
 
-public abstract class SearchEngine<K extends SearchQuery> {
+public interface SearchEngine {
 
-	@OneToMany(mappedBy = "engine", cascade = CascadeType.ALL)
-	private List<Collection> collections;
+	public Class getQueryClass();
+	
+	public List<SearchElement> executeSearch(Preset preset, List<SearchCondition> conditions);
+	
+	public List<SearchElement> getSupportedElements();
 
+	public Boolean supportsElement(SearchElement element);
+	
+	//TODO Shoudl be able to get a list of "Operations" that is 
+	// supported by the engine.
 }

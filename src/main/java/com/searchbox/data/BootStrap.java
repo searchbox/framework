@@ -15,13 +15,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.app.domain.CollectionDefinition;
+import com.searchbox.app.domain.DefinitionAttribute;
 import com.searchbox.app.domain.FieldDefinition;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.PresetFieldAttributeDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
+import com.searchbox.app.domain.SearchEngineDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.CollectionDefinitionRepository;
 import com.searchbox.app.repository.SearchboxRepository;
+import com.searchbox.core.engine.solr.EmbeddedSolr;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
@@ -66,6 +69,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The base Searchbox.
 		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
+		
+		//The embedded Solr SearchEngine
+		SearchEngineDefinition engine = new SearchEngineDefinition("embedded Solr",
+				EmbeddedSolr.class);
+		engine.setAttributeValue("coreName", "xoxoxox");
+		engine.setAttributeValue("solrHome", "xoxoxox");
+		engine.setAttributeValue("solrConfig", "xoxoxox");
+		engine.setAttributeValue("solrSchema", "xoxoxox");
+		engine.setAttributeValue("dataDir", "xoxoxox");
 		
 		//The base collection for searchbox
 		CollectionDefinition collection = new CollectionDefinition("pubmed");
