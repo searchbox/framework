@@ -1,5 +1,7 @@
 package com.searchbox.app.domain;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.core.dm.Preset;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.ref.ReflectionUtils;
 
 @Entity
@@ -49,6 +53,41 @@ public class DefinitionClass {
 		this.clazz = clazz;
 		this.attributes = new ArrayList<DefinitionAttribute>();
 		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
+	}
+	
+	protected Object toObject(){
+		Object element = null;
+		try {
+			element = this.getClazz().newInstance();
+		} catch (Exception e) {
+			logger.error("Could not create new instance of: " + this.getClazz(),e);
+			throw new RuntimeException("Could not construct element for class: " + getClazz());
+		}
+		
+		for(DefinitionAttribute attribute:this.getAttributes()){
+			if(attribute.getValue() != null){
+				Method setter = null;
+				try {
+					setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
+					if(setter == null){
+						logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
+						throw new RuntimeException("Could not construct element for class: " + getClazz());
+					} else {
+						setter.invoke(element, attribute.getValue());
+					}
+				} catch (Exception e) {
+					logger.error("Could not find setter: " + element.getClass().getName()+
+							"#"+attribute.getName()+"["+attribute.getType().getName()+"]");
+					logger.error("Attribute Value is: " + attribute.getValue());
+					logger.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
+					if(setter != null){
+						logger.error("\tsetter args: " + setter.getParameterTypes()[0].getName());
+					}
+					throw new RuntimeException("Could not construct element for class: " + getClazz());
+				}
+			}
+		}
+		return element;
 	}
 	
 	public long getId() {

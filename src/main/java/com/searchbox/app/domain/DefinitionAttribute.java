@@ -94,7 +94,11 @@ public class DefinitionAttribute {
 	}
 
 	public void setValue(Object value) {
+		try {
 		this.valueAsByteArray = SerializationUtils
 				.serialize((Serializable) value);
+		} catch (Exception e){
+			logger.error("Could not serialize value: " + this, e);
+		}
 	}
 }

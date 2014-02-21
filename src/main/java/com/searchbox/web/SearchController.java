@@ -78,7 +78,7 @@ public class SearchController {
 		if(searchbox != null){
 			for (PresetDefinition pdef : presetDefinitionRepository
 					.findAllBySearchbox(searchbox)) {
-				presets.add(pdef.toPreset(new Preset()));
+				presets.add(pdef.toPreset());
 			}
 		}
 		return presets;
@@ -130,13 +130,11 @@ public class SearchController {
 		SearchResult result = new SearchResult();
 
 		// Build the Preset DTO with dependancies
-		Preset preset = presetDefinition.toPreset(new Preset());
+		Preset preset = presetDefinition.toPreset();
 		for (SearchElementDefinition elementdefinition : presetDefinition
 				.getSearchElements()) {
 			try {
-				SearchElement searchElement = elementdefinition.toElement(
-						preset, (SearchElement) elementdefinition.getClazz()
-								.newInstance());
+				SearchElement searchElement = elementdefinition.toElement();
 				if (CachedContent.class.isAssignableFrom(searchElement
 						.getClass())) {
 					Integer hash = ((CachedContent) searchElement)

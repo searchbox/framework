@@ -187,7 +187,8 @@ public class PresetDefinition {
 		this.position = position;
 	}
 
-	public Preset toPreset(Preset preset){
+	public Preset toPreset(){
+		Preset preset = new Preset();
 		BeanUtils.copyProperties(this, preset);
 		return preset;
 	}

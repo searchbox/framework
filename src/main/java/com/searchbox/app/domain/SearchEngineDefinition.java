@@ -15,6 +15,7 @@ import javax.persistence.Version;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.ref.ReflectionUtils;
 
 @Entity
@@ -26,6 +27,11 @@ public class SearchEngineDefinition extends DefinitionClass{
 	
 	public SearchEngineDefinition(){
 		super();
+	}
+	
+	public AbstractSearchEngine toEngine(){
+		AbstractSearchEngine engine = (AbstractSearchEngine) super.toObject();
+		return engine;
 	}
 	
 	public SearchEngineDefinition(String name, Class<?> searchEngineClass){

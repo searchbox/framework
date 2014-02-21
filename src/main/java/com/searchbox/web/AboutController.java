@@ -30,7 +30,7 @@ public class AboutController {
 		List<Preset> presets = new ArrayList<Preset>();
 		Preset currentPreset = null;
 		for(PresetDefinition pdef:searchbox.getPresets()){
-			Preset pset = pdef.toPreset(new Preset());
+			Preset pset = pdef.toPreset();
 			presets.add(pset);
 		}
 		

@@ -57,40 +57,11 @@ public class SearchElementDefinition extends DefinitionClass
 		this.preset = preset;
 	}
 
-	public SearchElement toElement(Preset preset, SearchElement element){
-		try {
-			element.setPosition(this.getPosition());
-			element.setDefinitionId(this.getId());
-			for(DefinitionAttribute attribute:this.getAttributes()){
-				if(attribute.getValue() != null){
-					Method setter = null;
-					try {
-						setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
-						if(setter == null){
-							logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
-						} else {
-							setter.invoke(element, attribute.getValue());
-						}
-	//					Field field = ReflectionUtils.findUnderlying(clazz, attribute.getName());
-	//					field.setAccessible(true);
-	//					field.set(element, attribute.getValue());
-					} catch (Exception e) {
-						logger.error("Could not find setter: " + element.getClass().getName()+
-								"#"+attribute.getName()+"["+attribute.getType().getName()+"]");
-						logger.error("Attribute Value is: " + attribute.getValue());
-						logger.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
-						if(setter != null){
-							logger.error("\tsetter args: " + 
-								setter.getParameterTypes()[0].getName());
-						}
-					}
-				}
-			}
-			return element;
-		} catch (Exception e){
-			logger.error("Could not get Element for class: " + getClazz(), e);
-		}
-		throw new RuntimeException("Could not construct element for class: " + getClazz());
+	public SearchElement toElement(){
+		SearchElement element = (SearchElement) super.toObject();
+		element.setPosition(this.getPosition());
+		element.setDefinitionId(this.getId());
+		return element;
 	}
 	
 	
