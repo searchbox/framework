@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,16 +37,12 @@ import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
-import com.searchbox.service.SearchEngineService;
 import com.searchbox.service.SearchService;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
-	Logger logger = LoggerFactory.getLogger(BootStrap.class);
-	
-	@Autowired
-	private SearchEngineService searchEngineService;
+	private static Logger logger = LoggerFactory.getLogger(BootStrap.class);
 	
 	@Autowired
 	private ApplicationContext context;
@@ -86,14 +83,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The embedded Solr SearchEngine
 		logger.info("++ Creating Embedded Solr Engine");
-		SearchEngineDefinition engine = new SearchEngineDefinition("embedded Solr",
-				EmbeddedSolr.class);
-		engine.setAttributeValue("coreName", "pubmed");
-		engine.setAttributeValue("solrHome", "classpath:META-INF/solr/");
-		engine.setAttributeValue("solrConfig", "classpath:META-INF/solr/conf/solrconfig.xml");
-		engine.setAttributeValue("solrSchema", "classpath:META-INF/solr/conf/schema.xml");
-		engine.setAttributeValue("dataDir", "target/data/pubmed/");
-		engineRepository.save(engine);
+		try {
+			SearchEngineDefinition engine = new SearchEngineDefinition("embedded Solr",
+					EmbeddedSolr.class);
+			engine.setAttributeValue("coreName", "pubmed");
+			engine.setAttributeValue("solrHome",context.getResource("classpath:META-INF/solr/").getURL().getPath());
+			engine.setAttributeValue("solrConfig",context.getResource("classpath:META-INF/solr/conf/solrconfig.xml").getURL().getPath());
+			engine.setAttributeValue("solrSchema",context.getResource("classpath:META-INF/solr/conf/schema.xml").getURL().getPath());
+			engine.setAttributeValue("dataDir", "target/data/pubmed/");
+			engineRepository.save(engine);
+		} catch (Exception e){
+			logger.error("Could not set definition for SolrEmbededServer",e);
+		}
 		
 		//The base collection for searchbox
 		logger.info("++ Creating pubmed Collection");
@@ -202,11 +203,44 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("Starting all your engine");
 		//TODO check for lazyload or not ;)
 		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		
 		while(engineDefinitions.hasNext()){
 			SearchEngineDefinition engineDefinition = engineDefinitions.next();
 			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
 			searchService.load(engineDefinition);
 		}
+		
+		//THis is to wait till engines are loaded. 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		logger.info("****************************************************");
+		logger.info("*                  Welcome                         *");
+		logger.info("****************************************************");
+		logger.info("*                                                  *");
+		logger.info("*   __                     _     _                 *");
+		logger.info("*  / _\\ ___  __ _ _ __ ___| |__ | |__   _____  __  *");
+		logger.info("*  \\ \\ / _ \\/ _` | '__/ __| '_ \\| '_ \\ / _ \\ \\/ /  *");
+		logger.info("*  _\\ \\  __/ (_| | | | (__| | | | |_) | (_) >  <   *");
+		logger.info("*  \\__/\\___|\\__,_|_|  \\___|_| |_|_.__/ \\___/_/\\_\\  *");
+		logger.info("*                                                  *");
+		logger.info("*                                                  *");
+		logger.info("****************************************************");
+		logger.info("*                                                  *");
+		logger.info("****************************************************");
+		logger.info("*                                                  *");
+		logger.info("*  Your searchbox is running in DEMO mode and      *");
+		logger.info("*  sample data from the PUBMED directory has been  *");
+		logger.info("*  automatically added.                            *");
+		logger.info("*                                                  *");
+		logger.info("*  visit: http://localhost:8080/searchbox          *");
+		logger.info("*  admin: http://localhost:8080/searchbox/admin    *");
+		logger.info("*                                                  *");
+		logger.info("****************************************************");
 	}
 
 	// private void setSettings() {
