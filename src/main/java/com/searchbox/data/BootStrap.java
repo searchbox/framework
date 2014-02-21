@@ -207,14 +207,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 			searchService.load(engineDefinition);
 		}
 		
-		//THis is to wait till engines are loaded. 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		logger.info("****************************************************");
 		logger.info("*                  Welcome                         *");
 		logger.info("****************************************************");
