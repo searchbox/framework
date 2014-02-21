@@ -12,7 +12,9 @@ import com.searchbox.core.search.SearchElement;
 
 public interface SearchEngine {
 
-	public Class getQueryClass();
+	public Class<?> getQueryClass();
+	
+	public Boolean isLoaded();
 	
 	public List<SearchElement> executeSearch(Preset preset, List<SearchCondition> conditions);
 	

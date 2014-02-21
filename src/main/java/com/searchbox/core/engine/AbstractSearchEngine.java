@@ -20,6 +20,8 @@ public abstract class AbstractSearchEngine<K> implements SearchEngine {
 	
 	protected Class<K> queryClass;
 	
+	private Boolean isLoaded = false;
+	
 	protected AbstractSearchEngine(Class<K> queryClass){
 		this.queryClass = queryClass;
 	}
@@ -32,6 +34,15 @@ public abstract class AbstractSearchEngine<K> implements SearchEngine {
 	@Override
 	public Class getQueryClass() {
 		return this.queryClass;
+	}
+	
+	@Override
+	public Boolean isLoaded(){
+		return this.isLoaded;
+	}
+	
+	protected void lodaed(){
+		this.isLoaded = true;
 	}
 	
 	public K getQueryObject(){
