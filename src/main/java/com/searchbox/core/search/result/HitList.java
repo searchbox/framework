@@ -85,6 +85,11 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	
 	public class Hit extends ValueElement  {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6419221783189375788L;
+		
 		public Map<String, Object> fieldValues;
 		private Float score;
 		
@@ -106,6 +111,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 			this.fieldValues.put(name, value);
 		}
 		
+		@SuppressWarnings("unchecked")
 		public String getTitle(){
 			Object title = this.fieldValues.get(titleField);
 			if(List.class.isAssignableFrom(title.getClass())){
@@ -115,6 +121,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 			}
 		}
 		
+		@SuppressWarnings("unchecked")
 		public String getUrl(){
 			Object url = this.fieldValues.get(urlField);
 			if(List.class.isAssignableFrom(url.getClass())){
@@ -167,7 +174,6 @@ class HitListAdapter implements SolrElementAdapter<HitList> {
 			SolrDocument document = documents.next();
 			HitList.Hit hit = element.newHit((Float) document.get("score"));
 			for(String field:document.getFieldNames()){
-				Object value = document.get(field);
 				hit.addFieldValue(field, document.get(field));
 			}
 		}

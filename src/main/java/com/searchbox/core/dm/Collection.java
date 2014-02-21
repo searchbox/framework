@@ -14,7 +14,7 @@ public class Collection {
      */
 	private String name;
 
-	private SearchEngine engine;
+	private SearchEngine<?, ?> engine;
 
 	private List<Field> fields = new ArrayList<Field>();
 
@@ -22,7 +22,7 @@ public class Collection {
 		this.name = name;
 	}
 
-	public Collection(String name, SearchEngine engine) {
+	public Collection(String name, SearchEngine<?, ?> engine) {
 		this.name = name;
 		this.engine = engine;
 	}
@@ -39,11 +39,11 @@ public class Collection {
         this.name = name;
     }
 
-	public SearchEngine getEngine() {
+	public SearchEngine<?, ?> getEngine() {
         return this.engine;
     }
 
-	public void setEngine(SearchEngine engine) {
+	public void setEngine(SearchEngine<?, ?> engine) {
         this.engine = engine;
     }
 

@@ -7,8 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.params.DisMaxParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
@@ -90,7 +88,6 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 class SimpleQuerySolrAdaptor implements SolrConditionAdapter<EdismaxQuery.Condition>,
 	SolrElementAdapter<EdismaxQuery> {
 
-	private static Logger logger = LoggerFactory.getLogger(SimpleQuerySolrAdaptor.class);
 	@Override
 	public SolrQuery doAdapt(Preset preset, EdismaxQuery SearchElement,
 			SolrQuery query) {

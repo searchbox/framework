@@ -11,13 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.app.domain.CollectionDefinition;
-import com.searchbox.app.domain.DefinitionAttribute;
 import com.searchbox.app.domain.FieldDefinition;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.PresetFieldAttributeDefinition;
@@ -314,27 +311,4 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	// searchCategory.persist();
 
 	// }
-
-	public static void main(String... args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext(
-				"classpath*:META-INF/spring/applicationContext.xml");
-		
-//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-//		System.out.println("List: " + Searchbox.findAllSearchboxes());
-//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-//		Searchbox sb = Searchbox.findAllSearchboxes().get(0);
-//		System.out.println("Searchbox: " + sb);
-//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-//		System.out.println("Searchbox: " + sb.getPresets());
-//		System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOX\nXOXOXOXOXOXOXOXOXOXOXOXOX");
-//
-//		for(PresetDefinition pdef:sb.getPresets()){
-//			Preset preset = pdef.getElement();
-//			System.out.println("Preset: " + preset.getSlug());
-//			for(SearchElement element:preset.getSearchElements()){
-//				System.out.println("\tElement: " + element.getType()+"\t"+element.getLabel());
-//			}
-//		}
-	}
-
 }

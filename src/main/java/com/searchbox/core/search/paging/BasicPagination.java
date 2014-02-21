@@ -2,8 +2,6 @@ package com.searchbox.core.search.paging;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.searchbox.anno.SearchAdaptor;
 import com.searchbox.anno.SearchComponent;
@@ -58,6 +56,11 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	}
 
 	public class Page extends ConditionalValueElement<PageCondition>{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4978333478047395794L;
 
 		Integer start;
 		
@@ -127,8 +130,6 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 @SearchAdaptor
 class BasicPaginationAdaptor implements SolrConditionAdapter<BasicPagination.PageCondition>,
 	SolrElementAdapter<BasicPagination> {
-
-	private static Logger logger = LoggerFactory.getLogger(BasicPaginationAdaptor.class);
 
 	@Override
 	public SolrQuery doAdapt(Preset preset, BasicPagination searchElement,

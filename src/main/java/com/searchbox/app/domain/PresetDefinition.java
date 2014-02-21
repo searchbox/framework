@@ -17,8 +17,7 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 
@@ -29,8 +28,6 @@ import com.searchbox.core.search.result.HitList;
 
 @Entity
 public class PresetDefinition {
-
-	private static Logger logger = LoggerFactory.getLogger(PresetDefinition.class);
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)

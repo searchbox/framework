@@ -2,15 +2,9 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
-
-import com.searchbox.core.dm.Collection;
-import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 
-public interface SearchEngine<Q,R> {
+public interface SearchEngine<Q extends Object,R> {
 
 	public Class<Q> getQueryClass();
 	

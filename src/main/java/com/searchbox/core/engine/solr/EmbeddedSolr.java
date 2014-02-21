@@ -1,10 +1,7 @@
 package com.searchbox.core.engine.solr;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -12,8 +9,6 @@ import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrConfig;
@@ -21,18 +16,11 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.schema.IndexSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
 
 import com.searchbox.anno.SearchAttribute;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.AbstractSearchEngine;
-import com.searchbox.core.search.SearchCondition;
-import com.searchbox.core.search.SearchElement;
-import com.searchbox.data.BootStrap;
 
 @Configurable
 public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> {
@@ -152,5 +140,10 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 
 	public void setSolrHome(String solrHome) {
 		this.solrHome = solrHome;
+	}
+	
+	@Deprecated
+	public SolrServer getServer(){
+		return this.server;
 	}
 }

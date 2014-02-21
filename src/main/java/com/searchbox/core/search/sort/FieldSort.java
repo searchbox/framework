@@ -34,6 +34,11 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	public static class Value extends ConditionalValueElement<FieldSort.Condition>
 		implements Serializable {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -230559535275452676L;
+		
 		public String fieldName;
 		public Sort sort;
 		public Boolean selected;

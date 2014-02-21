@@ -45,7 +45,7 @@ public class DefinitionAttribute {
 		this.name = name;
 	}
 
-	public DefinitionAttribute(String string, Object value) {
+	public DefinitionAttribute(String name, Object value) {
 		this.name = name;
 		this.setValue(value);
 		this.type = value.getClass();

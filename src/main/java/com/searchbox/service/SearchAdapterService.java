@@ -39,6 +39,7 @@ public class SearchAdapterService implements ApplicationListener<ContextRefreshe
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		
 		this.elementAdapters = new HashMap<Class<?>, SearchElementAdapter<?,SolrQuery, SolrResponse>>();
@@ -60,11 +61,11 @@ public class SearchAdapterService implements ApplicationListener<ContextRefreshe
 		}
 	}
 	
-	public SearchElementAdapter getAdapter(SearchElement element){
+	public SearchElementAdapter<?, ?, ?> getAdapter(SearchElement element){
 		return this.elementAdapters.get(element.getClass());
 	}
 	
-	public SearchConditionAdapter getAdapter(SearchCondition condition){
+	public SearchConditionAdapter<?, ?> getAdapter(SearchCondition condition){
 //		logger.info("Fetching adaptor for: " + condition.getClass());
 //		logger.info("Adaptor exists: " + condition.getClass());
 		

@@ -19,8 +19,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.ref.ReflectionUtils;
 
 @Entity

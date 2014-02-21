@@ -161,17 +161,17 @@ public class ApplicationConversionService  {
             }
         });
 		
-		conversionService.addConverter(new Converter<Class, String>(){
+		conversionService.addConverter(new Converter<Class<?>, String>(){
 			@Override
-			public String convert(Class source) {
+			public String convert(Class<?> source) {
 				return source.getName();
 			}
 		});
 		
-		conversionService.addConverter(new Converter<String, Class>(){
+		conversionService.addConverter(new Converter<String, Class<?>>(){
 
 			@Override
-			public Class convert(String source) {
+			public Class<?> convert(String source) {
 				try {
 					//TODO Such a bad hack...
 					if(source.contains("class")){

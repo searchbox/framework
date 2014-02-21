@@ -28,7 +28,6 @@ public class AboutController {
 		Searchbox searchbox = searchboxRepository.findAll().iterator().next();
 
 		List<Preset> presets = new ArrayList<Preset>();
-		Preset currentPreset = null;
 		for(PresetDefinition pdef:searchbox.getPresets()){
 			Preset pset = pdef.toPreset();
 			presets.add(pset);

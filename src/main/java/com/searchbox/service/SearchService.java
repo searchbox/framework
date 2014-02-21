@@ -3,8 +3,7 @@ package com.searchbox.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
+import org.apache.solr.client.solrj.SolrServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.engine.solr.EmbeddedSolr;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
@@ -31,6 +31,7 @@ public class SearchService {
 	@Autowired
 	private SearchAdapterService adapterService;
 	
+	@SuppressWarnings("rawtypes")
 	private SearchEngine engine;
 	
 	public SearchService() {
@@ -39,10 +40,12 @@ public class SearchService {
 	public void load(SearchEngineDefinition engineDefinition) {
 		//TODO Register searchEngine in hashmap and start it.
 		engine = engineDefinition.toEngine();
-		Thread engineThread = new Thread((AbstractSearchEngine<?,?>)engine);
-		engineThread.start();		
+		((AbstractSearchEngine<?,?>)engine).run();
+		//Thread engineThread = new Thread((AbstractSearchEngine<?,?>)engine);
+		//engineThread.start();		
 	}
 
+	@SuppressWarnings("rawtypes")
 	public List<SearchElement> execute(Preset preset, List<SearchCondition> conditions) {
 		
 		List<SearchCondition> presetConditions = new ArrayList<SearchCondition>();
@@ -122,5 +125,10 @@ public class SearchService {
 		logger.debug("we got: " + elements.size() + " elements");
 
 		return elements;
+	}
+
+	@Deprecated
+	public SolrServer getServer() {
+		return ((EmbeddedSolr)this.engine).getServer();
 	}
 }

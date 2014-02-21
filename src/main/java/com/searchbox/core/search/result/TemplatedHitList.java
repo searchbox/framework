@@ -1,16 +1,12 @@
 package com.searchbox.core.search.result;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.searchbox.anno.SearchAdaptor;
@@ -28,9 +24,7 @@ public class TemplatedHitList extends HitList implements CachedContent {
 	
 	@Autowired
 	DirectoryService directoryService;
-	
-	private static Logger logger = LoggerFactory.getLogger(TemplatedHitList.class);
-	
+		
 	protected List<String> fields;
 	
 	@SearchAttribute
@@ -104,7 +98,6 @@ class TemplatedHitListAdapter implements SolrElementAdapter<TemplatedHitList> {
 			SolrDocument document = documents.next();
 			Hit hit = element.newHit((Float) document.get("score"));
 			for(String field:document.getFieldNames()){
-				Object value = document.get(field);
 				hit.addFieldValue(field, document.get(field));
 			}
 		}

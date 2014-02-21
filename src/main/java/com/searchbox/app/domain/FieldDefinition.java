@@ -2,12 +2,7 @@ package com.searchbox.app.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
 import com.searchbox.core.dm.Field;
 
@@ -17,7 +12,7 @@ public class FieldDefinition extends DefinitionClass{
 	public FieldDefinition() {
 	}
 		
-	public FieldDefinition(Class clazz, String key) {
+	public FieldDefinition(Class<?> clazz, String key) {
 		super(key, clazz);
 	}
 	

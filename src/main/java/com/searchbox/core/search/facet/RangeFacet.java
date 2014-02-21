@@ -43,18 +43,23 @@ public class RangeFacet extends
 
 	public class Value extends ValueElement {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 9161435550332928573L;
+		
 		private String value;
 		private Integer count;
 
 		public Value(String label, String value, Integer count) {
 			super(label);
-			this.value = value;
+			this.setValue(value);
 			this.count = count;
 		}
 
 		public Value(String label, String value) {
 			super(label);
-			this.value = value;
+			this.setValue(value);
 		}
 
 		public Integer getCount() {
@@ -65,6 +70,14 @@ public class RangeFacet extends
 		public int compareTo(ValueElement other) {
 			// TODO Auto-generated method stub
 			return 0;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
 		}
 
 	}

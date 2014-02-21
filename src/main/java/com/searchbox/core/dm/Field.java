@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Field {
 
-	private Class clazz;
+	private Class<?> clazz;
 	/**
      */
 	private String key;
@@ -17,7 +17,7 @@ public class Field {
 		
 	private Boolean multivalue = false;
 
-	public Field(Class clazz, String key) {
+	public Field(Class<?> clazz, String key) {
 		this.clazz = clazz;
 		this.key = key;
 	}
@@ -29,6 +29,14 @@ public class Field {
 	public void setKey(String key) {
         this.key = key;
     }
+
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
 
 	public Boolean getMultivalue() {
         return this.multivalue;

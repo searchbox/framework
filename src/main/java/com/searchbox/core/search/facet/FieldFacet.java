@@ -61,6 +61,11 @@ public class FieldFacet
 
 	public class Value extends ConditionalValueElement<FieldFacet.ValueCondition>{
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5020007167116586645L;
+		
 		public String value;
 		public Integer count;
 		public Boolean selected = false;

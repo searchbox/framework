@@ -1,27 +1,19 @@
 package com.searchbox.app.domain;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 
 @Entity
 @Configurable
 public class SearchElementDefinition extends DefinitionClass
  implements Comparable<SearchElementDefinition> {
-
-	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinition.class);
 	
 	private Integer position;
 
