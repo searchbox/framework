@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
-public abstract class AbstractSearchEngine<K> implements SearchEngine {
+public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>, Runnable {
 	
 	@Autowired
 	private ApplicationContext context;
@@ -18,22 +18,30 @@ public abstract class AbstractSearchEngine<K> implements SearchEngine {
 	
 	protected String description;
 	
-	protected Class<K> queryClass;
+	protected Class<Q> queryClass;
+	protected Class<R> responseClass;
 	
 	private Boolean isLoaded = false;
 	
-	protected AbstractSearchEngine(Class<K> queryClass){
+	protected AbstractSearchEngine(Class<Q> queryClass, Class<R> responseClass){
 		this.queryClass = queryClass;
+		this.responseClass = responseClass;
 	}
 	
-	protected AbstractSearchEngine(String name, Class<K> queryClass){
+	protected AbstractSearchEngine(String name, Class<Q> queryClass, Class<R> responseClass){
 		this.name = name;
 		this.queryClass = queryClass;
+		this.responseClass = responseClass;
 	}
 	
 	@Override
-	public Class getQueryClass() {
+	public Class<Q> getQueryClass() {
 		return this.queryClass;
+	}
+	
+	@Override
+	public Class<R> getResponseClass() {
+		return this.responseClass;
 	}
 	
 	@Override
@@ -45,7 +53,8 @@ public abstract class AbstractSearchEngine<K> implements SearchEngine {
 		this.isLoaded = true;
 	}
 	
-	public K getQueryObject(){
+	@Override
+	public Q newQuery(){
 		try {
 			return queryClass.newInstance();
 		} catch (InstantiationException e) {
@@ -85,7 +94,11 @@ public abstract class AbstractSearchEngine<K> implements SearchEngine {
 		this.description = description;
 	}
 
-	public void setQueryClass(Class<K> queryClass) {
+	public void setQueryClass(Class<Q> queryClass) {
 		this.queryClass = queryClass;
+	}
+
+	protected void setResponseClass(Class<R> responseClass) {
+		this.responseClass = responseClass;
 	}
 }

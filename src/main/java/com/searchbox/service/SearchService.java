@@ -14,6 +14,8 @@ import com.searchbox.app.domain.SearchEngineDefinition;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
 import com.searchbox.core.dm.Preset;
+import com.searchbox.core.engine.AbstractSearchEngine;
+import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
@@ -29,16 +31,16 @@ public class SearchService {
 	@Autowired
 	private SearchAdapterService adapterService;
 	
-	@Autowired
-	private SearchEngineService searchEngineService;
+	private SearchEngine engine;
 	
 	public SearchService() {
 	}
 	
 	public void load(SearchEngineDefinition engineDefinition) {
 		//TODO Register searchEngine in hashmap and start it.
-//		SearchEngine engine = engineDefinition.
-		
+		engine = engineDefinition.toEngine();
+		Thread engineThread = new Thread((AbstractSearchEngine<?,?>)engine);
+		engineThread.start();		
 	}
 
 	public List<SearchElement> execute(Preset preset, List<SearchCondition> conditions) {
@@ -47,7 +49,7 @@ public class SearchService {
 		List<SearchElement> elements = new ArrayList<SearchElement>();
 		
 		//TODO we have to get this from the preset's collection
-		SolrQuery query = new SolrQuery();
+		Object query = this.engine.newQuery();
 		
 		for(SearchElement element:preset.getSearchElements()){
 			
@@ -85,10 +87,10 @@ public class SearchService {
 		}
 				
 		//Executing the query on the search engine!!! 
-		SolrResponse result = null;
+		Object result = null;
 		try {
-			logger.debug("Using: " + this.searchEngineService.server);
-			result = this.searchEngineService.getResponse(query);
+			logger.debug("Using: " + this.engine);
+			result = this.engine.execute(query);
 		} catch (Exception e) {
 			SearchElement error = new SearchError(e.getMessage(), e);
 			logger.debug("Adding search element: " + error);
@@ -105,7 +107,7 @@ public class SearchService {
 			if(elementAdaptor != null){
 				logger.debug("Adapting element from Preset: " + element + " for response");
 				//TODO the casting here is because we only suport Solr now.
-				elementAdaptor.doAdapt(preset, element, query, (SolrResponse) result);
+				elementAdaptor.doAdapt(preset, element, query, result);
 			}
 			
 			if(SearchConditionToElementMerger.class.isAssignableFrom(element.getClass())){

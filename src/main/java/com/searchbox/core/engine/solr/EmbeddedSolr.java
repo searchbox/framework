@@ -1,17 +1,44 @@
 package com.searchbox.core.engine.solr;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrResponse;
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
+import org.apache.solr.common.util.ContentStreamBase;
+import org.apache.solr.core.CoreContainer;
+import org.apache.solr.core.CoreDescriptor;
+import org.apache.solr.core.SolrConfig;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.schema.IndexSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.xml.sax.InputSource;
 
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
+import com.searchbox.data.BootStrap;
 
-public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery> {
-
+@Configurable
+public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> {
+	
+	private static Logger logger = LoggerFactory.getLogger(EmbeddedSolr.class);
+	
 	@SearchAttribute
 	private String solrHome;
 	
@@ -27,16 +54,64 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery> {
 	@SearchAttribute
 	private String coreName;
 	
-	EmbeddedSolr(String name, String solrHome) {
-		super(name, SolrQuery.class);
+	private SolrServer server; 
+	
+	public EmbeddedSolr(){
+		super(SolrQuery.class, SolrResponse.class);
+	}
+	
+	public EmbeddedSolr(String name, String solrHome) {
+		super(name, SolrQuery.class, SolrResponse.class);
 		this.solrHome = solrHome;
+	}
+	
+	@Override
+	public SolrResponse execute(SolrQuery query) {
+		try {
+			return this.server.query(query);
+		} catch (SolrServerException e) {
+			throw new RuntimeException("Could nexecute Query on  engine",e);
+		}
 	}
 
 	@Override
-	public List<SearchElement> executeSearch(Preset preset,
-			List<SearchCondition> conditions) {
-		// TODO Auto-generated method stub
-		return null;
+	public void run() {
+		try {
+			logger.info("Embedded solr.solr.home is: " + this.solrHome);
+		System.setProperty("solr.solr.home", this.solrHome);
+
+		CoreContainer coreContainer = new CoreContainer();
+		coreContainer.load();
+
+		String coreInstanceDir = this.solrHome;
+		SolrConfig config = new SolrConfig("solrconfig.xml", 
+				new InputSource( new FileReader(new File(this.solrConfig))));
+
+		IndexSchema schema = new IndexSchema(config, "schema.xml",
+				new InputSource( new FileReader(new File(this.solrSchema))));
+
+		File dataDir = new File(this.dataDir);
+		if(dataDir.exists()){			
+			FileUtils.deleteDirectory(dataDir);
+		}
+		
+		String dataDirName = dataDir.getPath();
+		
+		CoreDescriptor cd = new CoreDescriptor(coreContainer, coreName, coreInstanceDir);
+		SolrCore core = new SolrCore(coreName,dataDirName,config, schema, cd);
+		logger.info("Solr Core config: " + core.getConfigResource());
+		logger.info("Solr Instance dir: " + core.getIndexDir());
+		logger.info("Solr Data dir: " + core.getDataDir());
+		coreContainer.register(core, false);
+		
+		this.server = new EmbeddedSolrServer(coreContainer, "pubmed");
+		
+		} catch (Exception e){
+			throw new RuntimeException("Could not start search engine",e);
+		}
+		
+		logger.info("SolrEmdeddedServer is loaded");
+		// TODO Get the searchEngine started here.
 	}
 	
 	public String getDataDir() {
