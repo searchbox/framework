@@ -11,9 +11,9 @@
 		<aspectj.version>1.7.2</aspectj.version>
 		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<roo.version>1.2.5.RELEASE</roo.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<spring.version>4.0.1.RELEASE</spring.version>
+    <spring.version>4.0.1.RELEASE</spring.version>
+    <spring-batch.version>3.0.0.M2</spring-batch.version>
 		<lucene.version>4.6.1</lucene.version>
 		<solr.version>4.6.1</solr.version>
 	</properties>
@@ -47,6 +47,12 @@
 	</pluginRepositories>
 	<dependencies>
 	
+	  <dependency>
+        <groupId>org.springframework.batch</groupId>
+        <artifactId>spring-batch-core</artifactId>
+        <version>${spring-batch.version}</version>
+    </dependency>
+    
 		<dependency>
 			<groupId>taglibs</groupId>
 			<artifactId>string</artifactId>

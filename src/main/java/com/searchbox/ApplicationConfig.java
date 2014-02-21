@@ -1,9 +1,8 @@
 package com.searchbox;
 
-import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
-
 import javax.sql.DataSource;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -27,13 +27,18 @@ import com.searchbox.app.repository.SearchboxRepository;
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
+@EnableBatchProcessing
 @ComponentScan(basePackages = {"com.searchbox.core","com.searchbox.ref",
 		"com.searchbox.app","com.searchbox.service", "com.searchbox.data"})
 public class ApplicationConfig  {
 	
     @Bean
     public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder().setType(H2).build();
+        return new EmbeddedDatabaseBuilder()
+        		.addScript("classpath:org/springframework/batch/core/schema-drop-h2.sql")
+				.addScript("classpath:org/springframework/batch/core/schema-h2.sql")
+				.setType(EmbeddedDatabaseType.H2)
+				.build();
     }
 
     @Bean(name="entityManagerFactory")
