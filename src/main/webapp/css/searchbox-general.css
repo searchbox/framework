@@ -153,7 +153,7 @@ input:focus,textarea:focus {
   padding-right: 0px;
   padding-bottom: 40px;
   border-bottom: 1px solid #BCBCBC;
-  /*background: url("/searchbox/img/texture-white.png") repeat scroll 0 0
+  /*background: url("/img/texture-white.png") repeat scroll 0 0
 		rgba(0, 0, 0, 0);*/
   background-color: #f5f5f5;
 }
@@ -295,7 +295,7 @@ a.clear_input:hover {
 }
 
 #main-col-left .css-label {
-  background-image: url(/searchbox/img/lite-gray-check.png);
+  background-image: url(/img/lite-gray-check.png);
 }
 
 #main-col-left .facet-mobile button {
