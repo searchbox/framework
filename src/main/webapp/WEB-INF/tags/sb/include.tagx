@@ -59,7 +59,8 @@
 
 		<c:choose>
 			<c:when test="${admin or debug}">
-				<div class="panel panel-default" id="admin_${element.getClass().getSimpleName()}">
+				<div class="panel panel-default"
+					id="admin_${element.getClass().getSimpleName()}">
 					<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
 						<div class="btn-group btn-group-xs pull-right" role="toolbar">
 							<c:if test="${admin }">
@@ -72,23 +73,24 @@
 								</button>
 							</c:if>
 							<c:if test="${debug }">
-							  <c:set var="debugContent"><c:out value="${fn:replace(element,',',', ') }" /></c:set>
+								<c:set var="debugContent">
+									<c:out value="${fn:replace(element,',',', ') }" />
+								</c:set>
 								<button type="button" class="btn btn-default"
-								  id="debug_${element.getClass().getSimpleName()}"
-									data-toggle="popover"
-									title="Element data"
-									data-placement="auto"
-									data-content="${debugContent }">
-									<span class="glyphicon glyphicon-search"></span></button>
-									<script>$('#debug_${element.getClass().getSimpleName()}').popover()</script>
+									id="debug_${element.getClass().getSimpleName()}"
+									data-toggle="popover" title="Element data"
+									data-placement="auto" data-content="${debugContent }">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+								<script>$('#debug_${element.getClass().getSimpleName()}').popover()</script>
 							</c:if>
 							<c:if test="${admin }">
-                <button type="button" class="btn btn-default"
-                  data-toggle="modal" data-remote="${formUrl}"
-                  data-target="#deldef_${element.definitionId}">
-                  <span class="glyphicon glyphicon-remove"></span>
-                </button>
-              </c:if>
+								<button type="button" class="btn btn-default"
+									data-toggle="modal" data-remote="${formUrl}"
+									data-target="#deldef_${element.definitionId}">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</c:if>
 						</div>
 					</div>
 					<div class="panel-body">
@@ -101,4 +103,12 @@
 			</c:otherwise>
 		</c:choose>
 	</c:catch>
+	<c:if test="${catchException != null}">
+		<div class="panel panel-default"
+			id="error_${element.getClass().getSimpleName()}">
+			<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
+				- ERROR</div>
+			<div class="panel-body">${catchException }</div>
+		</div>
+	</c:if>
 </jsp:root>
