@@ -21,7 +21,7 @@
     value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
     var="bootstrap_js_url" />
 
-	<spring:url value="/assets/images/favicon.ico" var="favicon" />
+	<spring:url value="/img/favicon.ico" var="favicon" />
   <spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
   <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
 
