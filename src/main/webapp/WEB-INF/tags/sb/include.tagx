@@ -15,58 +15,90 @@
 		rtexprvalue="true" description="Search Result element" />
 	<jsp:directive.attribute name="admin" type="java.lang.Boolean"
 		required="false" rtexprvalue="true" description="decorate with admin" />
+	<jsp:directive.attribute name="debug" type="java.lang.Boolean"
+		required="false" rtexprvalue="true" description="decorate with debug" />
 
 	<c:catch var="catchException">
-	   <spring:url var="formUrl" value="/admin/searchElementDefinition/${element.definitionId}"/>
-	   <script>
-	   jQuery(function($) {
-		   console.log("added modal window edef_${element.definitionId}");
-		   $('body').prepend('<div class="modal fade" tabindex="-1" role="dialog" data-target="body" aria-labelledby="updateModal" aria-hidden="true" id="edef_${element.definitionId}"> <div class="modal-dialog"><div class="modal-content">loading content...</div></div></div>');
-		   $('#edef_${element.definitionId}').on('shown.bs.modal', function (e) {
-			   var form = $(this).find('form');
-			   var target = $(this).find(".modal-content");
-		         console.log(form);
-		         console.log(target);
-		        
-		     $(form).on('submit', function(event) {
-				      console.log("submiting form");
-				      $.ajax({
-				        type : form.attr('method'),
-				        url : form.attr('action'),
-				        data : form.serialize(),
-				        success : function(data, status) {
-				        	location.reload();
-				        }
-				      });
-				      event.preventDefault();
-				    });
-				  }); 
-		   }); 
-	   </script>
-    
-		<div class="panel panel-default">
-			<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
-				<div class="btn-group btn-group-xs pull-right" role="toolbar">
-					<spring:url var="formUrl"
-						value="/admin/searchElementDefinition/${element.definitionId}" />
-					<button type="button" class="btn btn-default" data-toggle="modal"
-						data-remote="${formUrl}" data-target="#edef_${element.definitionId}">
-						<span class="glyphicon glyphicon-edit"></span>
-					</button>
-					<button type="button" class="btn btn-default" data-toggle="modal"
-						data-remote="${formUrl}" data-target="#deldef_${element.definitionId}">
-						<span class="glyphicon glyphicon-remove"></span>
-					</button>
+		<c:if test="${admin }">
+			<spring:url var="formUrl"
+				value="/admin/searchElementDefinition/${element.definitionId}" />
+			<script>
+				jQuery(function($) {
+					console
+							.log("added modal window edef_${element.definitionId}");
+					$('body')
+							.prepend(
+									'<div class="modal fade" tabindex="-1" role="dialog" data-target="body" aria-labelledby="updateModal" aria-hidden="true" id="edef_${element.definitionId}"> <div class="modal-dialog"><div class="modal-content">loading content...</div></div></div>');
+					$('#edef_${element.definitionId}').on('shown.bs.modal',
+							function(e) {
+								var form = $(this).find('form');
+								var target = $(this).find(".modal-content");
+								console.log(form);
+								console.log(target);
+
+								$(form).on('submit', function(event) {
+									console.log("submiting form");
+									$.ajax({
+										type : form.attr('method'),
+										url : form.attr('action'),
+										data : form.serialize(),
+										success : function(data, status) {
+											location.reload();
+										}
+									});
+									event.preventDefault();
+								});
+							});
+				});
+			</script>
+		</c:if>
+
+		<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
+		<c:set scope="request" var="element" value="${element}" />
+		<c:set scope="request" var="result" value="${result}" />
+
+		<c:choose>
+			<c:when test="${admin or debug}">
+				<div class="panel panel-default" id="admin_${element.getClass().getSimpleName()}">
+					<div class="panel-heading">${element.getClass().getSimpleName()}:${element.label}
+						<div class="btn-group btn-group-xs pull-right" role="toolbar">
+							<c:if test="${admin }">
+								<spring:url var="formUrl"
+									value="/admin/searchElementDefinition/${element.definitionId}" />
+								<button type="button" class="btn btn-default"
+									data-toggle="modal" data-remote="${formUrl}"
+									data-target="#edef_${element.definitionId}">
+									<span class="glyphicon glyphicon-edit"></span>
+								</button>
+							</c:if>
+							<c:if test="${debug }">
+							  <c:set var="debugContent"><c:out value="${fn:replace(element,',',', ') }" /></c:set>
+								<button type="button" class="btn btn-default"
+								  id="debug_${element.getClass().getSimpleName()}"
+									data-toggle="popover"
+									title="Element data"
+									data-placement="auto"
+									data-content="${debugContent }">
+									<span class="glyphicon glyphicon-search"></span></button>
+									<script>$('#debug_${element.getClass().getSimpleName()}').popover()</script>
+							</c:if>
+							<c:if test="${admin }">
+                <button type="button" class="btn btn-default"
+                  data-toggle="modal" data-remote="${formUrl}"
+                  data-target="#deldef_${element.definitionId}">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </c:if>
+						</div>
+					</div>
+					<div class="panel-body">
+						<jsp:include page="${elementInset}" />
+					</div>
 				</div>
-			</div>
-			<div class="panel-body">
-				<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
-				<c:set scope="request" var="element" value="${element}" />
-				<c:set scope="request" var="result" value="${result}" />
+			</c:when>
+			<c:otherwise>
 				<jsp:include page="${elementInset}" />
-			</div>
-		</div>
+			</c:otherwise>
+		</c:choose>
 	</c:catch>
-
-
 </jsp:root>

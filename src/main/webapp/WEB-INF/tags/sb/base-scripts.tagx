@@ -4,19 +4,22 @@
 	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 
 	<jsp:output omit-xml-declaration="yes" />
+	
+  <c:set var="bootstrapVersion" value="3.1.1"/>
+  <c:set var="jqueryVersion" value="2.0.3"/>
 
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
 		var="bootstrap_css_url" />
 	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"
+		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap-theme.min.css"
 		var="bootstrap_theme_css_url" />
 	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"
+		value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
 		var="jquery_url" />
-	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"
-		var="bootstrap_js_url" />
+  <spring:url
+    value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
+    var="bootstrap_js_url" />
 
 	<spring:url value="/assets/images/favicon.ico" var="favicon" />
   <spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />

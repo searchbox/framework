@@ -3,10 +3,15 @@ package com.searchbox.web.admin;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.searchbox.app.domain.PresetDefinition;
+import com.searchbox.app.domain.Searchbox;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 import com.searchbox.web.SearchController;
@@ -34,4 +39,13 @@ public class AdminController extends SearchController {
 	public List<Sort> getReferenceSort() {
 		return Arrays.asList(Sort.values());
 	}
+	
+	@Override
+	protected ModelAndView executeSearch(Searchbox searchbox,
+			PresetDefinition presetDefinition, HttpServletRequest request,
+			ModelAndView model) {
+		model.addObject("presetDefinition", presetDefinition);
+		return super.executeSearch(searchbox, presetDefinition, request, model);
+	}
+
 }

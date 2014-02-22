@@ -13,7 +13,7 @@
       data-toggle="dropdown"> ${element.label} <span class="caret"><!-- empty --></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <c:forEach items="${element.values}" var="facetValue" varStatus="i">
+      <c:forEach items="${element.values}" var="facetValue">
           <li><a href="#">${facetValue.value} (${facetValue.count}) <span class="glyphicon glyphicon-ok"><!-- empty --></span></a></li>
         </c:forEach>
     </ul>
@@ -25,8 +25,7 @@
     </div>
     <div class="panel-body">
       <ul class="list-group facet-list">
-        <c:forEach items="${element.values}" var="facetValue"
-          varStatus="i">
+        <c:forEach items="${element.values}" var="facetValue" varStatus="i">
           <li class="list-group-item"><span class="badge">${facetValue.count}</span>
 
             <c:choose>

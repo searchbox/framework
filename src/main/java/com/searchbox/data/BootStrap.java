@@ -120,7 +120,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("titleField", "article-title");
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
-		templatedHitList.setAttributeValue("template", "<a href=\"${hit.getUrl()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"+
+		templatedHitList.setAttributeValue("template", "<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"+
 														"<div>${hit.fieldValues['article-abstract']}</div>");
 		preset.addSearchElementDeifinition(templatedHitList);
 

@@ -55,8 +55,7 @@ public class SearchController {
 	SearchboxRepository searchboxRepository;
 
 	@Autowired
-	protected
-	PresetDefinitionRepository presetDefinitionRepository;
+	protected PresetDefinitionRepository presetDefinitionRepository;
 
 	public SearchController() {
 	}
@@ -73,9 +72,9 @@ public class SearchController {
 
 	@ModelAttribute("presets")
 	public List<Preset> getAllPresets(
-			@RequestParam(value="searchbox", required=false) Searchbox searchbox) {
+			@RequestParam(value = "searchbox", required = false) Searchbox searchbox) {
 		ArrayList<Preset> presets = new ArrayList<Preset>();
-		if(searchbox != null){
+		if (searchbox != null) {
 			for (PresetDefinition pdef : presetDefinitionRepository
 					.findAllBySearchbox(searchbox)) {
 				presets.add(pdef.toPreset());
@@ -96,17 +95,9 @@ public class SearchController {
 			PresetDefinition presetDefinition, HttpServletRequest request,
 			ModelAndView model) {
 
-		if (searchbox == null) {
-			model.setViewName(this.getHomeView());
-			return model;
-		} else {
-			model.setViewName(this.getIndexView());
-		}
-
-		if (presetDefinition == null) {
-			logger.info("No preset, should forward to first preset");
-			presetDefinition = searchbox.getPresets().get(0);
-		}
+		
+		model.setViewName(this.getIndexView());
+	
 
 		// Fetch all search Conditions within HTTP params
 		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
@@ -184,54 +175,57 @@ public class SearchController {
 
 	@RequestMapping("/{slug}")
 	public ModelAndView searchPreset(
-			@RequestParam(value="searchbox", required=false) Searchbox searchbox,
+			@RequestParam(value = "searchbox", required = false) Searchbox searchbox,
 			@PathVariable String slug,
 			@ModelAttribute("searchboxes") ArrayList<Searchbox> searchboxes,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
-		
-		
-		if(searchbox == null){
-			//TODO Deal with empty searchbox
+
+		if (searchbox == null) {
+			// TODO Deal with empty searchbox
 			searchbox = searchboxes.get(0);
 			redirectAttributes.addAttribute("searchbox", searchbox);
-			ModelAndView redirect = new ModelAndView(new RedirectView(slug, true));
+			ModelAndView redirect = new ModelAndView(new RedirectView(slug,
+					true));
 			return redirect;
-		}
+		} else {
+			PresetDefinition pdef = presetDefinitionRepository
+					.findPresetDefinitionBySearchboxAndSlug(searchbox, slug);
+			
+			if (pdef == null) {
 
-		PresetDefinition pdef = presetDefinitionRepository
-				.findPresetDefinitionBySearchboxAndSlug(searchbox, slug);
-
-		if(pdef == null){
-			slug = searchbox.getPresets().get(0).getSlug();			
-			redirectAttributes.addAttribute("preset", slug);
-			ModelAndView redirect = new ModelAndView(new RedirectView(slug, true));
-			return redirect;
+				slug = searchbox.getPresets().get(0).getSlug();
+				redirectAttributes.addAttribute("preset", slug);
+				ModelAndView redirect = new ModelAndView(new RedirectView(slug,
+						true));
+				return redirect;
+			} else {
+	
+				return executeSearch(searchbox, pdef, request, model);
+			}
 		}
-		
-		return executeSearch(searchbox, pdef, request, model);
 	}
 
 	@RequestMapping("/")
 	public ModelAndView search(
-			@RequestParam(value="searchbox", required=false) Searchbox searchbox,
+			@RequestParam(value = "searchbox", required = false) Searchbox searchbox,
 			@RequestParam(value = "preset", required = false) String slug,
 			@ModelAttribute("searchboxes") ArrayList<Searchbox> searchboxes,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
-		
-		if(searchbox == null){
-			//TODO Deal with empty searchbox
+
+		if (searchbox == null) {
+			// TODO Deal with empty searchbox
 			searchbox = searchboxes.get(0);
 			redirectAttributes.addAttribute("searchbox", searchbox);
 		}
-		
-		if(slug == null){
-			//TODO Deal with empty preset
-			slug = searchbox.getPresets().get(0).getSlug();			
+
+		if (slug == null) {
+			// TODO Deal with empty preset
+			slug = searchbox.getPresets().get(0).getSlug();
 			redirectAttributes.addAttribute("preset", slug);
 		}
-		
+
 		ModelAndView redirect = new ModelAndView(new RedirectView(slug, true));
 		return redirect;
 	}

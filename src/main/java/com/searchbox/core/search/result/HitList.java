@@ -112,6 +112,16 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 		}
 		
 		@SuppressWarnings("unchecked")
+		public String getId(){
+			Object id = this.fieldValues.get(idField);
+			if(List.class.isAssignableFrom(id.getClass())){
+				return ((List<String>)id).get(0);
+			} else {
+				return (String)id;
+			}
+		}
+		
+		@SuppressWarnings("unchecked")
 		public String getTitle(){
 			Object title = this.fieldValues.get(titleField);
 			if(List.class.isAssignableFrom(title.getClass())){
