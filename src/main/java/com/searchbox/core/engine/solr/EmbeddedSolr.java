@@ -95,6 +95,7 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 			coreContainer.register(core, false);
 
 			this.server = new EmbeddedSolrServer(coreContainer, "pubmed");
+			
 
 		} catch (Exception e) {
 			logger.error("Could not start search engine", e);

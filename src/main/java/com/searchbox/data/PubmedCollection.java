@@ -26,14 +26,16 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
 
-import com.searchbox.service.SearchService;
+import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.engine.solr.EmbeddedSolr;
+import com.searchbox.service.SearchEngineService;
 
-public class PubmedCollection implements ApplicationListener<ContextRefreshedEvent> {
+@Configurable
+public class PubmedCollection {
 
 	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
 	
@@ -41,7 +43,7 @@ public class PubmedCollection implements ApplicationListener<ContextRefreshedEve
 	ApplicationContext context;
 	
 	@Autowired
-	SearchService searchService;
+	SearchEngineService searchEngineService;
 
 	public ItemReader<Resource> reader() {
 		return new ItemReader<Resource>() {
@@ -77,21 +79,22 @@ public class PubmedCollection implements ApplicationListener<ContextRefreshedEve
 			@Override
 			public void write(List<? extends File> items) throws Exception {
 				for(File item:items){
-					logger.error("Indexing for pubmed: " + item.getAbsolutePath());
+					logger.info("Indexing for pubmed: " + item.getAbsolutePath());
 					ContentStreamBase contentstream = new ContentStreamBase.FileStream(item);
 					contentstream.setContentType("text/xml");
 					ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
 					request.addContentStream(contentstream);
-//					request.process(searchService.getServer());
-//					searchService.getServer().commit();
+					SearchEngine engine = searchEngineService.getSearchEngine("embedded Solr");
+					
+					request.process(((EmbeddedSolr)engine).getServer());
+					((EmbeddedSolr)engine).getServer().commit();
 				}
 			}
 		};
 		return writer;
 	}
 
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+	public void importCollection() {
 
 
 		StepBuilderFactory stepBuilderFactory = context

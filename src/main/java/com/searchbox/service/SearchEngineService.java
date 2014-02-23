@@ -49,6 +49,15 @@ public class SearchEngineService {
 	}
 	
 	public SearchEngine<?,?> getSearchEngine(String name){
-		return this.engines.get(name);
+		SearchEngine engine = this.engines.get(name);
+		while(!engine.isLoaded()){
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return engine;
 	}
 }

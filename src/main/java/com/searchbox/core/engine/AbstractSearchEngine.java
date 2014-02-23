@@ -46,7 +46,9 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	protected abstract boolean _load();
 	
 	public boolean load(){
-		return _load();
+		boolean loaded = _load();
+		this.isLoaded = true;
+		return loaded;
 	}
 	
 	@Override
