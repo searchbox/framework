@@ -1,13 +1,12 @@
 package com.searchbox.core.search.stat;
 
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 
 @SearchComponent
@@ -63,18 +62,11 @@ public class BasicSearchStats extends SearchElement {
 	}
 }
 
-@SearchAdapter
-class BasicSearchStatsAdapter implements SolrElementAdapter<BasicSearchStats>{
+@SearchAdapter(target=BasicSearchStats.class)
+class BasicSearchStatsAdapter {
 
-	@Override
-	public SolrQuery doAdapt(Preset preset,
-			BasicSearchStats searchElement, SolrQuery query) {
-		return query;
-	}
-
-	@Override
-	public BasicSearchStats doAdapt(Preset preset,
-			BasicSearchStats searchElement, SolrQuery query,
+	@SearchAdapterMethod(target=Target.POST)
+	public BasicSearchStats doAdapt(BasicSearchStats searchElement,
 			QueryResponse response) {
 		if(response.getResults() != null){
 			searchElement.setHitCount(response.getResults().getNumFound());

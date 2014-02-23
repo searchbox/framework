@@ -4,9 +4,9 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrConditionAdapter;
-import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
@@ -126,20 +126,13 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	}
 }
 
-@SearchAdapter
-class BasicPaginationAdaptor implements SolrConditionAdapter<BasicPagination.PageCondition>,
-	SolrElementAdapter<BasicPagination> {
+@SearchAdapter(target=BasicPagination.class)
+class BasicPaginationAdaptor  {
 
-	@Override
-	public SolrQuery doAdapt(Preset preset, BasicPagination searchElement,
-			SolrQuery query) {
-		return query;
-	}
-
-	@Override
-	public BasicPagination doAdapt(Preset preset,
-			BasicPagination searchElement, SolrQuery query,
-			QueryResponse response) {
+	
+	@SearchAdapterMethod(target=Target.POST)
+	public BasicPagination doAdapt(BasicPagination searchElement,
+			SolrQuery query, QueryResponse response) {
 		
 		Integer hitsPerPage = query.getRows();
 		Long numberOfHits = response.getResults().getNumFound();
@@ -159,8 +152,8 @@ class BasicPaginationAdaptor implements SolrConditionAdapter<BasicPagination.Pag
 		return searchElement;
 	}
 
-	@Override
-	public SolrQuery doAdapt(Preset preset, PageCondition condition,
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery doAdapt(PageCondition condition,
 			SolrQuery query) {
 		query.setStart(condition.start);
 		return query;

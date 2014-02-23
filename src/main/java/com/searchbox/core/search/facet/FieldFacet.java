@@ -9,7 +9,6 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 
-import com.searchbox.anno.PostSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
 import com.searchbox.anno.SearchAdapterMethod.Target;

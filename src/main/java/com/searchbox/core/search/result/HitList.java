@@ -11,10 +11,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
 import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.core.search.ValueElement;
@@ -152,11 +152,11 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	}
 }
 
-@SearchAdapter
-class HitListAdapter implements SolrElementAdapter<HitList> {
+@SearchAdapter(target=HitList.class)
+class HitListAdapter {
 
-	@Override
-	public SolrQuery doAdapt(Preset preset, HitList searchElement,
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery setRequieredFields(HitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
 			query.addField(field);
@@ -174,9 +174,8 @@ class HitListAdapter implements SolrElementAdapter<HitList> {
 		return query;
 	}
 
-	@Override
-	public HitList doAdapt(Preset preset, HitList element,
-			SolrQuery query, QueryResponse response) {
+	@SearchAdapterMethod(target=Target.POST)
+	public HitList doAdapt(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
 		while(documents.hasNext()){

@@ -9,10 +9,10 @@ import org.apache.solr.common.SolrDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.result.HitList.Hit;
 import com.searchbox.ref.StringUtils;
@@ -66,11 +66,11 @@ public class TemplatedHitList extends HitList implements CachedContent {
 	}
 }
 
-@SearchAdapter
-class TemplatedHitListAdapter implements SolrElementAdapter<TemplatedHitList> {
+@SearchAdapter(target=TemplatedHitList.class)
+class TemplatedHitListAdapter  {
 
-	@Override
-	public SolrQuery doAdapt(Preset preset, TemplatedHitList searchElement,
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery setRequieredFields(HitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
 			query.addField(field);
@@ -88,9 +88,8 @@ class TemplatedHitListAdapter implements SolrElementAdapter<TemplatedHitList> {
 		return query;
 	}
 
-	@Override
-	public TemplatedHitList doAdapt(Preset preset, TemplatedHitList element,
-			SolrQuery query, QueryResponse response) {
+	@SearchAdapterMethod(target=Target.POST)
+	public HitList doAdapt(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
 		while(documents.hasNext()){

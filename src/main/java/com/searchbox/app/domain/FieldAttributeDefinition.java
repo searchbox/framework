@@ -1,14 +1,9 @@
 package com.searchbox.app.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Version;
 
 import com.searchbox.core.dm.FieldAttribute;
 
@@ -50,6 +45,7 @@ public class FieldAttributeDefinition extends UnknownClassDefinition implements 
 	@Override
 	public FieldAttribute getInstance() {
 		FieldAttribute attribute = (FieldAttribute) super.toObject();
+		attribute.setKey(this.field.getKey());
 		return attribute;
 	}
 }

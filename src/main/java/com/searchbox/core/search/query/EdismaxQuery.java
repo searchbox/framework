@@ -1,6 +1,17 @@
 package com.searchbox.core.search.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.common.params.DisMaxParams;
+
+import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -69,45 +80,41 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	}
 }
 
-//@SearchAdapter
-//class SimpleQuerySolrAdaptor implements SolrConditionAdapter<EdismaxQuery.Condition>,
-//	SolrElementAdapter<EdismaxQuery> {
-//
-////	@Override
-////	public SolrQuery doAdapt(Preset preset, EdismaxQuery SearchElement,
-////			SolrQuery query) {
-////		
-////		query.setQuery(SearchElement.getQuery());
-////		
-////		query.setRequestHandler("edismax");
-////		query.set(DisMaxParams.ALTQ, "*:*");
-////		
-////		//fetching all searchable fields
-////		List<String> qfs = new ArrayList<String>();
-////		for(FieldAttribute fieldAttr:preset.getFieldAttributes()){
-////			if(fieldAttr.getSearchable()){
-////				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
-////				qfs.add(fieldAttr.getField().getKey()+"^"+boost);
-////			}
-////		}
-////		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
-////		return query;
-////	}
-//
-//	@Override
-//	public EdismaxQuery doAdapt(Preset preset, EdismaxQuery searchElement,
-//			SolrQuery query, QueryResponse response) {
-//		searchElement.setQuery(query.getQuery());			
-//		return searchElement;
-//	}
-//
-//	@Override
-//	public SolrQuery doAdapt(Preset preset, EdismaxQuery.Condition condition,
-//			SolrQuery query) {
-//		
-//		query.setQuery(condition.getQuery());
-//		return query;
-//	}
-//
-//}
+@SearchAdapter(target=EdismaxQuery.class)
+class SimpleQuerySolrAdaptor {
+
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery setQueryFields(EdismaxQuery SearchElement,
+			SolrQuery query, List<FieldAttribute> fieldAttributes) {
+		
+		query.setQuery(SearchElement.getQuery());
+		
+		query.setRequestHandler("edismax");
+		query.set(DisMaxParams.ALTQ, "*:*");
+		
+		//fetching all searchable fields
+		List<String> qfs = new ArrayList<String>();
+		for(FieldAttribute fieldAttr:fieldAttributes){
+			if(fieldAttr.getSearchable()){
+				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
+				qfs.add(fieldAttr.getKey()+"^"+boost);
+			}
+		}
+		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
+		return query;
+	}
+
+	@SearchAdapterMethod(target=Target.POST)
+	public EdismaxQuery udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
+		searchElement.setQuery(query.getQuery());			
+		return searchElement;
+	}
+
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
+		query.setQuery(condition.getQuery());
+		return query;
+	}
+
+}
 

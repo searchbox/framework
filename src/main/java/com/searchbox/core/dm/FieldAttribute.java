@@ -8,10 +8,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MappedSuperclass
 public class FieldAttribute {
 	
+	protected String key = "";
+	
 	protected String label = "";
 	
 	protected Boolean searchable;
-	
+
 	protected Boolean highlight;
 	
 	protected Boolean sortable;
@@ -25,6 +27,14 @@ public class FieldAttribute {
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 
 	public String getLabel() {
 		return label;
