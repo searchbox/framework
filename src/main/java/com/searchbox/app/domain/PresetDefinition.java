@@ -1,6 +1,5 @@
 package com.searchbox.app.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,12 +16,10 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
 
@@ -81,12 +78,12 @@ public class PresetDefinition {
 		fieldAttributes = new HashSet<PresetFieldAttributeDefinition>();
 	}
 
-	public PresetDefinition(Searchbox searchbox, CollectionDefinition collection) {
-		this.searchbox = searchbox;
+	public PresetDefinition(CollectionDefinition collection) {
 		this.collection = collection;
 		searchElements = new HashSet<SearchElementDefinition>();
 		fieldAttributes = new HashSet<PresetFieldAttributeDefinition>(); 
 	}
+	
 	public long getId() {
 		return id;
 	}
@@ -231,7 +228,7 @@ public class PresetDefinition {
 	}
 
 	public static PresetDefinition BasicPreset(Searchbox sb, CollectionDefinition collection){
-		PresetDefinition pdef = new PresetDefinition(sb, collection);
+		PresetDefinition pdef = new PresetDefinition(collection);
 		pdef.slug = "all";
 		pdef.label = "Basic Preset";
 		
@@ -266,28 +263,28 @@ public class PresetDefinition {
 		Searchbox sb = new Searchbox("test","testing");
 		sb.setSlug("pubmed");
 		
-		//The base collection for searchbox
-		CollectionDefinition collection = new CollectionDefinition("testCollection");
-		collection.setName("pubmed");
-		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
-		collectionFields.add(FieldDefinition.StringFieldDef("id"));
-		collectionFields.add(FieldDefinition.StringFieldDef("title"));
-		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
-		collection.setFieldDefinitions(collectionFields);
-
-		PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
-
-		pdef.slug = "search-all";
-		pdef.label = "Hello World";
-		
-		SearchElementDefinition fdef = new SearchElementDefinition("FieldFacet", FieldFacet.class);
-		fdef.setAttributeValue("fieldName", "MyField");
-		fdef.setAttributeValue("label", "Categories");
-		pdef.addSearchElementDeifinition(fdef);
-		
-		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
-		fieldAttr.setSearchable(true);
-		pdef.addFieldAttributeDefinition(fieldAttr);
+//		//The base collection for searchbox
+//		CollectionDefinition collection = new CollectionDefinition("testCollection");
+//		collection.setName("pubmed");
+//		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
+//		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+//		collectionFields.add(FieldDefinition.StringFieldDef("title"));
+//		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+//		collection.setFieldDefinitions(collectionFields);
+//
+//		PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
+//
+//		pdef.slug = "search-all";
+//		pdef.label = "Hello World";
+//		
+//		SearchElementDefinition fdef = new SearchElementDefinition("FieldFacet", FieldFacet.class);
+//		fdef.setAttributeValue("fieldName", "MyField");
+//		fdef.setAttributeValue("label", "Categories");
+//		pdef.addSearchElementDeifinition(fdef);
+//		
+//		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
+//		fieldAttr.setSearchable(true);
+//		pdef.addFieldAttributeDefinition(fieldAttr);
 		
 //		Preset elem = pdef.getElement();
 //		System.out.println("Preset label: " + elem.getLabel());

@@ -9,7 +9,7 @@ public class SearchEngineDefinition extends DefinitionClass{
 	
 	protected String description;
 	
-	protected Boolean lazyLoad = true;
+	protected Boolean lazyLoad = false;
 	
 	public SearchEngineDefinition(){
 		super();
@@ -17,6 +17,7 @@ public class SearchEngineDefinition extends DefinitionClass{
 	
 	public AbstractSearchEngine<?, ?> toEngine(){
 		AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super.toObject();
+		engine.setName(this.getName());
 		return engine;
 	}
 	

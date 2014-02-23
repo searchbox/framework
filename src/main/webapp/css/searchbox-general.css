@@ -295,7 +295,7 @@ a.clear_input:hover {
 }
 
 #main-col-left .css-label {
-  background-image: url(/img/lite-gray-check.png);
+  background-image: url(../images/lite-gray-check.png);
 }
 
 #main-col-left .facet-mobile button {

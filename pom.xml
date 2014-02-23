@@ -43,7 +43,7 @@
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.5</slf4j.version>
-		<spring.version>4.0.1.RELEASE</spring.version>
+		<spring.version>4.0.2.RELEASE</spring.version>
 		<spring-batch.version>3.0.0.M2</spring-batch.version>
 		<jetty.version>8.1.5.v20120716</jetty.version>
 		<lucene.version>4.6.1</lucene.version>

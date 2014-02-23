@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import com.searchbox.service.SearchService;
 
-@Component
 public class PubmedCollection implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
@@ -84,9 +83,8 @@ public class PubmedCollection implements ApplicationListener<ContextRefreshedEve
 					contentstream.setContentType("text/xml");
 					ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
 					request.addContentStream(contentstream);
-					request.process(searchService.getServer());
-					searchService.getServer().commit();
-					logger.info("Writing stuff for file: " + item.getAbsolutePath());					
+//					request.process(searchService.getServer());
+//					searchService.getServer().commit();
 				}
 			}
 		};

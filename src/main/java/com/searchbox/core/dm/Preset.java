@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.SearchElement;
 
 public class Preset implements Comparable<Preset> {
@@ -35,6 +36,8 @@ public class Preset implements Comparable<Preset> {
 	private Integer position;
 
 	private Collection collection;
+	
+	private SearchEngine<?,?> searchEngine;
 
 	private List<SearchElement> searchElements = new ArrayList<SearchElement>();
 	
@@ -44,12 +47,16 @@ public class Preset implements Comparable<Preset> {
 		
 	}
 	
-	public Preset(String label, Collection collection) {
-		this.label = label;
-	}
-	
 	public void addSearchElement(SearchElement element) {
 		this.searchElements.add(element);
+	}
+
+	public SearchEngine<?, ?> getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 
 	public String getSlug() {

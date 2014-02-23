@@ -6,25 +6,16 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.searchbox.core.engine.SearchEngine;
-
 public class Collection {
 
 	/**
      */
 	private String name;
 
-	private SearchEngine<?, ?> engine;
-
 	private List<Field> fields = new ArrayList<Field>();
 
 	public Collection(String name) {
 		this.name = name;
-	}
-
-	public Collection(String name, SearchEngine<?, ?> engine) {
-		this.name = name;
-		this.engine = engine;
 	}
 
 	public void addField(Field field) {
@@ -37,14 +28,6 @@ public class Collection {
 
 	public void setName(String name) {
         this.name = name;
-    }
-
-	public SearchEngine<?, ?> getEngine() {
-        return this.engine;
-    }
-
-	public void setEngine(SearchEngine<?, ?> engine) {
-        this.engine = engine;
     }
 
 	public List<Field> getFields() {

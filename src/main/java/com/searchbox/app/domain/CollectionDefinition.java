@@ -13,7 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
+import org.springframework.beans.factory.annotation.Configurable;
+
 @Entity
+@Configurable
 public class CollectionDefinition {
 	
 	@Id
@@ -29,7 +32,7 @@ public class CollectionDefinition {
 	private String name;
 
 	@ManyToOne
-	private SearchEngineDefinition engine;
+	private SearchEngineDefinition searchEngine;
 
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
@@ -37,7 +40,8 @@ public class CollectionDefinition {
 	public CollectionDefinition() {
 	}
 	
-	public CollectionDefinition(String name) {
+	public CollectionDefinition(String name, SearchEngineDefinition definition) {
+		this.searchEngine = definition;
 		this.name = name;
 	}
 	
@@ -65,12 +69,12 @@ public class CollectionDefinition {
 		this.name = name;
 	}
 
-	public SearchEngineDefinition getEngine() {
-		return engine;
+	public SearchEngineDefinition getSearchEngineDefinition() {
+		return searchEngine;
 	}
 
-	public void setEngine(SearchEngineDefinition engine) {
-		this.engine = engine;
+	public void setSearchEngineDefinition(SearchEngineDefinition engine) {
+		this.searchEngine = engine;
 	}
 
 	public List<FieldDefinition> getFieldDefinitions() {

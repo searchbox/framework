@@ -2,6 +2,8 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -9,7 +11,10 @@ import org.springframework.context.ApplicationContext;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
-public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>, Runnable {
+public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
+	
+	@SuppressWarnings("unused")
+	private static Logger logger = LoggerFactory.getLogger(AbstractSearchEngine.class);
 	
 	@Autowired
 	private ApplicationContext context;
@@ -32,6 +37,12 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>, Ru
 		this.name = name;
 		this.queryClass = queryClass;
 		this.responseClass = responseClass;
+	}
+	
+	protected abstract boolean _load();
+	
+	public boolean load(){
+		return _load();
 	}
 	
 	@Override
@@ -78,6 +89,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>, Ru
 		return true;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

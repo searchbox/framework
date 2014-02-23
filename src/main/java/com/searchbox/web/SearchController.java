@@ -157,7 +157,13 @@ public class SearchController {
 						+ fielddefinition);
 			}
 		}
-
+		
+		//Get the searchEngine Impl for preset:
+		preset.setSearchEngine(searchService
+				.getSearchEngine(presetDefinition.getCollection()
+						.getSearchEngineDefinition().getName()));
+						
+		
 		if (preset != null) {
 			for (SearchElement element : searchService.execute(preset,
 					conditions)) {

@@ -80,22 +80,23 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The embedded Solr SearchEngine
 		logger.info("++ Creating Embedded Solr Engine");
+		SearchEngineDefinition engine = null;
 		try {
-			SearchEngineDefinition engine = new SearchEngineDefinition("embedded Solr",
+			engine = new SearchEngineDefinition("embedded Solr",
 					EmbeddedSolr.class);
 			engine.setAttributeValue("coreName", "pubmed");
 			engine.setAttributeValue("solrHome",context.getResource("classpath:META-INF/solr/").getURL().getPath());
 			engine.setAttributeValue("solrConfig",context.getResource("classpath:META-INF/solr/conf/solrconfig.xml").getURL().getPath());
 			engine.setAttributeValue("solrSchema",context.getResource("classpath:META-INF/solr/conf/schema.xml").getURL().getPath());
 			engine.setAttributeValue("dataDir", "target/data/pubmed/");
-			engineRepository.save(engine);
+			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			logger.error("Could not set definition for SolrEmbededServer",e);
 		}
 		
 		//The base collection for searchbox
 		logger.info("++ Creating pubmed Collection");
-		CollectionDefinition collection = new CollectionDefinition("pubmed");
+		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);
 		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
@@ -105,7 +106,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//SearchAll preset
 		logger.info("++ Creating Search All preset");
-		PresetDefinition preset = new PresetDefinition(searchbox, collection);
+		PresetDefinition preset = new PresetDefinition(collection);
 		preset.setLabel("Search All");
 		preset.setSlug("all");
 		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("article-title"));
@@ -177,12 +178,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		searchbox.addPresetDefinition(preset);
 		
-		PresetDefinition articles = new PresetDefinition(searchbox, collection);
+		PresetDefinition articles = new PresetDefinition(collection);
 		articles.setLabel("Articles");
 		articles.setSlug("articles");
 		searchbox.addPresetDefinition(articles);
 
-		PresetDefinition press = new PresetDefinition(searchbox, collection);
+		PresetDefinition press = new PresetDefinition(collection);
 		press.setLabel("Press");
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
@@ -195,16 +196,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		logger.info("Bootstraping application with default data... done");
 
-		}
-		
-		logger.info("Starting all your engine");
-		//TODO check for lazyload or not ;)
-		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
-		
-		while(engineDefinitions.hasNext()){
-			SearchEngineDefinition engineDefinition = engineDefinitions.next();
-			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
-			searchService.load(engineDefinition);
 		}
 		
 		logger.info("****************************************************");
@@ -230,6 +221,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("*  admin: http://localhost:8080/searchbox/admin    *");
 		logger.info("*                                                  *");
 		logger.info("****************************************************");
+		
+		logger.info("Starting all your engine");
+		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		
+		while(engineDefinitions.hasNext()){
+			SearchEngineDefinition engineDefinition = engineDefinitions.next();
+			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
+			searchService.load(engineDefinition);
+		}
 	}
 
 	// private void setSettings() {

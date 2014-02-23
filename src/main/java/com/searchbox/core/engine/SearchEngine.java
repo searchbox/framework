@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.searchbox.core.search.SearchElement;
 
-public interface SearchEngine<Q extends Object,R> {
+public interface SearchEngine<Q,R> {
+	
+	public String getName();
 
 	public Class<Q> getQueryClass();
 	
@@ -20,6 +22,7 @@ public interface SearchEngine<Q extends Object,R> {
 
 	public Boolean supportsElement(SearchElement element);
 	
+	public boolean load();
 	//TODO Shoudl be able to get a list of "Operations" that is 
 	// supported by the engine.
 }

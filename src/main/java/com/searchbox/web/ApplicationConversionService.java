@@ -73,8 +73,6 @@ public class ApplicationConversionService  {
 		for (BeanDefinition beanDefinition : scanner
 				.findCandidateComponents("com.searchbox")) {
 			try {
-				logger.info("Got scanner: " + beanDefinition
-						.getBeanClassName());
 				Class<?> searchComponent = Class.forName(beanDefinition
 						.getBeanClassName());
 				
@@ -92,17 +90,16 @@ public class ApplicationConversionService  {
 					
 					if(conditionConverter!=null && Converter.class.isAssignableFrom(conditionConverter)){
 		
-						logger.info("~~ Found " + prefix + ":"
-								+ searchComponent.getSimpleName() + " with filter["
-								+ searchCondition.getName() + "]");
+						logger.info("Registering Condition " + searchCondition.getSimpleName() +
+								" for "+ searchComponent.getSimpleName() + " with prefix: " + prefix);
 		
 						conversionService.addConverter((Converter<?, ?>) conditionConverter.newInstance());
 					}
 				} else if(SearchElementAdapter.class.isAssignableFrom(searchComponent)){
-					logger.info("~~ Found Adaptor: " + searchComponent);
+					//logger.info("~~ Found Adaptor: " + searchComponent);
 
 				} else if(SearchConditionAdapter.class.isAssignableFrom(searchComponent)){
-					logger.info("~~ Found Adaptor: " + searchComponent);
+					//logger.info("~~ Found Adaptor: " + searchComponent);
 				}
 				
 			} catch (ClassNotFoundException e) {
