@@ -3,19 +3,18 @@ package com.searchbox.core.search.stat;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchElementType;
 
 @SearchComponent
 public class BasicSearchStats extends SearchElement {
 
-	private Long hitCount;
-	private Long searchTime;
+	private Long hitCount = 0l;
+	private Long searchTime = 0l;
 	
 	@SearchAttribute
 	private Boolean viewTime = true;
@@ -56,17 +55,15 @@ public class BasicSearchStats extends SearchElement {
 	}
 	
 	public BasicSearchStats(){
-		super();
-		this.setType(SearchElementType.STAT);
+		super(null,SearchElement.Type.STAT);
 	}
 
 	public BasicSearchStats(String label) {
-		super(label);
-		this.setType(SearchElementType.STAT);
+		super(label,SearchElement.Type.STAT);
 	}
 }
 
-@SearchAdaptor
+@SearchAdapter
 class BasicSearchStatsAdapter implements SolrElementAdapter<BasicSearchStats>{
 
 	@Override

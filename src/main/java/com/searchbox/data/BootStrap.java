@@ -1,7 +1,8 @@
 package com.searchbox.data;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -10,19 +11,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.ApplicationConfig;
 import com.searchbox.app.domain.CollectionDefinition;
+import com.searchbox.app.domain.FieldAttributeDefinition;
 import com.searchbox.app.domain.FieldDefinition;
 import com.searchbox.app.domain.PresetDefinition;
-import com.searchbox.app.domain.PresetFieldAttributeDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.SearchEngineDefinition;
 import com.searchbox.app.domain.Searchbox;
-import com.searchbox.app.repository.CollectionDefinitionRepository;
-import com.searchbox.app.repository.SearchEngineDefinitionRepository;
+import com.searchbox.app.repository.CollectionRepository;
+import com.searchbox.app.repository.SearchEngineRepository;
 import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.engine.solr.EmbeddedSolr;
 import com.searchbox.core.search.debug.SolrToString;
@@ -34,7 +37,7 @@ import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
-import com.searchbox.service.SearchService;
+import com.searchbox.service.SearchEngineService;
 
 @Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -48,13 +51,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	private SearchboxRepository repository;
 	
 	@Autowired
-	private SearchEngineDefinitionRepository engineRepository;
+	private SearchEngineRepository engineRepository;
 	
 	@Autowired
-	private CollectionDefinitionRepository collectionRepository;
+	private CollectionRepository collectionRepository;
 	
 	@Autowired
-	private SearchService searchService;
+	private SearchEngineService searchEngineService;
 	
 	private static boolean BOOTSTRAPED = false;
 	
@@ -82,8 +85,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = null;
 		try {
-			engine = new SearchEngineDefinition("embedded Solr",
-					EmbeddedSolr.class);
+			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
 			engine.setAttributeValue("coreName", "pubmed");
 			engine.setAttributeValue("solrHome",context.getResource("classpath:META-INF/solr/").getURL().getPath());
 			engine.setAttributeValue("solrConfig",context.getResource("classpath:META-INF/solr/conf/solrconfig.xml").getURL().getPath());
@@ -96,8 +98,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The base collection for searchbox
 		logger.info("++ Creating pubmed Collection");
-		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);
-		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
+		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
+		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
@@ -107,14 +109,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//SearchAll preset
 		logger.info("++ Creating Search All preset");
 		PresetDefinition preset = new PresetDefinition(collection);
-		preset.setLabel("Search All");
+		preset.setAttributeValue("label","Search All");
 		preset.setSlug("all");
-		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("article-title"));
-		fieldAttr.setSearchable(true);
-		preset.addFieldAttributeDefinition(fieldAttr);
-		PresetFieldAttributeDefinition fieldAttr2 = new PresetFieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
-		fieldAttr2.setSearchable(true);
-		preset.addFieldAttributeDefinition(fieldAttr2);
+		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
+		fieldAttr.setAttributeValue("searchable",true);
+		preset.addFieldAttribute(fieldAttr);
+		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
+		fieldAttr2.setAttributeValue("searchable",true);
+		preset.addFieldAttribute(fieldAttr2);
 
 		//Create & add a TemplatedHitLIst SearchComponent to the preset;
 		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
@@ -123,7 +125,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("urlField", "article-title");
 		templatedHitList.setAttributeValue("template", "<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"+
 														"<div>${hit.fieldValues['article-abstract']}</div>");
-		preset.addSearchElementDeifinition(templatedHitList);
+		preset.addSearchElement(templatedHitList);
 
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
@@ -132,7 +134,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		sortFields.add(new FieldSort.Value("Latest Article", "article-completion-date", Sort.DESC));
 		sortFields.add(new FieldSort.Value("Latest Reviewed", "article-revision-date", Sort.DESC));
 		fieldSort.setAttributeValue("values", sortFields);
-		preset.addSearchElementDeifinition(fieldSort);
+		preset.addSearchElement(fieldSort);
 				
 		
 		
@@ -150,19 +152,19 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //		fields.add("article-completion-date");
 //		fields.add("article-revision-date");
 //		hitList.setAttributeValue("fields", fields);
-//		preset.addSearchElementDeifinition(hitList);
+//		preset.addSearchElement(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-		preset.addSearchElementDeifinition(basicStatus);
+		preset.addSearchElement(basicStatus);
 		
 		//Create & add a querydebug SearchComponent to the preset;
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-		preset.addSearchElementDeifinition(querydebug);
+		preset.addSearchElement(querydebug);
 		
 		//Create & add a query SearchComponent to the preset;
 		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
-		preset.addSearchElementDeifinition(query);
+		preset.addSearchElement(query);
 		
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
@@ -170,21 +172,21 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldFacet.setAttributeValue("label", "Type");
 		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
 		fieldFacet.setAttributeValue("sort", Sort.DESC);
-		preset.addSearchElementDeifinition(fieldFacet);
+		preset.addSearchElement(fieldFacet);
 		
 		
 		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
-		preset.addSearchElementDeifinition(pagination);
+		preset.addSearchElement(pagination);
 		
 		searchbox.addPresetDefinition(preset);
 		
 		PresetDefinition articles = new PresetDefinition(collection);
-		articles.setLabel("Articles");
+		articles.setAttributeValue("label","Articles");
 		articles.setSlug("articles");
 		searchbox.addPresetDefinition(articles);
 
 		PresetDefinition press = new PresetDefinition(collection);
-		press.setLabel("Press");
+		press.setAttributeValue("label","Press");
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
@@ -228,7 +230,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		while(engineDefinitions.hasNext()){
 			SearchEngineDefinition engineDefinition = engineDefinitions.next();
 			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
-			searchService.load(engineDefinition);
+			searchEngineService.load(engineDefinition.toEngine());
 		}
 	}
 
@@ -303,4 +305,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	// searchCategory.persist();
 
 	// }
+	
+	@SuppressWarnings("resource")
+	public static void main(String... args){
+		@SuppressWarnings("unused")
+		AnnotationConfigApplicationContext context = 
+				new AnnotationConfigApplicationContext(ApplicationConfig.class);
+		
+	}
 }

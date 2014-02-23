@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
-import com.searchbox.app.repository.PresetDefinitionRepository;
+import com.searchbox.app.repository.PresetRepository;
 import com.searchbox.app.repository.SearchboxRepository;
 import com.searchbox.core.adaptor.SearchConditionAdapter;
 import com.searchbox.core.adaptor.SearchElementAdapter;
@@ -42,7 +42,7 @@ public class ApplicationConversionService  {
 	private DefaultFormattingConversionService conversionService;
 	
 	@Autowired
-	private PresetDefinitionRepository presetRepository;
+	private PresetRepository presetRepository;
 	
 	@Autowired
 	private SearchboxRepository searchboxRepository;
@@ -154,7 +154,7 @@ public class ApplicationConversionService  {
 		
 		conversionService.addConverter(new Converter<PresetDefinition, String>() {
             public String convert(PresetDefinition presetDefinition) {
-                return new StringBuilder().append(presetDefinition.getSlug()).append(' ').append(presetDefinition.getLabel()).append(' ').append(presetDefinition.getDescription()).append(' ').append(presetDefinition.getPosition()).toString();
+                return new StringBuilder().append(presetDefinition.getSlug()).toString();
             }
         });
 		

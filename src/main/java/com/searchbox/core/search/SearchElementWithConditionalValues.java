@@ -21,12 +21,12 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
 	public abstract void mergeSearchCondition(SearchCondition condition);
 
 	public SearchElementWithConditionalValues() {
-		super(null);
+		super(null,SearchElement.Type.UNKNOWN);
 		values = new TreeSet<K>();
 	}
 	
-	public SearchElementWithConditionalValues(String label) {
-		super(label);
+	public SearchElementWithConditionalValues(String label, SearchElement.Type type) {
+		super(label,type);
 		values = new TreeSet<K>();
 	}
 

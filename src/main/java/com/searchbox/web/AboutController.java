@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.SearchboxRepository;
-import com.searchbox.core.dm.Preset;
 
 @Controller
 @RequestMapping("/about")
@@ -27,10 +26,9 @@ public class AboutController {
 		// That should come from the searchbox param/filter
 		Searchbox searchbox = searchboxRepository.findAll().iterator().next();
 
-		List<Preset> presets = new ArrayList<Preset>();
+		List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 		for(PresetDefinition pdef:searchbox.getPresets()){
-			Preset pset = pdef.toPreset();
-			presets.add(pset);
+			presets.add(pdef);
 		}
 		
 		ModelAndView model = new ModelAndView("about/index");

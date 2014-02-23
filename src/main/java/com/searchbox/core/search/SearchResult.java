@@ -21,7 +21,7 @@ public class SearchResult {
 		this.elements.add(element);
 	}
 	
-	public SortedSet<SearchElement> getElements(SearchElementType type){
+	public SortedSet<SearchElement> getElements(SearchElement.Type type){
 		TreeSet<SearchElement> typedElements = new TreeSet<SearchElement>();
 		for(SearchElement element:this.elements){
 			if(element.type.equals(type)){

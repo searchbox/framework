@@ -9,15 +9,15 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrConditionAdapter;
-import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
-import com.searchbox.core.search.SearchElementType;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.ref.Order;
@@ -30,16 +30,17 @@ public class FieldFacet
 
 	@SearchAttribute
 	private String fieldName;
+	
+	@SearchAttribute
+	private Boolean sticky = true;
 
 	public FieldFacet() {
-		fieldName = "";
-		this.setType(SearchElementType.FACET);
+		super("",SearchElement.Type.FACET);
 	}
 
 	public FieldFacet(String label, String fieldName) {
-		super(label);
+		super(label,SearchElement.Type.FACET);
 		this.fieldName = fieldName;
-		this.setType(SearchElementType.FACET);
 	}
 
 	public String getFieldName() {
@@ -177,22 +178,29 @@ public class FieldFacet
 			}
 		}
 	}
+
+	public boolean getSticky() {
+		return this.sticky;
+	}
+	
+	public void setSticky(boolean sticky){
+		this.sticky = sticky;
+	}
+	
 }
 
-@SearchAdaptor
-class FieldFacetSolrAdaptor 
-	implements SolrElementAdapter<FieldFacet>,
-	SolrConditionAdapter<FieldFacet.ValueCondition> {
+@SearchAdapter(target=FieldFacet.class)
+class FieldFacetSolrAdaptor {
 	
-	@Override
-	public SolrQuery doAdapt(Preset preset,
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery createFilterQueries(FieldFacet facet, 
 			FieldFacet.ValueCondition condition, SolrQuery query) {
 		String conditionValue = ClientUtils.escapeQueryChars(condition.value);
 		boolean isnew = true;
 		List<String> fqs = new ArrayList<String>();
 		if(query.getFilterQueries() != null){
 			for(String fq:query.getFilterQueries()){
-				if(fq.contains("{!tag="+condition.fieldName+"}"+condition.fieldName+":")){
+				if(fq.contains(condition.fieldName+":")){
 					isnew = false;
 					fq = fq+" OR " + conditionValue;
 				}
@@ -200,28 +208,35 @@ class FieldFacetSolrAdaptor
 			}
 		}
 		if(isnew){
-			fqs.add("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+conditionValue);			
+			if(facet.getSticky()){
+				fqs.add("{!tag="+condition.fieldName+"}"+condition.fieldName+":"+conditionValue);
+			} else {
+				fqs.add(condition.fieldName+":"+conditionValue);
+			}
 		}
 		query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
 		return query;
 	}
 
-	@Override
-	public SolrQuery doAdapt(Preset preset, FieldFacet element, SolrQuery query) {
-		query.addFacetField("{!ex="+element.getFieldName()+"}"+element.getFieldName());
+	@SearchAdapterMethod(target=Target.PRE)
+	public SolrQuery addFacetField(FieldFacet facet, SolrQuery query) {
+		if(facet.getSticky()){
+			query.addFacetField("{!ex="+facet.getFieldName()+"}"+facet.getFieldName());
+		} else {
+			query.addFacetField(facet.getFieldName());
+		}
 		return query;
 	}
 
-	@Override
-	public FieldFacet doAdapt(Preset preset, FieldFacet searchElement,
-			SolrQuery query, QueryResponse response) {
+	@SearchAdapterMethod(target=Target.POST)
+	public FieldFacet getFacetValues(FieldFacet fieldFacet, QueryResponse response) {
 		for(FacetField facet:response.getFacetFields()){
-			if(facet.getName().equals(searchElement.getFieldName())){
+			if(facet.getName().equals(fieldFacet.getFieldName())){
 				for(Count value:facet.getValues()){
-					searchElement.addValueElement(value.getName(), (int)value.getCount());
+					fieldFacet.addValueElement(value.getName(), (int)value.getCount());
 				}
 			}
 		}
-		return searchElement;
+		return fieldFacet;
 	}
 }

@@ -3,14 +3,14 @@ package com.searchbox.core.search.paging;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
-import com.searchbox.core.search.SearchElementType;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
@@ -23,8 +23,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	private Long numberOfHits;
 	
 	public BasicPagination(){
-		super("Basic Pagination");
-		this.setType(SearchElementType.VIEW);
+		super("Basic Pagination",SearchElement.Type.VIEW);
 	}
 
 	public Integer getHitsPerPage() {
@@ -127,7 +126,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	}
 }
 
-@SearchAdaptor
+@SearchAdapter
 class BasicPaginationAdaptor implements SolrConditionAdapter<BasicPagination.PageCondition>,
 	SolrElementAdapter<BasicPagination> {
 

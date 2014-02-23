@@ -1,8 +1,11 @@
 package com.searchbox.web;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,17 +23,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.app.domain.PresetDefinition;
-import com.searchbox.app.domain.PresetFieldAttributeDefinition;
+import com.searchbox.app.domain.FieldAttributeDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.Searchbox;
-import com.searchbox.app.repository.PresetDefinitionRepository;
+import com.searchbox.app.repository.FieldAttributeRepository;
+import com.searchbox.app.repository.PresetRepository;
+import com.searchbox.app.repository.SearchEngineRepository;
 import com.searchbox.app.repository.SearchboxRepository;
+import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.Preset;
+import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.service.DirectoryService;
+import com.searchbox.service.SearchEngineService;
 import com.searchbox.service.SearchService;
 
 @Controller
@@ -47,6 +55,9 @@ public class SearchController {
 
 	@Autowired
 	SearchService searchService;
+	
+	@Autowired
+	SearchEngineService searchEngineService;
 
 	@Autowired
 	DirectoryService directoryService;
@@ -55,7 +66,13 @@ public class SearchController {
 	SearchboxRepository searchboxRepository;
 
 	@Autowired
-	protected PresetDefinitionRepository presetDefinitionRepository;
+	FieldAttributeRepository fieldAttributeRepository;
+
+	@Autowired
+	protected PresetRepository presetRepository;
+	
+	@Autowired
+	protected SearchEngineRepository searchEngineRepository;
 
 	public SearchController() {
 	}
@@ -75,9 +92,9 @@ public class SearchController {
 			@RequestParam(value = "searchbox", required = false) Searchbox searchbox) {
 		ArrayList<Preset> presets = new ArrayList<Preset>();
 		if (searchbox != null) {
-			for (PresetDefinition pdef : presetDefinitionRepository
+			for (PresetDefinition pdef : presetRepository
 					.findAllBySearchbox(searchbox)) {
-				presets.add(pdef.toPreset());
+				presets.add(pdef.getInstance());
 			}
 		}
 		return presets;
@@ -92,15 +109,13 @@ public class SearchController {
 	}
 
 	protected ModelAndView executeSearch(Searchbox searchbox,
-			PresetDefinition presetDefinition, HttpServletRequest request,
+			PresetDefinition preset, HttpServletRequest request,
 			ModelAndView model) {
-
 		
-		model.setViewName(this.getIndexView());
-	
+		model.setViewName(this.getIndexView());	
 
 		// Fetch all search Conditions within HTTP params
-		List<SearchCondition> conditions = new ArrayList<SearchCondition>();
+		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
 		for (String param : searchComponentService.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
@@ -121,11 +136,11 @@ public class SearchController {
 		SearchResult result = new SearchResult();
 
 		// Build the Preset DTO with dependancies
-		Preset preset = presetDefinition.toPreset();
-		for (SearchElementDefinition elementdefinition : presetDefinition
-				.getSearchElements()) {
+		Set<SearchElement> searchElements = new TreeSet<SearchElement>();
+
+		for (SearchElementDefinition elementdefinition : preset.getSearchElements()) {
 			try {
-				SearchElement searchElement = elementdefinition.toElement();
+				SearchElement searchElement = elementdefinition.getInstance();
 				if (CachedContent.class.isAssignableFrom(searchElement
 						.getClass())) {
 					Integer hash = ((CachedContent) searchElement)
@@ -141,38 +156,31 @@ public class SearchController {
 					((CachedContent) searchElement).setPath(directoryService
 							.getApplicationRelativePath(tempFile));
 				}
-				preset.addSearchElement(searchElement);
+				
+				searchElements.add(searchElement);
 			} catch (Exception e) {
 				logger.error("Could not get SearchElement for: "
 						+ elementdefinition, e);
 			}
 		}
-		for (PresetFieldAttributeDefinition fielddefinition : presetDefinition
-				.getFieldAttributes()) {
-			try {
-				preset.addFieldAttribute(fielddefinition
-						.toPresetFieldAttribute());
-			} catch (Exception e) {
-				logger.error("Could not get SearchElement for: "
-						+ fielddefinition);
-			}
+	
+		Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
+		for(FieldAttributeDefinition def:fieldAttributeRepository.findAllByPreset(preset)){
+			fieldAttributes.add(def.getInstance());
 		}
 		
-		//Get the searchEngine Impl for preset:
-		preset.setSearchEngine(searchService
-				.getSearchEngine(presetDefinition.getCollection()
-						.getSearchEngineDefinition().getName()));
-						
+		SearchEngine<?, ?> searchEngine = searchEngineService.getSearchEngine(
+				preset.getCollection().getSearchEngine().getName());
 		
-		if (preset != null) {
-			for (SearchElement element : searchService.execute(preset,
-					conditions)) {
-				logger.debug("Adding to result view element["
-						+ element.getPosition() + "] = " + element.getLabel());
-				result.addElement(element);
-			}
+		Set<SearchElement> resultElements =  searchService.execute(searchEngine,
+				searchElements, fieldAttributes, conditions);
+		
+		for (SearchElement element : resultElements) {
+			logger.debug("Adding to result view element["
+					+ element.getPosition() + "] = " + element.getLabel());
+			result.addElement(element);
 		}
-
+	
 		model.addObject("result", result);
 		model.addObject("preset", preset);
 
@@ -195,7 +203,7 @@ public class SearchController {
 					true));
 			return redirect;
 		} else {
-			PresetDefinition pdef = presetDefinitionRepository
+			PresetDefinition pdef = presetRepository
 					.findPresetDefinitionBySearchboxAndSlug(searchbox, slug);
 			
 			if (pdef == null) {

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.EngineReadyEvent;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.event.EngineReadyEvent;
 
 @Service
 public class CollectionService implements ApplicationListener<EngineReadyEvent> {
@@ -18,7 +18,7 @@ public class CollectionService implements ApplicationListener<EngineReadyEvent> 
 		// TODO here we have to get the collection of the engine
 		// and update their fields :)
 		
-		SearchEngine engine = (SearchEngine)event.getSource();
+		SearchEngine<?, ?> engine = (SearchEngine<?, ?>)event.getSource();
 		logger.info("SearchEngine " + engine.getName() + " is ready for some action!!!");
 		
 	}

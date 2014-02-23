@@ -1,36 +1,29 @@
 package com.searchbox.core.dm;
 
+import javax.persistence.MappedSuperclass;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class PresetFieldAttribute {
+@MappedSuperclass
+public class FieldAttribute {
 	
-	private Field field;
+	protected String label = "";
 	
-	private String label;
+	protected Boolean searchable;
 	
-	private Boolean searchable;
+	protected Boolean highlight;
 	
-	private Boolean highlight;
+	protected Boolean sortable;
 	
-	private Boolean sortable;
+	protected Boolean spelling;
 	
-	private Boolean spelling;
+	protected Boolean suggestion;
 	
-	private Boolean suggestion;
-	
-	private Float boost;
+	protected Float boost = 1f;
 
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
-	public Field getField() {
-        return this.field;
-    }
-
-	public void setField(Field field) {
-        this.field = field;
     }
 
 	public String getLabel() {

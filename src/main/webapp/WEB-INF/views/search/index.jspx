@@ -101,9 +101,13 @@
 						<div class="col-md-7 col-sm-7" id="main-col-center">
 
 							<c:forEach items="${result.getElements('VIEW')}" var="element">
-								<sb:include element="${element }" result="${result }"
-									admin="false" debug="${not empty param.debug}" />
-							</c:forEach>
+                <sb:include element="${element }" result="${result }"
+                  admin="false" debug="${not empty param.debug}" />
+              </c:forEach>
+              <c:forEach items="${result.getElements('DEBUG')}" var="element">
+                <sb:include element="${element }" result="${result }"
+                  admin="false" debug="${not empty param.debug}" />
+              </c:forEach>
 
 						</div>
 

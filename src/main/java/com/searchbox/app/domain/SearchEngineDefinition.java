@@ -1,19 +1,27 @@
 package com.searchbox.app.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import com.searchbox.core.engine.AbstractSearchEngine;
+import com.searchbox.core.engine.SearchEngine;
 
 @Entity
-public class SearchEngineDefinition extends DefinitionClass{
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public class SearchEngineDefinition extends UnknownClassDefinition 
+	implements ElementFactory<SearchEngine<?,?>>{
 	
-	protected String description;
-	
-	protected Boolean lazyLoad = false;
-	
+	protected String name;
+		
 	public SearchEngineDefinition(){
 		super();
 	}
+	public SearchEngineDefinition(Class<?> searchEngineClass, String name){
+		super(searchEngineClass);
+		this.name = name;
+	}
+	
 	
 	public AbstractSearchEngine<?, ?> toEngine(){
 		AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super.toObject();
@@ -21,23 +29,16 @@ public class SearchEngineDefinition extends DefinitionClass{
 		return engine;
 	}
 	
-	public SearchEngineDefinition(String name, Class<?> searchEngineClass){
-		super(name, searchEngineClass);
-	}
 
-	public String getDescription() {
-		return description;
+	public String getName() {
+		return name;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setName(String name) {
+		this.name = name;
 	}
-
-	public Boolean getLazyLoad() {
-		return lazyLoad;
-	}
-
-	public void setLazyLoad(Boolean lazyLoad) {
-		this.lazyLoad = lazyLoad;
+	@Override
+	public SearchEngine<?, ?> getInstance() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

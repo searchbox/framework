@@ -2,32 +2,38 @@ package com.searchbox.core.search;
 
 import java.net.URL;
 
+import javax.persistence.MappedSuperclass;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 
-@Configurable(autowire=Autowire.BY_TYPE)
+@MappedSuperclass
 public abstract class SearchElement implements Comparable<SearchElement>{
-
-	private Long definitionId;
+	
+	public enum Type {
+		QUERY, FACET, FILTER, VIEW, ANALYTIC, SORT, STAT, DEBUG, UNKNOWN
+	}
 	
 	@SearchAttribute
 	private String label;
 	
 	private Integer position;
 	
-	protected SearchElementType type = SearchElementType.FILTER;
+	protected Type type = Type.FILTER;
 	
 	public SearchElement(){}
 	
-	protected SearchElement(String label){
+	protected SearchElement(String label, SearchElement.Type type){
 		this.label = label;
+		this.type = type;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.searchbox.core.search.SearchElement#getLabel()
+	 */
 	public String getLabel() {
 		return label;
 	}
@@ -36,6 +42,9 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		this.label = label;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.searchbox.core.search.SearchElement#getPosition()
+	 */
 	public Integer getPosition() {
 		return position;
 	}
@@ -44,20 +53,15 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		this.position = position;
 	}
 
-	public SearchElementType getType() {
+	/* (non-Javadoc)
+	 * @see com.searchbox.core.search.SearchElement#getType()
+	 */
+	public SearchElement.Type getElementType() {
 		return type;
 	}
 
-	public void setType(SearchElementType type) {
+	public void setType(SearchElement.Type type) {
 		this.type = type;
-	}
-
-	public Long getDefinitionId() {
-		return definitionId;
-	}
-
-	public void setDefinitionId(Long definitionId) {
-		this.definitionId = definitionId;
 	}
 
 	@Override

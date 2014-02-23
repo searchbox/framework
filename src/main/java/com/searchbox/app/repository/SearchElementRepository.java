@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.app.domain.SearchElementDefinition;
 
-public interface SearchElementDefinitionRepository extends
+public interface SearchElementRepository extends
 		CrudRepository<SearchElementDefinition, Long> {
 
 }

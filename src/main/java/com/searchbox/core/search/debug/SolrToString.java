@@ -4,12 +4,11 @@ package com.searchbox.core.search.debug;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
+import com.searchbox.anno.SearchAdapterMethod;
+import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.adaptor.SolrElementAdapter;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchElementType;
 
 @SearchComponent
 public class SolrToString extends SearchElement  {
@@ -18,8 +17,7 @@ public class SolrToString extends SearchElement  {
 	private QueryResponse response;
 	
 	public SolrToString(){
-		super("Solr Debug");
-		this.type = SearchElementType.VIEW;
+		super("Solr Debug", SearchElement.Type.DEBUG);
 	}
 	
 	public String getQuery() {
@@ -38,19 +36,17 @@ public class SolrToString extends SearchElement  {
 		this.response = response;
 	}
 
-	@SearchAdaptor
-	public static class SolrAdaptor implements SolrElementAdapter<SolrToString>{
+	@SearchAdapter(target=SolrToString.class)
+	public static class SolrAdaptor {
 
-		@Override
-		public SolrQuery doAdapt(Preset preset,
-				SolrToString SearchElement, SolrQuery query) {
+		@SearchAdapterMethod(target=Target.PRE)
+		public SolrQuery addDebug(SolrQuery query) {
 			query.set("debug","true");
 			return query;
 		}
 
-		@Override
-		public SolrToString doAdapt(Preset preset,
-				SolrToString searchElement, SolrQuery query,
+		@SearchAdapterMethod(target=Target.POST)
+		public SolrToString getDebugInfo(SolrToString searchElement, SolrQuery query,
 				QueryResponse response) {
 			searchElement.setQuery(query.toString());
 			searchElement.setResponse(response);

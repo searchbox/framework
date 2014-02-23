@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.searchbox.anno.SearchAttribute;
-import com.searchbox.app.domain.DefinitionAttribute;
+import com.searchbox.app.domain.UnknownAttributeDefinition;
 
 public class ReflectionUtils {
 
@@ -26,11 +26,11 @@ public class ReflectionUtils {
 		}
 	}
 	
-	public static void inspectAndSaveAttribute(Class<?> searchElement, List<DefinitionAttribute> attributes){
+	public static void inspectAndSaveAttribute(Class<?> searchElement, List<UnknownAttributeDefinition> attributes){
 		if(searchElement != null){
 			for(Field field:searchElement.getDeclaredFields()){
 				if(field.isAnnotationPresent(SearchAttribute.class)){
-					attributes.add(new DefinitionAttribute(field.getType(), field.getName()));
+					attributes.add(new UnknownAttributeDefinition(field.getType(), field.getName()));
 				}
 			}
 			inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);

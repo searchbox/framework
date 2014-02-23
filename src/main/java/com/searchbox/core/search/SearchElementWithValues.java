@@ -18,12 +18,12 @@ public class SearchElementWithValues<K extends ValueElement> extends SearchEleme
 	protected SortedSet<K> values;
 
 	public SearchElementWithValues() {
-		super(null);
+		super(null, SearchElement.Type.UNKNOWN);
 		values = new TreeSet<K>();
 	}
 	
-	public SearchElementWithValues(String label) {
-		super(label);
+	public SearchElementWithValues(String label, SearchElement.Type type) {
+		super(label, type);
 		values = new TreeSet<K>();
 	}
 

@@ -2,11 +2,17 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
-import com.searchbox.core.search.SearchElement;
+import javax.persistence.MappedSuperclass;
 
+import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.search.SearchCondition;
+
+@MappedSuperclass
 public interface SearchEngine<Q,R> {
 	
 	public String getName();
+	
+	public String getDescription();
 
 	public Class<Q> getQueryClass();
 	
@@ -22,7 +28,7 @@ public interface SearchEngine<Q,R> {
 
 	public Boolean supportsElement(SearchElement element);
 	
+	public Boolean supportsCondition(SearchCondition condition);
+
 	public boolean load();
-	//TODO Shoudl be able to get a list of "Operations" that is 
-	// supported by the engine.
 }

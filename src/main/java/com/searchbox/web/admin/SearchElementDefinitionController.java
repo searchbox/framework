@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.searchbox.app.domain.DefinitionAttribute;
+import com.searchbox.app.domain.UnknownAttributeDefinition;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
-import com.searchbox.app.repository.PresetDefinitionRepository;
-import com.searchbox.app.repository.SearchElementDefinitionRepository;
+import com.searchbox.app.repository.PresetRepository;
+import com.searchbox.app.repository.SearchElementRepository;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
@@ -44,10 +44,10 @@ public class SearchElementDefinitionController {
 	ConversionService conversionService;
 	
 	@Autowired
-	SearchElementDefinitionRepository repository;
+	SearchElementRepository repository;
 	
 	@Autowired
-	PresetDefinitionRepository presetRepository;
+	PresetRepository presetRepository;
 	
 	@ModelAttribute("OrderEnum")
     public List<Order> getReferenceOrder(){
@@ -120,7 +120,7 @@ public class SearchElementDefinitionController {
 			@Override
 			public void validate(Object target, Errors errors) {
 				SearchElementDefinition element = (SearchElementDefinition)target;
-				for(DefinitionAttribute attr:element.getAttributes()){
+				for(UnknownAttributeDefinition attr:element.getAttributes()){
 					if(!attr.getType().getName().equals(attr.getValue().getClass().getName())){
 						if(conversionService.canConvert(attr.getValue().getClass(), attr.getType())){
 							attr.setValue(conversionService.convert(attr.getValue(), attr.getType()));

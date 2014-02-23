@@ -1,4 +1,4 @@
-package com.searchbox.core;
+package com.searchbox.event;
 
 import org.springframework.context.ApplicationEvent;
 

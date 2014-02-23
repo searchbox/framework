@@ -10,12 +10,12 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.SearchElementType;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.core.search.ValueElement;
 
@@ -36,8 +36,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	private String idField;
 	
 	public HitList(){
-		super("Result Set");
-		this.type = SearchElementType.VIEW;
+		super("Result Set",SearchElement.Type.VIEW);
 		this.fields = new ArrayList<String>();
 	}
 	
@@ -153,7 +152,7 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 	}
 }
 
-@SearchAdaptor
+@SearchAdapter
 class HitListAdapter implements SolrElementAdapter<HitList> {
 
 	@Override

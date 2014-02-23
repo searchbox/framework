@@ -7,7 +7,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrConditionAdapter;
@@ -15,7 +15,7 @@ import com.searchbox.core.adaptor.SolrElementAdapter;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
-import com.searchbox.core.search.SearchElementType;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.ref.Sort;
@@ -27,8 +27,7 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	protected SortedSet<FieldSort.Value> values;
 	
 	public FieldSort() {
-		super("Sort Component");
-		this.setType(SearchElementType.SORT);
+		super("Sort Component",SearchElement.Type.SORT);
 	}
 	
 	public static class Value extends ConditionalValueElement<FieldSort.Condition>
@@ -138,7 +137,7 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	}
 }
 
-@SearchAdaptor
+@SearchAdapter
 class FieldSortSolrAdatptor implements SolrElementAdapter<FieldSort>,
 SolrConditionAdapter<FieldSort.Condition> {
 

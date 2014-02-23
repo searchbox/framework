@@ -2,21 +2,28 @@ package com.searchbox.core.dm;
 
 import java.util.Date;
 
+import javax.persistence.MappedSuperclass;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@MappedSuperclass
 public class Field {
 
-	private Class<?> clazz;
+	protected Class<?> clazz;
 	/**
      */
-	private String key;
+	protected String key;
 
 	/**
      */
 		
-	private Boolean multivalue = false;
+	protected Boolean multivalue = false;
 
+	public Field() {
+		
+	}
+	
 	public Field(Class<?> clazz, String key) {
 		this.clazz = clazz;
 		this.key = key;

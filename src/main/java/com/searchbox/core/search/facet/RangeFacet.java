@@ -3,7 +3,7 @@ package com.searchbox.core.search.facet;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalSearchElementWithValues;
 import com.searchbox.core.search.SearchCondition;
-import com.searchbox.core.search.SearchElementType;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.ValueElement;
 
 @SearchComponent(prefix = "fr", condition = RangeFacet.Condition.class)
@@ -15,9 +15,8 @@ public class RangeFacet extends
 	private final String upperElement = null;
 
 	public RangeFacet(String label, String fieldName) {
-		super(label);
+		super(label,SearchElement.Type.FACET);
 		this.fieldName = fieldName;
-		this.setType(SearchElementType.FACET);
 	}
 
 	public RangeFacet addValueElement(String label, Integer count) {

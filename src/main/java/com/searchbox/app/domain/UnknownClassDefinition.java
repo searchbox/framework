@@ -7,10 +7,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.ref.ReflectionUtils;
 
-@Entity
-public class DefinitionClass {
+@MappedSuperclass
+public class UnknownClassDefinition {
 	
-	private static Logger logger = LoggerFactory.getLogger(DefinitionClass.class);
+	private static Logger logger = LoggerFactory.getLogger(UnknownClassDefinition.class);
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -36,20 +36,17 @@ public class DefinitionClass {
 	
 	private Class<?> clazz;
 
-	private String name;
-
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<DefinitionAttribute> attributes = new ArrayList<DefinitionAttribute>();
+	private List<UnknownAttributeDefinition> attributes = new ArrayList<UnknownAttributeDefinition>();
 
-	public DefinitionClass(){
-		this.attributes = new ArrayList<DefinitionAttribute>();
+	public UnknownClassDefinition(){
+		this.attributes = new ArrayList<UnknownAttributeDefinition>();
 	}
 	
-	protected DefinitionClass(String name, Class<?> clazz){
-		this.name = name;
+	protected UnknownClassDefinition(Class<?> clazz){
 		this.clazz = clazz;
-		this.attributes = new ArrayList<DefinitionAttribute>();
+		this.attributes = new ArrayList<UnknownAttributeDefinition>();
 		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
 	}
 	
@@ -62,7 +59,7 @@ public class DefinitionClass {
 			throw new RuntimeException("Could not construct element for class: " + getClazz());
 		}
 		
-		for(DefinitionAttribute attribute:this.getAttributes()){
+		for(UnknownAttributeDefinition attribute:this.getAttributes()){
 			if(attribute.getValue() != null){
 				Method setter = null;
 				try {
@@ -110,26 +107,19 @@ public class DefinitionClass {
 
 	public void setClazz(Class<?> clazz) {
 		this.clazz = clazz;
+		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public List<DefinitionAttribute> getAttributes(){
+	public List<UnknownAttributeDefinition> getAttributes(){
 		return this.attributes;
 	}
 
-	public void setAttributes(List<DefinitionAttribute> attributes) {
+	public void setAttributes(List<UnknownAttributeDefinition> attributes) {
 		this.attributes = attributes;
 	}
 	
-	public DefinitionAttribute getAttributeByName(String name){
-		for(DefinitionAttribute attr:this.attributes){
+	public UnknownAttributeDefinition getAttributeByName(String name){
+		for(UnknownAttributeDefinition attr:this.attributes){
 			if(attr.getName().equals(name)){
 				return attr;
 			}
@@ -137,8 +127,8 @@ public class DefinitionClass {
 		return null;
 	}
 	
-	public DefinitionClass setAttributeValue(String name, Object value) {
-		DefinitionAttribute attr = this.getAttributeByName(name);
+	public UnknownClassDefinition setAttributeValue(String name, Object value) {
+		UnknownAttributeDefinition attr = this.getAttributeByName(name);
 		if(attr != null){
 			this.getAttributeByName(name).setValue(value);
 		} else {

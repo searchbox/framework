@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.SerializationUtils;
 
 @Entity
-public class DefinitionAttribute {
+public class UnknownAttributeDefinition {
 	
-	private static Logger logger = LoggerFactory.getLogger(DefinitionAttribute.class);
+	private static Logger logger = LoggerFactory.getLogger(UnknownAttributeDefinition.class);
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -36,16 +36,16 @@ public class DefinitionAttribute {
 	@Column(name = "value", length = Integer.MAX_VALUE - 1)
 	private byte[] valueAsByteArray;
 	
-	public DefinitionAttribute(){
+	public UnknownAttributeDefinition(){
 		
 	}
 	
-	public DefinitionAttribute(Class<?> type, String name) {
+	public UnknownAttributeDefinition(Class<?> type, String name) {
 		this.type = type;
 		this.name = name;
 	}
 
-	public DefinitionAttribute(String name, Object value) {
+	public UnknownAttributeDefinition(String name, Object value) {
 		this.name = name;
 		this.setValue(value);
 		this.type = value.getClass();

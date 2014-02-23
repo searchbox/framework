@@ -2,15 +2,19 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
+import javax.persistence.MappedSuperclass;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
+import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
+@MappedSuperclass
 public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
 	@SuppressWarnings("unused")
@@ -88,6 +92,12 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 		//FIXME check if searchegine can actually use Element
 		return true;
 	}
+	
+	@Override
+	public Boolean supportsCondition(SearchCondition condition) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	@Override
 	public String getName() {
@@ -98,6 +108,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 		this.name = name;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}

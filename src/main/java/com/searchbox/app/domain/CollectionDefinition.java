@@ -1,72 +1,44 @@
 package com.searchbox.app.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Version;
 
 import org.springframework.beans.factory.annotation.Configurable;
 
+import com.searchbox.core.dm.Collection;
+
 @Entity
-@Configurable
-public class CollectionDefinition {
-	
-	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-	
-	@Version
-	@Column(name="OPTLOCK")
-	private long version;
-	
-	/**
-     */
-	private String name;
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public class CollectionDefinition extends UnknownClassDefinition implements ElementFactory<Collection> {
 
 	@ManyToOne
 	private SearchEngineDefinition searchEngine;
 
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
+	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
 	
 	public CollectionDefinition() {
+		super();
 	}
 	
 	public CollectionDefinition(String name, SearchEngineDefinition definition) {
+		super();
 		this.searchEngine = definition;
-		this.name = name;
 	}
 	
-	public long getId() {
-		return id;
+	public SearchEngineDefinition getSearchEngine() {
+		return searchEngine;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setSearchEngine(SearchEngineDefinition searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 
 	public SearchEngineDefinition getSearchEngineDefinition() {
@@ -77,11 +49,11 @@ public class CollectionDefinition {
 		this.searchEngine = engine;
 	}
 
-	public List<FieldDefinition> getFieldDefinitions() {
+	public Set<FieldDefinition> getFieldDefinitions() {
 		return fieldDefinitions;
 	}
 
-	public void setFieldDefinitions(List<FieldDefinition> fieldDefinitions) {
+	public void setFieldDefinitions(Set<FieldDefinition> fieldDefinitions) {
 		this.fieldDefinitions = fieldDefinitions;
 	}
 
@@ -91,6 +63,12 @@ public class CollectionDefinition {
 				return def;
 			}
 		}
+		return null;
+	}
+	
+	@Override
+	public Collection getInstance() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

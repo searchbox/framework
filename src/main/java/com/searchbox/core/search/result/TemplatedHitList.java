@@ -6,10 +6,9 @@ import java.util.List;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.searchbox.anno.SearchAdaptor;
+import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.adaptor.SolrElementAdapter;
@@ -67,7 +66,7 @@ public class TemplatedHitList extends HitList implements CachedContent {
 	}
 }
 
-@SearchAdaptor
+@SearchAdapter
 class TemplatedHitListAdapter implements SolrElementAdapter<TemplatedHitList> {
 
 	@Override
