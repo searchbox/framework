@@ -81,11 +81,11 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 }
 
 @SearchAdapter(target=EdismaxQuery.class)
-class SimpleQuerySolrAdaptor {
+class EdismaxQuerySolrAdaptor {
 
 	@SearchAdapterMethod(target=Target.PRE)
 	public SolrQuery setQueryFields(EdismaxQuery SearchElement,
-			SolrQuery query, List<FieldAttribute> fieldAttributes) {
+			SolrQuery query) {
 		
 		query.setQuery(SearchElement.getQuery());
 		
@@ -93,14 +93,15 @@ class SimpleQuerySolrAdaptor {
 		query.set(DisMaxParams.ALTQ, "*:*");
 		
 		//fetching all searchable fields
-		List<String> qfs = new ArrayList<String>();
-		for(FieldAttribute fieldAttr:fieldAttributes){
-			if(fieldAttr.getSearchable()){
-				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
-				qfs.add(fieldAttr.getKey()+"^"+boost);
-			}
-		}
-		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
+		//FIXME the Magic executeMethod in SearchAdapterService fails with List<FieldAtributes>
+//		List<String> qfs = new ArrayList<String>();
+//		for(FieldAttribute fieldAttr:fieldAttributes){
+//			if(fieldAttr.getSearchable()){
+//				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
+//				qfs.add(fieldAttr.getKey()+"^"+boost);
+//			}
+//		}
+//		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
 		return query;
 	}
 

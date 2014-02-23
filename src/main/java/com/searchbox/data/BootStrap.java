@@ -1,5 +1,6 @@
 package com.searchbox.data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,6 +33,7 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
+import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
@@ -141,18 +143,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 				
 		//Create & add a HitLIst SearchComponent to the preset;
-//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-//		hitList.setAttributeValue("titleField", "article-title");
-//		hitList.setAttributeValue("idField", "id");
-//		hitList.setAttributeValue("urlField", "article-title");
-//		ArrayList<String> fields = new ArrayList<String>();
-//		fields.add("article-abstract");
-//		fields.add("author");
-//		fields.add("publication-type");
-//		fields.add("article-completion-date");
-//		fields.add("article-revision-date");
-//		hitList.setAttributeValue("fields", fields);
-//		preset.addSearchElement(hitList);
+		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+		hitList.setAttributeValue("titleField", "article-title");
+		hitList.setAttributeValue("idField", "id");
+		hitList.setAttributeValue("urlField", "article-title");
+		ArrayList<String> fields = new ArrayList<String>();
+		fields.add("article-abstract");
+		fields.add("author");
+		fields.add("publication-type");
+		fields.add("article-completion-date");
+		fields.add("article-revision-date");
+		hitList.setAttributeValue("fields", fields);
+		preset.addSearchElement(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
