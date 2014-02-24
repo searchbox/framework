@@ -20,6 +20,8 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	@SearchAttribute
 	private String label;
 	
+	private Long definitionId;
+	
 	private Integer position;
 	
 	protected Type type = Type.FILTER;
@@ -91,4 +93,12 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
+
+	public Long getDefinitionId() {
+		return definitionId;
+	}
+
+	public void setDefinitionId(Long definitionId) {
+		this.definitionId = definitionId;
+	}
 }
