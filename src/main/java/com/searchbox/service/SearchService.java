@@ -41,11 +41,10 @@ public class SearchService {
 
 		Set<SearchCondition> presetConditions = new TreeSet<SearchCondition>();
 
+		// Weave in all SearchElement in Query
+		adapterService.doPreSearchAdapt(searchEngine, null, query, fieldAttributes, searchElements);
 		
 		for (SearchElement element : searchElements) {
-
-			adapterService.doPreSearchAdapt(element, searchEngine, query, fieldAttributes);
-
 			if (element.getClass().isAssignableFrom(
 					GenerateSearchCondition.class)) {
 				logger.debug("This is a filter right here.");
@@ -55,18 +54,15 @@ public class SearchService {
 		}
 
 		// Weave in all UI Conditions in query
-		for (SearchCondition condition : conditions) {
-			logger.debug("Adapting condition from UI: " + condition);
-			adapterService.doPreSearchAdapt(searchElements, searchEngine, query, 
-					fieldAttributes, condition);
-		}
+		logger.debug("Adapting condition from UI: " + conditions);
+		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+				fieldAttributes, conditions, searchElements);
 
 		// Weave in all presetConditions in query
-		for (SearchCondition condition : presetConditions) {
-			logger.debug("Adapting condition from Preset: " + condition);
-			adapterService.doPreSearchAdapt(searchElements, searchEngine, query, 
-					fieldAttributes, condition);
-		}
+		logger.debug("Adapting condition from Preset: " + presetConditions);
+		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+			fieldAttributes, presetConditions, searchElements);
+	
 
 		// Executing the query on the search engine!!!
 		Object result = null;
@@ -81,13 +77,12 @@ public class SearchService {
 			logger.error("Could not use searchEngine!!!", e);
 		}
 
+		// Weave in SearchResponse to element
+		adapterService.doPostSearchAdapt(searchEngine, result.getClass(), query, 
+				fieldAttributes, conditions, presetConditions, result, searchElements);
+		
 		// Executing a merge on all SearchConditions
 		for (SearchElement element : searchElements) {
-
-			// Weave in SearchResponse to element
-			adapterService.doPostSearchAdapt(element, searchEngine, query, 
-					fieldAttributes, conditions, presetConditions, result);
-
 			if (SearchConditionToElementMerger.class.isAssignableFrom(element
 					.getClass())) {
 				for (SearchCondition condition : conditions) {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,9 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
+import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.core.search.SearchElement;
 
 @Service
 public class SearchAdapterService implements
@@ -37,13 +36,13 @@ public class SearchAdapterService implements
 	ApplicationContext context;
 
 	private Map<Class<?>, Object> adapterIntances;
-	private Map<Object, Set<Method>> preSearchMethods;
-	private Map<Object, Set<Method>> postSearchMethods;
+	private Map<Method, Object> preSearchMethods;
+	private Map<Method, Object> postSearchMethods;
 
 	public SearchAdapterService() {
 		this.adapterIntances = new HashMap<Class<?>, Object>();
-		this.preSearchMethods = new HashMap<Object, Set<Method>>();
-		this.postSearchMethods = new HashMap<Object, Set<Method>>();
+		this.preSearchMethods = new HashMap<Method, Object>();
+		this.postSearchMethods = new HashMap<Method, Object>();
 	}
 
 	@Override
@@ -51,8 +50,8 @@ public class SearchAdapterService implements
 
 		// Reset maps for adapters.
 		this.adapterIntances = new HashMap<Class<?>, Object>();
-		this.preSearchMethods = new HashMap<Object, Set<Method>>();
-		this.postSearchMethods = new HashMap<Object, Set<Method>>();
+		this.preSearchMethods = new HashMap<Method, Object>();
+		this.postSearchMethods = new HashMap<Method, Object>();
 
 		// Scan the classpath for adapters
 		for (Entry<String, Object> bean : context.getBeansWithAnnotation(
@@ -61,166 +60,71 @@ public class SearchAdapterService implements
 			Class<?> target = adapter.getClass()
 					.getAnnotation(SearchAdapter.class).target();
 			this.adapterIntances.put(target, adapter);
-			this.preSearchMethods.put(adapter, new HashSet<Method>());
-			this.postSearchMethods.put(adapter, new HashSet<Method>());
 			logger.debug("Found adapter for: " + target.getSimpleName());
 			for (Method method : adapter.getClass().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(SearchAdapterMethod.class)) {
 					if (method.getAnnotation(SearchAdapterMethod.class)
-							.target().equals(Target.PRE)) {
+							.timing().equals(Timing.BEFORE)) {
 						logger.debug("Registering Pre adapt: "
 								+ method.getName());
-						this.preSearchMethods.get(adapter).add(method);
+						this.preSearchMethods.put(method,adapter);
 					} else {
 						logger.debug("Registering Post adapt: "
 								+ method.getName());
-						this.postSearchMethods.get(adapter).add(method);
+						this.postSearchMethods.put(method,adapter);
 					}
 				}
 			}
 		}
 	}
 
-	public void doPreSearchAdapt(Collection<SearchElement> elements,
-			SearchEngine<?, ?> engine, Object... objects) {
-		for (SearchElement element : elements) {
-			doPreSearchAdapt(element, engine, objects);
-		}
+	public void doPreSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
+		//This is because "Arrays.asList(objects)" does not support remove;
+		ArrayList<Object> arguments = new ArrayList<Object>();
+		arguments.addAll(Arrays.asList(objects));
+		this.doAdapt(requiredArg, this.preSearchMethods, arguments);
 	}
 
-	public void doPreSearchAdapt(SearchElement element,
-			SearchEngine<?, ?> engine, Object... objects) {
-		if (!this.adapterIntances.containsKey(element.getClass())) {
-			logger.warn("Could not find an adapter for: " + element.getClass()
-					+ " with engine: " + engine.getName());
-			return;
-		}
-		Object adapter = this.adapterIntances.get(element.getClass());
-		Set<Method> methods = this.preSearchMethods.get(adapter);
-		if (methods.size() > 0) {
-			ArrayList<Object> arguments = new ArrayList<Object>(Arrays.asList(objects));
-			arguments.add(element);
-			this.doAdapt(adapter, methods, arguments);		}
+	public void doPostSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
+		//This is because "Arrays.asList(objects)" does not support remove;
+		ArrayList<Object> arguments = new ArrayList<Object>();
+		arguments.addAll(Arrays.asList(objects));
+		this.doAdapt(requiredArg, this.postSearchMethods, arguments);
 	}
 
-	public void doPostSearchAdapt(Collection<SearchElement> elements,
-			SearchEngine<?, ?> engine, Object... objects) {
-		for (SearchElement element : elements) {
-			doPostSearchAdapt(element, engine, objects);
-		}
-	}
 
-	public void doPostSearchAdapt(SearchElement element,
-			SearchEngine<?, ?> engine, Object... objects) {
-		if (!this.adapterIntances.containsKey(element.getClass())) {
-			logger.warn("Could not find an adapter for: " + element.getClass()
-					+ " with engine: " + engine.getName());
-			return;
-		}
-		Object adapter = this.adapterIntances.get(element.getClass());
-		Set<Method> methods = this.postSearchMethods.get(adapter);
-		if (methods.size() > 0) {
-			ArrayList<Object> arguments = new ArrayList<Object>(Arrays.asList(objects));
-			arguments.add(element);
-			this.doAdapt(adapter, methods, arguments);
-		}
-	}
-
-	private Map<Class<?>, List<Object>> mapArguments(Map<Class<?>, List<Object>> map,
-			List<Object> objects) {
-		if (objects.size() == 0) {
-			return map;
-		} else {
-			Object currentObject = objects.remove(0);
-			if (Collection.class.isAssignableFrom(currentObject.getClass())) {
-				//objects.addAll((Collection<? extends Object>) currentObject);
-			}
-			if (!map.containsKey(currentObject.getClass())) {
-				map.put(currentObject.getClass(), new ArrayList<Object>());
-			}
-			map.get(currentObject.getClass()).add(currentObject);
-
-			return mapArguments(map, objects);
-		}
-	}
-
-	private List<Method> matchingdMethods(Set<Method> methods,
-			Set<Class<?>> classSet) {
-		List<Method> matchingMethods = new ArrayList<Method>();
-		for (Method method : methods) {
-			int match = 0;
-			Class<?>[] paramTypes = method.getParameterTypes();
-			for (Class<?> paramType : paramTypes) {
-				for(Class<?> clazz:classSet){
-					if (paramType.isAssignableFrom(clazz)) {
-						match++;
-					}					
-				}
-			}
-			if (match == paramTypes.length) {
-				matchingMethods.add(method);
-			}
-		}
-		return matchingMethods;
-	}
-
-	private void executeMethod(Object caller, Method method, Object... arguments) {
-		try {
-			method.setAccessible(true);
-			method.invoke(caller, arguments);
-		} catch (IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			logger.error("Could not invoke method " + method.getName()
-					+ " on: " + caller.getClass().getSimpleName(), e);
-		}
-	}
+	private void doAdapt(Class<?> requiredArg, Map<Method, Object> methods, List<Object> objects) {
 	
-	/** Permute all possible parameters
-	 * 
-	 * @param caller
-	 * @param method
-	 * @param allArguments
-	 * @param offset
-	 * @param arguments
-	 */
-	private void executeMethodWithPermutation(Object caller, Method method, Object[][] allArguments, int offset, Object[] arguments) {
-		if(offset<arguments.length){
-			for(int i = 0; i<allArguments[offset].length; i++){
-				arguments[offset] = allArguments[offset][i];
-				executeMethodWithPermutation(caller, method, allArguments, offset+1,arguments);	
-			}
-		} else {
-			logger.debug("Found a working permutation for method: " + method.getName());
-			String out = "\tPermutation is: ";
-			for(Object obj:arguments){
-				out += obj.getClass().getSimpleName()+", ";
-			}
-			logger.debug(out);
-			executeMethod(caller, method, arguments);
-		}
-	}
-
-	private void doAdapt(Object adapter, Set<Method> methods, List<Object> objects) {
-		
-//		for(Object obj:objects){
-//			logger.debug("This is my object: " + obj.getClass());
-//		}
-
-		// map the list of arguments to their class definition
+		//Generate Parameter bag
 		Map<Class<?>, List<Object>> arguments = mapArguments(new HashMap<Class<?>, List<Object>>(), objects);
 		
-		
+
+		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
+		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXO filter: " + ((requiredArg==null)?"null":requiredArg.getSimpleName()));	
+		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
 		for(Class<?> clazz:arguments.keySet()){
-			logger.debug("Bag for class: " + clazz.getName());
+			logger.trace("Bag for class: " + clazz.getSimpleName());
 			for(Object obj:arguments.get(clazz)){
-				logger.debug("\tin bag: " + obj.getClass());
+				if(Collection.class.isAssignableFrom(obj.getClass())){
+					Iterator<?> obji = ((Collection<?>)obj).iterator();
+					String out = "\tin bag: ";
+					while(obji.hasNext()){
+						out += obji.next().getClass().getSimpleName()+", ";
+					}
+					logger.trace(out);
+				} else {
+					logger.trace("\tin bag: " + obj.getClass().getSimpleName());
+				}
 			}
 		}
+		logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
 
-		for (Method method : matchingdMethods(methods, arguments.keySet())) {
+
+		for (Method method : matchingdMethods(requiredArg, methods.keySet(), arguments.keySet())) {
 			Class<?>[] paramTypes = method.getParameterTypes();
 			Object[][] parameters = new Object[paramTypes.length][];
 			
+			//Generate parameter matrix for permutation.
 			logger.debug("Got a matching method: " + method.getName());
 			int x = 0;
 			for(Class<?> paramType:paramTypes){
@@ -247,39 +151,107 @@ public class SearchAdapterService implements
 					logger.debug("\tin bag: " + obj.getClass().getSimpleName());
 				}
 			}
-			executeMethodWithPermutation(adapter, method, parameters, 0, new Object[paramTypes.length]);
-		}
-	}
-	
-	private static void ploplop( List<List<String>> allArguments, int offset, Object[] arguments) {
-		if(offset<allArguments.size()){
-			for(int i = 0; i<allArguments.get(offset).size(); i++){
-				arguments[offset] = allArguments.get(offset).get(i);
-				ploplop( allArguments, offset+1,arguments);	
+			
+			//Execute method with permutated arguments.
+			List<Object[]> argumentBags = findAllArgumentPermutations(parameters, 0,
+					new Object[paramTypes.length], new ArrayList<Object[]>());
+			for(Object[] argumentsInBag:argumentBags){
+				logger.trace("Found a working permutation for method: " + method.getName());
+				for(Object obj:argumentsInBag){
+					logger.trace("\t"+obj.getClass().getSimpleName()+", "+obj.toString());
+				}
+				this.executeMethod(methods.get(method), method, argumentsInBag);
 			}
-		} else {
-			logger.debug("Permutation is: " + Arrays.toString(arguments));
-			//executeMethod(caller, method, arguments);
+			logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
 		}
 	}
 	
-	public static void main(String...args){
-		List<List<String>> stuff = new ArrayList<List<String>>();
-		List<String> l1 = new ArrayList<String>();
-		l1.add("A");
-//		l1.add("B");
-//		List<String> l2 = new ArrayList<String>();
-//		l2.add("-");
-//		l2.add("+");
-//		List<String> l3 = new ArrayList<String>();
-//		l3.add("1");
-//		l3.add("2");
-//		l3.add("3");
-		stuff.add(l1);
-//		stuff.add(l2);
-//		stuff.add(l3);
-		
-		ploplop(stuff, 0, new String[1]);
-		
+	
+	@SuppressWarnings("unchecked")
+	private Map<Class<?>, List<Object>> mapArguments(Map<Class<?>, List<Object>> map,
+			List<Object> objects) {
+		if (objects.size() == 0) {
+			return map;
+		} else {
+			Object currentObject = objects.remove(0);
+			if (Collection.class.isAssignableFrom(currentObject.getClass())) {
+				objects.addAll((Collection<? extends Object>) currentObject);
+			} else {
+				if (!map.containsKey(currentObject.getClass())) {
+					map.put(currentObject.getClass(), new ArrayList<Object>());
+				}
+				map.get(currentObject.getClass()).add(currentObject);
+			}
+			return mapArguments(map, objects);
+		}
+	}
+
+	private List<Method> matchingdMethods(Class<?> requiredClass, Set<Method> methods,
+			Set<Class<?>> classSet) {
+		List<Method> matchingMethods = new ArrayList<Method>();
+		boolean hasRequiredClass = (requiredClass == null)?true:false;
+		for (Method method : methods) {
+			logger.trace("~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~~+");
+			logger.trace("Mathing Method: " + method.getName());
+			int match = 0;
+			Class<?>[] paramTypes = method.getParameterTypes();
+			for (Class<?> paramType : paramTypes) {
+				for(Class<?> clazz:classSet){
+					logger.trace("\tclass: " + clazz.getSimpleName() +
+							"\tparamType: " + paramType.getSimpleName() +
+							"\t" + paramType.isAssignableFrom(clazz) +
+							((requiredClass==null)?"":"\trequired:"+requiredClass.isAssignableFrom(paramType)));
+					if (paramType.isAssignableFrom(clazz)) {
+						match++;
+						if(requiredClass != null && requiredClass.isAssignableFrom(paramType)){
+							hasRequiredClass = true;
+						}
+						break;
+					}
+					
+				}
+			}
+			logger.trace("Mathing for method is: " + (hasRequiredClass && (match == paramTypes.length)));
+			if(hasRequiredClass && (match == paramTypes.length)) {
+				matchingMethods.add(method);
+			}
+		}
+		return matchingMethods;
+	}
+
+	private void executeMethod(Object caller, Method method, Object... arguments) {
+		try {
+			method.setAccessible(true);
+			method.invoke(caller, arguments);
+		} catch (IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			logger.error("Method name: "+ method.getName());
+			for(Object object:arguments){
+				logger.error("\t Param: " + object.getClass().getSimpleName()+"\t"+object.toString());
+			}
+			logger.error("Could not invoke method " + method.getName()
+					+ " on: " + caller.getClass().getSimpleName(), e);
+		}
+	}
+	
+	/** Permute all possible parameters
+	 * 
+	 * @param caller
+	 * @param method
+	 * @param allArguments
+	 * @param offset
+	 * @param arguments
+	 */
+	private List<Object[]> findAllArgumentPermutations(Object[][] allArguments, int offset, Object[] arguments, List<Object[]> results) {
+		if(offset<arguments.length){
+			for(int i = 0; i<allArguments[offset].length; i++){
+				arguments[offset] = allArguments[offset][i];
+				findAllArgumentPermutations(allArguments, offset+1,arguments, results);
+			}
+			return results;
+		} else {
+			results.add(arguments);
+			return results;
+		}
 	}
 }
