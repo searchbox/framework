@@ -1,5 +1,6 @@
 package com.searchbox.core.search.result;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.Set;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
@@ -16,9 +16,9 @@ import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.CachedContent;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.ref.StringUtils;
-import com.searchbox.service.DirectoryService;
 
 @SearchComponent
 public class TemplatedHitList extends SearchElementWithValues<Hit> implements CachedContent {
@@ -37,7 +37,8 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements Ca
 	@SearchAttribute String idField;
 	
 	public TemplatedHitList(){
-		super();
+		super("Result Set with Template",SearchElement.Type.VIEW);
+		this.fields = new ArrayList<String>();
 	}
 	
 	public String getTemplate(){
@@ -120,7 +121,7 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements Ca
 class TemplatedHitListAdapter  {
 
 	@SearchAdapterMethod(timing=Timing.BEFORE)
-	public SolrQuery setRequieredFieldsForTemplate(HitList searchElement,
+	public void setRequieredFieldsForTemplate(TemplatedHitList searchElement,
 			SolrQuery query) {
 		Set<String> fields = new HashSet<String>();
 		for(String field:searchElement.getFields()){
@@ -137,11 +138,10 @@ class TemplatedHitListAdapter  {
 		}
 		fields.add("score");
 		query.setFields(fields.toArray(new String[0]));
-		return query;
 	}
 
 	@SearchAdapterMethod(timing=Timing.AFTER)
-	public HitList generateHitElementsForTemplate(HitList element, QueryResponse response) {
+	public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
 		while(documents.hasNext()){
@@ -151,7 +151,6 @@ class TemplatedHitListAdapter  {
 				hit.addFieldValue(field, document.get(field));
 			}
 		}
-		return element;
 	}
 
 }
