@@ -73,11 +73,12 @@ public class UnknownClassDefinition {
 						logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
 						throw new RuntimeException("Could not construct element for class: " + getClazz());
 					} else {
+						setter.setAccessible(true);
 						setter.invoke(element, attribute.getValue());
 					}
 				} catch (Exception e) {
-					logger.error("Could not find setter: " + element.getClass().getName()+
-							"#"+attribute.getName()+"["+attribute.getType().getName()+"]");
+					logger.error("Error in setter: " + element.getClass().getName()+
+							"#"+setter.getName()+"["+attribute.getType().getName()+"]");
 					logger.error("Attribute Value is: " + attribute.getValue());
 					logger.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
 					if(setter != null){
