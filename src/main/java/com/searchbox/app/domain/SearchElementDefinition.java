@@ -106,6 +106,7 @@ public class SearchElementDefinition extends UnknownClassDefinition
 		SearchElement element = (SearchElement) super.toObject();
 		element.setLabel(this.getLabel());
 		element.setPosition(this.getPosition());
+		element.setDefinitionId(this.getId());
 		return element;
 	}
 }

@@ -22,14 +22,6 @@ public class SearchEngineDefinition extends UnknownClassDefinition
 		this.name = name;
 	}
 	
-	
-	public AbstractSearchEngine<?, ?> toEngine(){
-		AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super.toObject();
-		engine.setName(this.getName());
-		return engine;
-	}
-	
-
 	public String getName() {
 		return name;
 	}
@@ -38,7 +30,8 @@ public class SearchEngineDefinition extends UnknownClassDefinition
 	}
 	@Override
 	public SearchEngine<?, ?> getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super.toObject();
+		engine.setName(this.getName());
+		return engine;
 	}
 }

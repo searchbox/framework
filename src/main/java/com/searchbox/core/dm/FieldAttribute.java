@@ -5,23 +5,33 @@ import javax.persistence.MappedSuperclass;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.searchbox.anno.SearchAttribute;
+
 @MappedSuperclass
 public class FieldAttribute {
 	
+	@SearchAttribute
 	protected String key = "";
 	
+	@SearchAttribute
 	protected String label = "";
 	
-	protected Boolean searchable;
+	@SearchAttribute
+	protected Boolean searchable = false;
 
-	protected Boolean highlight;
+	@SearchAttribute
+	protected Boolean highlight = false;
 	
-	protected Boolean sortable;
+	@SearchAttribute
+	protected Boolean sortable = false;
 	
-	protected Boolean spelling;
+	@SearchAttribute
+	protected Boolean spelling = false;
 	
-	protected Boolean suggestion;
+	@SearchAttribute
+	protected Boolean suggestion = false;
 	
+	@SearchAttribute
 	protected Float boost = 1f;
 
 	public String toString() {

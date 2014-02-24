@@ -119,6 +119,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
 		fieldAttr2.setAttributeValue("searchable",true);
 		preset.addFieldAttribute(fieldAttr2);
+		
+		//Create & add a querydebug SearchComponent to the preset;
+		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
+		preset.addSearchElement(querydebug);
+		
+		//Create & add a query SearchComponent to the preset;
+		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
+		preset.addSearchElement(query);
 
 		//Create & add a TemplatedHitLIst SearchComponent to the preset;
 		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
@@ -138,35 +146,24 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldSort.setAttributeValue("values", sortFields);
 		preset.addSearchElement(fieldSort);
 				
-		
-		
-
 				
 		//Create & add a HitLIst SearchComponent to the preset;
-		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "article-title");
-		hitList.setAttributeValue("idField", "id");
-		hitList.setAttributeValue("urlField", "article-title");
-		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("article-abstract");
-		fields.add("author");
-		fields.add("publication-type");
-		fields.add("article-completion-date");
-		fields.add("article-revision-date");
-		hitList.setAttributeValue("fields", fields);
-		preset.addSearchElement(hitList);
+//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+//		hitList.setAttributeValue("titleField", "article-title");
+//		hitList.setAttributeValue("idField", "id");
+//		hitList.setAttributeValue("urlField", "article-title");
+//		ArrayList<String> fields = new ArrayList<String>();
+//		fields.add("article-abstract");
+//		fields.add("author");
+//		fields.add("publication-type");
+//		fields.add("article-completion-date");
+//		fields.add("article-revision-date");
+//		hitList.setAttributeValue("fields", fields);
+//		preset.addSearchElement(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
 		preset.addSearchElement(basicStatus);
-		
-		//Create & add a querydebug SearchComponent to the preset;
-		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-		preset.addSearchElement(querydebug);
-		
-		//Create & add a query SearchComponent to the preset;
-		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
-		preset.addSearchElement(query);
 		
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
@@ -232,82 +229,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		while(engineDefinitions.hasNext()){
 			SearchEngineDefinition engineDefinition = engineDefinitions.next();
 			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
-			searchEngineService.load(engineDefinition.toEngine());
+			searchEngineService.load(engineDefinition.getInstance());
 		}
 	}
 
-	// private void setSettings() {
-	// SettingCategory generalCategory = new SettingCategory();
-	// generalCategory.setLabel("General");
-	// generalCategory.setScope("searchbox");
-	// generalCategory
-	// .addSetting("Logo", "The searchbox logo used everywhere");
-	// generalCategory.addSetting("Private",
-	// "A private searchbox requires a registration", false);
-	// generalCategory.addSetting("Advanced",
-	// "Show advanced configuration (Solr schema/config)", false);
-	// generalCategory.persist();
-	//
-	// SettingCategory customizationCategory = new SettingCategory();
-	// customizationCategory.setLabel("Customization");
-	// customizationCategory.setScope("searchbox");
-	// customizationCategory.addSetting("Custom JS",
-	// "Js script added at the bottom of the page");
-	// customizationCategory.addSetting("Custom CSS",
-	// "CSS added on the top of the page");
-	// customizationCategory.addSetting("Site Verification",
-	// "Google site verification for webmaster tools");
-	// customizationCategory.persist();
-	//
-	// SettingCategory landingCategory = new SettingCategory();
-	// landingCategory.setLabel("Landing Page");
-	// landingCategory.setScope("searchbox");
-	// landingCategory
-	// .addSetting(
-	// "Teaser",
-	// "Teaser, html format that encourage users to signup to your searchbox (if private)");
-	// landingCategory.persist();
-	//
-	// SettingCategory searchCategory = new SettingCategory();
-	// searchCategory.setLabel("Search");
-	// searchCategory.setScope("preset");
-	// searchCategory.addSetting("Query Operator",
-	// "Query operator to use between keywords", "AND");
-	// searchCategory.addSetting("Semantic search",
-	// "Activate semantic search", false);
-
-	// settings["resultPerPage"] = new Setting(label:
-	// "Pagination type","Type of pagination", slug:"paginationType",
-	// category: searchCat, widget:"select",
-	// options:"traditional=Traditional Pagination;infiniteScroll=Infinite scroll",
-	// defaultValue:"traditional").save(failOnError: true, flush:true)
-	// settings["semanticSearchActive"] = new Setting(label:
-	// "Semantic search","Activate semantic search", slug:"semanticSearch",
-	// category: searchCat, widget:"boolean",
-	// defaultValue:"0").save(failOnError: true, flush:true)
-	// settings["itemsPerPage"] = new Setting(label:
-	// "Result per page","Number of result per page", slug:"pageSize",
-	// category: searchCat, widget:"integer",
-	// defaultValue:"10").save(failOnError: true, flush:true)
-	// settings["queryOperator"] = new Setting(label:
-	// "Query operator","Query operator to use between keywords", slug:
-	// "queryOperator", category:searchCat, widget:"radio",
-	// options:"OR=OR;AND=AND", defaultValue:"AND").save(failOnError: true,
-	// flush:true)
-	// settings["liveSearch"] = new Setting(label:
-	// "Live search","Enable live search (search as you type)", slug:
-	// "liveSearch", category:searchCat, widget:"boolean",
-	// defaultValue:"0").save(failOnError: true, flush:true)
-	// settings["rssLink"] = new Setting(label:
-	// "Rss Link","Add a link to RSS feed for results", slug:"rssLink",
-	// category:searchCat,
-	// widget:"boolean",defaultValue:"0").save(failOnError: true,
-	// flush:true)
-
-	// searchCategory.persist();
-
-	// }
-	
 	@SuppressWarnings("resource")
 	public static void main(String... args){
 		@SuppressWarnings("unused")

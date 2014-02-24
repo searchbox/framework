@@ -165,7 +165,7 @@ public class SearchController {
 		}
 	
 		Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-		for(FieldAttributeDefinition def:fieldAttributeRepository.findAllByPreset(preset)){
+		for(FieldAttributeDefinition def:preset.getFieldAttributes()){
 			fieldAttributes.add(def.getInstance());
 		}
 		

@@ -84,7 +84,7 @@ public class PubmedCollection {
 					contentstream.setContentType("text/xml");
 					ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
 					request.addContentStream(contentstream);
-					SearchEngine engine = searchEngineService.getSearchEngine("embedded Solr");
+					SearchEngine<?, ?> engine = searchEngineService.getSearchEngine("embedded Solr");
 					
 					request.process(((EmbeddedSolr)engine).getServer());
 					((EmbeddedSolr)engine).getServer().commit();
