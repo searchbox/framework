@@ -7,11 +7,13 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.LazyCollection;
@@ -36,10 +38,10 @@ public class UnknownClassDefinition {
 	
 	private Class<?> clazz;
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<UnknownAttributeDefinition> attributes = new ArrayList<UnknownAttributeDefinition>();
-
+	private List<UnknownAttributeDefinition> attributes;
+	
 	public UnknownClassDefinition(){
 		this.attributes = new ArrayList<UnknownAttributeDefinition>();
 	}
@@ -50,6 +52,7 @@ public class UnknownClassDefinition {
 		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
 	}
 	
+	@Transient
 	protected Object toObject(){
 		Object element = null;
 		try {
