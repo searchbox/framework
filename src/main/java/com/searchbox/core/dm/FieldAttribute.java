@@ -8,19 +8,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MappedSuperclass
 public class FieldAttribute {
 	
+	
 	protected String key = "";
 	
 	protected String label = "";
 	
-	protected Boolean searchable;
+	protected Boolean searchable = false;
 
-	protected Boolean highlight;
+	protected Boolean highlight = false;
 	
-	protected Boolean sortable;
+	protected Boolean sortable = false;
 	
-	protected Boolean spelling;
+	protected Boolean spelling = false;
 	
-	protected Boolean suggestion;
+	protected Boolean suggestion = false;
 	
 	protected Float boost = 1f;
 
