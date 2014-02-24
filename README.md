@@ -45,12 +45,16 @@ Components
 ---------------
 
 TODO
-=======
+====
 * Finish the framework
 * Add new components such as RangeFacet and GeoFacet
 * Write the technical documentation
 * Build a new website for the open-source project
 
+Known Limitations
+-----------------
+* SearchElement *cannot* extend one another for the moment (breaks adapterService).
+* SearchAdapterMethod *cannot* use Collection as arguments (fails in adapterService).
 
 License
 =======
