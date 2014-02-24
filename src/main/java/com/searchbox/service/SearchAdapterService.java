@@ -202,9 +202,9 @@ public class SearchAdapterService implements
 
 	private void doAdapt(Object adapter, Set<Method> methods, List<Object> objects) {
 		
-		for(Object obj:objects){
-			logger.debug("This is my object: " + obj.getClass());
-		}
+//		for(Object obj:objects){
+//			logger.debug("This is my object: " + obj.getClass());
+//		}
 
 		// map the list of arguments to their class definition
 		Map<Class<?>, List<Object>> arguments = mapArguments(new HashMap<Class<?>, List<Object>>(), objects);

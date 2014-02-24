@@ -7,7 +7,6 @@ import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
 import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;

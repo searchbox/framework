@@ -148,18 +148,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 				
 				
 		//Create & add a HitLIst SearchComponent to the preset;
-		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "article-title");
-		hitList.setAttributeValue("idField", "id");
-		hitList.setAttributeValue("urlField", "article-title");
-		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("article-abstract");
-		fields.add("author");
-		fields.add("publication-type");
-		fields.add("article-completion-date");
-		fields.add("article-revision-date");
-		hitList.setAttributeValue("fields", fields);
-		preset.addSearchElement(hitList);
+//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+//		hitList.setAttributeValue("titleField", "article-title");
+//		hitList.setAttributeValue("idField", "id");
+//		hitList.setAttributeValue("urlField", "article-title");
+//		ArrayList<String> fields = new ArrayList<String>();
+//		fields.add("article-abstract");
+//		fields.add("author");
+//		fields.add("publication-type");
+//		fields.add("article-completion-date");
+//		fields.add("article-revision-date");
+//		hitList.setAttributeValue("fields", fields);
+//		preset.addSearchElement(hitList);
 		
 		//Create & add a basicSearchStat SearchComponent to the preset;
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
