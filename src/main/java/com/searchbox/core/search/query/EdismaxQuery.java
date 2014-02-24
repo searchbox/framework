@@ -2,6 +2,7 @@ package com.searchbox.core.search.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -85,7 +86,7 @@ class EdismaxQuerySolrAdaptor {
 
 	@SearchAdapterMethod(target=Target.PRE)
 	public SolrQuery setQueryFields(EdismaxQuery SearchElement,
-			SolrQuery query) {
+			SolrQuery query, Set<FieldAttribute> fieldAttributes) {
 		
 		query.setQuery(SearchElement.getQuery());
 		
@@ -93,15 +94,14 @@ class EdismaxQuerySolrAdaptor {
 		query.set(DisMaxParams.ALTQ, "*:*");
 		
 		//fetching all searchable fields
-		//FIXME the Magic executeMethod in SearchAdapterService fails with List<FieldAtributes>
-//		List<String> qfs = new ArrayList<String>();
-//		for(FieldAttribute fieldAttr:fieldAttributes){
-//			if(fieldAttr.getSearchable()){
-//				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
-//				qfs.add(fieldAttr.getKey()+"^"+boost);
-//			}
-//		}
-//		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
+		List<String> qfs = new ArrayList<String>();
+		for(FieldAttribute fieldAttr:fieldAttributes){
+			if(fieldAttr.getSearchable()){
+				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
+				qfs.add(fieldAttr.getKey()+"^"+boost);
+			}
+		}
+		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
 		return query;
 	}
 
