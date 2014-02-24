@@ -8,9 +8,9 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElement;
@@ -80,10 +80,10 @@ public class HitList extends SearchElementWithValues<Hit> {
 	}
 }
 
-@SearchAdapter(target=HitList.class)
+@SearchAdapter
 class HitListAdapter {
 
-	@SearchAdapterMethod(timing=Timing.BEFORE)
+	@PreSearchAdapter
 	public SolrQuery setRequieredFields(HitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
@@ -102,7 +102,7 @@ class HitListAdapter {
 		return query;
 	}
 
-	@SearchAdapterMethod(timing=Timing.AFTER)
+	@PostSearchAdapter
 	public HitList generateHits(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();

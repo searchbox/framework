@@ -1,16 +1,13 @@
 package com.searchbox.core.search.query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.DisMaxParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.ConditionalSearchElement;
@@ -81,41 +78,44 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	}
 }
 
-@SearchAdapter(target=EdismaxQuery.class)
+@SearchAdapter
 class EdismaxQuerySolrAdaptor {
 
-	@SearchAdapterMethod(target=Target.PRE)
-	public SolrQuery setQueryFields(EdismaxQuery SearchElement,
-			SolrQuery query, Set<FieldAttribute> fieldAttributes) {
-		
-		query.setQuery(SearchElement.getQuery());
-		
+	private static Logger logger = LoggerFactory
+			.getLogger(EdismaxQuerySolrAdaptor.class);
+	
+	@PreSearchAdapter
+	public void setDefaultQuery(SolrQuery query){
 		query.setRequestHandler("edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
-		
-		//fetching all searchable fields
-		List<String> qfs = new ArrayList<String>();
-		for(FieldAttribute fieldAttr:fieldAttributes){
-			if(fieldAttr.getSearchable()){
-				Float boost = (fieldAttr.getBoost()!=null)?fieldAttr.getBoost():1.0f;
-				qfs.add(fieldAttr.getKey()+"^"+boost);
-			}
+	}
+	
+	
+	@PreSearchAdapter
+	public void setQueryFields(EdismaxQuery SearchElement,
+			SolrQuery query, FieldAttribute fieldAttribute) {
+	
+		if(fieldAttribute.getSearchable()){
+			Float boost = (fieldAttribute.getBoost()!=null)?fieldAttribute.getBoost():1.0f;
+			String currentFields = query.get(DisMaxParams.QF);
+			query.set(DisMaxParams.QF, 
+					((currentFields!=null && !currentFields.isEmpty())?currentFields+" ":"")+
+							fieldAttribute.getKey()+"^"+boost);
 		}
-		query.set(DisMaxParams.QF, StringUtils.join(qfs," "));
-		return query;
 	}
 
-	@SearchAdapterMethod(target=Target.POST)
+	@PostSearchAdapter
 	public EdismaxQuery udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
+		logger.info("Post query adapter. Setting query to: " + query.getQuery());
 		searchElement.setQuery(query.getQuery());			
 		return searchElement;
 	}
 
-	@SearchAdapterMethod(target=Target.PRE)
+	@PreSearchAdapter
 	public SolrQuery getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
+		logger.info("Pre adaptor setting query to: " + condition.getQuery());
 		query.setQuery(condition.getQuery());
 		return query;
 	}
-
 }
 

@@ -10,9 +10,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.FacetParams;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalValueElement;
@@ -193,10 +193,10 @@ public class FieldFacet
 
 }
 
-@SearchAdapter(target = FieldFacet.class)
+@SearchAdapter
 class FieldFacetSolrAdaptor {
 
-	@SearchAdapterMethod(target = Target.PRE)
+	@PreSearchAdapter
 	public SolrQuery createFilterQueries(FieldFacet facet,
 			FieldFacet.ValueCondition condition, SolrQuery query) {
 		String conditionValue = ClientUtils.escapeQueryChars(condition.value);
@@ -223,7 +223,7 @@ class FieldFacetSolrAdaptor {
 		return query;
 	}
 
-	@SearchAdapterMethod(target = Target.PRE)
+	@PreSearchAdapter
 	public SolrQuery addFacetField(FieldFacet facet, SolrQuery query) {
 		boolean defined = false;
 		String[] facetFields = query.getFacetFields();
@@ -245,7 +245,7 @@ class FieldFacetSolrAdaptor {
 		return query;
 	}
 
-	@SearchAdapterMethod(target = Target.POST)
+	@PostSearchAdapter
 	public FieldFacet getFacetValues(FieldFacet fieldFacet,
 			QueryResponse response) {
 		if (response.getFacetFields() != null) {

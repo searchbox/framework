@@ -4,9 +4,9 @@ package com.searchbox.core.search.debug;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 
@@ -36,16 +36,16 @@ public class SolrToString extends SearchElement  {
 		this.response = response;
 	}
 
-	@SearchAdapter(target=SolrToString.class)
+	@SearchAdapter
 	public static class SolrAdaptor {
 
-		@SearchAdapterMethod(target=Target.PRE)
+		@PreSearchAdapter
 		public SolrQuery addDebug(SolrQuery query) {
 			query.set("debug","true");
 			return query;
 		}
 
-		@SearchAdapterMethod(target=Target.POST)
+		@PostSearchAdapter
 		public SolrToString getDebugInfo(SolrToString searchElement, SolrQuery query,
 				QueryResponse response) {
 			searchElement.setQuery(query.toString());

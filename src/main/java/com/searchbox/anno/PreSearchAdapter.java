@@ -6,12 +6,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.METHOD })
+import com.searchbox.anno.SearchAdapter.Time;
+
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SearchAdapterMethod {
+@SearchAdapter(execute=Time.BEFORE)
+public @interface PreSearchAdapter{
 
-	Target target() default Target.PRE;
-	
-	public enum Target { PRE, POST}
 }

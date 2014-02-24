@@ -1,6 +1,5 @@
 package com.searchbox.data;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,7 +32,6 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
-import com.searchbox.core.search.result.HitList;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;

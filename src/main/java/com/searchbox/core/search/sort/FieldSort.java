@@ -6,9 +6,8 @@ import java.util.SortedSet;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.ConditionalValueElement;
@@ -135,10 +134,10 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	}
 }
 
-@SearchAdapter(target=FieldSort.class)
+@SearchAdapter
 class FieldSortSolrAdatptor {
 
-	@SearchAdapterMethod(target=Target.PRE)
+	@PreSearchAdapter
 	public SolrQuery setSortCondition(FieldSort.Condition condition,
 			SolrQuery query) {
 		if(condition.sort.equals(Sort.ASC)) {

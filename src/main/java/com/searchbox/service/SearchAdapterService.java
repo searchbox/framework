@@ -20,9 +20,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.core.engine.SearchEngine;
 
 @Service
@@ -35,12 +35,10 @@ public class SearchAdapterService implements
 	@Autowired
 	ApplicationContext context;
 
-	private Map<Class<?>, Object> adapterIntances;
 	private Map<Method, Object> preSearchMethods;
 	private Map<Method, Object> postSearchMethods;
 
 	public SearchAdapterService() {
-		this.adapterIntances = new HashMap<Class<?>, Object>();
 		this.preSearchMethods = new HashMap<Method, Object>();
 		this.postSearchMethods = new HashMap<Method, Object>();
 	}
@@ -49,7 +47,6 @@ public class SearchAdapterService implements
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 
 		// Reset maps for adapters.
-		this.adapterIntances = new HashMap<Class<?>, Object>();
 		this.preSearchMethods = new HashMap<Method, Object>();
 		this.postSearchMethods = new HashMap<Method, Object>();
 
@@ -57,22 +54,15 @@ public class SearchAdapterService implements
 		for (Entry<String, Object> bean : context.getBeansWithAnnotation(
 				SearchAdapter.class).entrySet()) {
 			Object adapter = bean.getValue();
-			Class<?> target = adapter.getClass()
-					.getAnnotation(SearchAdapter.class).target();
-			this.adapterIntances.put(target, adapter);
-			logger.debug("Found adapter for: " + target.getSimpleName());
 			for (Method method : adapter.getClass().getDeclaredMethods()) {
-				if (method.isAnnotationPresent(SearchAdapterMethod.class)) {
-					if (method.getAnnotation(SearchAdapterMethod.class)
-							.timing().equals(Timing.BEFORE)) {
-						logger.debug("Registering Pre adapt: "
-								+ method.getName());
-						this.preSearchMethods.put(method,adapter);
-					} else {
-						logger.debug("Registering Post adapt: "
-								+ method.getName());
-						this.postSearchMethods.put(method,adapter);
-					}
+				if (method.isAnnotationPresent(PreSearchAdapter.class)) {
+					logger.debug("Registering Pre adapt: "
+							+ method.getName());
+					this.preSearchMethods.put(method,adapter);
+				} else if(method.isAnnotationPresent(PostSearchAdapter.class)) {
+					logger.debug("Registering Post adapt: "
+							+ method.getName());
+					this.postSearchMethods.put(method,adapter);
 				}
 			}
 		}

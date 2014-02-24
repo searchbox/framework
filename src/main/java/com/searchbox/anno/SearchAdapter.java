@@ -9,15 +9,12 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.searchbox.core.search.SearchElement;
-
-@Target({ ElementType.TYPE })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
 @Scope("singleton")
 public @interface SearchAdapter {
-	
-	Class<?> target() default SearchElement.class;
-
+	Time execute() default Time.BEFORE;
+	public enum Time {BEFORE, AFTER}
 }

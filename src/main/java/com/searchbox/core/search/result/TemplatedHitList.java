@@ -10,9 +10,9 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
+import com.searchbox.anno.PostSearchAdapter;
+import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.CachedContent;
@@ -117,10 +117,10 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements Ca
 	}
 }
 
-@SearchAdapter(target=TemplatedHitList.class)
+@SearchAdapter
 class TemplatedHitListAdapter  {
 
-	@SearchAdapterMethod(timing=Timing.BEFORE)
+	@PreSearchAdapter
 	public void setRequieredFieldsForTemplate(TemplatedHitList searchElement,
 			SolrQuery query) {
 		Set<String> fields = new HashSet<String>();
@@ -140,7 +140,7 @@ class TemplatedHitListAdapter  {
 		query.setFields(fields.toArray(new String[0]));
 	}
 
-	@SearchAdapterMethod(timing=Timing.AFTER)
+	@PostSearchAdapter
 	public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
