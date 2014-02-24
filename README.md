@@ -1,4 +1,4 @@
-Searchbox - Search framework - the missing layer between the user and backend technology
+Searchbox/Search Framework
 =========
 Searchbox is a Search Framework developed under java/spring which enables you as a developer or CIO to easily leverage backend search engines such as Apache Solr, ElasticSearch and Google Site Search in an easy way.
 
@@ -38,8 +38,6 @@ Components
 **Search elements**
 
 **Web**
-
-
 The Searchbox framework provides an easy way to build a search engine to visualise 
 
 
@@ -56,10 +54,10 @@ TODO
 
 License
 =======
-Searchbox is distributed under the Apache 2 license. Please keep the exisisting headers.
+Searchbox is distributed under the Apache 2 license. Please keep the existing headers.
 
 Attribution
 ======
 Main developers
-- Gamard Stéphane - <stephane.gamard@searchbox.com>, @gamars, http://www.searchbox.com
+- Gamard Stephane - <stephane.gamard@searchbox.com>, @gamars, http://www.searchbox.com
 - Rey Jonathan - <jonathan.rey@searchbox.com>, @searchbox, http://www.searchbox.com
