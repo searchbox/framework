@@ -1,7 +1,9 @@
 package com.searchbox.core.search.result;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -10,19 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
+import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.CachedContent;
-import com.searchbox.core.search.result.HitList.Hit;
+import com.searchbox.core.search.SearchElementWithValues;
 import com.searchbox.ref.StringUtils;
 import com.searchbox.service.DirectoryService;
 
 @SearchComponent
-public class TemplatedHitList extends HitList implements CachedContent {
-	
-	@Autowired
-	DirectoryService directoryService;
+public class TemplatedHitList extends SearchElementWithValues<Hit> implements CachedContent {
 		
 	protected List<String> fields;
 	
@@ -30,6 +29,12 @@ public class TemplatedHitList extends HitList implements CachedContent {
 	private String template;
 	
 	private String templateFile;
+	
+	@SearchAttribute String titleField;
+	
+	@SearchAttribute String urlField;
+	
+	@SearchAttribute String idField;
 	
 	public TemplatedHitList(){
 		super();
@@ -46,6 +51,51 @@ public class TemplatedHitList extends HitList implements CachedContent {
 	
 	public String getTemplateFile(){
 		return this.templateFile;
+	}
+
+	public String getTitleField() {
+		return titleField;
+	}
+
+	public void setTitleField(String titleField) {
+		this.titleField = titleField;
+	}
+
+	public String getUrlField() {
+		return urlField;
+	}
+
+	public void setUrlField(String urlField) {
+		this.urlField = urlField;
+	}
+
+	public String getIdField() {
+		return idField;
+	}
+
+	public void setIdField(String idField) {
+		this.idField = idField;
+	}
+
+	public void setFields(List<String> fields) {
+		this.fields = fields;
+	}
+
+	public List<String> getFields() {
+		return this.fields;
+	}
+
+	public void addHit(Hit hit) {
+		this.values.add(hit);
+	}
+
+	public Hit newHit(Float score) {
+		Hit hit = new Hit(score);
+		hit.setIDFieldName(this.idField);
+		hit.setTitleFieldName(this.titleField);
+		hit.setURLFieldName(this.urlField);
+		this.addHit(hit);
+		return hit;
 	}
 
 	@Override
@@ -69,27 +119,29 @@ public class TemplatedHitList extends HitList implements CachedContent {
 @SearchAdapter(target=TemplatedHitList.class)
 class TemplatedHitListAdapter  {
 
-	@SearchAdapterMethod(target=Target.PRE)
-	public SolrQuery setRequieredFields(HitList searchElement,
+	@SearchAdapterMethod(timing=Timing.BEFORE)
+	public SolrQuery setRequieredFieldsForTemplate(HitList searchElement,
 			SolrQuery query) {
+		Set<String> fields = new HashSet<String>();
 		for(String field:searchElement.getFields()){
-			query.addField(field);
+			fields.add(field);
 		}
 		if(!searchElement.getFields().contains(searchElement.getTitleField())){
-			query.addField(searchElement.getTitleField());
+			fields.add(searchElement.getTitleField());
 		}
 		if(!searchElement.getFields().contains(searchElement.getUrlField())){
-			query.addField(searchElement.getUrlField());
+			fields.add(searchElement.getUrlField());
 		}
 		if(!searchElement.getFields().contains(searchElement.getIdField())){
-			query.addField(searchElement.getIdField());
+			fields.add(searchElement.getIdField());
 		}
-		query.addField("score");
+		fields.add("score");
+		query.setFields(fields.toArray(new String[0]));
 		return query;
 	}
 
-	@SearchAdapterMethod(target=Target.POST)
-	public HitList doAdapt(HitList element, QueryResponse response) {
+	@SearchAdapterMethod(timing=Timing.AFTER)
+	public HitList generateHitElementsForTemplate(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
 		while(documents.hasNext()){

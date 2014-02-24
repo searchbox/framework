@@ -1,10 +1,8 @@
 package com.searchbox.core.search.result;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -12,28 +10,24 @@ import org.apache.solr.common.SolrDocument;
 
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAdapterMethod;
-import com.searchbox.anno.SearchAdapterMethod.Target;
+import com.searchbox.anno.SearchAdapterMethod.Timing;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
-import com.searchbox.core.search.ValueElement;
 
 
 @SearchComponent
-public class HitList extends SearchElementWithValues<HitList.Hit> {
+public class HitList extends SearchElementWithValues<Hit> {
 	
 	@SearchAttribute
 	protected List<String> fields;
 	
-	@SearchAttribute
-	private String titleField;
+	@SearchAttribute String titleField;
 	
-	@SearchAttribute
-	private String urlField;
+	@SearchAttribute String urlField;
 	
-	@SearchAttribute
-	private String idField;
+	@SearchAttribute String idField;
 	
 	public HitList(){
 		super("Result Set",SearchElement.Type.VIEW);
@@ -78,84 +72,18 @@ public class HitList extends SearchElementWithValues<HitList.Hit> {
 
 	public Hit newHit(Float score) {
 		Hit hit = new Hit(score);
+		hit.setIDFieldName(this.idField);
+		hit.setTitleFieldName(this.titleField);
+		hit.setURLFieldName(this.urlField);
 		this.addHit(hit);
 		return hit;
-	}
-	
-	public class Hit extends ValueElement  {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6419221783189375788L;
-		
-		public Map<String, Object> fieldValues;
-		private Float score;
-		
-		public Hit(Float score){
-			super("");
-			this.score = score;
-			this.fieldValues = new HashMap<String, Object>();
-		}
-		
-		public Float getScore(){
-			return this.score;
-		}
-
-		public void setScore(Float score) {
-			this.score = score;
-		}
-		
-		public void addFieldValue(String name, Object value){
-			this.fieldValues.put(name, value);
-		}
-		
-		@SuppressWarnings("unchecked")
-		public String getId(){
-			Object id = this.fieldValues.get(idField);
-			if(List.class.isAssignableFrom(id.getClass())){
-				return ((List<String>)id).get(0);
-			} else {
-				return (String)id;
-			}
-		}
-		
-		@SuppressWarnings("unchecked")
-		public String getTitle(){
-			Object title = this.fieldValues.get(titleField);
-			if(List.class.isAssignableFrom(title.getClass())){
-				return ((List<String>)title).get(0);
-			} else {
-				return (String)title;
-			}
-		}
-		
-		@SuppressWarnings("unchecked")
-		public String getUrl(){
-			Object url = this.fieldValues.get(urlField);
-			if(List.class.isAssignableFrom(url.getClass())){
-				return ((List<String>)url).get(0);
-			} else {
-				return (String)url;
-			}
-		}
-		
-		public Map<String, Object> getFieldValues(){
-			return this.fieldValues;
-		}
-
-		@Override
-		public int compareTo(ValueElement other) {
-			return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
-		}
-		
 	}
 }
 
 @SearchAdapter(target=HitList.class)
 class HitListAdapter {
 
-	@SearchAdapterMethod(target=Target.PRE)
+	@SearchAdapterMethod(timing=Timing.BEFORE)
 	public SolrQuery setRequieredFields(HitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
@@ -174,13 +102,13 @@ class HitListAdapter {
 		return query;
 	}
 
-	@SearchAdapterMethod(target=Target.POST)
-	public HitList doAdapt(HitList element, QueryResponse response) {
+	@SearchAdapterMethod(timing=Timing.AFTER)
+	public HitList generateHits(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();
 		while(documents.hasNext()){
 			SolrDocument document = documents.next();
-			HitList.Hit hit = element.newHit((Float) document.get("score"));
+			Hit hit = element.newHit((Float) document.get("score"));
 			for(String field:document.getFieldNames()){
 				hit.addFieldValue(field, document.get(field));
 			}
