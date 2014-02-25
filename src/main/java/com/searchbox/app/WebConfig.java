@@ -1,4 +1,4 @@
-package com.searchbox;
+package com.searchbox.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
