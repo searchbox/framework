@@ -164,13 +164,15 @@ public class SearchAdapterService implements
 			return map;
 		} else {
 			Object currentObject = objects.remove(0);
-			if (Collection.class.isAssignableFrom(currentObject.getClass())) {
-				objects.addAll((Collection<? extends Object>) currentObject);
-			} else {
-				if (!map.containsKey(currentObject.getClass())) {
-					map.put(currentObject.getClass(), new ArrayList<Object>());
+			if(currentObject!=null){
+				if (Collection.class.isAssignableFrom(currentObject.getClass())) {
+					objects.addAll((Collection<? extends Object>) currentObject);
+				} else {
+					if (!map.containsKey(currentObject.getClass())) {
+						map.put(currentObject.getClass(), new ArrayList<Object>());
+					}
+					map.get(currentObject.getClass()).add(currentObject);
 				}
-				map.get(currentObject.getClass()).add(currentObject);
 			}
 			return mapArguments(map, objects);
 		}
