@@ -10,8 +10,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.springframework.beans.factory.annotation.Configurable;
-
 import com.searchbox.core.dm.Collection;
 
 @Entity

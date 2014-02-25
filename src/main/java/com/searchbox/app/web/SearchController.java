@@ -22,8 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.FieldAttributeDefinition;
+import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.SearchElementDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.FieldAttributeRepository;
