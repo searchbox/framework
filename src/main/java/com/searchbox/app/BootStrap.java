@@ -16,7 +16,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.ApplicationConfig;
+import com.searchbox.ContextConfig;
 import com.searchbox.app.domain.CollectionDefinition;
 import com.searchbox.app.domain.FieldAttributeDefinition;
 import com.searchbox.app.domain.FieldDefinition;
@@ -235,7 +235,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	public static void main(String... args){
 		@SuppressWarnings("unused")
 		AnnotationConfigApplicationContext context = 
-				new AnnotationConfigApplicationContext(ApplicationConfig.class);
+				new AnnotationConfigApplicationContext(ContextConfig.class);
 		
 	}
 }

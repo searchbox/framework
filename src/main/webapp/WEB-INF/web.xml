@@ -28,7 +28,7 @@
         specified for component-scanning -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>com.searchbox.ApplicationConfig com.searchbox.app.WebConfig</param-value>
+        <param-value>com.searchbox.ContextConfig com.searchbox.app.WebConfig</param-value>
     </context-param>
 
     <!-- Bootstrap the root application context as usual using ContextLoaderListener -->

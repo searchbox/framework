@@ -30,7 +30,7 @@ import com.searchbox.app.repository.SearchboxRepository;
 @EnableBatchProcessing
 @ComponentScan(basePackages = {"com.searchbox.core","com.searchbox.ref",
 		"com.searchbox.app","com.searchbox.service", "com.searchbox.data"})
-public class ApplicationConfig  {
+public class ContextConfig  {
 	
     @Bean
     public DataSource dataSource() {
@@ -66,7 +66,7 @@ public class ApplicationConfig  {
 
 
     public static void main(String[] args) {
-        AbstractApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(ContextConfig.class);
         SearchboxRepository repository = context.getBean(SearchboxRepository.class);
 
 
