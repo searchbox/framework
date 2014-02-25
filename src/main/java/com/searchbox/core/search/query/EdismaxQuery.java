@@ -2,21 +2,20 @@ package com.searchbox.core.search.query;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.DisMaxParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.searchbox.anno.PostSearchAdapter;
 import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 
-@SearchComponent(prefix = "q", condition = EdismaxQuery.Condition.class, converter=EdismaxQuery.Converter.class)
+@SearchComponent(urlParam="q")
 public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition> {
-
+	
 	private String query;
 
 	public EdismaxQuery() {
@@ -59,7 +58,7 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 		}
 	}
 	
-
+	@SearchConverter
 	public static class Converter implements 
 	org.springframework.core.convert.converter.Converter<String, EdismaxQuery.Condition> {
 	
@@ -80,9 +79,6 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 
 @SearchAdapter
 class EdismaxQuerySolrAdaptor {
-
-	private static Logger logger = LoggerFactory
-			.getLogger(EdismaxQuerySolrAdaptor.class);
 	
 	@PreSearchAdapter
 	public void setDefaultQuery(SolrQuery query){
@@ -106,14 +102,12 @@ class EdismaxQuerySolrAdaptor {
 
 	@PostSearchAdapter
 	public EdismaxQuery udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
-		logger.info("Post query adapter. Setting query to: " + query.getQuery());
 		searchElement.setQuery(query.getQuery());			
 		return searchElement;
 	}
 
 	@PreSearchAdapter
 	public SolrQuery getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
-		logger.info("Pre adaptor setting query to: " + condition.getQuery());
 		query.setQuery(condition.getQuery());
 		return query;
 	}

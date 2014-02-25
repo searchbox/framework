@@ -7,7 +7,7 @@
 
 
 	<div class="input-group input-group" style="padding-top: 10px">
-		<input type="text" class="form-control" placeholder="Query" name="q"
+		<input type="text" class="form-control" placeholder="Query" name="${elementUrlParam}"
 			value="${element.query }" /> <span class="input-group-btn">
 			<button type="submit" class="btn btn-black">
 				<span class="glyphicon glyphicon-search"></span>

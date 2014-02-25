@@ -7,6 +7,7 @@ import com.searchbox.anno.PostSearchAdapter;
 import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -14,9 +15,9 @@ import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
-@SearchComponent(prefix = "p", condition = BasicPagination.PageCondition.class, converter = BasicPagination.Converter.class)
+@SearchComponent(urlParam="p")
 public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
-	
+		
 	private Integer hitsPerPage;
 	
 	private Long numberOfHits;
@@ -114,6 +115,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		}
 	}
 
+	@SearchConverter	
 	public static class Converter implements 
 		org.springframework.core.convert.converter.Converter<String, BasicPagination.PageCondition> {
 

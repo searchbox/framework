@@ -6,9 +6,10 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.ValueElement;
 
-@SearchComponent(prefix = "fr", condition = RangeFacet.Condition.class)
+@SearchComponent
 public class RangeFacet extends
 		ConditionalSearchElementWithValues<RangeFacet.Value,  RangeFacet.Condition> {
+	
 
 	private final String fieldName;
 	private final String lowerElement = null;

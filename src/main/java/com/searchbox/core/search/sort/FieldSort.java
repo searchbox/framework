@@ -10,6 +10,7 @@ import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -17,7 +18,7 @@ import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.ref.Sort;
 
-@SearchComponent(prefix = "fs", condition = FieldSort.Condition.class, converter=FieldSort.Converter.class)
+@SearchComponent(urlParam="s")
 public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
 	
 	@SearchAttribute
@@ -118,6 +119,7 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 		return new FieldSort.Value("Relevancy", "score", Sort.DESC);
 	}
 	
+	@SearchConverter	
 	public static class Converter implements
 	org.springframework.core.convert.converter.Converter<String, Condition> {
 

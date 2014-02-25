@@ -24,7 +24,7 @@
       </c:forEach>
     </ul>
   </div>
-  <input id="${element.getClass().getSimpleName()}_field" type="hidden" name="${element.getParamPrefix()}" value="${sortVariable }"/>
+  <input id="${element.getClass().getSimpleName()}_field" type="hidden" name="${elementUrlParam}" value="${sortVariable }"/>
   <script>
       function ${element.getClass().getSimpleName()}_submit(param){
     	  $("#${element.getClass().getSimpleName()}_field").val(param);

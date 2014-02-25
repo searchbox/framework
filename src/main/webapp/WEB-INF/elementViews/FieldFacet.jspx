@@ -33,14 +33,14 @@
               <c:when test="${facetValue.getSelected()}">
                 <input id="${element.fieldName}_${i.index}"
                   class="css-checkbox" type="checkbox"
-                  name="${element.getParamPrefix()}"
+                  name="${elementUrlParam}"
                   value="${facetValue.geParamValue()}" checked="checked"
                   onclick="$('form').submit();" />
               </c:when>
               <c:otherwise>
                 <input id="${element.fieldName}_${i.index}"
                   class="css-checkbox" type="checkbox"
-                  name="${element.getParamPrefix()}"
+                  name="${elementUrlParam}"
                   value="${facetValue.geParamValue()}"
                   onclick="$('form').submit();" />
               </c:otherwise>

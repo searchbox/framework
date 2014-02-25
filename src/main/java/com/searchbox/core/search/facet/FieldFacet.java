@@ -15,6 +15,7 @@ import com.searchbox.anno.PreSearchAdapter;
 import com.searchbox.anno.SearchAdapter;
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -23,11 +24,11 @@ import com.searchbox.core.search.ValueElement;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
 
-@SearchComponent(prefix = "ff", condition = FieldFacet.ValueCondition.class, converter = FieldFacet.Converter.class)
+@SearchComponent(urlParam="ff")
 public class FieldFacet
 		extends
 		SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
-
+	
 	@SearchAttribute
 	private String fieldName;
 
@@ -155,6 +156,7 @@ public class FieldFacet
 		}
 	}
 
+	@SearchConverter
 	public static class Converter
 			implements
 			org.springframework.core.convert.converter.Converter<String, ValueCondition> {
