@@ -1,5 +1,7 @@
 package com.searchbox.web;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
 import com.searchbox.app.repository.PresetRepository;
@@ -30,163 +33,160 @@ import com.searchbox.core.search.SearchCondition;
 
 @Service("conversionService")
 @Configurable
-public class ApplicationConversionService  { 
+public class ApplicationConversionService {
 
 	@Autowired
-    private ApplicationContext context;
-	
+	private ApplicationContext context;
+
 	@Autowired
 	private DefaultFormattingConversionService conversionService;
-	
+
 	@Autowired
 	private PresetRepository presetRepository;
-	
+
 	@Autowired
 	private SearchboxRepository searchboxRepository;
-	
-	private static Logger logger = LoggerFactory.getLogger(ApplicationConversionService.class);
-	
-	private Map<String, Class<?>> searchComponents;
-	private Map<String, Class<?>> searchConditions;
-	private Map<String, Class<?>> conditionConverters;
-	
-	
-    public ApplicationConversionService(){        
-        this.searchComponents = new HashMap<String, Class<?>>();
-		this.searchConditions = new HashMap<String, Class<?>>();
-		this.conditionConverters = new HashMap<String, Class<?>>();
-    }
-    
-    @PostConstruct
-    public void init(){
-		
-    	logger.info("Scanning for SearchComponents");
 
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(
-				false);
+	private static Logger logger = LoggerFactory
+			.getLogger(ApplicationConversionService.class);
+
+	private Map<String, Class<?>> searchConditions;
+
+	public ApplicationConversionService() {
+		this.searchConditions = new HashMap<String, Class<?>>();
+	}
+
+	@PostConstruct
+	public void init() {
+
+		logger.info("Scanning for SearchComponents");
+		Map<Class<?>, String> conditionUrl = new HashMap<Class<?>, String>();		
+		ClassPathScanningCandidateComponentProvider scanner;
+		
+
+		//Getting all the SearchElements
+		scanner = new ClassPathScanningCandidateComponentProvider(false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
-		for (BeanDefinition beanDefinition : scanner
-				.findCandidateComponents("com.searchbox")) {
+		for (BeanDefinition bean:scanner.findCandidateComponents("com.searchbox")) {
 			try {
-				Class<?> searchComponent = Class.forName(beanDefinition
-						.getBeanClassName());
-				
-				if(searchComponent.isAnnotationPresent(SearchComponent.class)){					
-					String prefix = ((SearchComponent) searchComponent
-							.getAnnotation(SearchComponent.class)).prefix();
-					Class<?> searchCondition = ((SearchComponent) searchComponent
-							.getAnnotation(SearchComponent.class)).condition();
-					Class<?> conditionConverter = ((SearchComponent) searchComponent
-							.getAnnotation(SearchComponent.class)).converter();
-	
-					searchComponents.put(prefix, searchComponent);
-					searchConditions.put(prefix, searchCondition);
-					conditionConverters.put(prefix, conditionConverter);
-					
-					if(conditionConverter!=null && Converter.class.isAssignableFrom(conditionConverter)){
-		
-						logger.info("Registering Condition " + searchCondition.getSimpleName() +
-								" for "+ searchComponent.getSimpleName() + " with prefix: " + prefix);
-		
-						conversionService.addConverter((Converter<?, ?>) conditionConverter.newInstance());
+				Class<?> clazz = Class.forName(bean.getBeanClassName());
+				String urlParam = clazz.getAnnotation(SearchComponent.class).urlParam();
+				if(urlParam != null && !urlParam.isEmpty()){
+					logger.info("Getting condition for: "+ urlParam + " in class: " + clazz.getSimpleName());
+					ParameterizedType pi = (ParameterizedType)clazz.getGenericSuperclass();
+					for (Type piarg : pi.getActualTypeArguments()) {					
+						if (SearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
+							conditionUrl.put(((Class<?>) piarg), urlParam);
+						}
 					}
 				}
-				
-			} catch (ClassNotFoundException e) {
-				logger.error("Could not find class for: "
-						+ beanDefinition.getBeanClassName());
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.error("Could not introspect SearchElement: " + bean,e);
 			}
-
 		}
 		
-		
+		//Getting all converters for SearchConditions
+		scanner = new ClassPathScanningCandidateComponentProvider(false);
+		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchConverter.class));
+		for (BeanDefinition bean : scanner
+				.findCandidateComponents("com.searchbox")) {
+			try {
+				Class<?> clazz = Class.forName(bean.getBeanClassName());
+				for (Type i : clazz.getGenericInterfaces()) {
+					ParameterizedType pi = (ParameterizedType) i;
+					for (Type piarg : pi.getActualTypeArguments()) {								
+						if (SearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
+							Class<?> conditionClass = ((Class<?>) piarg);
+							searchConditions.put(conditionUrl.get(conditionClass), ((Class<?>) piarg));
+							conversionService.addConverter((Converter<?, ?>) clazz.newInstance());
+							logger.info("Registered Converter "+ clazz.getSimpleName()
+									+ " for " + ((Class<?>) piarg).getSimpleName()
+									+ " with prefix: " + conditionUrl.get(conditionClass));
+						}
+					}
+				}
+			} catch (Exception e) {
+				logger.error("Could not create Converter for: "+ bean.getBeanClassName(), e);
+			}
+		}
+
 		conversionService.addConverter(new Converter<String, Searchbox>() {
-            public Searchbox convert(String slug) {
-                return searchboxRepository.findBySlug(slug);
-            }
-        });
-		
+			public Searchbox convert(String slug) {
+				return searchboxRepository.findBySlug(slug);
+			}
+		});
+
 		conversionService.addConverter(new Converter<Searchbox, String>() {
-            public String convert(Searchbox searchbox) {
-                return searchbox.getSlug();
-            }
-        });
-		
+			public String convert(Searchbox searchbox) {
+				return searchbox.getSlug();
+			}
+		});
+
 		conversionService.addConverter(new Converter<Long, Searchbox>() {
-            public Searchbox convert(java.lang.Long id) {
-                return searchboxRepository.findOne(id);
-            }
-        });
-		
+			public Searchbox convert(java.lang.Long id) {
+				return searchboxRepository.findOne(id);
+			}
+		});
+
 		conversionService.addConverter(new Converter<Searchbox, Long>() {
-            public Long convert(Searchbox searchbox) {
-                return searchbox.getId();
-            }
-        });
-		
-		conversionService.addConverter(new Converter<String, PresetDefinition>() {
-            public PresetDefinition convert(String id) {
-                return presetRepository.findOne(Long.parseLong(id));
-            }
-        });
-		
+			public Long convert(Searchbox searchbox) {
+				return searchbox.getId();
+			}
+		});
+
+		conversionService
+				.addConverter(new Converter<String, PresetDefinition>() {
+					public PresetDefinition convert(String id) {
+						return presetRepository.findOne(Long.parseLong(id));
+					}
+				});
+
 		conversionService.addConverter(new Converter<Long, PresetDefinition>() {
-            public PresetDefinition convert(java.lang.Long id) {
-                return presetRepository.findOne(id);
-            }
-        });
-		
-		conversionService.addConverter(new Converter<PresetDefinition, String>() {
-            public String convert(PresetDefinition presetDefinition) {
-                return new StringBuilder().append(presetDefinition.getSlug()).toString();
-            }
-        });
-		
-		conversionService.addConverter(new Converter<Class<?>, String>(){
+			public PresetDefinition convert(java.lang.Long id) {
+				return presetRepository.findOne(id);
+			}
+		});
+
+		conversionService
+				.addConverter(new Converter<PresetDefinition, String>() {
+					public String convert(PresetDefinition presetDefinition) {
+						return new StringBuilder().append(
+								presetDefinition.getSlug()).toString();
+					}
+				});
+
+		conversionService.addConverter(new Converter<Class<?>, String>() {
 			@Override
 			public String convert(Class<?> source) {
 				return source.getName();
 			}
 		});
-		
-		conversionService.addConverter(new Converter<String, Class<?>>(){
+
+		conversionService.addConverter(new Converter<String, Class<?>>() {
 
 			@Override
 			public Class<?> convert(String source) {
 				try {
-					//TODO Such a bad hack...
-					if(source.contains("class")){
+					// TODO Such a bad hack...
+					if (source.contains("class")) {
 						source = source.replace("class", "").trim();
 					}
 					return context.getClassLoader().loadClass(source);
-					//Class.forName(source);
+					// Class.forName(source);
 				} catch (ClassNotFoundException e) {
-					logger.error("Could not convert \""+source+"\" to class.",e);
+					logger.error("Could not convert \"" + source
+							+ "\" to class.", e);
 				}
 				return null;
 			}
 
-			
 		});
-    }
-    
-    public boolean isSearchConditionParam(String paramName){
-		logger.debug("checking if "+paramName+" is a parameter for any SearchComponent");
-		return this.searchConditions.keySet().contains(paramName);
 	}
-	
-	public List<SearchCondition> getSearchCondition(String paramName, String values){
-		logger.info("Creating a " + searchConditions.get(paramName).getSimpleName() +
-				" for component: " + searchComponents.get(paramName).getSimpleName());
-		
-		//TODO use Component to generate the condition
-		return Collections.emptyList();
+
+	public boolean isSearchConditionParam(String paramName) {
+		logger.debug("checking if " + paramName
+				+ " is a parameter for any SearchComponent");
+		return this.searchConditions.keySet().contains(paramName);
 	}
 
 	public Set<String> getSearchConditionParams() {
@@ -195,13 +195,5 @@ public class ApplicationConversionService  {
 
 	public Class<?> getSearchConditionClass(String param) {
 		return this.searchConditions.get(param);
-	}
-	
-	public Class<?> getConditionConverterClass(String param) {
-		return this.conditionConverters.get(param);
-	}
-
-	public Collection<Class<?>> getConditionClasses() {
-		return this.searchConditions.values(); 
 	}
 }

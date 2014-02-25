@@ -2,16 +2,22 @@ package com.searchbox.core.search;
 
 import java.net.URL;
 
-import javax.persistence.MappedSuperclass;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.searchbox.anno.SearchAttribute;
 import com.searchbox.anno.SearchComponent;
+import com.searchbox.anno.SearchConverter;
+import com.searchbox.core.search.sort.FieldSort.Condition;
 
-@MappedSuperclass
+@SearchComponent(urlParam="xxx")
 public abstract class SearchElement implements Comparable<SearchElement>{
+	
+	private static Logger logger = LoggerFactory.getLogger(SearchElement.class);
+	
+	public final static String URL_PARAM = "xoxo";
 	
 	public enum Type {
 		QUERY, FACET, FILTER, VIEW, ANALYTIC, SORT, STAT, DEBUG, UNKNOWN
@@ -31,6 +37,10 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	protected SearchElement(String label, SearchElement.Type type){
 		this.label = label;
 		this.type = type;
+	}
+	
+	public String getUrlParam(){
+		return this.getClass().getAnnotation(SearchComponent.class).urlParam();
 	}
 	
 	/* (non-Javadoc)
@@ -72,16 +82,6 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 		
 	}
 	
-	//TODO this should not be here...
-	public String getParamPrefix(){
-		SearchComponent a = this.getClass().getAnnotation(SearchComponent.class);
-		if(a==null){
-			return "";
-		} else {
-			return a.prefix();
-		}
-	}
-	
 	public URL getView(){
 		//TODO partial should be next to the .class file... 
 		System.out.println("XOXOXOXOXOX: " + this.getClass());
@@ -97,8 +97,24 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	public Long getDefinitionId() {
 		return definitionId;
 	}
-
+	
 	public void setDefinitionId(Long definitionId) {
 		this.definitionId = definitionId;
+	}
+	
+	@SearchConverter
+	public static class Converter implements
+	org.springframework.core.convert.converter.Converter<String, SearchCondition> {
+
+		@Override
+		public Condition convert(String source) {
+			logger.error("A searchElemenet is missing its URL_PARAM!!!");
+			logger.error("please make sure to define a \"public static final String URL_PARAM = ...\" ");
+			logger.error("within your SearchElement class. That URL_PARAM is used on forms (jspx) as");
+			logger.error("as to identify the proper converter to your class. IE:");
+			logger.error("@SearchConverter(urlParam=MyOwnSearchElement.URL_PARAM)");
+			logger.error("public static class Converter implements org.spring...Converter<String, MyOwnSearchElement> {");
+			return null;
+		}
 	}
 }
