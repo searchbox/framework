@@ -1,4 +1,4 @@
-package com.searchbox.web.admin;
+package com.searchbox.app.web.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -70,7 +72,9 @@ public class SearchElementDefinitionController {
     }
 	
 	@RequestMapping(method = RequestMethod.POST)
-    public ModelAndView update(@Valid SearchElementDefinition elementDefinition, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
+    public ModelAndView update(@Valid SearchElementDefinition elementDefinition,
+    		BindingResult bindingResult, HttpServletRequest httpServletRequest,
+    		ServerHttpResponse response) {
 		logger.info("Creating an filed element: " + elementDefinition.getClazz().getSimpleName() + 
 				" for preset: " + elementDefinition.getPreset().getSlug());
 	
@@ -81,6 +85,7 @@ public class SearchElementDefinitionController {
         	for(ObjectError error:bindingResult.getAllErrors()){
         		logger.error("Error: " + error.getDefaultMessage());
         	}
+        	response.setStatusCode(HttpStatus.PRECONDITION_FAILED);
             return model;
         }
 		try {

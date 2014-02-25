@@ -1,4 +1,4 @@
-package com.searchbox.web;
+package com.searchbox.app.web;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

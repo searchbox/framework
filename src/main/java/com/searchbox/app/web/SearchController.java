@@ -1,4 +1,4 @@
-package com.searchbox.web;
+package com.searchbox.app.web;
 
 import java.util.ArrayList;
 import java.util.HashSet;

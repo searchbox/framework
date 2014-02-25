@@ -1,4 +1,4 @@
-package com.searchbox.web.admin;
+package com.searchbox.app.web.admin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.app.domain.PresetDefinition;
 import com.searchbox.app.domain.Searchbox;
+import com.searchbox.app.web.SearchController;
 import com.searchbox.ref.Order;
 import com.searchbox.ref.Sort;
-import com.searchbox.web.SearchController;
 
 @Controller
 @RequestMapping("/admin")
