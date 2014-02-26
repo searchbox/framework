@@ -2,7 +2,6 @@ package com.searchbox.framework.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;

@@ -37,7 +37,6 @@ import com.searchbox.framework.repository.FieldAttributeRepository;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
-import com.searchbox.framework.service.ApplicationConversionService;
 import com.searchbox.framework.service.DirectoryService;
 import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.SearchService;
@@ -49,7 +48,10 @@ public class SearchController {
 			.getLogger(SearchController.class);
 
 	@Autowired
-	ApplicationConversionService conversionService;
+	ApplicationConversionService applicationConversionService;
+	
+	@Autowired
+	ConversionService conversionService;
 	
 	@Autowired
 	SearchService searchService;
@@ -114,13 +116,13 @@ public class SearchController {
 
 		// Fetch all search Conditions within HTTP params
 		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
-		for (String param : conversionService.getSearchConditionParams()) {
+		for (String param : applicationConversionService.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
 					if (value != null && !value.isEmpty()) {
 						try {
 							SearchCondition cond = (SearchCondition) conversionService
-									.convert(value, conversionService
+									.convert(value, applicationConversionService
 											.getSearchConditionClass(param));
 							conditions.add(cond);
 						} catch (Exception e) {

@@ -41,6 +41,7 @@ import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchEngineService;
 
 @Component
+@org.springframework.core.annotation.Order(value=10000)
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger logger = LoggerFactory.getLogger(BootStrap.class);

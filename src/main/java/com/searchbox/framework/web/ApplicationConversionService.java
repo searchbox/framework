@@ -1,4 +1,4 @@
-package com.searchbox.framework.service;
+package com.searchbox.framework.web;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -17,7 +17,6 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchComponent;
@@ -28,9 +27,8 @@ import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
-@Service("conversionService")
+@Service("mvcConversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService {
-
 	@Autowired
 	private ApplicationContext context;
 
@@ -173,7 +171,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 
 		});
 	}
-
+	
 	public boolean isSearchConditionParam(String paramName) {
 		logger.debug("checking if " + paramName
 				+ " is a parameter for any SearchComponent");

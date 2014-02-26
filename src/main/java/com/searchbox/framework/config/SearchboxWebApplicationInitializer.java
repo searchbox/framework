@@ -6,26 +6,25 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class SearchboxWebApplicationInitializer extends
-        AbstractAnnotationConfigDispatcherServletInitializer {
-	
-	 @Override
-	    protected Class<?>[] getRootConfigClasses() {
-	        return new Class[] { RootConfiguration.class };
-	    }
+		AbstractAnnotationConfigDispatcherServletInitializer {
 
-	    @Override
-	    protected Class<?>[] getServletConfigClasses() {
-	        return new Class[] { WebConfig.class };
-	    }
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] { RootConfiguration.class };
+	}
 
-	    @Override
-	    protected String[] getServletMappings() {
-	        return new String[] { "/" };
-	    }
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class[] { WebConfig.class };
+	}
 
-	    @Override
-	    protected Filter[] getServletFilters() {
-	        return new Filter[] { new HiddenHttpMethodFilter() };
-	    }
-   
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
+	}
+
+	@Override
+	protected Filter[] getServletFilters() {
+		return new Filter[] { new HiddenHttpMethodFilter() };
+	}
 }
