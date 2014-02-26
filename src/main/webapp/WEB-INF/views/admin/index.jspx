@@ -26,7 +26,7 @@
 
 	<div id="wrap">
 
-		<jsp:include page="/views/common/_navbar.jspx" />
+		<jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
 		<div id="main-content" role="main">
 
@@ -181,6 +181,6 @@
 			</div>
 		</div>
 	</div>
-	<jsp:include page="/views/common/_footer.jspx" />
+	<jsp:include page="/WEB-INF/views/common/_footer.jspx" />
 </body>
 </html>
