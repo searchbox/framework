@@ -3,9 +3,9 @@ package com.searchbox.core.search;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.searchbox.anno.SearchAttribute;
-import com.searchbox.ref.Order;
-import com.searchbox.ref.Sort;
+import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.ref.Order;
+import com.searchbox.core.ref.Sort;
 
 public class SearchElementWithValues<K extends ValueElement> extends SearchElement {
 	
