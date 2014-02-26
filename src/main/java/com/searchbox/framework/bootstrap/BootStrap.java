@@ -1,4 +1,4 @@
-package com.searchbox.framework;
+package com.searchbox.framework.bootstrap;
 
 import java.util.HashSet;
 import java.util.Iterator;

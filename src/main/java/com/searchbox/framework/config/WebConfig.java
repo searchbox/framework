@@ -14,12 +14,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
-@ComponentScan("com.searchbox.framework.web")
+@ComponentScan(basePackages={"com.searchbox.framework.web","com.searchbox.framework.bootstrap"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 	
-	private static Logger logger = LoggerFactory
-			.getLogger(WebConfig.class);
-
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(31556926);
