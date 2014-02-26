@@ -13,8 +13,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
-//@EnableWebMvcSecurity
-@ComponentScan("com.searchbox.framework")
+@ComponentScan("com.searchbox.framework.web")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override

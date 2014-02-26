@@ -19,9 +19,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//@Configuration
+@Configuration
 @EnableTransactionManagement
-@EnableBatchProcessing
 @EnableJpaRepositories("com.searchbox.framework.repository")
 public class DataConfiguration {
 	

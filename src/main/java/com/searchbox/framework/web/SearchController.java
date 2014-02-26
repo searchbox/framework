@@ -49,11 +49,8 @@ public class SearchController {
 			.getLogger(SearchController.class);
 
 	@Autowired
-	ConversionService conversionService;
-
-	@Autowired
-	ApplicationConversionService searchComponentService;
-
+	ApplicationConversionService conversionService;
+	
 	@Autowired
 	SearchService searchService;
 	
@@ -117,13 +114,13 @@ public class SearchController {
 
 		// Fetch all search Conditions within HTTP params
 		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
-		for (String param : searchComponentService.getSearchConditionParams()) {
+		for (String param : conversionService.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
 					if (value != null && !value.isEmpty()) {
 						try {
 							SearchCondition cond = (SearchCondition) conversionService
-									.convert(value, searchComponentService
+									.convert(value, conversionService
 											.getSearchConditionClass(param));
 							conditions.add(cond);
 						} catch (Exception e) {

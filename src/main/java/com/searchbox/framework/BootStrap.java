@@ -40,8 +40,7 @@ import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchEngineService;
 
-//@Component
-//@DependsOn("conversionService")
+@Component
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger logger = LoggerFactory.getLogger(BootStrap.class);

@@ -11,13 +11,13 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchComponent;
@@ -29,14 +29,10 @@ import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
 @Service("conversionService")
-@Configurable
-public class ApplicationConversionService {
+public class ApplicationConversionService extends DefaultFormattingConversionService {
 
 	@Autowired
 	private ApplicationContext context;
-
-	@Autowired
-	private DefaultFormattingConversionService conversionService;
 
 	@Autowired
 	private PresetRepository presetRepository;
@@ -95,7 +91,7 @@ public class ApplicationConversionService {
 						if (SearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
 							Class<?> conditionClass = ((Class<?>) piarg);
 							searchConditions.put(conditionUrl.get(conditionClass), ((Class<?>) piarg));
-							conversionService.addConverter((Converter<?, ?>) clazz.newInstance());
+							this.addConverter((Converter<?, ?>) clazz.newInstance());
 							logger.info("Registered Converter "+ clazz.getSimpleName()
 									+ " for " + ((Class<?>) piarg).getSimpleName()
 									+ " with prefix: " + conditionUrl.get(conditionClass));
@@ -107,59 +103,57 @@ public class ApplicationConversionService {
 			}
 		}
 
-		conversionService.addConverter(new Converter<String, Searchbox>() {
+		this.addConverter(new Converter<String, Searchbox>() {
 			public Searchbox convert(String slug) {
 				return searchboxRepository.findBySlug(slug);
 			}
 		});
 
-		conversionService.addConverter(new Converter<Searchbox, String>() {
+		this.addConverter(new Converter<Searchbox, String>() {
 			public String convert(Searchbox searchbox) {
 				return searchbox.getSlug();
 			}
 		});
 
-		conversionService.addConverter(new Converter<Long, Searchbox>() {
+		this.addConverter(new Converter<Long, Searchbox>() {
 			public Searchbox convert(java.lang.Long id) {
 				return searchboxRepository.findOne(id);
 			}
 		});
 
-		conversionService.addConverter(new Converter<Searchbox, Long>() {
+		this.addConverter(new Converter<Searchbox, Long>() {
 			public Long convert(Searchbox searchbox) {
 				return searchbox.getId();
 			}
 		});
 
-		conversionService
-				.addConverter(new Converter<String, PresetDefinition>() {
+		this.addConverter(new Converter<String, PresetDefinition>() {
 					public PresetDefinition convert(String id) {
 						return presetRepository.findOne(Long.parseLong(id));
 					}
 				});
 
-		conversionService.addConverter(new Converter<Long, PresetDefinition>() {
+		this.addConverter(new Converter<Long, PresetDefinition>() {
 			public PresetDefinition convert(java.lang.Long id) {
 				return presetRepository.findOne(id);
 			}
 		});
 
-		conversionService
-				.addConverter(new Converter<PresetDefinition, String>() {
+		this.addConverter(new Converter<PresetDefinition, String>() {
 					public String convert(PresetDefinition presetDefinition) {
 						return new StringBuilder().append(
 								presetDefinition.getSlug()).toString();
 					}
 				});
 
-		conversionService.addConverter(new Converter<Class<?>, String>() {
+		this.addConverter(new Converter<Class<?>, String>() {
 			@Override
 			public String convert(Class<?> source) {
 				return source.getName();
 			}
 		});
 
-		conversionService.addConverter(new Converter<String, Class<?>>() {
+		this.addConverter(new Converter<String, Class<?>>() {
 
 			@Override
 			public Class<?> convert(String source) {
