@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class PubmedCollection {
 					ParseException, NonTransientResourceException {
 				if(hasmore){
 					hasmore = false;
-					Resource resource = context.getResource("classpath:META-INF/data/pubmedIndex.xml");
+					Resource resource = context.getResource("classpath:data/pubmedIndex.xml");
 					if(resource.exists()){
 						logger.info("Read has created this resource: " + resource.getFilename());
 						return resource;
@@ -86,8 +87,11 @@ public class PubmedCollection {
 					request.addContentStream(contentstream);
 					SearchEngine<?, ?> engine = searchEngineService.getSearchEngine("embedded Solr");
 					
-					request.process(((EmbeddedSolr)engine).getServer());
-					((EmbeddedSolr)engine).getServer().commit();
+					UpdateResponse response = request.process(((EmbeddedSolr)engine).getServer());
+					logger.info("Solr Response: " + response);
+					response = ((EmbeddedSolr)engine).getServer().commit();
+					logger.info("Solr commig: " + response);
+
 				}
 			}
 		};
