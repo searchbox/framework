@@ -10,7 +10,7 @@
 	<groupId>com.searchbox</groupId>
 	<artifactId>searchbox</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.0.SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>searchbox</name>
 	<description>Searchbox is an analytical framework for big-data and searchengines</description>
 	<url>http:/www.searchbox.com</url>
@@ -48,6 +48,7 @@
 		<jetty.version>8.1.5.v20120716</jetty.version>
 		<lucene.version>4.6.1</lucene.version>
 		<solr.version>4.6.1</solr.version>
+    <m2eclipse.wtp.contextRoot>/searchbox</m2eclipse.wtp.contextRoot>
 	</properties>
 	<dependencies>
 		<!-- ************************************************* -->

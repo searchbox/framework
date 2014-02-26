@@ -10,15 +10,15 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
-import com.searchbox.anno.PostSearchAdapter;
-import com.searchbox.anno.PreSearchAdapter;
-import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAttribute;
-import com.searchbox.anno.SearchComponent;
+import com.searchbox.core.PostSearchAdapter;
+import com.searchbox.core.PreSearchAdapter;
+import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.SearchComponent;
+import com.searchbox.core.ref.StringUtils;
 import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
-import com.searchbox.ref.StringUtils;
 
 @SearchComponent
 public class TemplatedHitList extends SearchElementWithValues<Hit> implements CachedContent {

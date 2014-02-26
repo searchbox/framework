@@ -4,10 +4,10 @@ package com.searchbox.core.search.debug;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.anno.PostSearchAdapter;
-import com.searchbox.anno.PreSearchAdapter;
-import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchComponent;
+import com.searchbox.core.PostSearchAdapter;
+import com.searchbox.core.PreSearchAdapter;
+import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 
 @SearchComponent

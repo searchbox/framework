@@ -7,9 +7,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.anno.SearchAttribute;
-import com.searchbox.anno.SearchComponent;
-import com.searchbox.anno.SearchConverter;
+import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.sort.FieldSort.Condition;
 
 @SearchComponent(urlParam="xxx")

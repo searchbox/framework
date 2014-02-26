@@ -6,17 +6,17 @@ import java.util.SortedSet;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 
-import com.searchbox.anno.PreSearchAdapter;
-import com.searchbox.anno.SearchAdapter;
-import com.searchbox.anno.SearchAttribute;
-import com.searchbox.anno.SearchComponent;
-import com.searchbox.anno.SearchConverter;
+import com.searchbox.core.PreSearchAdapter;
+import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchConverter;
+import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
-import com.searchbox.ref.Sort;
 
 @SearchComponent(urlParam="s")
 public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {

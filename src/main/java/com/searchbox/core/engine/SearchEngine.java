@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.SearchElement;
 
 @MappedSuperclass
 public interface SearchEngine<Q,R> {

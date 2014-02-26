@@ -1,8 +1,7 @@
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
-	xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
+	xmlns:sb="urn:jsptagdir:/tags/sb"
 	xmlns:form="http://www.springframework.org/tags/form">
 
 <jsp:output omit-xml-declaration="yes" />
@@ -27,7 +26,7 @@
 
 	<div id="wrap">
 
-		<jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
+		<jsp:include page="/views/common/_navbar.jspx" />
 
 		<div id="main-content" role="main">
 
@@ -182,6 +181,6 @@
 			</div>
 		</div>
 	</div>
-	<jsp:include page="/WEB-INF/views/common/_footer.jspx" />
+	<jsp:include page="/views/common/_footer.jspx" />
 </body>
 </html>
