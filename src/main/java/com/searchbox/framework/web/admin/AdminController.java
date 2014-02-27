@@ -35,8 +35,18 @@ public class AdminController extends SearchController {
 	}
 	
 	protected String getView() {
-		return "admin/index";
+		return "admin/search";
 	}
+	
+	@RequestMapping()
+	public ModelAndView search(
+			HttpServletRequest request, ModelAndView model,
+			RedirectAttributes redirectAttributes) {
+
+		ModelAndView mav = new ModelAndView("admin/index");
+		return mav;
+	}
+
 	
 	@Override
 	@RequestMapping("/{preset}")
