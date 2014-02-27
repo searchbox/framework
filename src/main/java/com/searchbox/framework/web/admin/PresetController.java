@@ -3,14 +3,9 @@ package com.searchbox.framework.web.admin;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -19,11 +14,9 @@ import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.web.SearchController;
 
 @Controller
-@RequestMapping("/{searchbox}/admin")
-public class AdminController {
-
+@RequestMapping("/{searchbox}/admin/search")
+public class PresetController extends SearchController{
 	
-
 	@ModelAttribute("OrderEnum")
 	public List<Order> getReferenceOrder() {
 		return Arrays.asList(Order.values());
@@ -34,12 +27,12 @@ public class AdminController {
 		return Arrays.asList(Sort.values());
 	}
 	
-	@RequestMapping(value={"/",""})
-	public ModelAndView search(
-			HttpServletRequest request, ModelAndView model,
-			RedirectAttributes redirectAttributes) {
-
-		ModelAndView mav = new ModelAndView("admin/index");
-		return mav;
+	protected String getView() {
+		return "admin/search";
 	}
+	
+	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+		return "/"+searchbox.getSlug()+"/admin/search/"+preset.getSlug();
+	}
+
 }

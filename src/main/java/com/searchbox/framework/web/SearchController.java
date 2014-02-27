@@ -46,10 +46,6 @@ public class SearchController {
 	private static Logger logger = LoggerFactory
 			.getLogger(SearchController.class);
 
-	protected String getView() {
-		return "search/index";
-	}
-
 	@Autowired
 	ApplicationConversionService applicationConversionService;
 
@@ -80,6 +76,14 @@ public class SearchController {
 	public SearchController() {
 	}
 
+	protected String getView() {
+		return "search/index";
+	}
+	
+	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+		return "/"+searchbox.getSlug()+"/search/"+preset.getSlug();
+	}
+		
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {
 		ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
@@ -103,9 +107,9 @@ public class SearchController {
 
 		logger.info("Missing preset. Redirecting to first preset of searchbox: "
 				+ searchbox.getName());
-		String slug = searchbox.getPresets().get(0).getSlug();
-		ModelAndView redirect = new ModelAndView(new RedirectView(
-				"/"+searchbox.getSlug()+"/search/"+slug, true));
+		PresetDefinition preset = searchbox.getPresets().get(0);
+		ModelAndView redirect = new ModelAndView(
+				new RedirectView(getSearchUrl(searchbox,preset), true));
 		return redirect;
 
 	}
