@@ -14,8 +14,8 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <c:forEach items="${element.values}" var="facetValue">
-          <li><a href="#">${facetValue.value} (${facetValue.count}) <span class="glyphicon glyphicon-ok"><!-- empty --></span></a></li>
-        </c:forEach>
+          <li><a href="#">${facetValue.value} (${facetValue.count}) <c:if test="${facetValue.getSelected()}"><span class="glyphicon glyphicon-ok"><!-- empty --></span></c:if></a></li>
+      </c:forEach>
     </ul>
   </div>
 
@@ -27,26 +27,28 @@
     <div class="panel-body">
       <ul class="list-group facet-list">
         <c:forEach items="${element.values}" var="facetValue" varStatus="i">
-          <li class="list-group-item"><span class="badge">${facetValue.count}</span>
-
             <c:choose>
               <c:when test="${facetValue.getSelected()}">
-                <input id="${element.fieldName}_${i.index}"
-                  class="css-checkbox" type="checkbox"
-                  name="${elementUrlParam}"
-                  value="${facetValue.geParamValue()}" checked="checked"
-                  onclick="$('form').submit();" />
+                <li class="list-group-item selected"><span class="badge">${facetValue.count}</span>
+                  <input id="${element.fieldName}_${i.index}"
+                    class="css-checkbox" type="checkbox"
+                    name="${elementUrlParam}"
+                    value="${facetValue.geParamValue()}" checked="checked"
+                    onclick="$('form').submit();" />
+                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+                 </li>
               </c:when>
               <c:otherwise>
-                <input id="${element.fieldName}_${i.index}"
-                  class="css-checkbox" type="checkbox"
-                  name="${elementUrlParam}"
-                  value="${facetValue.geParamValue()}"
-                  onclick="$('form').submit();" />
+                <li class="list-group-item"><span class="badge">${facetValue.count}</span>
+                  <input id="${element.fieldName}_${i.index}"
+                    class="css-checkbox" type="checkbox"
+                    name="${elementUrlParam}"
+                    value="${facetValue.geParamValue()}"
+                    onclick="$('form').submit();" />
+                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+                 </li>
               </c:otherwise>
-            </c:choose> 
-            <label title="${facetValue.value}"
-            for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label></li>
+            </c:choose>
         </c:forEach>
       </ul>
     </div>
