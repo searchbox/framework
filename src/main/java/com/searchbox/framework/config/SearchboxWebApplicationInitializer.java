@@ -1,7 +1,6 @@
 package com.searchbox.framework.config;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
