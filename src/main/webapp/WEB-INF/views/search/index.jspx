@@ -47,7 +47,7 @@
                     value="/img/searchbox-logo-big.png"
                     var="searchbox_logo" /> <img
                   src='${searchbox_logo}' class="media-object"
-                  alt="Searchbox" id="logo-image" width="260px" />
+                  alt="Searchbox" id="logo-image"/>
                 </a>
               </div>
             </div>
@@ -128,15 +128,16 @@
 
             </div>
 
-            <div class="col-md-2" id="main-col-right" />
+            <div class="col-md-2" id="main-col-right"><!-- right col --></div>
 
 
           </div>
         </form>
       </div>
     </div>
+      <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
+    
   </div>
-  <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
 </body>
   </html>
 </jsp:root>
