@@ -45,34 +45,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web
 		// Spring Security ignores request to static resources such as CSS or JS
 		// files.
-		.ignoring().antMatchers("/js/**", "/img/**","/css/**","/assets/**", "/static/**");
+//		.ignoring().antMatchers("/js/**", "/img/**","/css/**","/assets/**", "/static/**");
+		.ignoring().antMatchers("/**");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-		// Configures form login
-		.formLogin()
-				.loginPage("/login")
-				.loginProcessingUrl("/login/authenticate")
-				.failureUrl("/login?error=bad_credentials")
-				// Configures the logout function
-				.and()
-				.logout()
-				.deleteCookies("JSESSIONID")
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login")
-				// Configures url based authorization
-				.and()
-				.authorizeRequests()
-				// Anyone can access the urls
-				.antMatchers("/","/auth/**", "/login", "/signin/**", "/signup/**",
-						"/user/register/**").permitAll()
-				// The rest of the our application is protected.
-				.antMatchers("/**").hasRole("USER")
-				// Adds the SocialAuthenticationFilter to Spring Security's
-				// filter chain.
-				.and().apply(new SpringSocialConfigurer());
+//		http
+//		// Configures form login
+//		.formLogin()
+//				.loginPage("/login")
+//				.loginProcessingUrl("/login/authenticate")
+//				.failureUrl("/login?error=bad_credentials")
+//				// Configures the logout function
+//				.and()
+//				.logout()
+//				.deleteCookies("JSESSIONID")
+//				.logoutUrl("/logout")
+//				.logoutSuccessUrl("/login")
+//				// Configures url based authorization
+//				.and()
+//				.authorizeRequests()
+//				// Anyone can access the urls
+//				.antMatchers("/","/auth/**", "/login/**", "/signin/**", "/signup/**",
+//						"/user/register/**").permitAll()
+//				// The rest of the our application is protected.
+//				.antMatchers("/**").hasRole("USER")
+//				// Adds the SocialAuthenticationFilter to Spring Security's
+//				// filter chain.
+//				.and().apply(new SpringSocialConfigurer());
 	}
 
 	/**
