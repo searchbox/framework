@@ -243,6 +243,10 @@ a.clear_input:hover {
   font-size: 12px;
 }
 
+#search-status-bar .sort-col {
+  text-align:right;
+}
+
 #status {
   padding: 15px 20px;
   color: #777;

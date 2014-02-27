@@ -62,24 +62,23 @@
 
 						<div id="search-status-bar">
 
-							<div class="col-md-3">
-
+							<div class="col-md-3 col-sm-6 col-xs-6">
 								<c:forEach items="${result.getElements('STAT')}" var="element">
 									<sb:include element="${element }" result="${result }"
 										admin="false" debug="${not empty param.debug}" />
 								</c:forEach>
 							</div>
 
-							<div class="col-md-6">
-								<!--  ADD TAGS HERE -->
-							</div>
-
-							<div class="col-md-3 last" id="main-col-status-bar">
+							<div class="col-md-7 col-sm-6 col-xs-6 last sort-col">
 								<c:forEach items="${result.getElements('SORT')}" var="element">
 									<sb:include element="${element }" result="${result }"
 										admin="false" debug="${not empty param.debug}" />
 								</c:forEach>
 							</div>
+              
+                            <div class="col-md-2 col-sm-12">
+                              <!--  ADD TAGS HERE -->
+                            </div>
 						</div>
 					</div>
 
