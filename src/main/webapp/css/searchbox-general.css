@@ -145,7 +145,11 @@ input:focus,textarea:focus {
   border-color: rgba(30, 187, 192, 0.8) !important;
 }
 
-#column-top {
+#search-bar .search-query, #search-bar .btn-search {
+  height: 42px;
+}
+
+#search-bar {
   margin-bottom: 10px;
   border-radius: 0;
   padding-left: 0px;
