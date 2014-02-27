@@ -49,7 +49,7 @@ public class Searchbox {
 	
 	
 	@OneToMany(mappedBy = "searchbox", cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.EXTRA)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<UserRole> userRoles = new ArrayList<UserRole>();
 	
 	public Searchbox() {
@@ -131,6 +131,7 @@ public class Searchbox {
 	}
 	
 	public void addUser(UserRole userRole) {
+		userRole.setSearchbox(this);
 		this.userRoles.add(userRole);
 	}
 	

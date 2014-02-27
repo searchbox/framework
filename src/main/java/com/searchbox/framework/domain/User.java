@@ -35,6 +35,7 @@ public class User implements UserDetails{
 	@Column(name="OPTLOCK")
 	private long version;
 	
+	@Column(nullable=false, unique=true)
 	private String username;
 	
 	private String password;

@@ -43,7 +43,9 @@
 						</div>
 					</div>
 
-					<div class="col-md-6">Some info here...</div>
+					<div class="col-md-6">
+					 <jsp:include page="/WEB-INF/views/login.jspx" />
+          </div>
 				</div>
 
 				<div class="row" id="searchboxes">

@@ -51,7 +51,13 @@
             <!-- some stuff here -->
           </div>
           <div class="col-md-8">
-            Wassup in the admin of searchbox
+            ${searchbox }
+            <hr/>
+            ${searchbox.userRoles }
+            <hr/>
+             ${users }
+            <hr/>
+             ${userRoles }
           </div>
         </div>
       </div>

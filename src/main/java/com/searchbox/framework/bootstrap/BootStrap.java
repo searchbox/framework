@@ -40,6 +40,7 @@ import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
+import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.SearchEngineService;
 
 @Component
@@ -63,6 +64,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
 	private SearchEngineService searchEngineService;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	private static boolean BOOTSTRAPED = false;
 	
 	private static boolean defaultData = true;
@@ -78,6 +82,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		BOOTSTRAPED = true;
 		
 		if(defaultData){
+			
+		logger.info("Creating Default Users...");
+		User system = new User("system","password");
+		system = userRepository.save(system);
+
+		User admin = new User("admin","password");
+		admin = userRepository.save(admin);
+		
+		User user = new User("user","password");
+		user = userRepository.save(user);
+		
 		logger.info("Bootstraping application with default data...");
 		
 		//The base Searchbox.
@@ -191,21 +206,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
-		repository.save(searchbox);
-		
-		//Making another Searchbox for testing and UI.
-		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
-		repository.save(anotherSearchbox);
-		
-		logger.info("Bootstraping application with default data... done");
-		
-		logger.info("Creating Default Users...");
-		User system = new User("system","toto");
-		User admin = new User("admin","toto");
-		User user = new User("user","toto");
 		searchbox.addUser(new UserRole(system, Role.SYSTEM));
 		searchbox.addUser(new UserRole(admin, Role.ADMIN));
 		searchbox.addUser(new UserRole(user, Role.USER));
+		repository.save(searchbox);
+				
+		//Making another Searchbox for testing and UI.
+		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
+		repository.save(anotherSearchbox);
+
+		logger.info("Bootstraping application with default data... done");
+		
 		
 		}
 		

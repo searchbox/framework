@@ -1,75 +1,99 @@
 package com.searchbox.framework.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.security.SocialUserDetailsService;
+import org.springframework.social.security.SpringSocialConfigurer;
+
+import com.searchbox.framework.repository.UserRepository;
+import com.searchbox.framework.service.RepositoryUserDetailsService;
+import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 
 @Configuration
 @EnableWebMvcSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	private UserRepository userRepository;
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web
+		// Spring Security ignores request to static resources such as CSS or JS
+		// files.
+		.ignoring().antMatchers("/js/**", "/img/**", "/static/**");
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests().antMatchers("/assets/**").permitAll()
-//		
-//			.anyRequest().authenticated().
-//				and().formLogin()
-//				.loginPage("/login").permitAll().and().logout().permitAll();
+		http
+		// Configures form login
+		.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/login/authenticate")
+				.failureUrl("/login?error=bad_credentials")
+				// Configures the logout function
+				.and()
+				.logout()
+				.deleteCookies("JSESSIONID")
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login")
+				// Configures url based authorization
+				.and()
+				.authorizeRequests()
+				// Anyone can access the urls
+				.antMatchers("/","/auth/**", "/login", "/signin/**", "/signup/**",
+						"/user/register/**").permitAll()
+				// The rest of the our application is protected.
+				.antMatchers("/**").hasRole("USER")
+				// Adds the SocialAuthenticationFilter to Spring Security's
+				// filter chain.
+				.and().apply(new SpringSocialConfigurer());
 	}
 
-	@Autowired
-	//TODO change to a inMemoryUserDetailSercive
-	public void configureGlobal(AuthenticationManagerBuilder auth)
+	/**
+	 * Configures the authentication manager bean which processes authentication
+	 * requests.
+	 */
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
-		auth.inMemoryAuthentication().withUser("user").password("toto")
-				.roles("USER").and().withUser("admin").password("toto")
-				.roles("USER", "ADMIN");
+		auth.userDetailsService(userDetailsService()).passwordEncoder(
+				passwordEncoder());
 	}
-	
+
+	/**
+	 * This is used to hash the password of the user.
+	 */
 	@Bean
-	//TODO get a real UserDetailService later on
-    public UserDetailsService userDetailsServiceBean() {
-        return new UserDetailsService() {
-            private final Logger logger = LoggerFactory.getLogger(UserDetailsService.class);
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(10);
+	}
 
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                List<GrantedAuthority> list = new ArrayList<>();
-                String login = null;
-                String password = null;
+	/**
+	 * This bean is used to load the user specific data when social sign in is
+	 * used.
+	 */
+	@Bean
+	public SocialUserDetailsService socialUserDetailsService() {
+		return new SimpleSocialUserDetailsService(userDetailsService());
+	}
 
-                logger.debug("Started loading user by name: " + username);
-                if (username.equals("admin")) {
-                    login = "admin";
-                    password = "admin";
-                    list.add(new SimpleGrantedAuthority("ROLE_USER"));
-                    list.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                }
-
-                if (username.equals("user")) {
-                    login = "user";
-                    password = "user";
-                    list.add(new SimpleGrantedAuthority("ROLE_USER"));
-                }
-                logger.debug("User " + username + ": " + login + ", " + password);
-
-                return new User(login, password, true, true, true, true, list);
-            }
-        };
-    }
+	/**
+	 * This bean is load the user specific data when form login is used.
+	 */
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new RepositoryUserDetailsService(userRepository);
+	}
 }
