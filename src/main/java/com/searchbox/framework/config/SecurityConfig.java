@@ -15,9 +15,12 @@
  ******************************************************************************/
 package com.searchbox.framework.config;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,43 +40,51 @@ import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 @EnableWebMvcSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	
+	protected static final String USE_SECURITY = "use.security";
 	@Autowired
 	private UserRepository userRepository;
+	
+    @Resource
+    private Environment env;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web
-		// Spring Security ignores request to static resources such as CSS or JS
-		// files.
-//		.ignoring().antMatchers("/js/**", "/img/**","/css/**","/assets/**", "/static/**");
-		.ignoring().antMatchers("/**");
+		if(env.getProperty(USE_SECURITY, Boolean.class, false)){
+			web
+			.ignoring().antMatchers("/js/**", "/img/**","/css/**","/assets/**", "/static/**");
+		} else {
+			web.ignoring().antMatchers("/**");
+		}
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http
-//		// Configures form login
-//		.formLogin()
-//				.loginPage("/login")
-//				.loginProcessingUrl("/login/authenticate")
-//				.failureUrl("/login?error=bad_credentials")
-//				// Configures the logout function
-//				.and()
-//				.logout()
-//				.deleteCookies("JSESSIONID")
-//				.logoutUrl("/logout")
-//				.logoutSuccessUrl("/login")
-//				// Configures url based authorization
-//				.and()
-//				.authorizeRequests()
-//				// Anyone can access the urls
-//				.antMatchers("/","/auth/**", "/login/**", "/signin/**", "/signup/**",
-//						"/user/register/**").permitAll()
-//				// The rest of the our application is protected.
-//				.antMatchers("/**").hasRole("USER")
-//				// Adds the SocialAuthenticationFilter to Spring Security's
-//				// filter chain.
-//				.and().apply(new SpringSocialConfigurer());
+		if(env.getProperty(USE_SECURITY, Boolean.class, false)){
+			http
+			// Configures form login
+			.formLogin()
+					.loginPage("/login")
+					.loginProcessingUrl("/login/authenticate")
+					.failureUrl("/login?error=bad_credentials")
+					// Configures the logout function
+					.and()
+					.logout()
+					.deleteCookies("JSESSIONID")
+					.logoutUrl("/logout")
+					.logoutSuccessUrl("/login")
+					// Configures url based authorization
+					.and()
+					.authorizeRequests()
+					// Anyone can access the urls
+					.antMatchers("/","/auth/**", "/login/**", "/signin/**", "/signup/**",
+							"/user/register/**").permitAll()
+					// The rest of the our application is protected.
+					.antMatchers("/**").hasRole("USER")
+					// Adds the SocialAuthenticationFilter to Spring Security's
+					// filter chain.
+					.and().apply(new SpringSocialConfigurer());
+		}
 	}
 
 	/**

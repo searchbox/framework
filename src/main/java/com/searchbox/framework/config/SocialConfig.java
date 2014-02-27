@@ -47,7 +47,6 @@ public class SocialConfig implements SocialConfigurer {
 
 	@Autowired
 	private DataSource dataSource;
-
 	/**
 	 * Configures the connection factories for Facebook and Twitter.
 	 * 
