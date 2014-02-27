@@ -75,7 +75,15 @@
 												<spring:url value="/${searchbox.slug }/search" var="searchboxUrl"/>
 												<td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
 												<td></td>
-												<td>options here</td>
+												<td>
+												<div class="btn-group btn-group-sm">
+                <spring:url var="adminUrl"
+                  value="/${searchbox.slug }/admin" />
+                <a href="${adminUrl }" class="btn btn-default">
+                  <span class="glyphicon glyphicon-cog"></span>
+                </a>
+												</div>
+												</td>
 											</tr>
 										</c:forEach>
 									</tbody>
