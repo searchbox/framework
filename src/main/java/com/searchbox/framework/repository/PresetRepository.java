@@ -12,5 +12,7 @@ public interface PresetRepository extends CrudRepository<PresetDefinition, Long>
 	public PresetDefinition findPresetDefinitionBySearchboxAndSlug(Searchbox searchbox, String slug);
 
 	public List<PresetDefinition> findAllBySearchbox(Searchbox searchbox);
+
+	public PresetDefinition findPresetDefinitionBySlug(String slug);
 	
 }

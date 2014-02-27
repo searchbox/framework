@@ -34,6 +34,9 @@ import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.SearchEngineDefinition;
 import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.domain.User;
+import com.searchbox.framework.domain.UserRole;
+import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -195,7 +198,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		repository.save(anotherSearchbox);
 		
 		logger.info("Bootstraping application with default data... done");
-
+		
+		logger.info("Creating Default Users...");
+		User system = new User("system","toto");
+		User admin = new User("admin","toto");
+		User user = new User("user","toto");
+		searchbox.addUser(new UserRole(system, Role.SYSTEM));
+		searchbox.addUser(new UserRole(admin, Role.ADMIN));
+		searchbox.addUser(new UserRole(user, Role.USER));
+		
 		}
 		
 		logger.info("****************************************************");
