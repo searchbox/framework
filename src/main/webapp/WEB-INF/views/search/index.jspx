@@ -11,16 +11,16 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:directive.page pageEncoding="UTF-8" />
 
-  <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
-
-<sb:base-scripts />
-
-<title>${title ? title : "Searchbox"}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
+  
+  <sb:base-scripts />
+  
+  <title>${title ? title : "Searchbox"}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
 <body>
   <div id="wrap">
 
@@ -98,16 +98,12 @@
           </div>
 
           <div class="row">
-
             <div class="col-md-3 col-sm-5 col-left" id="main-col-left">
               <c:forEach items="${result.getElements('FACET')}"
                 var="element">
                 <sb:include element="${element }" result="${result }"
                   admin="false" debug="${not empty param.debug}" />
               </c:forEach>
-              <div style="clear: all">
-                <!-- clear all -->
-              </div>
             </div>
 
 
@@ -125,18 +121,14 @@
                 <sb:include element="${element }" result="${result }"
                   admin="false" debug="${not empty param.debug}" />
               </c:forEach>
-
             </div>
 
             <div class="col-md-2" id="main-col-right"><!-- right col --></div>
-
-
           </div>
         </form>
       </div>
     </div>
       <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
-    
   </div>
 </body>
   </html>
