@@ -7,16 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.Searchbox;
-import com.searchbox.framework.web.SearchController;
 
 @Controller
 @RequestMapping("/{searchbox}/admin")
