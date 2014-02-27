@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.searchbox.framework.domain.CollectionDefinition;
+import com.searchbox.framework.domain.SearchEngineDefinition;
 import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.repository.CollectionRepository;
+import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
 @Controller
@@ -26,6 +30,32 @@ public class HomeController {
 	
 	@Autowired
 	SearchboxRepository searchboxRepository;
+	
+	@Autowired
+	CollectionRepository collectionRepository;
+	
+	@Autowired
+	SearchEngineRepository searchEngineRepository;
+	
+	@ModelAttribute("collections")
+	public List<CollectionDefinition> getAllCollections() {
+		ArrayList<CollectionDefinition> list = new ArrayList<CollectionDefinition>();
+		Iterator<CollectionDefinition> it = collectionRepository.findAll().iterator();
+		while (it.hasNext()) {
+			list.add(it.next());
+		}
+		return list;
+	}	
+	
+	@ModelAttribute("searchengines")
+	public List<SearchEngineDefinition> getAllSearchEngines() {
+		ArrayList<SearchEngineDefinition> list = new ArrayList<SearchEngineDefinition>();
+		Iterator<SearchEngineDefinition> it = searchEngineRepository.findAll().iterator();
+		while (it.hasNext()) {
+			list.add(it.next());
+		}
+		return list;
+	}	
 	
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {

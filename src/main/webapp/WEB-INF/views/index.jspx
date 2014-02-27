@@ -1,10 +1,169 @@
-<div xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:jsp="http://java.sun.com/JSP/Page">
-	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
+
 	<jsp:output omit-xml-declaration="yes" />
+	<jsp:output doctype-root-element="HTML"
+		doctype-system="about:legacy-compat" />
 
-	Hello World :)
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:directive.page pageEncoding="UTF-8" />
 
-</div>
+	<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
+
+<sb:base-scripts />
+
+<title>${title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+	<div id="wrap">
+
+		<jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
+
+		<div id="main-content" role="main">
+		
+			<div class="row" id="main-search-content">
+
+				<div class="row" id="column-top">
+
+					<div class="col-md-3 col-left">
+
+						<div class="media">
+							<a class="pull-left" href="#"> <spring:url
+									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
+								src='${searchbox_logo}' class="media-object" alt="Searchbox"
+								id="logo-image" width="260px" />
+							</a>
+						</div>
+					</div>
+
+					<div class="col-md-6">Some info here...</div>
+				</div>
+
+				<div class="row" id="searchboxes">
+					<div class="col-md-2">
+						<!-- some stuff here -->
+					</div>
+					<div class="col-md-8">
+						<div class="panel panel-default">
+							<div class="panel-heading">Available Searchbox on server</div>
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>name</th>
+											<th>alias</th>
+											<th>slug</th>
+											<th>users</th>
+											<th>options</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${searchboxes }" var="searchbox"
+											varStatus="item">
+											<tr>
+												<td>${item.count }</td>
+												<td>${searchbox.name }</td>
+												<td>${searchbox.alias }</td>
+												<spring:url value="/${searchbox.slug }/search" var="searchboxUrl"/>
+												<td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
+												<td></td>
+												<td>options here</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="collections">
+					<div class="col-md-2">
+						<!-- some stuff here -->
+					</div>
+					<div class="col-md-8">
+						<div class="panel panel-default">
+							<div class="panel-heading">Available Collections on server</div>
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>name</th>
+											<th>alias</th>
+											<th>slug</th>
+											<th>users</th>
+											<th>options</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${collections }" var="collection"
+											varStatus="item">
+											<tr>
+												<td>${item.count }</td>
+												<td>${collection.getAttributeByName('name') }</td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td>options here</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="searchengines">
+					<div class="col-md-2">
+						<!-- some stuff here -->
+					</div>
+					<div class="col-md-8">
+						<div class="panel panel-default">
+							<div class="panel-heading">Available SearchEngines on
+								server</div>
+							<div class="panel-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>name</th>
+											<th>alias</th>
+											<th>slug</th>
+											<th>users</th>
+											<th>options</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${searchengines }" var="searchengine"
+											varStatus="item">
+											<tr>
+												<td>${item.count }</td>
+												<td>${searchengine.name }</td>
+												<td>${searchengine.clazz.getSimpleName() }</td>
+												<td></td>
+												<td></td>
+												<td>options here</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+	</html>
+</jsp:root>
