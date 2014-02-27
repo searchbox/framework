@@ -14,6 +14,10 @@
   font-weight: bold;
 }
 
+.dropdown-menu{
+  z-index:1002;
+}
+
 /** General style - layout related **/
 #first-row {
   border-bottom: 1px solid #eeeeee;
@@ -257,8 +261,12 @@ a.clear_input:hover {
   margin-right: 10px;
 }
 
-#search-status-bar .sort-col {
-  text-align:right;
+#search-status-bar #sort-combo{
+  float:right;
+}
+
+#search-status-bar .sort-col{
+  padding-right:0;
 }
 
 #status {
