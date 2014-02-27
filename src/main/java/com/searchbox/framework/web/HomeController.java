@@ -26,6 +26,7 @@ import com.searchbox.framework.repository.SearchboxRepository;
 @RequestMapping("/")
 public class HomeController {
 	
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired
