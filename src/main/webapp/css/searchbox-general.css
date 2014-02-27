@@ -237,13 +237,11 @@ a.clear_input:hover {
 /*                         Status bar                        */
 /*************************************************************/
 #search-status-bar {
-  margin-bottom: 10px;
   float: left;
   width:100%;
-  margin-bottom:5px;
   margin-top:5px;
-  padding-bottom:5px;
   min-height:33px;
+  padding-bottom:10px;
   padding-left:15px;
 }
 
