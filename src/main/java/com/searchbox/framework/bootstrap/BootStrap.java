@@ -34,204 +34,181 @@ import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.SearchEngineDefinition;
 import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.domain.User;
+import com.searchbox.framework.domain.UserRole;
+import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchEngineService;
 
 @Component
-@org.springframework.core.annotation.Order(value = 10000)
+@org.springframework.core.annotation.Order(value=10000)
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger logger = LoggerFactory.getLogger(BootStrap.class);
-
+	
 	@Autowired
 	private ApplicationContext context;
-
+	
 	@Autowired
 	private SearchboxRepository repository;
-
+	
 	@Autowired
 	private SearchEngineRepository engineRepository;
-
+	
 	@Autowired
 	private CollectionRepository collectionRepository;
-
+	
 	@Autowired
 	private SearchEngineService searchEngineService;
-
+	
 	private static boolean BOOTSTRAPED = false;
-
+	
 	private static boolean defaultData = true;
-
-	private static double JAVA_VERSION = getVersion();
 
 	@Override
 	@Transactional
 	synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
 
-		if (BOOTSTRAPED) {
+		if(BOOTSTRAPED){
 			return;
-		}
-
+		} 
+		
 		BOOTSTRAPED = true;
-
-		if(JAVA_VERSION < 1.7){
-			logger.error("Java 7 is required to run Searchbox. Current version: "+
-						JAVA_VERSION + ". Please update your system.");
-			//throw new Exception("bad value");
-			System.exit(0);
+		
+		if(defaultData){
+		logger.info("Bootstraping application with default data...");
+		
+		//The base Searchbox.
+		logger.info("++ Creating pubmed searchbox");
+		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
+		
+		
+		//The embedded Solr SearchEngine
+		logger.info("++ Creating Embedded Solr Engine");
+		SearchEngineDefinition engine = null;
+		try {
+			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
+			engine.setAttributeValue("coreName", "pubmed");
+			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
+			engine.setAttributeValue("solrConfig",context.getResource("classpath:solr/conf/solrconfig.xml").getURL().getPath());
+			engine.setAttributeValue("solrSchema",context.getResource("classpath:solr/conf/schema.xml").getURL().getPath());
+			engine.setAttributeValue("dataDir", "target/data/pubmed/");
+			engine = engineRepository.save(engine);
+		} catch (Exception e){
+			logger.error("Could not set definition for SolrEmbededServer",e);
 		}
 		
-		if (defaultData) {
-			logger.info("Bootstraping application with default data...");
+		//The base collection for searchbox
+		logger.info("++ Creating pubmed Collection");
+		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
+		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
+		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
+		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+		collection.setFieldDefinitions(collectionFields);		
+		collection = collectionRepository.save(collection);
+		
+		//SearchAll preset
+		logger.info("++ Creating Search All preset");
+		PresetDefinition preset = new PresetDefinition(collection);
+		preset.setAttributeValue("label","Search All");
+		preset.setSlug("all");
+		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
+		fieldAttr.setAttributeValue("searchable",true);
+		preset.addFieldAttribute(fieldAttr);
+		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
+		fieldAttr2.setAttributeValue("searchable",true);
+		preset.addFieldAttribute(fieldAttr2);
+		
+		//Create & add a querydebug SearchComponent to the preset;
+		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
+		preset.addSearchElement(querydebug);
+		
+		//Create & add a query SearchComponent to the preset;
+		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
+		preset.addSearchElement(query);
 
-			// The base Searchbox.
-			logger.info("++ Creating pubmed searchbox");
-			Searchbox searchbox = new Searchbox("pubmed", "Embeded pubmed Demo");
+		//Create & add a TemplatedHitLIst SearchComponent to the preset;
+		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
+		templatedHitList.setAttributeValue("titleField", "article-title");
+		templatedHitList.setAttributeValue("idField", "id");
+		templatedHitList.setAttributeValue("urlField", "article-title");
+		templatedHitList.setAttributeValue("template", "<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"+
+														"<div>${hit.fieldValues['article-abstract']}</div>");
+		preset.addSearchElement(templatedHitList);
 
-			// The embedded Solr SearchEngine
-			logger.info("++ Creating Embedded Solr Engine");
-			SearchEngineDefinition engine = null;
-			try {
-				engine = new SearchEngineDefinition(EmbeddedSolr.class,
-						"embedded Solr");
-				engine.setAttributeValue("coreName", "pubmed");
-				engine.setAttributeValue("solrHome",
-						context.getResource("classpath:solr/").getURL()
-								.getPath());
-				engine.setAttributeValue(
-						"solrConfig",
-						context.getResource(
-								"classpath:solr/conf/solrconfig.xml").getURL()
-								.getPath());
-				engine.setAttributeValue("solrSchema",
-						context.getResource("classpath:solr/conf/schema.xml")
-								.getURL().getPath());
-				engine.setAttributeValue("dataDir", "target/data/pubmed/");
-				engine = engineRepository.save(engine);
-			} catch (Exception e) {
-				logger.error("Could not set definition for SolrEmbededServer",
-						e);
-			}
+		//Create & add a FieldSort SearchComponent to the preset;
+		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
+		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
+		sortFields.add(FieldSort.getRelevancySort());
+		sortFields.add(new FieldSort.Value("Latest Article", "article-completion-date", Sort.DESC));
+		sortFields.add(new FieldSort.Value("Latest Reviewed", "article-revision-date", Sort.DESC));
+		fieldSort.setAttributeValue("values", sortFields);
+		preset.addSearchElement(fieldSort);
+				
+				
+		//Create & add a HitLIst SearchComponent to the preset;
+//		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
+//		hitList.setAttributeValue("titleField", "article-title");
+//		hitList.setAttributeValue("idField", "id");
+//		hitList.setAttributeValue("urlField", "article-title");
+//		ArrayList<String> fields = new ArrayList<String>();
+//		fields.add("article-abstract");
+//		fields.add("author");
+//		fields.add("publication-type");
+//		fields.add("article-completion-date");
+//		fields.add("article-revision-date");
+//		hitList.setAttributeValue("fields", fields);
+//		preset.addSearchElement(hitList);
+		
+		//Create & add a basicSearchStat SearchComponent to the preset;
+		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
+		preset.addSearchElement(basicStatus);
+		
+		//Create & add a facet to the preset.
+		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
+		fieldFacet.setAttributeValue("fieldName", "publication-type");
+		fieldFacet.setAttributeValue("label", "Type");
+		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
+		fieldFacet.setAttributeValue("sort", Sort.DESC);
+		preset.addSearchElement(fieldFacet);
+		
+		
+		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
+		preset.addSearchElement(pagination);
+		
+		searchbox.addPresetDefinition(preset);
+		
+		PresetDefinition articles = new PresetDefinition(collection);
+		articles.setAttributeValue("label","Articles");
+		articles.setSlug("articles");
+		searchbox.addPresetDefinition(articles);
 
-			// The base collection for searchbox
-			logger.info("++ Creating pubmed Collection");
-			CollectionDefinition collection = new CollectionDefinition(
-					"pubmed", engine);
-			Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
-			collectionFields.add(FieldDefinition.StringFieldDef("id"));
-			collectionFields.add(FieldDefinition
-					.StringFieldDef("article-title"));
-			collectionFields.add(FieldDefinition
-					.StringFieldDef("article-abstract"));
-			collection.setFieldDefinitions(collectionFields);
-			collection = collectionRepository.save(collection);
-
-			// SearchAll preset
-			logger.info("++ Creating Search All preset");
-			PresetDefinition preset = new PresetDefinition(collection);
-			preset.setAttributeValue("label", "Search All");
-			preset.setSlug("all");
-			FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(
-					collection.getFieldDefinition("article-title"));
-			fieldAttr.setAttributeValue("searchable", true);
-			preset.addFieldAttribute(fieldAttr);
-			FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(
-					collection.getFieldDefinition("article-abstract"));
-			fieldAttr2.setAttributeValue("searchable", true);
-			preset.addFieldAttribute(fieldAttr2);
-
-			// Create & add a querydebug SearchComponent to the preset;
-			SearchElementDefinition querydebug = new SearchElementDefinition(
-					SolrToString.class);
-			preset.addSearchElement(querydebug);
-
-			// Create & add a query SearchComponent to the preset;
-			SearchElementDefinition query = new SearchElementDefinition(
-					EdismaxQuery.class);
-			preset.addSearchElement(query);
-
-			// Create & add a TemplatedHitLIst SearchComponent to the preset;
-			SearchElementDefinition templatedHitList = new SearchElementDefinition(
-					TemplatedHitList.class);
-			templatedHitList.setAttributeValue("titleField", "article-title");
-			templatedHitList.setAttributeValue("idField", "id");
-			templatedHitList.setAttributeValue("urlField", "article-title");
-			templatedHitList
-					.setAttributeValue(
-							"template",
-							"<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"
-									+ "<div>${hit.fieldValues['article-abstract']}</div>");
-			preset.addSearchElement(templatedHitList);
-
-			// Create & add a FieldSort SearchComponent to the preset;
-			SearchElementDefinition fieldSort = new SearchElementDefinition(
-					FieldSort.class);
-			SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
-			sortFields.add(FieldSort.getRelevancySort());
-			sortFields.add(new FieldSort.Value("Latest Article",
-					"article-completion-date", Sort.DESC));
-			sortFields.add(new FieldSort.Value("Latest Reviewed",
-					"article-revision-date", Sort.DESC));
-			fieldSort.setAttributeValue("values", sortFields);
-			preset.addSearchElement(fieldSort);
-
-			// Create & add a HitLIst SearchComponent to the preset;
-			// SearchElementDefinition hitList = new
-			// SearchElementDefinition(HitList.class);
-			// hitList.setAttributeValue("titleField", "article-title");
-			// hitList.setAttributeValue("idField", "id");
-			// hitList.setAttributeValue("urlField", "article-title");
-			// ArrayList<String> fields = new ArrayList<String>();
-			// fields.add("article-abstract");
-			// fields.add("author");
-			// fields.add("publication-type");
-			// fields.add("article-completion-date");
-			// fields.add("article-revision-date");
-			// hitList.setAttributeValue("fields", fields);
-			// preset.addSearchElement(hitList);
-
-			// Create & add a basicSearchStat SearchComponent to the preset;
-			SearchElementDefinition basicStatus = new SearchElementDefinition(
-					BasicSearchStats.class);
-			preset.addSearchElement(basicStatus);
-
-			// Create & add a facet to the preset.
-			SearchElementDefinition fieldFacet = new SearchElementDefinition(
-					FieldFacet.class);
-			fieldFacet.setAttributeValue("fieldName", "publication-type");
-			fieldFacet.setAttributeValue("label", "Type");
-			fieldFacet.setAttributeValue("order", Order.BY_VALUE);
-			fieldFacet.setAttributeValue("sort", Sort.DESC);
-			preset.addSearchElement(fieldFacet);
-
-			SearchElementDefinition pagination = new SearchElementDefinition(
-					BasicPagination.class);
-			preset.addSearchElement(pagination);
-
-			searchbox.addPresetDefinition(preset);
-
-			PresetDefinition articles = new PresetDefinition(collection);
-			articles.setAttributeValue("label", "Articles");
-			articles.setSlug("articles");
-			searchbox.addPresetDefinition(articles);
-
-			PresetDefinition press = new PresetDefinition(collection);
-			press.setAttributeValue("label", "Press");
-			press.setSlug("press");
-			searchbox.addPresetDefinition(press);
-
-			repository.save(searchbox);
-
-			// Making another Searchbox for testing and UI.
-			Searchbox anotherSearchbox = new Searchbox("custom", "My Searchbox");
-			repository.save(anotherSearchbox);
-
-			logger.info("Bootstraping application with default data... done");
-
+		PresetDefinition press = new PresetDefinition(collection);
+		press.setAttributeValue("label","Press");
+		press.setSlug("press");
+		searchbox.addPresetDefinition(press);
+		
+		repository.save(searchbox);
+		
+		//Making another Searchbox for testing and UI.
+		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
+		repository.save(anotherSearchbox);
+		
+		logger.info("Bootstraping application with default data... done");
+		
+		logger.info("Creating Default Users...");
+		User system = new User("system","toto");
+		User admin = new User("admin","toto");
+		User user = new User("user","toto");
+		searchbox.addUser(new UserRole(system, Role.SYSTEM));
+		searchbox.addUser(new UserRole(admin, Role.ADMIN));
+		searchbox.addUser(new UserRole(user, Role.USER));
+		
 		}
-
+		
 		logger.info("****************************************************");
 		logger.info("*                  Welcome                         *");
 		logger.info("****************************************************");
@@ -255,42 +232,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("*  admin: http://localhost:8080/searchbox/admin    *");
 		logger.info("*                                                  *");
 		logger.info("****************************************************");
-
+		
 		logger.info("Starting all your engine");
-		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository
-				.findAll().iterator();
-
-		while (engineDefinitions.hasNext()) {
+		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		
+		while(engineDefinitions.hasNext()){
 			SearchEngineDefinition engineDefinition = engineDefinitions.next();
-			logger.info("++ Starting SearchEngine: "
-					+ engineDefinition.getName());
+			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
 			searchEngineService.load(engineDefinition.getInstance());
 		}
 	}
 
-	/**
-	 * Retrieving current java version
-	 * @return Double Java version
-	 */
-	private static double getVersion() {
-		String version = System.getProperty("java.version");
-		logger.info("Checking java version. Version found :" + version);
-		int pos = 0, count = 0;
-		for (; pos < version.length() && count < 2; pos++) {
-			if (version.charAt(pos) == '.') {
-				count++;
-			}
-		}
-		--pos; // EVALUATE double
-		double dversion = Double.parseDouble(version.substring(0, pos));
-		return dversion;
-	}
-
 	@SuppressWarnings("resource")
-	public static void main(String... args) {
+	public static void main(String... args){
 		@SuppressWarnings("unused")
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-				RootConfiguration.class);
-
+		AnnotationConfigApplicationContext context = 
+				new AnnotationConfigApplicationContext(RootConfiguration.class);
+		
 	}
 }

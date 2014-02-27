@@ -45,6 +45,7 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<spring.version>4.0.2.RELEASE</spring.version>
 		<spring-batch.version>2.2.5.RELEASE</spring-batch.version>
+		<spring-security.version>3.2.0.RELEASE</spring-security.version>
 		<jetty.version>8.1.5.v20120716</jetty.version>
 		<lucene.version>4.6.1</lucene.version>
 		<solr.version>4.6.1</solr.version>
@@ -298,12 +299,17 @@
     <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-web</artifactId>
-        <version>3.2.0.RELEASE</version>
+        <version>${spring-security.version}</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-config</artifactId>
-        <version>3.2.0.RELEASE</version>
+        <version>${spring-security.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-taglibs</artifactId>
+        <version>${spring-security.version}</version>
     </dependency>
 		<!-- ************************************************* -->
 		<!-- -->

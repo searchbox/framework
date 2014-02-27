@@ -29,6 +29,7 @@ import com.searchbox.framework.repository.SearchboxRepository;
 
 @Service("mvcConversionService")
 public class ApplicationConversionService extends DefaultFormattingConversionService {
+	
 	@Autowired
 	private ApplicationContext context;
 
@@ -126,8 +127,8 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 		});
 
 		this.addConverter(new Converter<String, PresetDefinition>() {
-					public PresetDefinition convert(String id) {
-						return presetRepository.findOne(Long.parseLong(id));
+					public PresetDefinition convert(String slug) {
+						return presetRepository.findPresetDefinitionBySlug(slug);
 					}
 				});
 
