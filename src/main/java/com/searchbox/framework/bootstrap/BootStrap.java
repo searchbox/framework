@@ -200,7 +200,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
 		fieldFacet.setAttributeValue("fieldName", "publication-type");
-		fieldFacet.setAttributeValue("label", "Type");
+		fieldFacet.setLabel("Type");
 		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
 		fieldFacet.setAttributeValue("sort", Sort.DESC);
 		preset.addSearchElement(fieldFacet);
