@@ -39,9 +39,7 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 /**
  * @author Stephane Gamard
- * @see http
- *      ://www.petrikainulainen.net/programming/spring-framework/adding-social
- *      -sign-in-to-a-spring-mvc-web-application-configuration/
+ * http://www.petrikainulainen.net/programming/spring-framework/adding-social-sign-in-to-a-spring-mvc-web-application-configuration/
  */
 @Configuration
 @EnableSocial
