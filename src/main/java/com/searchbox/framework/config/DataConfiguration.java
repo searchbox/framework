@@ -43,7 +43,7 @@ public class DataConfiguration {
 				.setType(EmbeddedDatabaseType.H2)
 				.build();
     }
-
+   
     @Bean(name="entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
@@ -64,6 +64,10 @@ public class DataConfiguration {
 
     @Bean(name="transactionManager")
     public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager();
+    	JpaTransactionManager txManager = new JpaTransactionManager();
+//    	txManager.setDefaultTimeout(1000);
+//    	txManager.setNestedTransactionAllowed(true);
+//    	txManager.setTransactionSynchronization(TransactionSynchronization.STATUS_COMMITTED);
+        return txManager;
     }
 }

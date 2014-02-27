@@ -44,12 +44,12 @@ public class Searchbox {
 	private String description;
 
 	@OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 	
 	
 	@OneToMany(mappedBy = "searchbox", cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	private List<UserRole> userRoles = new ArrayList<UserRole>();
 	
 	public Searchbox() {
