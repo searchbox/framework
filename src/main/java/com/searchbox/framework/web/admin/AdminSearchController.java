@@ -15,7 +15,7 @@ import com.searchbox.framework.web.SearchController;
 
 @Controller
 @RequestMapping("/{searchbox}/admin/search")
-public class PresetController extends SearchController{
+public class AdminSearchController extends SearchController{
 	
 	@ModelAttribute("OrderEnum")
 	public List<Order> getReferenceOrder() {
@@ -34,5 +34,4 @@ public class PresetController extends SearchController{
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
 		return "/"+searchbox.getSlug()+"/admin/search/"+preset.getSlug();
 	}
-
 }
