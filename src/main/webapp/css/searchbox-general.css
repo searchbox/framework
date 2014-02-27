@@ -150,7 +150,7 @@ input:focus,textarea:focus {
 }
 
 #search-bar {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   border-radius: 0;
   padding-left: 0px;
   padding-top: 40px;
@@ -236,11 +236,24 @@ a.clear_input:hover {
   margin-bottom: 10px;
   float: left;
   width:100%;
+  margin-bottom:5px;
+  margin-top:5px;
+  padding-bottom:5px;
+  min-height:33px;
 }
 
 #search-status-bar .status-text {
   color: #999;;
   font-size: 12px;
+}
+
+#search-status-bar h4{
+  margin:0;
+}
+
+#search-status-bar span.label{
+  padding: 5px 14px;
+  margin-right: 10px;
 }
 
 #search-status-bar .sort-col {

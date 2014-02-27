@@ -8,7 +8,7 @@
   <c:set var="sortVariable" value=""/>
 
   <div class="btn-group">
-    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
       Sort by <span class="caret"> <!-- Empty -->
       </span>
     </button>
