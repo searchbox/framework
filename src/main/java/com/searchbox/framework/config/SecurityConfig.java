@@ -33,8 +33,8 @@ import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.searchbox.framework.repository.UserRepository;
-import com.searchbox.framework.service.RepositoryUserDetailsService;
-import com.searchbox.framework.service.SimpleSocialUserDetailsService;
+import com.searchbox.framework.user.service.RepositoryUserDetailsService;
+import com.searchbox.framework.user.service.SimpleSocialUserDetailsService;
 
 @Configuration
 @EnableWebMvcSecurity

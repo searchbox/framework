@@ -57,6 +57,7 @@ import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.SearchEngineService;
+import com.searchbox.framework.user.service.RepositoryUserService;
 
 @Component
 @org.springframework.core.annotation.Order(value=10000)
@@ -80,7 +81,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	private SearchEngineService searchEngineService;
 	
 	@Autowired
-	private UserRepository userRepository;
+	RepositoryUserService userService;
+	
+	
 	
 	private static boolean BOOTSTRAPED = false;
 	
@@ -99,14 +102,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		if(defaultData){
 			
 		logger.info("Creating Default Users...");
-		User system = new User("system","password");
-		system = userRepository.save(system);
-
-		User admin = new User("admin","password");
-		admin = userRepository.save(admin);
-		
-		User user = new User("user","password");
-		user = userRepository.save(user);
+		User system = userService.registerNewUserAccount("system", "password");
+		User admin = userService.registerNewUserAccount("admin", "password");
+		User user = userService.registerNewUserAccount("user", "password");
 		
 		logger.info("Bootstraping application with default data...");
 		

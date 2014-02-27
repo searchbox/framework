@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +27,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.searchbox.framework.domain.UserRole.Role;
+import com.searchbox.framework.user.model.SocialMediaService;
 
 
 @Entity
-public class User implements UserDetails{
+public class User {
 
 	/**
 	 * 
@@ -51,29 +47,28 @@ public class User implements UserDetails{
 	private long version;
 	
 	@Column(nullable=false, unique=true)
-	private String username;
+	private String email;
 	
 	private String password;
 	
+	private SocialMediaService SignInProvider;
+	
 	@OneToMany(cascade = CascadeType.ALL)
-	private Map<Searchbox, UserRole> roles;
-	
-	public User(){
-		roles = new HashMap<Searchbox,UserRole>();
-	}
+	private Map<Searchbox, UserRole> roles = new HashMap<Searchbox,UserRole>();
 
-	public User(String username, String password){
-		this.username = username;
+	public User(){}
+	
+	public User(String email, String password){
+		this.email = email;
 		this.password = password;
-		roles = new HashMap<Searchbox,UserRole>();
 	}
 	
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -84,37 +79,35 @@ public class User implements UserDetails{
 		this.password = password;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+	public long getId() {
+		return id;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+	public long getVersion() {
+		return version;
 	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+	public void setVersion(long version) {
+		this.version = version;
 	}
 
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+	public Map<Searchbox, UserRole> getRoles() {
+		return roles;
 	}
 
-	public void addRole(Searchbox searchbox, Role role) {
-		this.roles.put(searchbox, new UserRole(this, role));
-	}	
+	public void setRoles(Map<Searchbox, UserRole> roles) {
+		this.roles = roles;
+	}
+
+	public SocialMediaService getSignInProvider() {
+		return SignInProvider;
+	}
+
+	public void setSignInProvider(SocialMediaService signInProvider) {
+		SignInProvider = signInProvider;
+	}
 }
