@@ -37,7 +37,7 @@
 						<input type="hidden" name="searchbox" value="${param.searchbox }" />
 					</c:if>
 
-					<div class="row" id="column-top">
+					<div class="row" id="search-bar">
 
 						<div class="col-md-3 col-left">
 
