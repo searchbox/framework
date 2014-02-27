@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright Searchbox - http://www.searchbox.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.searchbox.framework.domain;
 
 import java.util.ArrayList;
@@ -6,7 +21,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +29,8 @@ import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Searchbox {
@@ -27,16 +43,6 @@ public class Searchbox {
 	@Column(name="OPTLOCK")
 	private long version;
 	
-	public Searchbox() {
-		
-	}
-
-	public Searchbox(String name, String description) {
-		this.name = name;
-		this.slug = name;
-		this.description = description;
-	}
-
 	/**
      */
 	@Column(unique=true)
@@ -52,9 +58,24 @@ public class Searchbox {
      */
 	private String description;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 	
+	
+	@OneToMany(mappedBy = "searchbox", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<UserRole> userRoles = new ArrayList<UserRole>();
+	
+	public Searchbox() {
+	}
+
+	public Searchbox(String name, String description) {
+		this.name = name;
+		this.slug = name;
+		this.description = description;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -111,9 +132,22 @@ public class Searchbox {
 		this.presets = presets;
 	}
 
+	public List<UserRole> getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+
 	public void addPresetDefinition(PresetDefinition preset) {
 		preset.setSearchbox(this);
 		this.presets.add(preset);
+	}
+	
+	public void addUser(UserRole userRole) {
+		userRole.setSearchbox(this);
+		this.userRoles.add(userRole);
 	}
 	
 	@Override

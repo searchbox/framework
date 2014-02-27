@@ -1,186 +1,68 @@
-<html xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:sb="urn:jsptagdir:/tags/sb"
-	xmlns:form="http://www.springframework.org/tags/form">
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
 
-<jsp:output omit-xml-declaration="yes" />
-<jsp:output doctype-root-element="HTML"
-	doctype-system="about:legacy-compat" />
+  <jsp:output omit-xml-declaration="yes" />
+  <jsp:output doctype-root-element="HTML"
+    doctype-system="about:legacy-compat" />
 
-<jsp:directive.page contentType="text/html;charset=UTF-8" />
-<jsp:directive.page pageEncoding="UTF-8" />
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:directive.page pageEncoding="UTF-8" />
 
+  <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
 
 <sb:base-scripts />
-<sb:admin-scripts />
 
 <title>${title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 </head>
 <body>
+  <div id="wrap">
 
-	<div id="wrap">
+    <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
-		<jsp:include page="/views/common/_navbar.jspx" />
+    <div id="main-content" role="main">
+    
+      <div class="row" id="main-search-content">
 
-		<div id="main-content" role="main">
+        <div class="row" id="column-top">
 
-			<div class="row" id="main-search-content">
+          <div class="col-md-3 col-left">
 
-					<c:if test="${not empty param.debug}">
-						<input type="hidden" name="debug" value="${param.debug }" />
-					</c:if>
-					<c:if test="${not empty param.searchbox}">
-						<input type="hidden" name="searchbox" value="${param.searchbox }" />
-					</c:if>
+            <div class="media">
+              <a class="pull-left" href="#"> <spring:url
+                  value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
+                src='${searchbox_logo}' class="media-object" alt="Searchbox"
+                id="logo-image" width="260px" />
+              </a>
+            </div>
+          </div>
 
-					<div class="row" id="column-top">
+          <div class="col-md-6">Some info here...</div>
+        </div>
 
-						<div class="col-md-3 col-left">
-
-							<div class="media">
-								<a class="pull-left" href="#"> <spring:url
-										value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
-									src='${searchbox_logo}' class="media-object" alt="Searchbox"
-									id="logo-image" width="260px" />
-								</a>
-							</div>
-						</div>
-
-						<div class="col-md-6">
-							<c:forEach items="${result.getElements('QUERY')}" var="element">
-								<sb:include element="${element }" result="${result }"
-									admin="true" debug="${not empty param.debug}" />
-							</c:forEach>
-						</div>
-					</div>
-
-					<div class="row" id="first-row">
-						<div id="search-status-bar">
-
-							<div class="col-md-3">
-								<c:forEach items="${result.getElements('STAT')}" var="element">
-									<sb:include element="${element }" result="${result }"
-										admin="true" debug="${not empty param.debug}" />
-								</c:forEach>
-							</div>
-
-							<div class="col-md-6">
-								<!-- HERE COMES TAGS -->
-							</div>
-
-							<div class="col-md-3 last" id="main-col-status-bar">
-								<c:forEach items="${result.getElements('SORT')}" var="element">
-									<sb:include element="${element }" result="${result }"
-										admin="true" debug="${not empty param.debug}" />
-
-								</c:forEach>
-							</div>
-
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="col-md-3 col-sm-5 col-left" id="main-col-left">
-							<c:forEach items="${result.getElements('FACET')}" var="element">
-								<sb:include element="${element }" result="${result }"
-									admin="true" debug="${not empty param.debug}" />
-
-							</c:forEach>
-							<div style="clear: all">
-								<!-- afsfd -->
-							</div>
-						</div>
-
-						<div class="col-md-8 col-sm-8" id="main-col-center">
-
-							<!-- Nav tabs -->
-							<ul class="nav nav-tabs nav-justified">
-								<li class="active"><a href="#view" data-toggle="tab">View
-										Element<span class="badge pull-right">${result.getElements('VIEW').size()}</span>
-								</a></li>
-								<li><a href="#filter" data-toggle="tab">Preset Filters
-										<span class="badge pull-right">${result.getElements('FILTER').size()}</span>
-								</a></li>
-								<li><a href="#field" data-toggle="tab">Fields
-										Definition <span class="badge pull-right">${presetDefinition.fieldAttributes.size()}</span>
-								</a></li>
-
-							</ul>
-
-							<!-- Tab panes -->
-							<div class="tab-content">
-								<div class="tab-pane active" id="view">
-									<c:forEach items="${result.getElements('VIEW')}" var="element">
-										<sb:include element="${element }" result="${result }"
-											admin="true" debug="${not empty param.debug}" />
-									</c:forEach>
-								</div>
-								<div class="tab-pane" id="filter">Preset Filters go here.</div>
-								<div class="tab-pane" id="field">
-
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th></th>
-												<th>key</th>
-												<th>type</th>
-												<th>label</th>
-												<th>search</th>
-												<th>highlight</th>
-												<th>sort</th>
-												<th>spell</th>
-												<th>suggest</th>
-												<th>boost</th>
-											</tr>
-										</thead>
-										<tbody>
-											<c:forEach items="${presetDefinition.fieldAttributes }"
-												var="attr" varStatus="item">
-
-												<c:set var="trclass" value="" />
-
-												<tr>
-													<td><p class="form-control-static">${item.count }</p></td>
-													<td nowrap="nowrap" class="nowrap"><p
-															class="form-control-static">${attr.field.getKey() }</p></td>
-													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-													<td><a href="" id="label" data-type="text" data-placeholder="Label"
-														data-pk="${attr.getId() }" data-title="Field Label"
-														class="editable editable-click">${attr.getAttributeByName('label')}</a></td>
-													<td>
-													<a href="#" id="firstname" data-type="text" data-pk="1" data-placement="right" data-placeholder="Required" data-title="Enter your firstname" class="editable editable-click editable-empty">Empty</a>
-													</td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-												</tr>
-
-											</c:forEach>
-
-
-										</tbody>
-									</table>
-									<script>
-									$.fn.editable.defaults.mode = 'inline';
-									$('.editable').editable();
-									</script>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-2" id="main-col-right" />
-					</div>
-			</div>
-		</div>
-	</div>
-	<jsp:include page="/views/common/_footer.jspx" />
+        <div class="row" id="searchboxes">
+          <div class="col-md-2">
+            <!-- some stuff here -->
+          </div>
+          <div class="col-md-8">
+            ${searchbox }
+            <hr/>
+            ${searchbox.userRoles }
+            <hr/>
+             ${users }
+            <hr/>
+             ${userRoles }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
-</html>
+  </html>
+</jsp:root>

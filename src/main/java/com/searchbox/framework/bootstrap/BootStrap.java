@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright Searchbox - http://www.searchbox.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
 import java.util.HashSet;
@@ -34,9 +49,13 @@ import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.SearchEngineDefinition;
 import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.domain.User;
+import com.searchbox.framework.domain.UserRole;
+import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
+import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.SearchEngineService;
 
 @Component
@@ -60,6 +79,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
 	private SearchEngineService searchEngineService;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	private static boolean BOOTSTRAPED = false;
 	
 	private static boolean defaultData = true;
@@ -75,6 +97,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		BOOTSTRAPED = true;
 		
 		if(defaultData){
+			
+		logger.info("Creating Default Users...");
+		User system = new User("system","password");
+		system = userRepository.save(system);
+
+		User admin = new User("admin","password");
+		admin = userRepository.save(admin);
+		
+		User user = new User("user","password");
+		user = userRepository.save(user);
+		
 		logger.info("Bootstraping application with default data...");
 		
 		//The base Searchbox.
@@ -132,7 +165,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("titleField", "article-title");
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
-		templatedHitList.setAttributeValue("template", "<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"+
+		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
 														"<div>${hit.fieldValues['article-abstract']}</div>");
 		preset.addSearchElement(templatedHitList);
 
@@ -167,7 +200,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//Create & add a facet to the preset.
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
 		fieldFacet.setAttributeValue("fieldName", "publication-type");
-		fieldFacet.setAttributeValue("label", "Type");
+		fieldFacet.setLabel("Type");
 		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
 		fieldFacet.setAttributeValue("sort", Sort.DESC);
 		preset.addSearchElement(fieldFacet);
@@ -188,14 +221,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
+		searchbox.addUser(new UserRole(system, Role.SYSTEM));
+		searchbox.addUser(new UserRole(admin, Role.ADMIN));
+		searchbox.addUser(new UserRole(user, Role.USER));
 		repository.save(searchbox);
-		
+				
 		//Making another Searchbox for testing and UI.
 		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
 		repository.save(anotherSearchbox);
-		
-		logger.info("Bootstraping application with default data... done");
 
+		logger.info("Bootstraping application with default data... done");
+		
+		
 		}
 		
 		logger.info("****************************************************");

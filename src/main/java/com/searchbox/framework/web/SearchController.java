@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright Searchbox - http://www.searchbox.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.searchbox.framework.web;
 
 import java.util.ArrayList;
@@ -17,13 +32,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.dm.Preset;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.SearchCondition;
@@ -42,6 +55,7 @@ import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.SearchService;
 
 @Controller
+@RequestMapping("/{searchbox}/search")
 public class SearchController {
 
 	private static Logger logger = LoggerFactory
@@ -49,13 +63,13 @@ public class SearchController {
 
 	@Autowired
 	ApplicationConversionService applicationConversionService;
-	
+
 	@Autowired
 	ConversionService conversionService;
-	
+
 	@Autowired
 	SearchService searchService;
-	
+
 	@Autowired
 	SearchEngineService searchEngineService;
 
@@ -70,13 +84,21 @@ public class SearchController {
 
 	@Autowired
 	protected PresetRepository presetRepository;
-	
+
 	@Autowired
 	protected SearchEngineRepository searchEngineRepository;
 
 	public SearchController() {
 	}
 
+	protected String getView() {
+		return "search/index";
+	}
+	
+	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+		return "/"+searchbox.getSlug()+"/search/"+preset.getSlug();
+	}
+		
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {
 		ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
@@ -88,42 +110,48 @@ public class SearchController {
 	}
 
 	@ModelAttribute("presets")
-	public List<Preset> getAllPresets(
-			@RequestParam(value = "searchbox", required = false) Searchbox searchbox) {
-		ArrayList<Preset> presets = new ArrayList<Preset>();
-		if (searchbox != null) {
-			for (PresetDefinition pdef : presetRepository
-					.findAllBySearchbox(searchbox)) {
-				presets.add(pdef.getInstance());
-			}
-		}
-		return presets;
+	public List<PresetDefinition> getAllPresets(
+			@PathVariable Searchbox searchbox) {
+		return presetRepository.findAllBySearchbox(searchbox);
 	}
 
-	protected String getIndexView() {
-		return "search/index";
+	@RequestMapping(value = { "", "/" })
+	public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
+			HttpServletRequest request, ModelAndView model,
+			RedirectAttributes redirectAttributes) {
+
+		logger.info("Missing preset. Redirecting to first preset of searchbox: "
+				+ searchbox.getName());
+		PresetDefinition preset = searchbox.getPresets().get(0);
+		ModelAndView redirect = new ModelAndView(
+				new RedirectView(getSearchUrl(searchbox,preset), true));
+		return redirect;
+
 	}
 
-	protected String getHomeView() {
-		return "search/home";
-	}
+	@RequestMapping("/{preset}")
+	public ModelAndView executeSearch(
+			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+			@PathVariable Searchbox searchbox,
+			@PathVariable PresetDefinition preset, HttpServletRequest request,
+			ModelAndView model, RedirectAttributes redirectAttributes) {
 
-	protected ModelAndView executeSearch(Searchbox searchbox,
-			PresetDefinition preset, HttpServletRequest request,
-			ModelAndView model) {
-		
-		model.setViewName(this.getIndexView());	
+		logger.info("search page for: " + searchbox + " with preset:" + preset);
+		model.setViewName(this.getView());
 
 		// Fetch all search Conditions within HTTP params
 		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
-		for (String param : applicationConversionService.getSearchConditionParams()) {
+		for (String param : applicationConversionService
+				.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
 					if (value != null && !value.isEmpty()) {
 						try {
 							SearchCondition cond = (SearchCondition) conversionService
-									.convert(value, applicationConversionService
-											.getSearchConditionClass(param));
+									.convert(
+											value,
+											applicationConversionService
+													.getSearchConditionClass(param));
 							conditions.add(cond);
 						} catch (Exception e) {
 							logger.error("Could not convert " + value, e);
@@ -138,7 +166,8 @@ public class SearchController {
 		// Build the Preset DTO with dependancies
 		Set<SearchElement> searchElements = new TreeSet<SearchElement>();
 
-		for (SearchElementDefinition elementdefinition : preset.getSearchElements()) {
+		for (SearchElementDefinition elementdefinition : preset
+				.getSearchElements()) {
 			try {
 				SearchElement searchElement = elementdefinition.getInstance();
 				if (CachedContent.class.isAssignableFrom(searchElement
@@ -156,91 +185,35 @@ public class SearchController {
 					((CachedContent) searchElement).setPath(directoryService
 							.getApplicationRelativePath(tempFile));
 				}
-				
+
 				searchElements.add(searchElement);
 			} catch (Exception e) {
 				logger.error("Could not get SearchElement for: "
 						+ elementdefinition, e);
 			}
 		}
-	
+
 		Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-		for(FieldAttributeDefinition def:preset.getFieldAttributes()){
+		for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
 			fieldAttributes.add(def.getInstance());
 		}
-		
-		SearchEngine<?, ?> searchEngine = searchEngineService.getSearchEngine(
-				preset.getCollection().getSearchEngine().getName());
-		
-		Set<SearchElement> resultElements =  searchService.execute(searchEngine,
+
+		SearchEngine<?, ?> searchEngine = searchEngineService
+				.getSearchEngine(preset.getCollection().getSearchEngine()
+						.getName());
+
+		Set<SearchElement> resultElements = searchService.execute(searchEngine,
 				searchElements, fieldAttributes, conditions);
-		
+
 		for (SearchElement element : resultElements) {
 			logger.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
 			result.addElement(element);
 		}
-	
+
 		model.addObject("result", result);
 		model.addObject("preset", preset);
 
 		return model;
-	}
-
-	@RequestMapping("/{slug}")
-	public ModelAndView searchPreset(
-			@RequestParam(value = "searchbox", required = false) Searchbox searchbox,
-			@PathVariable String slug,
-			@ModelAttribute("searchboxes") ArrayList<Searchbox> searchboxes,
-			HttpServletRequest request, ModelAndView model,
-			RedirectAttributes redirectAttributes) {
-
-		if (searchbox == null) {
-			// TODO Deal with empty searchbox
-			searchbox = searchboxes.get(0);
-			redirectAttributes.addAttribute("searchbox", searchbox);
-			ModelAndView redirect = new ModelAndView(new RedirectView(slug,
-					true));
-			return redirect;
-		} else {
-			PresetDefinition pdef = presetRepository
-					.findPresetDefinitionBySearchboxAndSlug(searchbox, slug);
-			
-			if (pdef == null) {
-
-				slug = searchbox.getPresets().get(0).getSlug();
-				redirectAttributes.addAttribute("preset", slug);
-				ModelAndView redirect = new ModelAndView(new RedirectView(slug,
-						true));
-				return redirect;
-			} else {
-	
-				return executeSearch(searchbox, pdef, request, model);
-			}
-		}
-	}
-
-	@RequestMapping("/")
-	public ModelAndView search(
-			@RequestParam(value = "searchbox", required = false) Searchbox searchbox,
-			@RequestParam(value = "preset", required = false) String slug,
-			@ModelAttribute("searchboxes") ArrayList<Searchbox> searchboxes,
-			HttpServletRequest request, ModelAndView model,
-			RedirectAttributes redirectAttributes) {
-
-		if (searchbox == null) {
-			// TODO Deal with empty searchbox
-			searchbox = searchboxes.get(0);
-			redirectAttributes.addAttribute("searchbox", searchbox);
-		}
-
-		if (slug == null) {
-			// TODO Deal with empty preset
-			slug = searchbox.getPresets().get(0).getSlug();
-			redirectAttributes.addAttribute("preset", slug);
-		}
-
-		ModelAndView redirect = new ModelAndView(new RedirectView(slug, true));
-		return redirect;
 	}
 }

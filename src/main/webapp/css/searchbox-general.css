@@ -14,6 +14,10 @@
   font-weight: bold;
 }
 
+.dropdown-menu{
+  z-index:1002;
+}
+
 /** General style - layout related **/
 #first-row {
   border-bottom: 1px solid #eeeeee;
@@ -145,8 +149,12 @@ input:focus,textarea:focus {
   border-color: rgba(30, 187, 192, 0.8) !important;
 }
 
-#column-top {
-  margin-bottom: 10px;
+#search-bar .search-query, #search-bar .btn-search {
+  height: 44px;
+}
+
+#search-bar {
+  margin-bottom: 5px;
   border-radius: 0;
   padding-left: 0px;
   padding-top: 40px;
@@ -229,14 +237,34 @@ a.clear_input:hover {
 /*                         Status bar                        */
 /*************************************************************/
 #search-status-bar {
-  margin-bottom: 10px;
   float: left;
   width:100%;
+  margin-top:5px;
+  min-height:33px;
+  padding-bottom:10px;
+  padding-left:15px;
 }
 
 #search-status-bar .status-text {
   color: #999;;
   font-size: 12px;
+}
+
+#search-status-bar h4{
+  margin:0;
+}
+
+#search-status-bar span.label{
+  padding: 5px 14px;
+  margin-right: 10px;
+}
+
+#search-status-bar #sort-combo{
+  float:right;
+}
+
+#search-status-bar .sort-col{
+  padding-right:0;
 }
 
 #status {
@@ -319,6 +347,12 @@ a.clear_input:hover {
   margin-bottom: 0;
 }
 
+/*************************************************************/
+/*                          Results                          */
+/*************************************************************/
+#main-col-center h5{
+  margin-top:0;
+}
 /*************************************************************/
 /*                           Footer                          */
 /*************************************************************/

@@ -5,14 +5,12 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:output omit-xml-declaration="yes" />
 
-
-	<div class="input-group input-group" style="padding-top: 10px">
-		<input type="text" class="form-control" placeholder="Query" name="${elementUrlParam}"
+	<div class="input-group input-group">
+		<input type="text" class="form-control search-query" placeholder="Query" name="${elementUrlParam}"
 			value="${element.query }" /> <span class="input-group-btn">
-			<button type="submit" class="btn btn-black">
-				<span class="glyphicon glyphicon-search"></span>
+			<button type="submit" class="btn btn-black btn-search">
+				<span class="glyphicon glyphicon-search"><!-- search --></span>
 			</button>
 		</span>
 	</div>
-
 </jsp:root>

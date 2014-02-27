@@ -13,7 +13,7 @@
             <ul class="dropdown-menu">
             <li><a href="about">About ${currentSearchbox.getName() }</a></li>
             <li><a href="about">Login</a></li>
-            <li class="divider"></li>
+            <li class="divider"><!-- divider --></li>
             <c:forEach var="searchbox" items="${searchboxes}">
               <li><a href="?searchbox=${searchbox.getSlug() }">${searchbox.getName() }</a></li>
             </c:forEach>
