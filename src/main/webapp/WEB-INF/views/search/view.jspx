@@ -29,7 +29,9 @@
     <div id="main-content" role="main">
 
       <div class="row" id="main-search-content">
-        <form id="searchForm">
+        <spring:url var="searchUrl" 
+          value="/${searchbox.getSlug() }/search/${preset.getSlug() }"/>
+        <form id="searchForm" action="${searchUrl}">
           <c:if test="${not empty param.debug}">
             <input type="hidden" name="debug" value="${param.debug }" />
           </c:if>
