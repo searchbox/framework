@@ -115,7 +115,7 @@ public class UserRole implements GrantedAuthority{
 
 	@Override
 	public String getAuthority() {
-		return role.name();
+		return "ROLE_"+role.toString();
 	}
 	
 	@Override
