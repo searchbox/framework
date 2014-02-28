@@ -131,7 +131,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("++ Creating pubmed Collection");
 		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
 		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
-		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
+		idField.setIdField(true);
+		collectionFields.add(idField);
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
 		collection.setFieldDefinitions(collectionFields);		

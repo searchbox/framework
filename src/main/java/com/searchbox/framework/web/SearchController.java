@@ -16,6 +16,7 @@
 package com.searchbox.framework.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,7 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
+import com.searchbox.framework.domain.FieldDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.Searchbox;
@@ -55,7 +57,7 @@ import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.SearchService;
 
 @Controller
-@RequestMapping("/{searchbox}/search")
+@RequestMapping("/{searchbox}")
 public class SearchController {
 
 	private static Logger logger = LoggerFactory
@@ -91,8 +93,12 @@ public class SearchController {
 	public SearchController() {
 	}
 
-	protected String getView() {
+	protected String getSearchView() {
 		return "search/index";
+	}
+	
+	protected String getHitView() {
+		return "search/view";
 	}
 	
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
@@ -115,7 +121,7 @@ public class SearchController {
 		return presetRepository.findAllBySearchbox(searchbox);
 	}
 
-	@RequestMapping(value = { "", "/" })
+	@RequestMapping(value = { "/search", "/search/" })
 	public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
@@ -128,8 +134,34 @@ public class SearchController {
 		return redirect;
 
 	}
+	
+	@RequestMapping("/view/{preset}")
+	public ModelAndView executeView(
+			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+			@PathVariable Searchbox searchbox,
+			@PathVariable PresetDefinition preset, HttpServletRequest request,
+			ModelAndView model, RedirectAttributes redirectAttributes) {
 
-	@RequestMapping("/{preset}")
+		logger.info("search page for: " + searchbox + " with preset:" + preset);
+		model.setViewName(this.getSearchView());
+		
+		SearchResult result = new SearchResult();
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset, request, 
+				SearchElement.Type.QUERY, SearchElement.Type.FACET,SearchElement.Type.FILTER,
+				SearchElement.Type.SORT, SearchElement.Type.DEBUG, SearchElement.Type.INSPECT);
+		for (SearchElement element : resultElements) {
+			logger.debug("Adding to result view element["
+					+ element.getPosition() + "] = " + element.getLabel());
+			result.addElement(element);
+		}
+
+		model.addObject("result", result);
+		model.addObject("preset", preset);
+		
+		return model;
+	}
+
+	@RequestMapping("/search/{preset}")
 	public ModelAndView executeSearch(
 			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
 			@PathVariable Searchbox searchbox,
@@ -137,7 +169,27 @@ public class SearchController {
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName(this.getView());
+		model.setViewName(this.getSearchView());
+		
+		SearchResult result = new SearchResult();
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset, request, 
+				SearchElement.Type.QUERY, SearchElement.Type.FACET,SearchElement.Type.FILTER,
+				SearchElement.Type.SORT, SearchElement.Type.DEBUG, SearchElement.Type.VIEW);
+		for (SearchElement element : resultElements) {
+			logger.debug("Adding to result view element["
+					+ element.getPosition() + "] = " + element.getLabel());
+			result.addElement(element);
+		}
+
+		model.addObject("result", result);
+		model.addObject("preset", preset);
+		
+		return model;
+	}
+	
+	private Set<SearchElement> executeRequest(Searchbox searchbox,
+			PresetDefinition preset, HttpServletRequest request,
+			SearchElement.Type ... types) {
 
 		// Fetch all search Conditions within HTTP params
 		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
@@ -161,8 +213,6 @@ public class SearchController {
 			}
 		}
 
-		SearchResult result = new SearchResult();
-
 		// Build the Preset DTO with dependancies
 		Set<SearchElement> searchElements = new TreeSet<SearchElement>();
 
@@ -170,6 +220,9 @@ public class SearchController {
 				.getSearchElements()) {
 			try {
 				SearchElement searchElement = elementdefinition.getInstance();
+				if(!Arrays.asList(types).contains(searchElement.getElementType())){
+					break;
+				}
 				if (CachedContent.class.isAssignableFrom(searchElement
 						.getClass())) {
 					Integer hash = ((CachedContent) searchElement)
@@ -205,15 +258,6 @@ public class SearchController {
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
 				searchElements, fieldAttributes, conditions);
 
-		for (SearchElement element : resultElements) {
-			logger.debug("Adding to result view element["
-					+ element.getPosition() + "] = " + element.getLabel());
-			result.addElement(element);
-		}
-
-		model.addObject("result", result);
-		model.addObject("preset", preset);
-
-		return model;
+		return resultElements;
 	}
 }

@@ -34,6 +34,8 @@ public class Field {
      */
 		
 	protected Boolean multivalue = false;
+	
+	protected Boolean idField = false;
 
 	public Field() {
 		
@@ -67,6 +69,15 @@ public class Field {
 	public void setMultivalue(Boolean multivalue) {
         this.multivalue = multivalue;
     }
+	
+
+	public Boolean getIdField() {
+		return idField;
+	}
+
+	public void setIdField(Boolean idField) {
+		this.idField = idField;
+	}
 
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
