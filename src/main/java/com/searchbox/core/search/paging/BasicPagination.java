@@ -62,7 +62,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		if(PageCondition.class.equals(condition.getClass())){
 			PageCondition pcondition = (PageCondition)condition;
 			for(Page page:this.getValues()){
-				if((page.start) == pcondition.start){
+				if(page.start.equals(pcondition.start)){
 					page.selected = true;
 				}
 			}
