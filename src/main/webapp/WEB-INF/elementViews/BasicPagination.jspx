@@ -21,11 +21,15 @@
 
       <ul class="pagination">
 
-        <c:if test="${prevPage > 0}">
+        <c:if test="${prevPage >= 0}">
           <li><a href="#"
             onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${prevPage})">prev</a></li>
         </c:if>
-
+      
+        <c:if test="${beginPage>1}">
+          <li><span class="gap">...</span></li>
+        </c:if>
+        
         <c:forEach var="value" begin="${beginPage}" end="${endPage}"
           varStatus="i">
           <c:set var="activePageCss"
@@ -34,8 +38,11 @@
           <li class="${activePageCss}"><a href="#"
             onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
           </li>
-
         </c:forEach>
+        
+        <c:if test="${(maxPage-2)>endPage}">
+          <li><span class="gap">...</span></li>
+        </c:if>
 
         <c:if test="${nextPage > 0}">
           <li><a href="#"
