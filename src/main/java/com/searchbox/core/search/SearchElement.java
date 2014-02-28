@@ -35,7 +35,7 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	public final static String URL_PARAM = "xoxo";
 	
 	public enum Type {
-		QUERY, FACET, FILTER, VIEW, ANALYTIC, SORT, STAT, DEBUG, UNKNOWN
+		QUERY, FACET, FILTER, VIEW, ANALYTIC, SORT, STAT, DEBUG, UNKNOWN, INSPECT
 	}
 	
 	@SearchAttribute

@@ -39,6 +39,8 @@ public class SearchElementDefinition extends UnknownClassDefinition
 	
 	private Integer position;
 	
+	private SearchElement.Type type;
+	
 	public SearchElementDefinition() {
 		super();
 	}
@@ -74,6 +76,14 @@ public class SearchElementDefinition extends UnknownClassDefinition
 
 	public void setPosition(Integer position) {
 		this.position = position;
+	}
+
+	public SearchElement.Type getType() {
+		return type;
+	}
+
+	public void setType(SearchElement.Type type) {
+		this.type = type;
 	}
 
 	@Override
@@ -121,6 +131,9 @@ public class SearchElementDefinition extends UnknownClassDefinition
 		element.setLabel(this.getLabel());
 		element.setPosition(this.getPosition());
 		element.setDefinitionId(this.getId());
+		if(this.type != null){
+			element.setType(type);
+		}
 		return element;
 	}
 }

@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
@@ -131,7 +132,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("++ Creating pubmed Collection");
 		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
 		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
-		collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
+		idField.setIdField(true);
+		collectionFields.add(idField);
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
 		collectionFields.add(FieldDefinition.StringFieldDef("author"));
@@ -175,6 +178,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 														);
 		preset.addSearchElement(templatedHitList);
 
+		//Create & add another TemplatedHitLIst SearchComponent to the preset;
+		SearchElementDefinition viewHit = new SearchElementDefinition(TemplatedHitList.class);
+		//Search Element have a default type that can be overriden... 
+		viewHit.setType(SearchElement.Type.INSPECT);
+		viewHit.setAttributeValue("titleField", "article-title");
+		viewHit.setAttributeValue("idField", "id");
+		viewHit.setAttributeValue("urlField", "article-title");
+		viewHit.setAttributeValue("template", "Now we have a template dedicated to the view here...");
+		preset.addSearchElement(viewHit);
+		
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
 		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
@@ -185,7 +198,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.addSearchElement(fieldSort);
 				
 				
-		//Create & add a HitLIst SearchComponent to the preset;
+//		Create & add a HitLIst SearchComponent to the preset;
 //		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
 //		hitList.setAttributeValue("titleField", "article-title");
 //		hitList.setAttributeValue("idField", "id");

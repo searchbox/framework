@@ -30,7 +30,6 @@ import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
-import com.searchbox.core.SearchConverter;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.ConditionalValueElement;
@@ -38,11 +37,12 @@ import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
+import com.searchbox.core.search.filter.FieldValueCondition;
 
 @SearchComponent(urlParam="ff")
 public class FieldFacet
 		extends
-		SearchElementWithConditionalValues<FieldFacet.Value, FieldFacet.ValueCondition> {
+		SearchElementWithConditionalValues<FieldFacet.Value, FieldValueCondition> {
 	
 	@SearchAttribute
 	private String fieldName;
@@ -77,7 +77,7 @@ public class FieldFacet
 	}
 
 	public class Value extends
-			ConditionalValueElement<FieldFacet.ValueCondition> {
+			ConditionalValueElement<FieldValueCondition> {
 
 		/**
 		 * 
@@ -117,8 +117,8 @@ public class FieldFacet
 		}
 
 		@Override
-		public FieldFacet.ValueCondition getSearchCondition() {
-			return new FieldFacet.ValueCondition(fieldName, this.value);
+		public FieldValueCondition getSearchCondition() {
+			return new FieldValueCondition(fieldName, this.value, sticky);
 		}
 
 		@Override
@@ -144,54 +144,14 @@ public class FieldFacet
 		}
 	}
 
-	public static class ValueCondition extends SearchCondition {
-
-		String fieldName;
-		String value;
-
-		public ValueCondition(String fieldName, String value) {
-			this.fieldName = fieldName;
-			this.value = value;
-		}
-
-		public String getFieldName() {
-			return fieldName;
-		}
-
-		public void setFieldName(String fieldName) {
-			this.fieldName = fieldName;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-	}
-
-	@SearchConverter
-	public static class Converter
-			implements
-			org.springframework.core.convert.converter.Converter<String, ValueCondition> {
-
-		@Override
-		public ValueCondition convert(String source) {
-			String field = source.split("\\[")[0];
-			String value = source.split("\\[")[1].split("]")[0];
-			return new ValueCondition(field, value);
-		}
-	}
-
 	@Override
 	public void mergeSearchCondition(SearchCondition condition) {
-		if (FieldFacet.ValueCondition.class.equals(condition.getClass())) {
-			if (this.fieldName.equals(((FieldFacet.ValueCondition) condition)
+		if (FieldValueCondition.class.equals(condition.getClass())) {
+			if (this.fieldName.equals(((FieldValueCondition) condition)
 					.getFieldName())) {
 				for (FieldFacet.Value value : this.getValues()) {
 					if (value.value
-							.equals(((FieldFacet.ValueCondition) condition)
+							.equals(((FieldValueCondition) condition)
 									.getValue())) {
 						value.setSelected(true);
 					}
@@ -212,33 +172,6 @@ public class FieldFacet
 
 @SearchAdapter
 class FieldFacetSolrAdaptor {
-
-	@PreSearchAdapter
-	public SolrQuery createFilterQueries(FieldFacet facet,
-			FieldFacet.ValueCondition condition, SolrQuery query) {
-		String conditionValue = ClientUtils.escapeQueryChars(condition.value);
-		boolean isnew = true;
-		List<String> fqs = new ArrayList<String>();
-		if (query.getFilterQueries() != null) {
-			for (String fq : query.getFilterQueries()) {
-				if (fq.contains(condition.fieldName + ":")) {
-					isnew = false;
-					fq = fq + " OR " + conditionValue;
-				}
-				fqs.add(fq);
-			}
-		}
-		if (isnew) {
-			if (facet.getSticky()) {
-				fqs.add("{!tag=" + condition.fieldName + "}"
-						+ condition.fieldName + ":" + conditionValue);
-			} else {
-				fqs.add(condition.fieldName + ":" + conditionValue);
-			}
-		}
-		query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
-		return query;
-	}
 
 	@PreSearchAdapter
 	public SolrQuery addFacetField(FieldFacet facet, SolrQuery query) {
