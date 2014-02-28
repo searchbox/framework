@@ -25,13 +25,13 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
-import com.searchbox.core.search.Conditional;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
 @SearchComponent
-@SearchCondition(urlParam="p")
-public class BasicPagination extends ConditionalSearchElement{
+public class BasicPagination extends ConditionalSearchElement<BasicPagination.PageCondition>{
 		
 	@SearchAttribute
 	private Integer hitsPerPage = 10;
@@ -42,12 +42,8 @@ public class BasicPagination extends ConditionalSearchElement{
 	private Long numberOfHits;
 	
 	public BasicPagination(){
-		super("Pagination",SearchElement.Type.VIEW);
-	}
-	
-	public BasicPagination(Integer page){
-		super("Pagination",SearchElement.Type.VIEW);
-		this.currentPage = page;
+		super();
+		this.type = SearchElement.Type.VIEW;
 	}
 
 	
@@ -84,32 +80,50 @@ public class BasicPagination extends ConditionalSearchElement{
 	}
 
 	@Override
-	public void mergeSearchCondition(Conditional condition) {
-		if(BasicPagination.class.equals(condition.getClass())){
-			BasicPagination pcondition = (BasicPagination)condition;
-				this.currentPage = pcondition.getCurrentPage();
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
+		if(PageCondition.class.equals(condition.getClass())){
+			PageCondition pcondition = (PageCondition)condition;
+				this.currentPage = pcondition.getPage();
 		}
 	}
+
 	
-	@Override
-	public String getParamValue() {
-		return Integer.toString(this.currentPage);
+	@SearchCondition(urlParam="p")
+	public static class PageCondition extends AbstractSearchCondition {
+		Integer page;
+		public PageCondition(Integer page) {
+			this.page = page;
+		}
+		
+		public Integer getPage(){
+			return this.page;
+		}
 	}
 
 	@SearchConverter	
 	public static class Converter implements 
-		org.springframework.core.convert.converter.Converter<String, BasicPagination> {
+		org.springframework.core.convert.converter.Converter<String, BasicPagination.PageCondition> {
 
 		@Override
-		public BasicPagination convert(String source) {
-			return new BasicPagination(Integer.parseInt(source));
+		public PageCondition convert(String source) {
+			return new PageCondition(Integer.parseInt(source));
 		}
 
 	}
 
 	@Override
-	public String getUrlParam() {
-		return this.getClass().getAnnotation(SearchCondition.class).urlParam();
+	public String geParamValue() {
+		return this.currentPage+"";
+	}
+
+	@Override
+	public PageCondition getSearchCondition() {
+		return new PageCondition(this.currentPage);
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return PageCondition.class;
 	}
 }
 
@@ -140,9 +154,9 @@ class BasicPaginationAdaptor  {
 	}
 
 	@PreSearchAdapter
-	public SolrQuery setPagination(BasicPagination searchElement, BasicPagination condition,
+	public SolrQuery setPagination(BasicPagination searchElement, PageCondition condition,
 			SolrQuery query) {
-		query.setStart(condition.getCurrentPage()*searchElement.getHitsPerPage());
+		query.setStart(condition.page*searchElement.getHitsPerPage());
 		query.setRows(searchElement.getHitsPerPage());
 		return query;
 	}
