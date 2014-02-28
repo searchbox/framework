@@ -34,7 +34,7 @@ import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
 		
 	private Integer hitsPerPage;
-	private Integer currentPage;
+	private Integer currentPage = 1;
 	
 	private Long numberOfHits;
 	
