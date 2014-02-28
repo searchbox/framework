@@ -22,15 +22,16 @@ import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalValueElement;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
-@SearchComponent(urlParam="p")
+@SearchComponent
 public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
 		
 	private Integer hitsPerPage;
@@ -58,7 +59,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	}
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if(PageCondition.class.equals(condition.getClass())){
 			PageCondition pcondition = (PageCondition)condition;
 			for(Page page:this.getValues()){
@@ -120,10 +121,16 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 			Page opage = (Page)other;
 			return this.start.compareTo(opage.start);
 		}
+
+		@Override
+		public Class<?> getConditionClass() {
+			return PageCondition.class;
+		}
 		
 	}
 	
-	public static class PageCondition extends SearchCondition {
+	@SearchCondition(urlParam="p")
+	public static class PageCondition extends AbstractSearchCondition {
 		Integer start;
 		public PageCondition(Integer start) {
 			this.start = start;

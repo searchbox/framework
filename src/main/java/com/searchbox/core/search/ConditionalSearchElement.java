@@ -17,15 +17,37 @@ package com.searchbox.core.search;
 
 
 
-public abstract class ConditionalSearchElement<K extends SearchCondition> 
-	extends SearchElement implements GenerateSearchCondition<K>, SearchConditionToElementMerger {
+import java.lang.reflect.ParameterizedType;
 
+import com.searchbox.core.SearchCondition;
+
+
+
+public abstract class ConditionalSearchElement<K extends AbstractSearchCondition> 
+	extends SearchElement implements GenerateSearchCondition<K>, SearchConditionToElementMerger {
+	
 	public ConditionalSearchElement(String label,SearchElement.Type type) {
 		super(label,type);
+	}
+	
+	
+	public ConditionalSearchElement(){
+		super();
 	}
 	
 	@Override
 	public abstract K getSearchCondition();
 	
-	public abstract void mergeSearchCondition(SearchCondition condition);
+	public abstract void mergeSearchCondition(AbstractSearchCondition condition);
+	
+	public abstract Class<?> getConditionClass();
+	
+	public String getUrlParam() {
+		Class<?> clazz = this.getConditionClass();
+		if(clazz.isAnnotationPresent(SearchCondition.class)){
+			return clazz.getAnnotation(SearchCondition.class).urlParam();
+		} else {
+			return "missingAnnotationOnSearchConditionClass";
+		}
+	}
 }

@@ -27,7 +27,7 @@ import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.sort.FieldSort.Condition;
 
-@SearchComponent(urlParam="xxx")
+@SearchComponent
 public abstract class SearchElement implements Comparable<SearchElement>{
 	
 	private static Logger logger = LoggerFactory.getLogger(SearchElement.class);
@@ -52,10 +52,6 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	protected SearchElement(String label, SearchElement.Type type){
 		this.label = label;
 		this.type = type;
-	}
-	
-	public String getUrlParam(){
-		return this.getClass().getAnnotation(SearchComponent.class).urlParam();
 	}
 	
 	/* (non-Javadoc)
@@ -119,7 +115,7 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 	
 	@SearchConverter
 	public static class Converter implements
-	org.springframework.core.convert.converter.Converter<String, SearchCondition> {
+	org.springframework.core.convert.converter.Converter<String, AbstractSearchCondition> {
 
 		@Override
 		public Condition convert(String source) {

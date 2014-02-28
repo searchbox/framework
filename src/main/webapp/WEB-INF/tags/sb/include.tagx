@@ -54,11 +54,9 @@
 		</c:if>
 
 		<c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
-    <c:set scope="request" var="elementUrlParam" value="${element.getUrlParam()}" />
 		<c:set scope="request" var="element" value="${element}" />
     <c:set scope="request" var="result" value="${result}" />
-		
-
+	
 		<c:choose>
 			<c:when test="${admin or debug}">
 				<div class="panel panel-default"

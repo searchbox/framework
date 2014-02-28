@@ -6,7 +6,7 @@
 	<jsp:output omit-xml-declaration="yes" />
 
 	<div class="input-group input-group">
-		<input type="text" class="form-control search-query" placeholder="Query" name="${elementUrlParam}"
+		<input type="text" class="form-control search-query" placeholder="Query" name="${element.getUrlParam() }"
 			value="${element.query }" /> <span class="input-group-btn">
 			<button type="submit" class="btn btn-black btn-search">
 				<span class="glyphicon glyphicon-search"><!-- search --></span>

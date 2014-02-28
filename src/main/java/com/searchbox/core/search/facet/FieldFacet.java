@@ -15,14 +15,10 @@
  ******************************************************************************/
 package com.searchbox.core.search.facet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.FacetParams;
 
 import com.searchbox.core.PostSearchAdapter;
@@ -32,14 +28,14 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalValueElement;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.filter.FieldValueCondition;
 
-@SearchComponent(urlParam="ff")
+@SearchComponent
 public class FieldFacet
 		extends
 		SearchElementWithConditionalValues<FieldFacet.Value, FieldValueCondition> {
@@ -142,10 +138,15 @@ public class FieldFacet
 			}
 			return diff * ((sort.equals(Sort.ASC)) ? 1 : -1);
 		}
+
+		@Override
+		public Class<?> getConditionClass() {
+			return FieldValueCondition.class;
+		}
 	}
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if (FieldValueCondition.class.equals(condition.getClass())) {
 			if (this.fieldName.equals(((FieldValueCondition) condition)
 					.getFieldName())) {

@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @MappedSuperclass
@@ -43,7 +43,7 @@ public interface SearchEngine<Q,R> {
 
 	public Boolean supportsElement(SearchElement element);
 	
-	public Boolean supportsCondition(SearchCondition condition);
+	public Boolean supportsCondition(AbstractSearchCondition condition);
 
 	public boolean load();
 }

@@ -40,7 +40,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.CachedContent;
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
@@ -188,14 +188,14 @@ public class SearchController {
 			SearchElement.Type... types) {
 
 		// Fetch all search Conditions within HTTP params
-		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
+		Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
 		for (String param : applicationConversionService
 				.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
 					if (value != null && !value.isEmpty()) {
 						try {
-							SearchCondition cond = (SearchCondition) conversionService
+							AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
 									.convert(
 											value,
 											applicationConversionService

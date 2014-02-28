@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
@@ -111,7 +111,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	}
 	
 	@Override
-	public Boolean supportsCondition(SearchCondition condition) {
+	public Boolean supportsCondition(AbstractSearchCondition condition) {
 		// TODO Auto-generated method stub
 		return true;
 	}

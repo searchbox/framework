@@ -2,9 +2,9 @@ package com.searchbox.core.search.filter;
 
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.search.ConditionalSearchElement;
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 
-@SearchComponent(urlParam="f")
+@SearchComponent
 public class FieldFilter extends ConditionalSearchElement<FieldValueCondition> {
 
 	public FieldFilter(String label, Type type) {
@@ -25,9 +25,14 @@ public class FieldFilter extends ConditionalSearchElement<FieldValueCondition> {
 	}
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return FieldValueCondition.class;
 	}
 
 }

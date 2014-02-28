@@ -25,10 +25,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.GenerateSearchCondition;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
@@ -50,11 +51,11 @@ public class SearchService {
 	public Set<SearchElement> execute(SearchEngine searchEngine, 
 			Set<SearchElement> searchElements,
 			Set<FieldAttribute> fieldAttributes,
-			Set<SearchCondition> conditions) {
+			Set<AbstractSearchCondition> conditions) {
 
 		Object query = searchEngine.newQuery();
 
-		Set<SearchCondition> presetConditions = new TreeSet<SearchCondition>();
+		Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
 		// Weave in all SearchElement in Query
 		adapterService.doPreSearchAdapt(searchEngine, null, query, fieldAttributes, searchElements);
@@ -70,12 +71,12 @@ public class SearchService {
 
 		// Weave in all UI Conditions in query
 		logger.debug("Adapting condition from UI: " + conditions);
-		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
 				fieldAttributes, conditions, searchElements);
 
 		// Weave in all presetConditions in query
 		logger.debug("Adapting condition from Preset: " + presetConditions);
-		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
 			fieldAttributes, presetConditions, searchElements);
 	
 
@@ -100,7 +101,7 @@ public class SearchService {
 		for (SearchElement element : searchElements) {
 			if (SearchConditionToElementMerger.class.isAssignableFrom(element
 					.getClass())) {
-				for (SearchCondition condition : conditions) {
+				for (AbstractSearchCondition condition : conditions) {
 					if (condition != null) {
 						((SearchConditionToElementMerger) element)
 								.mergeSearchCondition(condition);
