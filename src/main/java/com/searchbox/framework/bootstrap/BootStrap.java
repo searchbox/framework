@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
@@ -165,10 +166,19 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
-														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>"
-														);
+														"${hit.fieldValues['article-abstract']}");
 		preset.addSearchElement(templatedHitList);
 
+		//Create & add another TemplatedHitLIst SearchComponent to the preset;
+		SearchElementDefinition viewHit = new SearchElementDefinition(TemplatedHitList.class);
+		//Search Element have a default type that can be overriden... 
+		viewHit.setType(SearchElement.Type.INSPECT);
+		viewHit.setAttributeValue("titleField", "article-title");
+		viewHit.setAttributeValue("idField", "id");
+		viewHit.setAttributeValue("urlField", "article-title");
+		viewHit.setAttributeValue("template", "THis is my hit view");
+		preset.addSearchElement(viewHit);
+		
 		//Create & add a FieldSort SearchComponent to the preset;
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
 		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
@@ -179,7 +189,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.addSearchElement(fieldSort);
 				
 				
-		//Create & add a HitLIst SearchComponent to the preset;
+//		Create & add a HitLIst SearchComponent to the preset;
 //		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
 //		hitList.setAttributeValue("titleField", "article-title");
 //		hitList.setAttributeValue("idField", "id");

@@ -96,15 +96,15 @@ public class SearchController {
 	protected String getSearchView() {
 		return "search/index";
 	}
-	
+
 	protected String getHitView() {
 		return "search/view";
 	}
-	
+
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-		return "/"+searchbox.getSlug()+"/search/"+preset.getSlug();
+		return "/" + searchbox.getSlug() + "/search/" + preset.getSlug();
 	}
-		
+
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {
 		ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
@@ -129,12 +129,12 @@ public class SearchController {
 		logger.info("Missing preset. Redirecting to first preset of searchbox: "
 				+ searchbox.getName());
 		PresetDefinition preset = searchbox.getPresets().get(0);
-		ModelAndView redirect = new ModelAndView(
-				new RedirectView(getSearchUrl(searchbox,preset), true));
+		ModelAndView redirect = new ModelAndView(new RedirectView(getSearchUrl(
+				searchbox, preset), true));
 		return redirect;
 
 	}
-	
+
 	@RequestMapping("/view/{preset}")
 	public ModelAndView executeView(
 			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
@@ -144,11 +144,11 @@ public class SearchController {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
 		model.setViewName(this.getSearchView());
-		
+
 		SearchResult result = new SearchResult();
-		Set<SearchElement> resultElements = executeRequest(searchbox, preset, request, 
-				SearchElement.Type.QUERY, SearchElement.Type.FACET,SearchElement.Type.FILTER,
-				SearchElement.Type.SORT, SearchElement.Type.DEBUG, SearchElement.Type.INSPECT);
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+				request, SearchElement.Type.QUERY, SearchElement.Type.FILTER, 
+				SearchElement.Type.DEBUG, SearchElement.Type.INSPECT);
 		for (SearchElement element : resultElements) {
 			logger.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
@@ -157,7 +157,7 @@ public class SearchController {
 
 		model.addObject("result", result);
 		model.addObject("preset", preset);
-		
+
 		return model;
 	}
 
@@ -170,11 +170,13 @@ public class SearchController {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
 		model.setViewName(this.getSearchView());
-		
+
 		SearchResult result = new SearchResult();
-		Set<SearchElement> resultElements = executeRequest(searchbox, preset, request, 
-				SearchElement.Type.QUERY, SearchElement.Type.FACET,SearchElement.Type.FILTER,
-				SearchElement.Type.SORT, SearchElement.Type.DEBUG, SearchElement.Type.VIEW);
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+				request, SearchElement.Type.QUERY, SearchElement.Type.FACET,
+				SearchElement.Type.FILTER, SearchElement.Type.SORT,
+				SearchElement.Type.DEBUG, SearchElement.Type.VIEW);
+
 		for (SearchElement element : resultElements) {
 			logger.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
@@ -183,13 +185,13 @@ public class SearchController {
 
 		model.addObject("result", result);
 		model.addObject("preset", preset);
-		
+
 		return model;
 	}
-	
+
 	private Set<SearchElement> executeRequest(Searchbox searchbox,
 			PresetDefinition preset, HttpServletRequest request,
-			SearchElement.Type ... types) {
+			SearchElement.Type... types) {
 
 		// Fetch all search Conditions within HTTP params
 		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
@@ -220,26 +222,32 @@ public class SearchController {
 				.getSearchElements()) {
 			try {
 				SearchElement searchElement = elementdefinition.getInstance();
-				if(!Arrays.asList(types).contains(searchElement.getElementType())){
-					break;
-				}
-				if (CachedContent.class.isAssignableFrom(searchElement
-						.getClass())) {
-					Integer hash = ((CachedContent) searchElement)
-							.getContentHash();
+				if (Arrays.asList(types).contains(
+						searchElement.getElementType())) {
 
-					String tempFile = searchElement.getClass().getSimpleName()
-							+ "_" + searchElement.getPosition() + "_" + hash
-							+ ".jspx";
-					if (!directoryService.fileExists(tempFile)) {
-						directoryService.createFile(tempFile,
-								((CachedContent) searchElement).getContent());
+					if (CachedContent.class.isAssignableFrom(searchElement
+							.getClass())) {
+						Integer hash = ((CachedContent) searchElement)
+								.getContentHash();
+
+						String tempFile = searchElement.getClass()
+								.getSimpleName()
+								+ "_"
+								+ searchElement.getPosition()
+								+ "_"
+								+ hash
+								+ ".jspx";
+						if (!directoryService.fileExists(tempFile)) {
+							directoryService.createFile(tempFile,
+									((CachedContent) searchElement)
+											.getContent());
+						}
+						((CachedContent) searchElement)
+								.setPath(directoryService
+										.getApplicationRelativePath(tempFile));
 					}
-					((CachedContent) searchElement).setPath(directoryService
-							.getApplicationRelativePath(tempFile));
+					searchElements.add(searchElement);
 				}
-
-				searchElements.add(searchElement);
 			} catch (Exception e) {
 				logger.error("Could not get SearchElement for: "
 						+ elementdefinition, e);
