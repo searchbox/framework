@@ -11,7 +11,7 @@
 		type="com.searchbox.core.search.result.Hit" required="true"
 		rtexprvalue="true" description="element to display" />
 	
-    <a href="http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}">
-      <h5 class="result-title">${hit.getTitle()}</h5>
-    </a>
+    <h5 class="result-title">
+      <a href="http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}">${hit.getTitle()}</a>
+    </h5>
 </jsp:root>

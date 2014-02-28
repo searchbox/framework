@@ -239,7 +239,8 @@ a.clear_input:hover {
 #search-status-bar {
   float: left;
   width:100%;
-  margin-top:5px;
+  margin-top:15px;
+  margin-bottom:10px;
   min-height:33px;
   padding-bottom:10px;
   padding-left:15px;
@@ -353,6 +354,21 @@ a.clear_input:hover {
 #main-col-center h5{
   margin-top:0;
 }
+
+#result-list{
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#result-list li .result-title{
+  margin:0;
+}
+
+#result-list li{
+  margin-bottom:15px;
+}
+
+
 /*************************************************************/
 /*                           Footer                          */
 /*************************************************************/
