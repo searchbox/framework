@@ -243,7 +243,8 @@ a.clear_input:hover {
   float: left;
   width: 100%;
   margin-top: 15px;
-  margin-bottom: 10px; min-height : 33px;
+  margin-bottom: 10px;
+  min-height: 33px;
   padding-bottom: 10px;
   padding-left: 15px;
   min-height: 33px;
@@ -385,28 +386,56 @@ a.clear_input:hover {
   margin-top: 40px;
 }
 
-#basic-pagination a, #basic-pagination span{margin:0px 4px 0 4px;border:none;color:#333;display:inline-block;line-height:18px;position:relative;float:none;padding: 5px 11px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}
-#basic-pagination a:hover{text-decoration:none}
-#basic-pagination .prevLink, #basic-pagination .nextLink, #basic-pagination a:hover{
-  background:#1B1B1B; color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+#basic-pagination a,#basic-pagination span {
+  margin: 0px 4px 0 4px;
+  border: none;
+  color: #333;
+  display: inline-block;
+  line-height: 18px;
+  position: relative;
+  float: none;
+  padding: 5px 11px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px
 }
-#basic-pagination .currentStep{border:none;background-color:#1B1B1B;color:rgba(255, 255, 255, 0.75);}
 
-#basic-pagination .prevLink{margin:0 4px 4px 0;}
-#basic-pagination.nextLink{margin:4px 0 0 4px;}
+#basic-pagination a:hover {
+  text-decoration: none
+}
 
-#basic-pagination .prevLink::after{
+#basic-pagination .prevLink,#basic-pagination .nextLink,#basic-pagination a:hover
+  {
+  background: #1B1B1B;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+#basic-pagination .currentStep {
+  border: none;
+  background-color: #1B1B1B;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#basic-pagination .prevLink {
+  margin: 0 4px 4px 0;
+}
+
+#basic-pagination.nextLink {
+  margin: 4px 0 0 4px;
+}
+
+#basic-pagination .prevLink::after {
   border-right: 14px solid #1B1B1B;
   right: 98%;
 }
 
-#basic-pagination .nextLink::after{
+#basic-pagination .nextLink::after {
   border-left: 14px solid #1B1B1B;
   left: 98%;
 }
 
-
-#basic-pagination .prevLink::after, #basic-pagination .nextLink::after{
+#basic-pagination .prevLink::after,#basic-pagination .nextLink::after {
   content: " ";
   display: block;
   width: 0;
@@ -417,6 +446,24 @@ a.clear_input:hover {
   top: 50%;
   margin-top: -13px;
   z-index: 2;
+}
+
+@media ( min-width : 768px) {
+  #basic-pagination a, #basic-pagination span {
+    padding: 5px 11px;
+  }
+  #basic-pagination .gap{
+    display:inline-block;
+  }
+}
+
+@media ( max-width : 768px) {
+  #basic-pagination a, #basic-pagination span {
+    padding: 5px 5px;
+  }
+  #basic-pagination .gap{
+    display:none;
+  }
 }
 
 /*************************************************************/
