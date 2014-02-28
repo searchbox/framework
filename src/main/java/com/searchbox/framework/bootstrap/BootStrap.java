@@ -134,6 +134,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collectionFields.add(FieldDefinition.StringFieldDef("id"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+		collectionFields.add(FieldDefinition.StringFieldDef("author"));
 		collection.setFieldDefinitions(collectionFields);		
 		collection = collectionRepository.save(collection);
 		
@@ -142,12 +143,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		PresetDefinition preset = new PresetDefinition(collection);
 		preset.setAttributeValue("label","Search All");
 		preset.setSlug("all");
+		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
 		fieldAttr.setAttributeValue("searchable",true);
 		preset.addFieldAttribute(fieldAttr);
+		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
 		fieldAttr2.setAttributeValue("searchable",true);
 		preset.addFieldAttribute(fieldAttr2);
+		
+		//FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("author"));
+		//fieldAttr3.setAttributeValue("searchable",true);
+		//preset.addFieldAttribute(fieldAttr3);
 		
 		//Create & add a querydebug SearchComponent to the preset;
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
@@ -163,7 +170,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
-														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>"
+														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>" +
+														"<sbx:tagAttribute limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
 														);
 		preset.addSearchElement(templatedHitList);
 

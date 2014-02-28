@@ -13,7 +13,7 @@
 	<div id="results">
       <ol id="result-list">
 		<c:forEach items="${element.values}" var="hit">
-          <li class="result">
+          <li class="result-item">
 			<c:if test="${hit != null}">
 				<c:catch var="includeException">
 					<c:set scope="request" var="hit" value="${hit }" />
