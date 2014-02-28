@@ -24,9 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -36,9 +38,11 @@ import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
+import com.searchbox.framework.user.ApplicationUser;
 
 @Controller
 @RequestMapping("/")
+@SessionAttributes("user")
 public class HomeController {
 	
 	@SuppressWarnings("unused")
@@ -84,11 +88,12 @@ public class HomeController {
 	}	
 	
 	@RequestMapping()
-	public ModelAndView search(
+	public ModelAndView home(@AuthenticationPrincipal ApplicationUser user,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
 
 		ModelAndView mav = new ModelAndView("index");
+		mav.addObject("user", user);
 		return mav;
 	}
 
