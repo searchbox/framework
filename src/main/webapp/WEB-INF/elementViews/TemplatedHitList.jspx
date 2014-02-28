@@ -38,9 +38,11 @@
 							<c:out value="${hit}" />
 						</pre>
 						<h4>Fields</h4>
-						<c:forEach items="${hit.fieldValues}" var="field">
-							<li><strong>${field.key }:</strong> ${field.value }</li>
-						</c:forEach>
+                        <ul>
+    						<c:forEach items="${hit.fieldValues}" var="field">
+    							<li><strong>${field.key }:</strong> ${field.value }</li>
+    						</c:forEach>
+                        </ul>
 					</div>
 				</c:if>
 			</c:if>
