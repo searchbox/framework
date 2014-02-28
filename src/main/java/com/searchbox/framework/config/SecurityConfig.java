@@ -21,11 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +37,7 @@ import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.searchbox.framework.repository.UserRepository;
-import com.searchbox.framework.service.RepositoryUserDetailsService;
+import com.searchbox.framework.service.AuthUserService;
 import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 
 @Configuration
@@ -64,23 +68,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			http
 			// Configures form login
 			.formLogin()
-					.loginPage("/login")
+					.loginPage("/")
 					.loginProcessingUrl("/login/authenticate")
-					.failureUrl("/login?error=bad_credentials")
+					.failureUrl("/?error=bad_credentials")
 					// Configures the logout function
 					.and()
 					.logout()
 					.deleteCookies("JSESSIONID")
 					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login")
+					.logoutSuccessUrl("/")
 					// Configures url based authorization
 					.and()
 					.authorizeRequests()
 					// Anyone can access the urls
 					.antMatchers("/","/auth/**", "/login/**", "/signin/**", "/signup/**",
 							"/user/register/**").permitAll()
+					//The admin part is protected
+					.antMatchers("/system/**").hasAnyRole("SYSTEM")
+					//The admin part is protected
+					.antMatchers("/*/admin/**").hasAnyRole("SYSTEM","ADMIN")
 					// The rest of the our application is protected.
-					.antMatchers("/**").hasRole("USER")
+					.antMatchers("/**").hasAnyRole("SYSTEM","ADMIN","USER")
 					// Adds the SocialAuthenticationFilter to Spring Security's
 					// filter chain.
 					.and().apply(new SpringSocialConfigurer());
@@ -94,14 +102,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
-		auth.userDetailsService(userDetailsService()).passwordEncoder(
-				passwordEncoder());
+		auth.userDetailsService(userDetailsService())
+			.passwordEncoder(passwordEncoder());
 	}
 
 	/**
 	 * This is used to hash the password of the user.
 	 */
-	@Bean
+	@Bean(name="passwordEncoder")
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10);
 	}
@@ -120,6 +128,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new RepositoryUserDetailsService(userRepository);
+		return new AuthUserService(userRepository);
 	}
 }

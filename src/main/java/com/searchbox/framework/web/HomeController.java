@@ -24,21 +24,27 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.SearchEngineDefinition;
 import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.domain.User;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
 @Controller
 @RequestMapping("/")
+//@SessionAttributes("user")
 public class HomeController {
 	
 	@SuppressWarnings("unused")
@@ -83,12 +89,26 @@ public class HomeController {
 		return searchboxes;
 	}	
 	
+//	@ModelAttribute("user")
+//	public User getCurrentUser(){
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		logger.info("Got auth {}", auth);
+//		if(auth.getClass().isAssignableFrom(User.class)){
+//			logger.info("Got user with roles {}", auth.getAuthorities());
+//			return (User) auth;
+//		} else {
+//			logger.info("Anonymous User...");
+//			return new User();
+//		}
+//	}
+	
 	@RequestMapping()
-	public ModelAndView search(
+	public ModelAndView home(@AuthenticationPrincipal User user,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
 
 		ModelAndView mav = new ModelAndView("index");
+		mav.addObject("user", user);
 		return mav;
 	}
 

@@ -20,7 +20,6 @@ import javax.servlet.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -60,7 +59,7 @@ public class SearchboxWebApplicationInitializer extends
 
 	@Override
 	protected Filter[] getServletFilters() {
-		return new Filter[] { new HiddenHttpMethodFilter(), new OpenEntityManagerInViewFilter()};
+		return new Filter[] {new HiddenHttpMethodFilter(), new OpenEntityManagerInViewFilter()};
 	}
 	
 	/**
