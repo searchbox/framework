@@ -16,7 +16,9 @@
 package com.searchbox.framework.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,6 +26,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
@@ -59,13 +62,14 @@ public class Searchbox {
 	private String description;
 
 	@OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.EXTRA)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 	
 	
 	@OneToMany(mappedBy = "searchbox", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<UserRole> userRoles = new ArrayList<UserRole>();
+	@MapKey(name="user")
+	private Map<User, UserRole> userRoles = new HashMap<User, UserRole>();
 	
 	public Searchbox() {
 	}
@@ -132,11 +136,11 @@ public class Searchbox {
 		this.presets = presets;
 	}
 
-	public List<UserRole> getUserRoles() {
+	public Map<User, UserRole> getUserRoles() {
 		return userRoles;
 	}
 
-	public void setUserRoles(List<UserRole> userRoles) {
+	public void setUserRoles(Map<User, UserRole> userRoles) {
 		this.userRoles = userRoles;
 	}
 
@@ -145,9 +149,9 @@ public class Searchbox {
 		this.presets.add(preset);
 	}
 	
-	public void addUser(UserRole userRole) {
+	public void addUserRole(UserRole userRole) {
 		userRole.setSearchbox(this);
-		this.userRoles.add(userRole);
+		this.userRoles.put(userRole.getUser(), userRole);
 	}
 	
 	@Override

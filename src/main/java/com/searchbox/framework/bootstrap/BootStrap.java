@@ -55,7 +55,7 @@ import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
-import com.searchbox.framework.repository.UserRepository;
+import com.searchbox.framework.service.UserService;
 import com.searchbox.framework.service.SearchEngineService;
 
 @Component
@@ -80,7 +80,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	private SearchEngineService searchEngineService;
 	
 	@Autowired
-	private UserRepository userRepository;
+	UserService userService;
+	
+	
 	
 	private static boolean BOOTSTRAPED = false;
 	
@@ -99,14 +101,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		if(defaultData){
 			
 		logger.info("Creating Default Users...");
-		User system = new User("system","password");
-		system = userRepository.save(system);
-
-		User admin = new User("admin","password");
-		admin = userRepository.save(admin);
-		
-		User user = new User("user","password");
-		user = userRepository.save(user);
+		User system = userService.registerNewUserAccount("system", "password");
+		User admin = userService.registerNewUserAccount("admin", "password");
+		User user = userService.registerNewUserAccount("user", "password");
 		
 		logger.info("Bootstraping application with default data...");
 		
@@ -221,9 +218,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
-		searchbox.addUser(new UserRole(system, Role.SYSTEM));
-		searchbox.addUser(new UserRole(admin, Role.ADMIN));
-		searchbox.addUser(new UserRole(user, Role.USER));
+		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
+		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
+		searchbox.addUserRole(new UserRole(user, Role.USER));
 		repository.save(searchbox);
 				
 		//Making another Searchbox for testing and UI.
