@@ -21,26 +21,28 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.core.search.ConditionalValueElement;
+import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchElementWithConditionalValues;
-import com.searchbox.core.search.ValueElement;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
 @SearchComponent
-public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
+public class BasicPagination extends ConditionalSearchElement<BasicPagination.PageCondition>{
 		
-	private Integer hitsPerPage;
-	private Integer currentPage = 1;
+	@SearchAttribute
+	private Integer hitsPerPage = 10;
+	
+	private Integer currentPage = 0;
 	
 	private Long numberOfHits;
 	
 	public BasicPagination(){
-		super("Basic Pagination",SearchElement.Type.VIEW);
+		super();
+		this.type = SearchElement.Type.VIEW;
 	}
 
 	public Integer getHitsPerPage() {
@@ -71,79 +73,20 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if(PageCondition.class.equals(condition.getClass())){
 			PageCondition pcondition = (PageCondition)condition;
-			for(Page page:this.getValues()){
-				if(page.start.equals(pcondition.start)){
-					page.selected = true;
-					this.currentPage = (page.start / this.hitsPerPage) + 1;
-				}
-			}
+				this.currentPage = pcondition.getPage();
 		}
 	}
 
-	public class Page extends ConditionalValueElement<PageCondition>{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 4978333478047395794L;
-
-		Integer start;
-		
-		boolean selected;
-		
-		public Page() {
-			super("Page attr");
-		}
-		
-		public Page(Integer start) {
-			super("Page attr");
-			this.start = start;
-		}
-
-		public Integer getPage() {
-			return (int) Math.ceil(start/(double)hitsPerPage)+1;
-		}
-		
-		public Integer getStart(){
-			return start;
-		}
-
-		public boolean isSelected() {
-			return selected;
-		}
-
-		public void setSelected(boolean selected) {
-			this.selected = selected;
-		}
-
-		@Override
-		public String geParamValue() {
-			return Integer.toString(start);
-		}
-
-		@Override
-		public PageCondition getSearchCondition() {
-			return new BasicPagination.PageCondition(start);
-		}
-
-		@Override
-		public int compareTo(ValueElement other) {
-			Page opage = (Page)other;
-			return this.start.compareTo(opage.start);
-		}
-
-		@Override
-		public Class<?> getConditionClass() {
-			return PageCondition.class;
-		}
-		
-	}
 	
 	@SearchCondition(urlParam="p")
 	public static class PageCondition extends AbstractSearchCondition {
-		Integer start;
-		public PageCondition(Integer start) {
-			this.start = start;
+		Integer page;
+		public PageCondition(Integer page) {
+			this.page = page;
+		}
+		
+		public Integer getPage(){
+			return this.page;
 		}
 	}
 
@@ -157,11 +100,30 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		}
 
 	}
+
+	@Override
+	public String geParamValue() {
+		return this.currentPage+"";
+	}
+
+	@Override
+	public PageCondition getSearchCondition() {
+		return new PageCondition(this.currentPage);
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return PageCondition.class;
+	}
 }
 
 @SearchAdapter
 class BasicPaginationAdaptor  {
 
+	@PreSearchAdapter
+	public void setNumberOfHitsPerPage(BasicPagination searchElement, SolrQuery query){
+		query.setRows(searchElement.getHitsPerPage());
+	}
 	
 	@PostSearchAdapter
 	public BasicPagination getPaginationSettings(BasicPagination searchElement,
@@ -175,20 +137,16 @@ class BasicPaginationAdaptor  {
 			hitsPerPage = response.getResults().size();
 		}
 		
-		//TODO... dont make all pages.
-		for(int p=0; p*hitsPerPage<numberOfHits; p++){
-			searchElement.addValueElement(searchElement.new Page(p*hitsPerPage));
-		}
-		
 		searchElement.setNumberOfHits(numberOfHits);
 		searchElement.setHitsPerPage(hitsPerPage);
 		return searchElement;
 	}
 
 	@PreSearchAdapter
-	public SolrQuery setPagination(PageCondition condition,
+	public SolrQuery setPagination(BasicPagination searchElement, PageCondition condition,
 			SolrQuery query) {
-		query.setStart(condition.start);
+		query.setStart(condition.page*searchElement.getHitsPerPage());
+		query.setRows(searchElement.getHitsPerPage());
 		return query;
 	}
 }
