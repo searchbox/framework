@@ -165,8 +165,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("titleField", "article-title");
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
-		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
-														"<div>${hit.fieldValues['article-abstract']}</div>");
+		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
+														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>"
+														);
 		preset.addSearchElement(templatedHitList);
 
 		//Create & add a FieldSort SearchComponent to the preset;
