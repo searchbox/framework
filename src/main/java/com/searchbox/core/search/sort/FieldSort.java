@@ -16,7 +16,6 @@
 package com.searchbox.core.search.sort;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.util.SortedSet;
 
 import org.apache.solr.client.solrj.SolrQuery;

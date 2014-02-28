@@ -1,8 +1,8 @@
 package com.searchbox.core.search.filter;
 
 import com.searchbox.core.SearchComponent;
-import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.AbstractSearchCondition;
+import com.searchbox.core.search.ConditionalSearchElement;
 
 @SearchComponent
 public class FieldFilter extends ConditionalSearchElement<FieldValueCondition> {

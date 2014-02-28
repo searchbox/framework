@@ -15,9 +15,6 @@
  ******************************************************************************/
 package com.searchbox.core.search;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import com.searchbox.core.SearchCondition;
 
 public abstract class ConditionalValueElement<T extends AbstractSearchCondition>

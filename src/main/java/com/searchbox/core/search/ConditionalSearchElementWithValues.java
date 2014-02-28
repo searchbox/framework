@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.searchbox.core.search;
 
-import java.lang.reflect.ParameterizedType;
-
 import com.searchbox.core.SearchCondition;
 
 

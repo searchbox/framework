@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.util.ClientUtils;
-import org.apache.solr.common.params.FacetParams;
 import org.springframework.core.convert.converter.Converter;
 
 import com.searchbox.core.PreSearchAdapter;
@@ -13,7 +12,6 @@ import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.core.search.facet.FieldFacet;
 
 @SearchCondition(urlParam="ff")
 public class FieldValueCondition extends AbstractSearchCondition {
