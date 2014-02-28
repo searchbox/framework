@@ -19,7 +19,7 @@
         <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
         <c:when test="${not empty hit.getId()}">
           <spring:url var="hitUrl"
-          value="/${searchbox.getSlug() }/view/${preset.getSlug() }/?f=id[${hit.getId()}]"/>
+          value="/${searchbox.getSlug() }/view/${preset.getSlug() }/?ff=id[${hit.getId()}]"/>
           <a href="${hitUrl}">${hit.getTitle()}</a>
         </c:when>
         <c:otherwise>

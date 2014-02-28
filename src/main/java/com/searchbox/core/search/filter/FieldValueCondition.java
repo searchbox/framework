@@ -58,8 +58,6 @@ public class FieldValueCondition extends AbstractSearchCondition {
 		this.taged = taged;
 	}
 
-
-
 	@SearchConverter
 	public static class FieldValueConditionConverter
 			implements Converter<String, FieldValueCondition> {
