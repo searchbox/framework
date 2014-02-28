@@ -368,6 +368,9 @@ a.clear_input:hover {
   margin-bottom:15px;
 }
 
+#result-list .label{
+  margin-right:10px;
+}
 
 /*************************************************************/
 /*                           Footer                          */

@@ -13,7 +13,7 @@
 	<div id="results">
       <ol id="result-list">
 		<c:forEach items="${element.values}" var="hit">
-          <li class="result">
+          <li class="result-item">
 			<c:if test="${hit != null}">
 				<c:catch var="includeException">
 					<c:set scope="request" var="hit" value="${hit }" />
@@ -38,9 +38,11 @@
 							<c:out value="${hit}" />
 						</pre>
 						<h4>Fields</h4>
-						<c:forEach items="${hit.fieldValues}" var="field">
-							<li><strong>${field.key }:</strong> ${field.value }</li>
-						</c:forEach>
+                        <ul>
+    						<c:forEach items="${hit.fieldValues}" var="field">
+    							<li><strong>${field.key }:</strong> ${field.value }</li>
+    						</c:forEach>
+                        </ul>
 					</div>
 				</c:if>
 			</c:if>
