@@ -34,6 +34,7 @@ import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
 		
 	private Integer hitsPerPage;
+	private Integer currentPage;
 	
 	private Long numberOfHits;
 	
@@ -57,6 +58,14 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		this.numberOfHits = l;
 	}
 
+	public Integer getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(Integer currentPage) {
+		this.currentPage = currentPage;
+	}
+
 	@Override
 	public void mergeSearchCondition(SearchCondition condition) {
 		if(PageCondition.class.equals(condition.getClass())){
@@ -64,6 +73,7 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 			for(Page page:this.getValues()){
 				if(page.start.equals(pcondition.start)){
 					page.selected = true;
+					this.currentPage = (page.start / this.hitsPerPage) + 1;
 				}
 			}
 		}
