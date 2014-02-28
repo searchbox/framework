@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.searchbox.framework.domain.User;
-import com.searchbox.framework.user.ApplicationUser;
 
 public class SecurityUtil {
 
@@ -16,20 +15,12 @@ public class SecurityUtil {
     public static void logInUser(User user) {
         LOGGER.info("Logging in user: {}", user);
 
-        ApplicationUser userDetails = ApplicationUser.getBuilder()
-                //.firstName(user.getFirstName())
-                .id(user.getId())
-                //.lastName(user.getLastName())
-                .password(user.getPassword())
-                //.role(user.getRole())
-                //.socialSignInProvider(user.getSignInProvider())
-                .username(user.getEmail())
-                .build();
-        LOGGER.debug("Logging in principal: {}", userDetails);
+        
+        LOGGER.debug("Logging in principal: {}", user);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        LOGGER.info("User: {} has been logged in.", userDetails);
+        LOGGER.info("User: {} has been logged in.", user);
     }
 }

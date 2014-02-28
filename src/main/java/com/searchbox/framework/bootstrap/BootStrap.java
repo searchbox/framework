@@ -55,9 +55,8 @@ import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
-import com.searchbox.framework.repository.UserRepository;
+import com.searchbox.framework.service.UserService;
 import com.searchbox.framework.service.SearchEngineService;
-import com.searchbox.framework.user.service.RepositoryUserService;
 
 @Component
 @org.springframework.core.annotation.Order(value=10000)
@@ -81,7 +80,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	private SearchEngineService searchEngineService;
 	
 	@Autowired
-	RepositoryUserService userService;
+	UserService userService;
 	
 	
 	
@@ -219,9 +218,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
-		searchbox.addUser(new UserRole(system, Role.SYSTEM));
-		searchbox.addUser(new UserRole(admin, Role.ADMIN));
-		searchbox.addUser(new UserRole(user, Role.USER));
+		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
+		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
+		searchbox.addUserRole(new UserRole(user, Role.USER));
 		repository.save(searchbox);
 				
 		//Making another Searchbox for testing and UI.

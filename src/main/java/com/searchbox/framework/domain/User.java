@@ -15,7 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -27,11 +29,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
-import com.searchbox.framework.user.model.SocialMediaService;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
+
+import com.searchbox.framework.web.user.SocialMediaService;
 
 
 @Entity
-public class User {
+public class User implements SocialUserDetails, UserDetails {
 
 	/**
 	 * 
@@ -50,13 +60,22 @@ public class User {
 	private String email;
 	
 	private String password;
-	
+
+	private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+	    
 	private SocialMediaService SignInProvider;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private Map<Searchbox, UserRole> roles = new HashMap<Searchbox,UserRole>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="user")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	List<UserRole> roles = new ArrayList<UserRole>();
+	//private Map<Searchbox, UserRole> roles = new HashMap<Searchbox,UserRole>();
 
-	public User(){}
+
+	public User(){
+	}	
 	
 	public User(String email, String password){
 		this.email = email;
@@ -95,11 +114,11 @@ public class User {
 		this.version = version;
 	}
 
-	public Map<Searchbox, UserRole> getRoles() {
+	public List<UserRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Map<Searchbox, UserRole> roles) {
+	public void setRoles(List<UserRole> roles) {
 		this.roles = roles;
 	}
 
@@ -109,5 +128,52 @@ public class User {
 
 	public void setSignInProvider(SocialMediaService signInProvider) {
 		SignInProvider = signInProvider;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.roles;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+	
+	public String setUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return this.accountNonExpired;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return this.accountNonLocked;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return this.credentialsNonExpired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	@Override
+	public String getUserId() {
+		return getUsername();
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this,
+				ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 }

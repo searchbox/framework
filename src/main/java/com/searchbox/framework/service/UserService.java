@@ -1,34 +1,36 @@
-package com.searchbox.framework.user.service;
+package com.searchbox.framework.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.framework.domain.User;
 import com.searchbox.framework.repository.UserRepository;
-import com.searchbox.framework.user.dto.RegistrationForm;
+import com.searchbox.framework.web.user.RegistrationForm;
 
 @Service
-public class RepositoryUserService {
+@Transactional
+public class UserService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(RepositoryUserService.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+   
 	private PasswordEncoder passwordEncoder;
 
 	private UserRepository repository;
 
 	@Autowired
-	public RepositoryUserService(PasswordEncoder passwordEncoder,
+	public UserService(PasswordEncoder passwordEncoder,
 			UserRepository repository) {
 		this.passwordEncoder = passwordEncoder;
 		this.repository = repository;
 	}
 
-	@Transactional
 	public User registerNewUserAccount(String email, String password){
 		RegistrationForm form = new RegistrationForm();
 		form.setEmail(email);
@@ -36,7 +38,6 @@ public class RepositoryUserService {
 		return registerNewUserAccount(form);
 	}
 	
-	@Transactional
 	public User registerNewUserAccount(RegistrationForm userAccountData)
 			throws RuntimeException {
 		logger.debug("Registering new user account with information: {}",

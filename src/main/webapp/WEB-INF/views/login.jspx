@@ -75,7 +75,7 @@
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
     <p><spring:message code="text.login.page.authenticated.user.help"/></p>
-    <p>tata: ${user.getAuthorities() }</p>
+    <p>tata: ${user }</p>
     <spring:url value="/logout" var="logoutUrl" />
     <a href="${logoutUrl }">logout</a>
 </sec:authorize>

@@ -1,4 +1,4 @@
-package com.searchbox.framework.user.model;
+package com.searchbox.framework.web.user;
 
 /**
  * @author Petri Kainulainen
