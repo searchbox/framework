@@ -64,15 +64,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			http
 			// Configures form login
 			.formLogin()
-					.loginPage("/login")
+					.loginPage("/")
 					.loginProcessingUrl("/login/authenticate")
-					.failureUrl("/login?error=bad_credentials")
+					.failureUrl("/?error=bad_credentials")
 					// Configures the logout function
 					.and()
 					.logout()
 					.deleteCookies("JSESSIONID")
 					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login")
+					.logoutSuccessUrl("/")
 					// Configures url based authorization
 					.and()
 					.authorizeRequests()

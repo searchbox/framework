@@ -21,10 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.framework.domain.User;
+import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.user.ApplicationUser;
+import com.searchbox.framework.user.ApplicationUser.Builder;
 
 public class RepositoryUserDetailsService implements UserDetailsService {
 
@@ -44,6 +47,7 @@ public class RepositoryUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException    Thrown if no user is found with the given username.
      */
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Loading user by username: {}", username);
 
@@ -54,18 +58,21 @@ public class RepositoryUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
 
-        ApplicationUser principal = ApplicationUser.getBuilder()
+        Builder principal = ApplicationUser.getBuilder()
                 //.firstName(user.getFirstName())
                 .id(user.getId())
                 //.lastName(user.getLastName())
                 .password(user.getPassword())
                 //.role(user.getRole())
                 //.socialSignInProvider(user.getSignInProvider())
-                .username(user.getEmail())
-                .build();
+                .username(user.getEmail());
+        
+        for(UserRole role:user.getRoles().values()){
+        	principal.role(role);
+        }
 
         logger.debug("Returning user details: {}", principal);
 
-        return principal;
+        return principal.build();
     }
 }

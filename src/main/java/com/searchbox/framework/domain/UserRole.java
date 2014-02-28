@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +51,7 @@ public class UserRole implements GrantedAuthority{
 	@Column(name="OPTLOCK")
 	private long version;
 	
-	@ManyToOne
+	@ManyToOne(cascade={CascadeType.PERSIST})
 	private User user;
 	
 	@ManyToOne

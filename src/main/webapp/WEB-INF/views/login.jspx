@@ -60,7 +60,8 @@
             <div class="row social-button-row">
                 <div class="col-lg-4">
                 <c:url value="/auth/facebook" var="facebookAuth"/>
-                    <a href="${facebookAuth }"><button class="btn btn-facebook"><i class="icon-facebook"></i> | <spring:message code="label.facebook.sign.in.button"/></button></a>
+                    <a href="${facebookAuth }">
+                    <button class="btn btn-facebook"><i class="icon-facebook"></i> | <spring:message code="label.facebook.sign.in.button"/></button></a>
                 </div>
             </div>
             <div class="row social-button-row">
@@ -74,5 +75,8 @@
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
     <p><spring:message code="text.login.page.authenticated.user.help"/></p>
+    <p>tata: ${user.getAuthorities() }</p>
+    <spring:url value="/logout" var="logoutUrl" />
+    <a href="${logoutUrl }">logout</a>
 </sec:authorize>
 </jsp:root>
