@@ -23,14 +23,25 @@ import java.util.List;
 
 import org.apache.lucene.search.BooleanClause;
 
-public abstract class SearchCondition {
+import com.searchbox.core.SearchCondition;
+
+@SearchCondition(urlParam="")
+public abstract class AbstractSearchCondition {
 	
 	private Float boost = 1f;
 	
 	private BooleanClause clause;
+		
+	private List<AbstractSearchCondition> innerConditions = new ArrayList<AbstractSearchCondition>();
 	
-	private List<SearchCondition> innerConditions = new ArrayList<SearchCondition>();
-	
+	public List<AbstractSearchCondition> getInnerConditions() {
+		return innerConditions;
+	}
+
+	public void setInnerConditions(List<AbstractSearchCondition> innerConditions) {
+		this.innerConditions = innerConditions;
+	}
+
 	public Float getBoost() {
 		return boost;
 	}
@@ -47,7 +58,7 @@ public abstract class SearchCondition {
 		this.clause = clause;
 	}
 	
-	public SearchCondition addInnerCondition(SearchCondition condition){
+	public AbstractSearchCondition addInnerCondition(AbstractSearchCondition condition){
 		this.innerConditions.add(condition);
 		return this;
 	}
@@ -99,5 +110,9 @@ public abstract class SearchCondition {
 			}
 		}
 		return true;
+	}
+	
+	public String getUrlParam(){
+		return this.getClass().getAnnotation(SearchCondition.class).urlParam();
 	}
 }

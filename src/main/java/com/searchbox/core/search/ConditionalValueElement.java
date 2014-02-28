@@ -15,10 +15,14 @@
  ******************************************************************************/
 package com.searchbox.core.search;
 
-public abstract class ConditionalValueElement<T extends SearchCondition> 
-	extends ValueElement implements
-		GenerateSearchCondition<T> {
-	
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+import com.searchbox.core.SearchCondition;
+
+public abstract class ConditionalValueElement<T extends AbstractSearchCondition>
+		extends ValueElement implements GenerateSearchCondition<T> {
+
 	/**
 	 * 
 	 */
@@ -27,7 +31,18 @@ public abstract class ConditionalValueElement<T extends SearchCondition>
 	public ConditionalValueElement(String label) {
 		super(label);
 	}
-	
+
 	@Override
 	public abstract T getSearchCondition();
+
+	public abstract Class<?> getConditionClass();
+	
+	public String getUrlParam() {
+		Class<?> clazz = this.getConditionClass();
+		if(clazz.isAnnotationPresent(SearchCondition.class)){
+			return clazz.getAnnotation(SearchCondition.class).urlParam();
+		} else {
+			return "missingAnnotationOnSearchConditionClass";
+		}
+	}
 }

@@ -26,5 +26,4 @@ import java.lang.annotation.Target;
 @Documented
 public @interface SearchComponent {
 	
-	String urlParam() default "";
 }

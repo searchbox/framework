@@ -16,10 +16,12 @@
 package com.searchbox.core.search;
 
 
-public interface GenerateSearchCondition<K extends SearchCondition> {
+
+public interface GenerateSearchCondition<K extends AbstractSearchCondition> {
 	
 	public K getSearchCondition();
+
+	public Class<?> getConditionClass();
 	
-	//TODO remove that goes to the conversion package...
 	public String geParamValue();
 }

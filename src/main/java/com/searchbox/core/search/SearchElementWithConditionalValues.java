@@ -22,7 +22,7 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
-public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends SearchCondition> 
+public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends AbstractSearchCondition> 
 	extends SearchElement implements SearchConditionToElementMerger {
 	
 	@SearchAttribute
@@ -33,7 +33,7 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
 	
 	SortedSet<K> values;
 	
-	public abstract void mergeSearchCondition(SearchCondition condition);
+	public abstract void mergeSearchCondition(AbstractSearchCondition condition);
 
 	public SearchElementWithConditionalValues() {
 		super(null,SearchElement.Type.UNKNOWN);

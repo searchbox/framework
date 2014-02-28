@@ -22,13 +22,14 @@ import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 
-@SearchComponent(urlParam="q")
+@SearchComponent
 public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition> {
 	
 	private String query;
@@ -60,7 +61,8 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 		return new EdismaxQuery.Condition(query);
 	}
 	
-	public static class Condition extends SearchCondition {
+	@SearchCondition(urlParam="q")
+	public static class Condition extends AbstractSearchCondition {
 
 		String query;
 
@@ -85,10 +87,15 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if(EdismaxQuery.Condition.class.equals(condition.getClass())){
 			this.query = ((EdismaxQuery.Condition)condition).getQuery();
 		}
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return EdismaxQuery.Condition.class;
 	}
 }
 

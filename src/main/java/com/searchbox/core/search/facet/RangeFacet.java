@@ -16,8 +16,9 @@
 package com.searchbox.core.search.facet;
 
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElementWithValues;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.ValueElement;
 
@@ -97,7 +98,8 @@ public class RangeFacet extends
 
 	}
 
-	public class Condition extends SearchCondition {
+	@SearchCondition(urlParam="fr")
+	public class Condition extends AbstractSearchCondition {
 
 		String fieldName;
 		String lowerElement;
@@ -111,8 +113,13 @@ public class RangeFacet extends
 	}
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return RangeFacet.Condition.class;
 	}
 }

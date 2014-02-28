@@ -10,11 +10,13 @@ import org.springframework.core.convert.converter.Converter;
 
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.facet.FieldFacet;
 
-public class FieldValueCondition extends SearchCondition {
+@SearchCondition(urlParam="ff")
+public class FieldValueCondition extends AbstractSearchCondition {
 
 	String fieldName;
 	String value;
@@ -55,8 +57,6 @@ public class FieldValueCondition extends SearchCondition {
 	public void setTaged(Boolean taged) {
 		this.taged = taged;
 	}
-
-
 
 	@SearchConverter
 	public static class FieldValueConditionConverter
