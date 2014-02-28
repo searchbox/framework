@@ -10,6 +10,9 @@
 	<jsp:directive.attribute name="value"
 		type="String" required="true"
 		rtexprvalue="true" description="value to display" />
+    <jsp:directive.attribute name="length"
+        type="Integer" required="false"
+        rtexprvalue="true" description="length of the snippet" />
 	
-    <div>++++${value} - ${value.getClass()}</div>
+    <div>${not empty length ? fn:substring(value, 0, length) : fn:substring(value, 0, 300)}...</div>
 </jsp:root>
