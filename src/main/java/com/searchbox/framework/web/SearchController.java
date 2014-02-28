@@ -93,14 +93,6 @@ public class SearchController {
 	public SearchController() {
 	}
 
-	protected String getSearchView() {
-		return "search/index";
-	}
-
-	protected String getHitView() {
-		return "search/view";
-	}
-
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
 		return "/" + searchbox.getSlug() + "/search/" + preset.getSlug();
 	}
@@ -143,12 +135,13 @@ public class SearchController {
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName(this.getSearchView());
+		model.setViewName("search/view");
 
 		SearchResult result = new SearchResult();
 		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
 				request, SearchElement.Type.QUERY, SearchElement.Type.FILTER, 
-				SearchElement.Type.DEBUG, SearchElement.Type.INSPECT);
+				SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
+				SearchElement.Type.STAT);
 		for (SearchElement element : resultElements) {
 			logger.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
@@ -169,13 +162,14 @@ public class SearchController {
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName(this.getSearchView());
+		model.setViewName("search/index");
 
 		SearchResult result = new SearchResult();
 		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
 				request, SearchElement.Type.QUERY, SearchElement.Type.FACET,
 				SearchElement.Type.FILTER, SearchElement.Type.SORT,
-				SearchElement.Type.DEBUG, SearchElement.Type.VIEW);
+				SearchElement.Type.DEBUG, SearchElement.Type.VIEW, 
+				SearchElement.Type.STAT);
 
 		for (SearchElement element : resultElements) {
 			logger.debug("Adding to result view element["

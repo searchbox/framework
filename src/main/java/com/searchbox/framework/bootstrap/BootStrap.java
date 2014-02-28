@@ -176,7 +176,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		viewHit.setAttributeValue("titleField", "article-title");
 		viewHit.setAttributeValue("idField", "id");
 		viewHit.setAttributeValue("urlField", "article-title");
-		viewHit.setAttributeValue("template", "THis is my hit view");
+		viewHit.setAttributeValue("template", "Now we have a template dedicated to the view here...");
 		preset.addSearchElement(viewHit);
 		
 		//Create & add a FieldSort SearchComponent to the preset;

@@ -15,14 +15,12 @@
     <h5 class="result-title">
     
       <c:choose>
-        <c:when test="${not empty link}">
-          <a target="_blank" href="${link}">${hit.getTitle()}</a>
-        </c:when>
-        <c:when test="${not empty hit.getUrl()}">
-          <a target="_blank" href="${hit.getUrl()}">${hit.getTitle()}</a>
-        </c:when>
+       
+        <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
         <c:when test="${not empty hit.getId()}">
-          <a href="./view/${hit.getId()}">${hit.getTitle()}</a>
+          <spring:url var="hitUrl"
+          value="/${searchbox.getSlug() }/view/${preset.getSlug() }/?f=id[${hit.getId()}]"/>
+          <a href="${hitUrl}">${hit.getTitle()}</a>
         </c:when>
         <c:otherwise>
           ${hit.getTitle()}
