@@ -1,42 +1,58 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:form="http://www.springframework.org/tags/form"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
-
-${element}
-
-
-<!--  (element.numberOfHits/element.hitsPerPage) -->
-
-
-	<div>
-	 <c:if test="${element.numberOfHits > element.hitsPerPage}">
-      <c:set var="beginPage" value="${(element.currentPage - 3) > 1 ? (element.currentPage - 3) : 1}"/>
-      <c:set var="maxPage" value="17"/>
-      <c:set var="endPage" value="${maxPage > (element.currentPage + 3) ?  (element.currentPage + 3) : maxPage}"/>
-            Begin ${beginPage} - end ${endPage} - max ${maxPage}
-
-		<ul class="pagination">
-			<li class="disabled"><a href="#">prev</a></li>
+  <div>
+    <c:if test="${element.numberOfHits > element.hitsPerPage}">
+      <c:set var="maxPage" value="${element.maxPage}" />
+      <c:set var="beginPage"
+        value="${(element.currentPage - 3) > 0 ? (element.currentPage - 3) : 0}" />
+      <c:set var="endPage"
+        value="${maxPage > (element.currentPage + 3) ?  (element.currentPage + 3) : maxPage}" />
+      <c:set var="nextPage"
+        value="${(element.currentPage + 1) > maxPage ? 0 : (element.currentPage + 1)}" />
+      <c:set var="prevPage" value="${element.currentPage - 1}" />
       
-			<c:forEach items="${element.values}" var="value" begin="${beginPage-1}" end="${endPage-1}">
-				<c:set var="activePageCss" value="" />
-				<c:if test="${value.selected}">
-                  <c:set var="activePageCss" value="active" />
-                  <c:set var="currentStart" value="${value.start}" />
-				</c:if>
-				<li class="${activePageCss}"><a href="#" 
-				  onclick="${element.getClass().getSimpleName()}_submit(${value.getUrlParam()}, ${value.start })">${value.page }</a></li>
-			</c:forEach>
-			<li><a href="#">next</a></li>
-		</ul>
-	 <!-- DO NOT set value="currentStart" to input so it gets whiped on search action -->
-		<input id="iPage" type="hidden" name="" value="${currentStart}" />
-	 </c:if>
-	</div>
-	<script>
+       <!-- 
+       Begin ${beginPage} - end ${endPage} - max ${maxPage} - prev ${prevPage} - next ${nextPage} - current ${element.currentPage}
+        -->
+
+      <ul class="pagination">
+
+        <c:if test="${prevPage > 0}">
+          <li><a href="#"
+            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${prevPage})">prev</a></li>
+        </c:if>
+
+        <c:forEach var="value" begin="${beginPage}" end="${endPage}"
+          varStatus="i">
+          <c:set var="activePageCss"
+            value="${i.index == element.currentPage ? 'active' : ''}" />
+
+          <li class="${activePageCss}"><a href="#"
+            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
+          </li>
+
+        </c:forEach>
+
+        <c:if test="${nextPage > 0}">
+          <li><a href="#"
+            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${nextPage})">next</a></li>
+        </c:if>
+
+      </ul>
+
+      <!-- DO NOT set value="currentStart" to input so it gets whiped on search action -->
+      <input id="iPage" type="hidden" name="" value="${currentStart}" />
+    </c:if>
+  </div>
+  <!--  (element.numberOfHits/element.hitsPerPage) -->
+
+
+
+  <script>
 	 function ${element.getClass().getSimpleName()}_submit(param, page){
 		 $("#iPage").val(page);
 		 $("#iPage").attr("name",param);

@@ -37,12 +37,22 @@ public class BasicPagination extends ConditionalSearchElement<BasicPagination.Pa
 	private Integer hitsPerPage = 10;
 	
 	private Integer currentPage = 0;
+	private Integer maxPage;
 	
 	private Long numberOfHits;
 	
 	public BasicPagination(){
 		super();
 		this.type = SearchElement.Type.VIEW;
+	}
+
+	
+	public Integer getMaxPage() {
+		return maxPage;
+	}
+
+	public void setMaxPage(Integer maxPage) {
+		this.maxPage = maxPage;
 	}
 
 	public Integer getHitsPerPage() {
@@ -132,11 +142,12 @@ class BasicPaginationAdaptor  {
 		Integer hitsPerPage = query.getRows();
 		Long numberOfHits = response.getResults().getNumFound();
 
-		//If rows in not set, we must gues sit form resultset
+		//If rows in not set, we must guess it form resultset
 		if(hitsPerPage == null){
 			hitsPerPage = response.getResults().size();
 		}
 		
+		searchElement.setMaxPage((int)(Math.ceil(numberOfHits/hitsPerPage)));
 		searchElement.setNumberOfHits(numberOfHits);
 		searchElement.setHitsPerPage(hitsPerPage);
 		return searchElement;
