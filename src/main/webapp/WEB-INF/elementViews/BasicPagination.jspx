@@ -4,60 +4,62 @@
   xmlns:form="http://www.springframework.org/tags/form"
   xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
-  <div>
-    <c:if test="${element.numberOfHits > element.hitsPerPage}">
-      <c:set var="maxPage" value="${element.maxPage}" />
-      <c:set var="beginPage"
-        value="${(element.currentPage - 3) > 0 ? (element.currentPage - 3) : 0}" />
-      <c:set var="endPage"
-        value="${maxPage > (element.currentPage + 3) ?  (element.currentPage + 3) : maxPage}" />
-      <c:set var="nextPage"
-        value="${(element.currentPage + 1) > maxPage ? 0 : (element.currentPage + 1)}" />
-      <c:set var="prevPage" value="${element.currentPage - 1}" />
-      
-       <!-- 
+
+  <c:if test="${element.numberOfHits > element.hitsPerPage}">
+    <c:set var="maxPage" value="${element.maxPage}" />
+    <c:set var="beginPage"
+      value="${(element.currentPage - 3) > 0 ? (element.currentPage - 3) : 0}" />
+    <c:set var="endPage"
+      value="${maxPage > (element.currentPage + 3) ?  (element.currentPage + 3) : maxPage}" />
+    <c:set var="nextPage"
+      value="${(element.currentPage + 1) > maxPage ? 0 : (element.currentPage + 1)}" />
+    <c:set var="prevPage" value="${element.currentPage - 1}" />
+
+    <!-- 
        Begin ${beginPage} - end ${endPage} - max ${maxPage} - prev ${prevPage} - next ${nextPage} - current ${element.currentPage}
-        -->
+    -->
 
-      <ul class="pagination">
+    <div id="basic-pagination">
 
-        <c:if test="${prevPage >= 0}">
-          <li><a href="#"
-            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${prevPage})">prev</a></li>
-        </c:if>
-      
-        <c:if test="${beginPage>1}">
-          <li><span class="gap">...</span></li>
-        </c:if>
-        
-        <c:forEach var="value" begin="${beginPage}" end="${endPage}"
-          varStatus="i">
-          <c:set var="activePageCss"
-            value="${i.index == element.currentPage ? 'active' : ''}" />
+      <c:if test="${prevPage >= 0}">
+        <a href="#"
+          onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${prevPage})"
+          class="prevLink">Prev</a>
+      </c:if>
 
-          <li class="${activePageCss}"><a href="#"
-            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
-          </li>
-        </c:forEach>
-        
-        <c:if test="${(maxPage-2)>endPage}">
-          <li><span class="gap">...</span></li>
-        </c:if>
-
-        <c:if test="${nextPage > 0}">
-          <li><a href="#"
-            onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${nextPage})">next</a></li>
-        </c:if>
-
-      </ul>
-
-      <!-- DO NOT set value="currentStart" to input so it gets whiped on search action -->
-      <input id="iPage" type="hidden" name="" value="${currentStart}" />
-    </c:if>
-  </div>
-  <!--  (element.numberOfHits/element.hitsPerPage) -->
+      <c:if test="${beginPage>1}">
+        <span class="step gap">..</span>
+      </c:if>
 
 
+
+
+      <c:forEach var="value" begin="${beginPage}" end="${endPage}"
+        varStatus="i">
+        <c:choose>
+          <c:when test="${i.index == element.currentPage}">
+            <span class="currentStep">${i.index+1}</span>
+          </c:when>
+          <c:otherwise>
+            <a href="#" class="step"
+              onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
+          </c:otherwise>
+        </c:choose>
+      </c:forEach>
+
+      <c:if test="${(maxPage-1)>endPage}">
+        <span class="step gap">..</span>
+      </c:if>
+
+      <c:if test="${nextPage > 0}">
+        <a class="nextLink"
+          href="#" onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${nextPage})">Next</a>
+      </c:if>
+    </div>
+
+    <!-- DO NOT set value="currentStart" to input so it gets whiped on search action -->
+    <input id="iPage" type="hidden" name="" value="${element.currentPage}" />
+  </c:if>
 
   <script>
 	 function ${element.getClass().getSimpleName()}_submit(param, page){
