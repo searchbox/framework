@@ -133,7 +133,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
 		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
 		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
-		idField.setIdField(true);
 		collectionFields.add(idField);
 		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
 		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
@@ -146,6 +145,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		PresetDefinition preset = new PresetDefinition(collection);
 		preset.setAttributeValue("label","Search All");
 		preset.setSlug("all");
+		
+		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
+		idFieldAttr.setAttributeValue("id",true);
+		preset.addFieldAttribute(idFieldAttr);
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
 		fieldAttr.setAttributeValue("searchable",true);

@@ -29,9 +29,9 @@ import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.web.SearchController;
 
 @Controller
-@RequestMapping("/{searchbox}/admin/search")
-public class AdminSearchController extends SearchController{
-	
+@RequestMapping("/{searchbox}/admin")
+public class AdminSearchController extends SearchController {
+
 	@ModelAttribute("OrderEnum")
 	public List<Order> getReferenceOrder() {
 		return Arrays.asList(Order.values());
@@ -41,12 +41,19 @@ public class AdminSearchController extends SearchController{
 	public List<Sort> getReferenceSort() {
 		return Arrays.asList(Sort.values());
 	}
+
+	@Override
+	protected String getViewViewName() {
+		return "admin/view";
+	}
 	
-	protected String getView() {
+	@Override
+	protected String getSearchViewName() {
 		return "admin/search";
 	}
 	
+	@Override
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-		return "/"+searchbox.getSlug()+"/admin/search/"+preset.getSlug();
+		return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
 	}
 }

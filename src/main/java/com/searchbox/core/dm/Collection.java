@@ -15,12 +15,9 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
-import javax.persistence.MappedSuperclass;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@MappedSuperclass
 public class Collection {
 
 	/**

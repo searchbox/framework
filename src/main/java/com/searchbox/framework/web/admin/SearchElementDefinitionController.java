@@ -52,7 +52,7 @@ import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchElementRepository;
 
 @Controller
-@RequestMapping("/admin/searchElementDefinition")
+@RequestMapping("/{searchbox}/admin/searchElementDefinition")
 public class SearchElementDefinitionController {
 
 	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinitionController.class);

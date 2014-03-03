@@ -17,12 +17,9 @@ package com.searchbox.core.dm;
 
 import java.util.Date;
 
-import javax.persistence.MappedSuperclass;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@MappedSuperclass
 public class Field {
 
 	protected Class<?> clazz;
@@ -32,10 +29,6 @@ public class Field {
 
 	/**
      */
-		
-	protected Boolean multivalue = false;
-	
-	protected Boolean idField = false;
 
 	public Field() {
 		
@@ -60,23 +53,6 @@ public class Field {
 
 	public void setClazz(Class<?> clazz) {
 		this.clazz = clazz;
-	}
-
-	public Boolean getMultivalue() {
-        return this.multivalue;
-    }
-
-	public void setMultivalue(Boolean multivalue) {
-        this.multivalue = multivalue;
-    }
-	
-
-	public Boolean getIdField() {
-		return idField;
-	}
-
-	public void setIdField(Boolean idField) {
-		this.idField = idField;
 	}
 
 	public String toString() {

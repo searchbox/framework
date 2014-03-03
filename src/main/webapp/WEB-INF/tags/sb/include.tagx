@@ -21,7 +21,7 @@
 	<c:catch var="catchException">
 		<c:if test="${admin }">
 			<spring:url var="formUrl"
-				value="/admin/searchElementDefinition/${element.definitionId}" />
+				value="${searchbox.getSlug() }/admin/searchElementDefinition/${element.definitionId}" />
 			<script>
 				jQuery(function($) {
 					console

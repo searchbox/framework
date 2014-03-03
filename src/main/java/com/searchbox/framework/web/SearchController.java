@@ -96,6 +96,14 @@ public class SearchController {
 	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
 		return "/" + searchbox.getSlug() + "/search/" + preset.getSlug();
 	}
+	
+	protected String getViewViewName(){
+		return "search/view";
+	}
+	
+	protected String getSearchViewName(){
+		return "search/search";
+	}
 
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {
@@ -135,7 +143,7 @@ public class SearchController {
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName("search/view");
+		model.setViewName(getViewViewName());
 
 		SearchResult result = new SearchResult();
 		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
@@ -162,7 +170,7 @@ public class SearchController {
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
 		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName("search/index");
+		model.setViewName(getSearchViewName());
 
 		SearchResult result = new SearchResult();
 		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
