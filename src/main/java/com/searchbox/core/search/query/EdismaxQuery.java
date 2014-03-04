@@ -104,6 +104,7 @@ class EdismaxQuerySolrAdaptor {
 	
 	@PreSearchAdapter
 	public void setDefaultQuery(SolrQuery query){
+		query.setParam("defType", "edismax");
 		query.setRequestHandler("edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
 	}
