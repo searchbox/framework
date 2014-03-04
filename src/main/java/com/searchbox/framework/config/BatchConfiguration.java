@@ -15,11 +15,45 @@
  ******************************************************************************/
 package com.searchbox.framework.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.SimpleBatchConfiguration;
+import org.springframework.batch.core.explore.support.JobExplorerFactoryBean;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfiguration {
+@DependsOn(value={"dataSource"})
+public class BatchConfiguration extends SimpleBatchConfiguration {
 
+	@Bean
+	public TaskExecutor taskExecutor(){
+		return new SimpleAsyncTaskExecutor();
+	}
+
+	@Bean
+	@Override
+	public JobLauncher jobLauncher() throws Exception {
+		SimpleJobLauncher jl = new SimpleJobLauncher();
+		jl.setJobRepository(jobRepository());
+		jl.setTaskExecutor(taskExecutor());
+		return jl;
+	}
+	
+	@Bean
+	public JobExplorerFactoryBean jobExplorerFactoryBean(DataSource datasource) throws Exception {
+		
+		System.out.println("Data source is: " + datasource);
+		JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
+		factory.setDataSource(datasource);
+		return factory;
+	}
 }

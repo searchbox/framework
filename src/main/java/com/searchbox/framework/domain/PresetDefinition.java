@@ -43,6 +43,7 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
 	private Searchbox searchbox;
 
 	@ManyToOne
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private CollectionDefinition collection;
 	
 	@OneToMany(mappedBy="preset", cascade=CascadeType.ALL)

@@ -54,6 +54,7 @@ public abstract class AbstractBatchCollection extends Collection implements
 		JobExecution jobExecution;
 		
 		try {
+
 			jobExecution = launcher.run(job, params);
 			logger.info("JobExecution for pubmed: "
 					+ jobExecution.getExitStatus().getExitCode());
