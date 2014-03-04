@@ -84,4 +84,32 @@ public class ReflectionUtils {
 			return null;
 		}
 	}
+	
+	/** Permute all possible parameters
+	 * 
+	 * @param caller
+	 * @param method
+	 * @param allArguments
+	 * @param offset
+	 * @param arguments
+	 */
+	public static List<Object[]> findAllArgumentPermutations(Object[][] allArguments) {
+		return findAllArgumentPermutations(allArguments, 0, 0, 
+				new Object[allArguments.length], new ArrayList<Object[]>());
+			
+	}
+		
+	public static List<Object[]> findAllArgumentPermutations(Object[][] allArguments, int depth, int offset, Object[] arguments, List<Object[]> results) {
+		if(depth < allArguments.length){
+			for(int i = offset; i<allArguments[depth].length; i++){
+				arguments[depth] = allArguments[depth][i];
+				//we got a bag here...
+				if((depth+1) == arguments.length){
+					results.add(arguments.clone());
+				}
+				findAllArgumentPermutations(allArguments, depth+1, offset, arguments, results);
+			}
+		} 
+		return results;
+	}
 }

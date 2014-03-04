@@ -39,6 +39,7 @@ import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.ref.ReflectionUtils;
 
 @Service
 public class SearchAdapterService implements
@@ -71,16 +72,24 @@ public class SearchAdapterService implements
 			Object adapter = bean.getValue();
 			for (Method method : adapter.getClass().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(PreSearchAdapter.class)) {
-					logger.debug("Registering Pre adapt: "
-							+ method.getName());
-					this.preSearchMethods.put(method,adapter);
+					this.addPreSearchMethod(method,adapter);
 				} else if(method.isAnnotationPresent(PostSearchAdapter.class)) {
-					logger.debug("Registering Post adapt: "
-							+ method.getName());
-					this.postSearchMethods.put(method,adapter);
+					this.addPPostSearchMethod(method,adapter);
 				}
 			}
 		}
+	}
+
+	public void addPPostSearchMethod(Method method, Object adapter) {
+		logger.debug("Registering Post adapt: "
+				+ method.getName());
+		this.postSearchMethods.put(method,adapter);		
+	}
+
+	public void addPreSearchMethod(Method method, Object adapter) {
+		logger.debug("Registering Pre adapt: "
+				+ method.getName());
+		this.preSearchMethods.put(method,adapter);
 	}
 
 	public void doPreSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
@@ -134,10 +143,10 @@ public class SearchAdapterService implements
 			int x = 0;
 			for(Class<?> paramType:paramTypes){
 				
-				logger.debug("Checking for parameter of param: " + (x)  + " as " + paramType.getSimpleName());
+//				logger.debug("Checking for parameter of param: " + (x)  + " as " + paramType.getSimpleName());
 				List<Object> currentparamters = new ArrayList<Object>();
 				for(Entry<Class<?>, List<Object>> entry:arguments.entrySet()){
-					logger.debug("\t is " + paramType.isAssignableFrom(entry.getKey()) + " class: " +  entry.getKey().getSimpleName() + " should be list: " +entry.getValue().getClass());
+//					logger.debug("\t is " + paramType.isAssignableFrom(entry.getKey()) + " class: " +  entry.getKey().getSimpleName() + " should be list: " +entry.getValue().getClass());
 					if(paramType.isAssignableFrom(entry.getKey())){
 						for(Object goodparam:entry.getValue()){
 							currentparamters.add(goodparam);
@@ -153,13 +162,12 @@ public class SearchAdapterService implements
 			for(int i=0; i<paramTypes.length; i++){
 				logger.debug("Bag for param: " + paramTypes[i].getSimpleName() + " is this bag a list? " + parameters[i].getClass().getSimpleName());
 				for(Object obj:parameters[i]){
-					logger.debug("\tin bag: " + obj.getClass().getSimpleName());
+					logger.debug("\tin bag: " + obj.getClass().getSimpleName()+"\t"+obj.toString());
 				}
 			}
 			
 			//Execute method with permutated arguments.
-			List<Object[]> argumentBags = findAllArgumentPermutations(parameters, 0,
-					new Object[paramTypes.length], new ArrayList<Object[]>());
+			List<Object[]> argumentBags = ReflectionUtils.findAllArgumentPermutations(parameters);
 			for(Object[] argumentsInBag:argumentBags){
 				logger.trace("Found a working permutation for method: " + method.getName());
 				for(Object obj:argumentsInBag){
@@ -238,27 +246,6 @@ public class SearchAdapterService implements
 			}
 			logger.error("Could not invoke method " + method.getName()
 					+ " on: " + caller.getClass().getSimpleName(), e);
-		}
-	}
-	
-	/** Permute all possible parameters
-	 * 
-	 * @param caller
-	 * @param method
-	 * @param allArguments
-	 * @param offset
-	 * @param arguments
-	 */
-	private List<Object[]> findAllArgumentPermutations(Object[][] allArguments, int offset, Object[] arguments, List<Object[]> results) {
-		if(offset<arguments.length){
-			for(int i = 0; i<allArguments[offset].length; i++){
-				arguments[offset] = allArguments[offset][i];
-				findAllArgumentPermutations(allArguments, offset+1,arguments, results);
-			}
-			return results;
-		} else {
-			results.add(arguments);
-			return results;
 		}
 	}
 }
