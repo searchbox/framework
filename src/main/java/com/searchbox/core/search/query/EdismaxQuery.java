@@ -15,16 +15,9 @@
  ******************************************************************************/
 package com.searchbox.core.search.query;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.common.params.DisMaxParams;
-
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
-import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
-import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchElement;
@@ -96,43 +89,6 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	@Override
 	public Class<?> getConditionClass() {
 		return EdismaxQuery.Condition.class;
-	}
-}
-
-@SearchAdapter
-class EdismaxQuerySolrAdaptor {
-	
-	@PreSearchAdapter
-	public void setDefaultQuery(SolrQuery query){
-		query.setParam("defType", "edismax");
-		query.setRequestHandler("edismax");
-		query.set(DisMaxParams.ALTQ, "*:*");
-	}
-	
-	
-	@PreSearchAdapter
-	public void setQueryFields(EdismaxQuery SearchElement,
-			SolrQuery query, FieldAttribute fieldAttribute) {
-	
-		if(fieldAttribute.getSearchable()){
-			Float boost = (fieldAttribute.getBoost()!=null)?fieldAttribute.getBoost():1.0f;
-			String currentFields = query.get(DisMaxParams.QF);
-			query.set(DisMaxParams.QF, 
-					((currentFields!=null && !currentFields.isEmpty())?currentFields+" ":"")+
-							fieldAttribute.getField().getKey()+"^"+boost);
-		}
-	}
-
-	@PostSearchAdapter
-	public EdismaxQuery udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
-		searchElement.setQuery(query.getQuery());			
-		return searchElement;
-	}
-
-	@PreSearchAdapter
-	public SolrQuery getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
-		query.setQuery(condition.getQuery());
-		return query;
 	}
 }
 
