@@ -27,10 +27,10 @@ public class EdismaxQuerySolrAdaptor {
 	@PreSearchAdapter
 	public void setQueryFields(EdismaxQuery SearchElement,
 			SolrQuery query, FieldAttribute fieldAttribute) {
-		logger.info("Checking Field Attr for EdismaxQuery -- Field:" + fieldAttribute.getField().getKey());
+		logger.debug("Checking Field Attr for EdismaxQuery -- Field: {} ", fieldAttribute.getField().getKey());
 
 		if(fieldAttribute.getSearchable()){
-			logger.info("Found searchable field: " + fieldAttribute.getField().getKey());
+			logger.debug("Found searchable field: {}", fieldAttribute.getField().getKey());
 			Float boost = (fieldAttribute.getBoost()!=null)?fieldAttribute.getBoost():1.0f;
 			String currentFields = query.get(DisMaxParams.QF);
 			query.set(DisMaxParams.QF, 
