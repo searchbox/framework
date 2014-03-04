@@ -33,11 +33,7 @@
           <c:if test="${not empty param.debug}">
             <input type="hidden" name="debug" value="${param.debug }" />
           </c:if>
-          <c:if test="${not empty param.searchbox}">
-            <input type="hidden" name="searchbox"
-              value="${param.searchbox }" />
-          </c:if>
-
+         
           <div class="row" id="search-bar">
 
             <div class="col-md-3 col-sm-5 col-left">
@@ -127,7 +123,7 @@
         </form>
       </div>
     </div>
-      <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
+    <jsp:include page="/WEB-INF/views/common/_footer.jspx" />
   </div>
 </body>
   </html>
