@@ -31,6 +31,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -56,8 +57,8 @@ import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
-import com.searchbox.framework.service.UserService;
 import com.searchbox.framework.service.SearchEngineService;
+import com.searchbox.framework.service.UserService;
 
 @Component
 @org.springframework.core.annotation.Order(value=10000)
@@ -130,7 +131,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		//The base collection for searchbox
 		logger.info("++ Creating pubmed Collection");
-		CollectionDefinition collection = new CollectionDefinition("pubmed", engine);	
+		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"pubmed");
+		collection.setAttributeValue("autoStart", true);
+		collection.setSearchEngine(engine);	
 		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
 		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
 		collectionFields.add(idField);

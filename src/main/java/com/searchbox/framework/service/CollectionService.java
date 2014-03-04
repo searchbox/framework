@@ -22,7 +22,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.collection.PubmedCollection;
+import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.framework.event.EngineReadyEvent;
 
@@ -36,6 +36,7 @@ public class CollectionService implements ApplicationListener<EngineReadyEvent> 
 	
 	@Override
 	public void onApplicationEvent(EngineReadyEvent event) {
+		
 		// TODO here we have to get the collection of the engine
 		// and update their fields :)
 		
@@ -44,7 +45,7 @@ public class CollectionService implements ApplicationListener<EngineReadyEvent> 
 		
 		
 		PubmedCollection pubmecCollection = factory.createBean(PubmedCollection.class);
-		pubmecCollection.importCollection();
+		pubmecCollection.synchronize();
 		
 	}
 }

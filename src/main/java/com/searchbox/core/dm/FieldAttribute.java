@@ -22,8 +22,7 @@ import com.searchbox.core.SearchAttribute;
 
 public class FieldAttribute {
 	
-	@SearchAttribute
-	protected String key = "";
+	protected Field field;
 	
 	@SearchAttribute
 	protected String label = "";
@@ -52,14 +51,6 @@ public class FieldAttribute {
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	public String getLabel() {
 		return label;
@@ -124,4 +115,12 @@ public class FieldAttribute {
 	public void setBoost(Float boost) {
         this.boost = boost;
     }
+
+	public void setField(Field field) {
+		this.field = field;
+	}
+	
+	public Field getField(){
+		return this.field;
+	}
 }

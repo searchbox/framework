@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Field;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
@@ -37,13 +38,15 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
 	
+	protected String name;
+	
 	public CollectionDefinition() {
 		super();
 	}
 	
-	public CollectionDefinition(String name, SearchEngineDefinition definition) {
-		super();
-		this.searchEngine = definition;
+	public CollectionDefinition(Class<?> clazz, String name) {
+		super(clazz);
+		this.name = name;
 	}
 	
 	public SearchEngineDefinition getSearchEngine() {
@@ -70,6 +73,14 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 		this.fieldDefinitions = fieldDefinitions;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public FieldDefinition getFieldDefinition(String key){
 		for(FieldDefinition def:this.fieldDefinitions){
 			if(def.getKey().equals(key)){
@@ -81,7 +92,10 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 	
 	@Override
 	public Collection getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		Collection collection = (Collection) super.toObject();
+		for(FieldDefinition fieldDef:this.fieldDefinitions){
+			collection.getFields().add(new Field(fieldDef.getClazz(), fieldDef.getKey()));
+		}
+		return collection;
 	}
 }

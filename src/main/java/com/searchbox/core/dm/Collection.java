@@ -15,17 +15,32 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.searchbox.core.SearchAttribute;
 
 public class Collection {
 
 	/**
      */
+	@SearchAttribute
 	protected String name;
 	
+	@SearchAttribute
 	protected String description;
+	
+	protected List<Field> fields;
+	
+	@SearchAttribute
+	protected Boolean autoStart = false;
 
+	public Collection(){}
+	
 	public Collection(String name) {
 		this.name = name;
 	}
@@ -41,4 +56,28 @@ public class Collection {
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
+	}
+
+	public Boolean isAutoStart() {
+		return autoStart;
+	}
+
+	public void setAutoStart(Boolean autoStart) {
+		this.autoStart = autoStart;
+	}
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.searchbox.collection;
+package com.searchbox.collection.pubmed;
 
 import java.io.File;
 import java.util.List;
@@ -24,42 +24,33 @@ import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
+import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.engine.solr.EmbeddedSolr;
-import com.searchbox.framework.service.SearchEngineService;
 
 @Configurable
-public class PubmedCollection {
+public class PubmedCollection extends AbstractBatchCollection{
 
 	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
 	
-	@Autowired
-	ApplicationContext context;
+	public PubmedCollection(){}
 	
-	@Autowired
-	SearchEngineService searchEngineService;
+	public PubmedCollection(String name) {
+		super(name);
+	}
 
 	public ItemReader<Resource> reader() {
 		return new ItemReader<Resource>() {
@@ -113,14 +104,12 @@ public class PubmedCollection {
 		return writer;
 	}
 
-	public void importCollection() {
-
-
+	@Override
+	protected Job getJob() {
 		StepBuilderFactory stepBuilderFactory = context
 				.getBean(StepBuilderFactory.class);
 		JobBuilderFactory jobBuilderFactory = context
 				.getBean(JobBuilderFactory.class);
-		JobLauncher launcher = context.getBean(JobLauncher.class);
 		
 		Step step = stepBuilderFactory.get("getFile")
 				.<Resource, File> chunk(1).reader(reader())
@@ -129,27 +118,7 @@ public class PubmedCollection {
 		Job myJob = jobBuilderFactory.get("importFile")
 				.incrementer(new RunIdIncrementer()).flow(step).end().build();
 		
-		JobParameters params = new JobParameters();
-
-		JobExecution jobExecution;
-		try {
-			jobExecution = launcher.run(myJob, params);
-			logger.info("JobExecution for pubmed: " + jobExecution.getExitStatus().getExitCode());
-
-		} catch (JobExecutionAlreadyRunningException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobRestartException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobInstanceAlreadyCompleteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobParametersInvalidException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		return myJob;
 	}
 
 }
