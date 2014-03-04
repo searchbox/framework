@@ -36,9 +36,15 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.stereotype.Component;
 
 import com.searchbox.core.ref.ReflectionUtils;
 
+@Configurable
+@Component
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class UnknownClassDefinition {
@@ -52,6 +58,9 @@ public class UnknownClassDefinition {
 	@Version
 	@Column(name="OPTLOCK")
 	private long version;
+	
+	@Transient
+	private static AutowireCapableBeanFactory factory;
 	
 	private Class<?> clazz;
 
@@ -69,11 +78,18 @@ public class UnknownClassDefinition {
 		ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
 	}
 	
+	@Autowired
+	public void setFactory(AutowireCapableBeanFactory factory) {
+		UnknownClassDefinition.factory = factory;
+	}
+	
 	@Transient
 	protected Object toObject(){
 		Object element = null;
 		try {
-			element = this.getClazz().newInstance();
+			element = factory.createBean(this.getClazz());
+//			element = factory.createBean(this.getClazz(), Autowire.BY_TYPE, true);
+//			element = this.getClazz().newInstance();
 		} catch (Exception e) {
 			logger.error("Could not create new instance of: " + this.getClazz(),e);
 			throw new RuntimeException("Could not construct element for class: " + getClazz());

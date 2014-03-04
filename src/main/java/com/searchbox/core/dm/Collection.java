@@ -15,14 +15,14 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.engine.SearchEngine;
 
 public class Collection {
 
@@ -34,11 +34,11 @@ public class Collection {
 	@SearchAttribute
 	protected String description;
 	
-	protected List<Field> fields;
+	protected List<Field> fields = new ArrayList<Field>();
 	
 	@SearchAttribute
-	protected Boolean autoStart = false;
-
+	protected SearchEngine<?, ?> searchEngine;
+	
 	public Collection(){}
 	
 	public Collection(String name) {
@@ -72,12 +72,12 @@ public class Collection {
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
 	}
-
-	public Boolean isAutoStart() {
-		return autoStart;
+	
+	public SearchEngine<?, ?> getSearchEngine() {
+		return searchEngine;
 	}
 
-	public void setAutoStart(Boolean autoStart) {
-		this.autoStart = autoStart;
+	public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 }

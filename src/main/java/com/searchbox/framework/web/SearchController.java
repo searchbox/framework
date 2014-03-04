@@ -39,12 +39,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.AbstractSearchCondition;
+import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.FieldDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.Searchbox;
@@ -261,9 +260,10 @@ public class SearchController {
 			fieldAttributes.add(def.getInstance());
 		}
 
-		SearchEngine<?, ?> searchEngine = searchEngineService
-				.getSearchEngine(preset.getCollection().getSearchEngine()
-						.getName());
+		SearchEngine<?, ?> searchEngine =
+				preset.getCollection().getSearchEngine().getInstance();
+		
+		logger.info("Current SearchEngine: " + searchEngine);
 
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
 				searchElements, fieldAttributes, conditions);

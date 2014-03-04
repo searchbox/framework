@@ -25,6 +25,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 
@@ -36,9 +40,12 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 	private SearchEngineDefinition searchEngine;
 
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
 	
 	protected String name;
+	
+	protected Boolean autoStart = false;
 	
 	public CollectionDefinition() {
 		super();
@@ -81,6 +88,14 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 		this.name = name;
 	}
 
+	public Boolean getAutoStart() {
+		return autoStart;
+	}
+
+	public void setAutoStart(Boolean autoStart) {
+		this.autoStart = autoStart;
+	}
+
 	public FieldDefinition getFieldDefinition(String key){
 		for(FieldDefinition def:this.fieldDefinitions){
 			if(def.getKey().equals(key)){
@@ -96,6 +111,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 		for(FieldDefinition fieldDef:this.fieldDefinitions){
 			collection.getFields().add(new Field(fieldDef.getClazz(), fieldDef.getKey()));
 		}
+		collection.setSearchEngine(searchEngine.getInstance());
 		return collection;
 	}
 }

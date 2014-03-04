@@ -18,9 +18,6 @@ package com.searchbox.collection.pubmed;
 import java.io.File;
 import java.util.List;
 
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -38,11 +35,11 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.io.Resource;
 
 import com.searchbox.collection.AbstractBatchCollection;
-import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.engine.solr.EmbeddedSolr;
+import com.searchbox.collection.SynchronizedCollection;
 
 @Configurable
-public class PubmedCollection extends AbstractBatchCollection{
+public class PubmedCollection extends AbstractBatchCollection 
+	implements SynchronizedCollection{
 
 	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
 	
@@ -85,19 +82,8 @@ public class PubmedCollection extends AbstractBatchCollection{
 		ItemWriter<File> writer = new ItemWriter<File>() {
 			@Override
 			public void write(List<? extends File> items) throws Exception {
-				for(File item:items){
-					logger.info("Indexing for pubmed: " + item.getAbsolutePath());
-					ContentStreamBase contentstream = new ContentStreamBase.FileStream(item);
-					contentstream.setContentType("text/xml");
-					ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
-					request.addContentStream(contentstream);
-					SearchEngine<?, ?> engine = searchEngineService.getSearchEngine("embedded Solr");
-					
-					UpdateResponse response = request.process(((EmbeddedSolr)engine).getServer());
-					logger.info("Solr Response: " + response);
-					response = ((EmbeddedSolr)engine).getServer().commit();
-					logger.info("Solr commig: " + response);
-
+				for(File item:items){	
+					indexFile(item);
 				}
 			}
 		};

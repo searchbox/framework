@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.dm.Collection;
-import com.searchbox.framework.service.SearchEngineService;
 
 @Configurable
 public abstract class AbstractBatchCollection extends Collection implements
@@ -29,9 +28,6 @@ public abstract class AbstractBatchCollection extends Collection implements
 
 	@Autowired
 	protected ApplicationContext context;
-
-	@Autowired
-	protected SearchEngineService searchEngineService;
 
 	public AbstractBatchCollection() {
 
@@ -78,8 +74,7 @@ public abstract class AbstractBatchCollection extends Collection implements
 
 	@Override
 	public boolean indexFile(File file) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.searchEngine.indexFile(file);
 	}
 
 	protected abstract Job getJob();

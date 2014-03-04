@@ -17,8 +17,6 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
-import javax.persistence.MappedSuperclass;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
-@MappedSuperclass
 public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
 	@SuppressWarnings("unused")
@@ -44,9 +41,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
 	protected Class<Q> queryClass;
 	protected Class<R> responseClass;
-	
-	private Boolean isLoaded = false;
-	
+		
 	protected AbstractSearchEngine(Class<Q> queryClass, Class<R> responseClass){
 		this.queryClass = queryClass;
 		this.responseClass = responseClass;
@@ -58,13 +53,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 		this.responseClass = responseClass;
 	}
 	
-	protected abstract boolean _load();
-	
-	public boolean load(){
-		boolean loaded = _load();
-		this.isLoaded = true;
-		return loaded;
-	}
+	public abstract void init();
 	
 	@Override
 	public Class<Q> getQueryClass() {
@@ -74,15 +63,6 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	@Override
 	public Class<R> getResponseClass() {
 		return this.responseClass;
-	}
-	
-	@Override
-	public Boolean isLoaded(){
-		return this.isLoaded;
-	}
-	
-	protected void lodaed(){
-		this.isLoaded = true;
 	}
 	
 	@Override

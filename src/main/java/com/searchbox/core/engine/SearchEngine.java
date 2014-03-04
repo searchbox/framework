@@ -15,14 +15,13 @@
  ******************************************************************************/
 package com.searchbox.core.engine;
 
+import java.io.File;
 import java.util.List;
-
-import javax.persistence.MappedSuperclass;
+import java.util.Map;
 
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
-@MappedSuperclass
 public interface SearchEngine<Q,R> {
 	
 	public String getName();
@@ -32,12 +31,14 @@ public interface SearchEngine<Q,R> {
 	public Class<Q> getQueryClass();
 	
 	public Class<R> getResponseClass();
-	
-	public Boolean isLoaded();
-	
+		
 	public Q newQuery();
 	
 	public R execute(Q query);
+	
+	public boolean indexFile(File file);
+	
+	public boolean indexMap(Map<String, Object> fields);
 		
 	public List<SearchElement> getSupportedElements();
 
@@ -45,5 +46,5 @@ public interface SearchEngine<Q,R> {
 	
 	public Boolean supportsCondition(AbstractSearchCondition condition);
 
-	public boolean load();
+	public void init();
 }

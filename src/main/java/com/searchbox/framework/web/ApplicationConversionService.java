@@ -34,7 +34,6 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;

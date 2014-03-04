@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -54,6 +55,7 @@ import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.domain.User;
 import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.domain.UserRole.Role;
+import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -83,6 +85,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ApplicationEventPublisher publisher;
 	
 	
 	
@@ -132,7 +137,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		//The base collection for searchbox
 		logger.info("++ Creating pubmed Collection");
 		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"pubmed");
-		collection.setAttributeValue("autoStart", true);
+		collection.setAutoStart(true);
 		collection.setSearchEngine(engine);	
 		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
 		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
@@ -260,6 +265,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		}
 		
+		logger.info("Starting all your engine");
+		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		
+		while(engineDefinitions.hasNext()){
+			SearchEngineDefinition engineDefinition = engineDefinitions.next();
+			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
+			engineDefinition.getInstance().init();
+		}
+		
 		logger.info("****************************************************");
 		logger.info("*                  Welcome                         *");
 		logger.info("****************************************************");
@@ -284,14 +298,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		logger.info("*                                                  *");
 		logger.info("****************************************************");
 		
-		logger.info("Starting all your engine");
-		Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+		publisher.publishEvent(new SearchboxReady(this));
 		
-		while(engineDefinitions.hasNext()){
-			SearchEngineDefinition engineDefinition = engineDefinitions.next();
-			logger.info("++ Starting SearchEngine: " + engineDefinition.getName());
-			searchEngineService.load(engineDefinition.getInstance());
-		}
 	}
 
 	@SuppressWarnings("resource")
