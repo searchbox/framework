@@ -27,7 +27,6 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
@@ -108,6 +107,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 	@Override
 	public Collection getInstance() {
 		Collection collection = (Collection) super.toObject();
+		collection.setName(this.getName());
 		for(FieldDefinition fieldDef:this.fieldDefinitions){
 			collection.getFields().add(new Field(fieldDef.getClazz(), fieldDef.getKey()));
 		}

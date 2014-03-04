@@ -31,7 +31,9 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import com.searchbox.collection.AbstractBatchCollection;
@@ -40,6 +42,15 @@ import com.searchbox.collection.SynchronizedCollection;
 @Configurable
 public class PubmedCollection extends AbstractBatchCollection 
 	implements SynchronizedCollection{
+	
+	@Autowired
+	ApplicationContext context;
+	
+	@Autowired
+	JobBuilderFactory jobBuilderFactory;
+	
+	@Autowired
+	StepBuilderFactory stepBuilderFactory;
 
 	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
 	
@@ -92,16 +103,11 @@ public class PubmedCollection extends AbstractBatchCollection
 
 	@Override
 	protected Job getJob() {
-		StepBuilderFactory stepBuilderFactory = context
-				.getBean(StepBuilderFactory.class);
-		JobBuilderFactory jobBuilderFactory = context
-				.getBean(JobBuilderFactory.class);
-		
 		Step step = stepBuilderFactory.get("getFile")
 				.<Resource, File> chunk(1).reader(reader())
 				.processor(itemProcessor()).writer(writer()).build();
 
-		Job myJob = jobBuilderFactory.get("importFile")
+		Job myJob = jobBuilderFactory.get(this.getName())
 				.incrementer(new RunIdIncrementer()).flow(step).end().build();
 		
 		return myJob;
