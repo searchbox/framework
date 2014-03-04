@@ -139,13 +139,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"pubmed");
 		collection.setAutoStart(true);
 		collection.setSearchEngine(engine);	
-		Set<FieldDefinition> collectionFields = new HashSet<FieldDefinition>();
-		FieldDefinition idField = FieldDefinition.StringFieldDef("id");
-		collectionFields.add(idField);
-		collectionFields.add(FieldDefinition.StringFieldDef("article-title"));
-		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
-		collectionFields.add(FieldDefinition.StringFieldDef("author"));
-		collection.setFieldDefinitions(collectionFields);		
+		//collection.setFieldDefinitions(collectionFields);		
 		collection = collectionRepository.save(collection);
 		
 		//SearchAll preset

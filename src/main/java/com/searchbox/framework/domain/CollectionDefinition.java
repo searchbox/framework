@@ -15,7 +15,10 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -32,29 +35,56 @@ import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class CollectionDefinition extends UnknownClassDefinition implements ElementFactory<Collection> {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class CollectionDefinition extends UnknownClassDefinition implements
+		ElementFactory<Collection> {
 
 	@ManyToOne
 	private SearchEngineDefinition searchEngine;
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
-	
+
 	protected String name;
-	
+
 	protected Boolean autoStart = false;
-	
+
 	public CollectionDefinition() {
 		super();
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public CollectionDefinition(Class<?> clazz, String name) {
 		super(clazz);
 		this.name = name;
+		try {
+			Method method = clazz.getMethod("GET_FIELDS");
+			if (method != null) {
+				List<Field> fields = (List<Field>)method.invoke(null);
+				for(Field field:fields){
+					FieldDefinition fieldDef = new FieldDefinition(field.getClazz(), field.getKey());
+					if(!this.fieldDefinitions.contains(fieldDef)){
+						this.fieldDefinitions.add(fieldDef);
+					}
+				}
+			}
+		} catch (NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public SearchEngineDefinition getSearchEngine() {
 		return searchEngine;
 	}
@@ -95,21 +125,22 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 		this.autoStart = autoStart;
 	}
 
-	public FieldDefinition getFieldDefinition(String key){
-		for(FieldDefinition def:this.fieldDefinitions){
-			if(def.getKey().equals(key)){
+	public FieldDefinition getFieldDefinition(String key) {
+		for (FieldDefinition def : this.fieldDefinitions) {
+			if (def.getKey().equals(key)) {
 				return def;
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Collection getInstance() {
 		Collection collection = (Collection) super.toObject();
 		collection.setName(this.getName());
-		for(FieldDefinition fieldDef:this.fieldDefinitions){
-			collection.getFields().add(new Field(fieldDef.getClazz(), fieldDef.getKey()));
+		for (FieldDefinition fieldDef : this.fieldDefinitions) {
+			collection.getFields().add(
+					new Field(fieldDef.getClazz(), fieldDef.getKey()));
 		}
 		collection.setSearchEngine(searchEngine.getInstance());
 		return collection;

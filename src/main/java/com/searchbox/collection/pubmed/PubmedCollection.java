@@ -16,6 +16,8 @@
 package com.searchbox.collection.pubmed;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,24 +40,48 @@ import org.springframework.core.io.Resource;
 
 import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.collection.SynchronizedCollection;
+import com.searchbox.core.dm.Field;
 
 @Configurable
-public class PubmedCollection extends AbstractBatchCollection 
-	implements SynchronizedCollection{
-	
+public class PubmedCollection extends AbstractBatchCollection implements
+		SynchronizedCollection {
+
 	@Autowired
 	ApplicationContext context;
-	
+
 	@Autowired
 	JobBuilderFactory jobBuilderFactory;
-	
+
 	@Autowired
 	StepBuilderFactory stepBuilderFactory;
 
-	private static Logger logger = LoggerFactory.getLogger(PubmedCollection.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(PubmedCollection.class);
 	
-	public PubmedCollection(){}
-	
+	public static List<Field> GET_FIELDS(){
+		ArrayList<Field> fields = new ArrayList<Field>();
+		fields.add(new Field(String.class, "id"));
+		fields.add(new Field(Date.class, "article-creation-date"));
+		fields.add(new Field(Integer.class, "article-year"));
+		fields.add(new Field(Date.class, "article-completion-date"));
+		fields.add(new Field(Date.class, "article-revision-date"));
+		fields.add(new Field(String.class, "article-pubmodel"));
+		fields.add(new Field(String.class, "journal-title"));
+		fields.add(new Field(String.class, "journal-title-abrv"));
+		fields.add(new Field(String.class, "article-title"));
+		fields.add(new Field(String.class, "article-abstract"));
+		fields.add(new Field(String.class, "author"));
+		fields.add(new Field(String.class, "article-lang"));
+		fields.add(new Field(String.class, "publication-type"));
+		fields.add(new Field(String.class, "substance-name"));
+		fields.add(new Field(String.class, "article-descriptor"));
+		fields.add(new Field(String.class, "article-qualifier"));
+		return fields;
+	}
+
+	public PubmedCollection() {
+	}
+
 	public PubmedCollection(String name) {
 		super(name);
 	}
@@ -63,16 +89,19 @@ public class PubmedCollection extends AbstractBatchCollection
 	public ItemReader<Resource> reader() {
 		return new ItemReader<Resource>() {
 			boolean hasmore = true;
+
 			@Override
 			public Resource read() throws Exception, UnexpectedInputException,
 					ParseException, NonTransientResourceException {
-				if(hasmore){
+				if (hasmore) {
 					hasmore = false;
-					Resource resource = context.getResource("classpath:data/pubmedIndex.xml");
-					if(resource.exists()){
-						logger.info("Read has created this resource: " + resource.getFilename());
+					Resource resource = context
+							.getResource("classpath:data/pubmedIndex.xml");
+					if (resource.exists()) {
+						logger.info("Read has created this resource: "
+								+ resource.getFilename());
 						return resource;
-					} 
+					}
 				}
 				return null;
 			}
@@ -93,7 +122,7 @@ public class PubmedCollection extends AbstractBatchCollection
 		ItemWriter<File> writer = new ItemWriter<File>() {
 			@Override
 			public void write(List<? extends File> items) throws Exception {
-				for(File item:items){	
+				for (File item : items) {
 					indexFile(item);
 				}
 			}
@@ -103,13 +132,13 @@ public class PubmedCollection extends AbstractBatchCollection
 
 	@Override
 	protected Job getJob() {
-		Step step = stepBuilderFactory.get("getFile")
-				.<Resource, File> chunk(1).reader(reader())
-				.processor(itemProcessor()).writer(writer()).build();
+		Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
+				.reader(reader()).processor(itemProcessor()).writer(writer())
+				.build();
 
 		Job myJob = jobBuilderFactory.get(this.getName())
 				.incrementer(new RunIdIncrementer()).flow(step).end().build();
-		
+
 		return myJob;
 	}
 
