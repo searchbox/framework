@@ -190,7 +190,7 @@ public class SearchController {
 		return model;
 	}
 
-	private Set<SearchElement> executeRequest(Searchbox searchbox,
+	protected Set<SearchElement> executeRequest(Searchbox searchbox,
 			PresetDefinition preset, HttpServletRequest request,
 			SearchElement.Type... types) {
 
