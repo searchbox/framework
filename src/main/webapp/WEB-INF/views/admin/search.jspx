@@ -211,16 +211,12 @@
 													<td><a href="" id="label" data-type="text"
 														data-placeholder="Label" data-pk="${attr.getId() }"
 														data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
-													<td><a href="#" id="firstname" data-type="text"
-														data-pk="1" data-placement="right"
-														data-placeholder="Required"
-														data-title="Enter your firstname"
-														class="editable editable-click editable-empty">Empty</a></td>
-													<td>${attr.getAttributeByName('label')}</td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+                          <td>${attr.getAttributeByName('searchable').getValue()}</td>
+                          <td>${attr.getAttributeByName('highlight').getValue()}</td>
+                          <td>${attr.getAttributeByName('sortable').getValue()}</td>
+                          <td>${attr.getAttributeByName('spelling').getValue()}</td>
+                          <td>${attr.getAttributeByName('suggestion').getValue()}</td>
+                          <td>${attr.getAttributeByName('boost').getValue()}</td>
 												</tr>
 
 											</c:forEach>
