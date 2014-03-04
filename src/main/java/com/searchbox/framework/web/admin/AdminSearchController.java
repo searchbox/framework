@@ -18,6 +18,8 @@ package com.searchbox.framework.web.admin;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,9 @@ import com.searchbox.framework.web.SearchController;
 @RequestMapping("/{searchbox}/admin")
 public class AdminSearchController extends SearchController {
 
+	@Autowired
+	JobExplorer jobExplorer;
+	
 	@ModelAttribute("OrderEnum")
 	public List<Order> getReferenceOrder() {
 		return Arrays.asList(Order.values());
@@ -40,6 +45,11 @@ public class AdminSearchController extends SearchController {
 	@ModelAttribute("SortEnum")
 	public List<Sort> getReferenceSort() {
 		return Arrays.asList(Sort.values());
+	}
+	
+	@ModelAttribute("jobExplorer")
+	public JobExplorer getJobExplorer() {
+		return this.jobExplorer;
 	}
 
 	@Override
