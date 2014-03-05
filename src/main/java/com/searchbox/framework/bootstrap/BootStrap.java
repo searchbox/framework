@@ -15,9 +15,7 @@
  ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -47,7 +45,6 @@ import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.config.RootConfiguration;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.FieldDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.SearchEngineDefinition;

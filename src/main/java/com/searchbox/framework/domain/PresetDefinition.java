@@ -43,6 +43,7 @@ import com.searchbox.core.search.result.HitList;
 public class PresetDefinition extends UnknownClassDefinition implements
 		ElementFactory<Preset> {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory
 			.getLogger(PresetDefinition.class);
 
