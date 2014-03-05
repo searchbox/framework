@@ -74,18 +74,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 					e.printStackTrace();
 				}
 			}
-		}
-		
-		
-		// TODO here we have to get the collection of the engine
-		// and update their fields :)
-		
-//		SearchEngine<?, ?> engine = (SearchEngine<?, ?>)event.getSource();
-//		logger.info("SearchEngine " + engine.getName() + " is ready for some action!!!");
-//		
-//		
-//		PubmedCollection pubmecCollection = factory.createBean(PubmedCollection.class);
-//		pubmecCollection.synchronize();
-		
+		}		
 	}
 }
