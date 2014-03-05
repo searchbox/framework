@@ -22,11 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.search.BooleanClause;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchCondition;
 
 @SearchCondition(urlParam="")
 public abstract class AbstractSearchCondition {
+	
+	private static Logger logger = LoggerFactory.getLogger(AbstractSearchCondition.class);
 	
 	private Float boost = 1f;
 	
@@ -105,7 +109,7 @@ public abstract class AbstractSearchCondition {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Could not compare Objects",e);
 				return false;
 			}
 		}

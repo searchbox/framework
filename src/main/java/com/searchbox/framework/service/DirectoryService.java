@@ -49,8 +49,7 @@ public class DirectoryService {
 			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
 			return relative;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not create temp file in directoryService",e);
 		}
 		return null;
 	}
@@ -61,8 +60,7 @@ public class DirectoryService {
 			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
 			return relative;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not get application-relative path in directoryService",e);
 		}
 		return null;
 	}
@@ -74,8 +72,7 @@ public class DirectoryService {
 			newFile = new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
 			return newFile.exists();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not create temp file in directoryService",e);
 		}
 		return false;
 	}
@@ -85,8 +82,7 @@ public class DirectoryService {
 		try {
 			FileUtils.writeStringToFile(file, content);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not write to temp file in directoryService",e);
 		}
 		return file;
 	}
@@ -97,8 +93,7 @@ public class DirectoryService {
 			try {
 				tempDir.getFile().mkdirs();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Could not create temp file in directoryService",e);
 			}
 		}
 		try {
@@ -106,8 +101,8 @@ public class DirectoryService {
 			newFile.deleteOnExit();
 			return newFile;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not create temp file in directoryService",e);
+
 		}
 		return null;
 	}

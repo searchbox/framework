@@ -29,7 +29,6 @@ import com.searchbox.core.search.SearchElement;
 @Configurable
 public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
-	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(AbstractSearchEngine.class);
 	
 	@Autowired
@@ -69,12 +68,8 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	public Q newQuery(){
 		try {
 			return queryClass.newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("Could not create new Query Object for searchEngine",e);
 		}
 		return null;
 	}

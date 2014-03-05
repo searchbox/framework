@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +29,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
@@ -38,6 +39,8 @@ import com.searchbox.core.dm.Field;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class CollectionDefinition extends UnknownClassDefinition implements
 		ElementFactory<Collection> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CollectionDefinition.class);
 
 	@ManyToOne
 	private SearchEngineDefinition searchEngine;
@@ -69,18 +72,8 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 					}
 				}
 			}
-		} catch (NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.warn("Could not use GET_FIELD method on collection: " + name,e);
 		}
 
 	}

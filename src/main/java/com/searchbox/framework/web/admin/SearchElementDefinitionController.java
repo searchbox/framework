@@ -106,7 +106,7 @@ public class SearchElementDefinitionController {
 		try {
 			elementDefinition = repository.save(elementDefinition);
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Could not save elementDefinition",e);
 		}
         model.addObject("searchElementDefinition", elementDefinition);
         return model;
