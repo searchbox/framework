@@ -145,7 +145,34 @@
 											<span class="glyphicon glyphicon-list">${preset.collection.name }</span>
 										</h2>
 									</div>
-									<div class="col-md-5 col-right">button button...</div>
+									<div class="col-md-5 col-right">
+										<p>
+											<a id="collectionSynchronize" class="btn btn-primary btn-lg"
+												role="button"> <span class="glyphicon glyphicon-random">Synchronize</span></a>
+										</p>
+										<div class='notifications top-left'></div>
+										<spring:url
+											value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
+											var="synchCollection" />
+										<script>
+									$(document).ready(function() {
+										  $('#collectionSynchronize').click(function(e) {
+										      e.preventDefault()
+										      var loadurl = "${synchCollection}";
+										      $.post(loadurl, function(data) {
+										    	  console.log(data);
+										    	  $.bootstrapGrowl(data.message, {
+										              type: 'info',
+										              align: 'right',
+										              width: 'auto',
+										              allow_dismiss: true
+										          });
+									      });
+										  });
+										});
+									
+									</script>
+									</div>
 								</div>
 
 								<div class="row">
@@ -211,12 +238,12 @@
 													<td><a href="" id="label" data-type="text"
 														data-placeholder="Label" data-pk="${attr.getId() }"
 														data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
-                          <td>${attr.getAttributeByName('searchable').getValue()}</td>
-                          <td>${attr.getAttributeByName('highlight').getValue()}</td>
-                          <td>${attr.getAttributeByName('sortable').getValue()}</td>
-                          <td>${attr.getAttributeByName('spelling').getValue()}</td>
-                          <td>${attr.getAttributeByName('suggestion').getValue()}</td>
-                          <td>${attr.getAttributeByName('boost').getValue()}</td>
+													<td>${attr.getAttributeByName('searchable').getValue()}</td>
+													<td>${attr.getAttributeByName('highlight').getValue()}</td>
+													<td>${attr.getAttributeByName('sortable').getValue()}</td>
+													<td>${attr.getAttributeByName('spelling').getValue()}</td>
+													<td>${attr.getAttributeByName('suggestion').getValue()}</td>
+													<td>${attr.getAttributeByName('boost').getValue()}</td>
 												</tr>
 
 											</c:forEach>
