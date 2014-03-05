@@ -15,15 +15,6 @@
  ******************************************************************************/
 package com.searchbox.core.search.facet;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.FacetField.Count;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.params.FacetParams;
-
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
-import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.ref.Order;
@@ -80,9 +71,9 @@ public class FieldFacet
 		 */
 		private static final long serialVersionUID = -5020007167116586645L;
 
-		public String value;
-		public Integer count;
-		public Boolean selected = false;
+		private String value;
+		private Integer count;
+		private Boolean selected = false;
 
 		public Value(String label, String value, Integer count) {
 			super(label);
@@ -169,46 +160,4 @@ public class FieldFacet
 		this.sticky = sticky;
 	}
 
-}
-
-@SearchAdapter
-class FieldFacetSolrAdaptor {
-
-	@PreSearchAdapter
-	public SolrQuery addFacetField(FieldFacet facet, SolrQuery query) {
-		boolean defined = false;
-		String[] facetFields = query.getFacetFields();
-		if (facetFields != null) {
-			for (String facetField : query.getParams(FacetParams.FACET_FIELD)) {
-				if (facetField.contains(facet.getFieldName())) {
-					defined = true;
-				}
-			}
-		}
-		if (!defined) {
-			if (facet.getSticky()) {
-				query.addFacetField("{!ex=" + facet.getFieldName() + "}"
-						+ facet.getFieldName());
-			} else {
-				query.addFacetField(facet.getFieldName());
-			}
-		}
-		return query;
-	}
-
-	@PostSearchAdapter
-	public FieldFacet getFacetValues(FieldFacet fieldFacet,
-			QueryResponse response) {
-		if (response.getFacetFields() != null) {
-			for (FacetField facet : response.getFacetFields()) {
-				if (facet.getName().equals(fieldFacet.getFieldName())) {
-					for (Count value : facet.getValues()) {
-						fieldFacet.addValueElement(value.getName(),
-								(int) value.getCount());
-					}
-				}
-			}
-		}
-		return fieldFacet;
-	}
 }
