@@ -54,7 +54,6 @@ import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
-import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.UserService;
 
 @Component
