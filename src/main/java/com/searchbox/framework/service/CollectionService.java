@@ -20,6 +20,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
@@ -54,7 +58,21 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 		for(Collection collection:findAutoStartCollection()){
 			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
 				logger.info("Starting synchronization for \"" + collection.getName()+"\"");
-				((SynchronizedCollection)collection).synchronize();
+				try {
+					((SynchronizedCollection)collection).synchronize();
+				} catch (JobExecutionAlreadyRunningException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobRestartException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobInstanceAlreadyCompleteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobParametersInvalidException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		

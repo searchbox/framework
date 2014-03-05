@@ -47,31 +47,17 @@ public abstract class AbstractBatchCollection extends Collection implements
 	}
 
 	@Override
-	public void synchronize() {
+	public void synchronize() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
 		Job job = this.getJob();
 		JobParameters params = new JobParameters();
 		
 		JobExecution jobExecution;
 		
-		try {
 
 			jobExecution = launcher.run(job, params);
 			logger.info("JobExecution for pubmed: "
 					+ jobExecution.getExitStatus().getExitCode());
 
-		} catch (JobExecutionAlreadyRunningException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobRestartException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobInstanceAlreadyCompleteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobParametersInvalidException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
