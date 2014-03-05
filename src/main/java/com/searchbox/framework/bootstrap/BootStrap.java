@@ -127,112 +127,185 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		/** The base collection for searchbox */
 		LOGGER.info("++ Creating pubmed Collection");
-		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"pubmed");
+		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"oppfin");
 		collection.setAutoStart(true);
 		collection.setSearchEngine(engine);	
 		collection = collectionRepository.save(collection);
 		
-		/** SearchAll preset */
-		LOGGER.info("++ Creating Search All preset");
-		PresetDefinition preset = new PresetDefinition(collection);
-		preset.setAttributeValue("label","Search All");
-		preset.setSlug("all");
+		/**
+		 * - Search All
+			- Project Funding (Topics)
+			- Cooperations
+			- Funded projects (Mêmes données qu'avant, même layout)
+			
+			
+			
+			Search All
+			- Facets
+				- Programme (H2020, ...)
+				- Opportunity Type (docType)
+			- Hitlist
+				- Filtres: All but funded projects
+				- Pas besoin de mettre "Contact information"
+				- Normalement on a plus de mouse over
+				
+				
+			Project Funding (Topics)
+			- Facets
+				- Call Identifier
+				- Deadline (list of months)
+				- Flags
+				
+			- Hitlist
+				- Filtres: docType=topic & callDeadline >= NOW
+				- HitList
+					- Title
+					- Description
+					- Tags: callDeadline, callIdentifier, callBudget (à confirmer par Francesco)
+				- DetailView
+					- Title
+					- FullDescription (HTML si possible)
+					- Left panel
+						- Topic Identifier: topicIdentifier
+						- Call Identifier: callIdentifier
+						- Call Deadline: callDeadline (MMM DD, YYYY)
+						- Further information:
+							- Call (link CallIdentifier)
+							- Topic (link topicIdentifier)
+							
+			Cooperations (EEN connector / même layout, même template)
+				- Mettre crawler à jour et faire layout en fonction
+		 */
+		
+		
+		/**
+		 *  Topic preset 
+		 */
+		
+		/**
+		 * From the crawler
+		 * doc.addField("id", topicIdentifier );
+				doc.addField("title", (String)topicObject.get("title"));
+				doc.addField("descriptionRaw", topicDetailRaw );
+				doc.addField("descriptionHtml", topicDetailHtml );
+				doc.addField("docType", "Topic H2020");
+				doc.addField("programme", "H2020");
+				
+				doc.addField("tags", topicObject.get("tags").toString());
+				doc.addField("flags", topicObject.get("flags").toString());
+
+				doc.addField("callTitle", (String)topicObject.get("callTitle"));
+				doc.addField("callIdentifier", (String)topicObject.get("callIdentifier"));
+				doc.addField("callDeadline", (Long)topicObject.get("callDeadline"));
+				doc.addField("callStatus", (String)topicObject.get("callStatus"));
+		 */
+		LOGGER.info("++ Creating Topic preset");
+		PresetDefinition presetTopic = new PresetDefinition(collection);
+		presetTopic.setAttributeValue("label","Topic");
+		presetTopic.setSlug("topic");
 		
 		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
 		idFieldAttr.setAttributeValue("id",true);
-		preset.addFieldAttribute(idFieldAttr);
+		presetTopic.addFieldAttribute(idFieldAttr);
 		
-		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
+		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("title"));
 		fieldAttr.setAttributeValue("searchable",true);
 		fieldAttr.setAttributeValue("label", "title");
-		preset.addFieldAttribute(fieldAttr);
+		presetTopic.addFieldAttribute(fieldAttr);
 		
-		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
+		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("descriptionRaw"));
 		fieldAttr2.setAttributeValue("searchable",true);
-		preset.addFieldAttribute(fieldAttr2);
+		presetTopic.addFieldAttribute(fieldAttr2);
 		
 		/** Create & add a querydebug SearchComponent to the preset; */
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-		preset.addSearchElement(querydebug);
+		presetTopic.addSearchElement(querydebug);
 		
 		/** Create & add a query SearchComponent to the preset; */
 		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
-		preset.addSearchElement(query);
+		presetTopic.addSearchElement(query);
 
 		/** Create & add a TemplatedHitLIst SearchComponent to the preset; */
 		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
-		templatedHitList.setAttributeValue("titleField", "article-title");
+		templatedHitList.setAttributeValue("titleField", "title");
 		templatedHitList.setAttributeValue("idField", "id");
-		templatedHitList.setAttributeValue("urlField", "article-title");
-		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
-														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>" +
-														"<sbx:tagAttribute limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
+		templatedHitList.setAttributeValue("urlField", "title");
+		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
+														"<sbx:snippet value=\"${hit.fieldValues['descriptionRaw']}\"/>" +
+														"<sbx:tagAttribute limit=\"1\" label=\"Deadline\" values=\"${hit.fieldValues['callDeadline']}\"/>" +
+														"<sbx:tagAttribute limit=\"1\" label=\"Call\" values=\"${hit.fieldValues['callIdentifier']}\"/>"
 														);
-		preset.addSearchElement(templatedHitList);
+		presetTopic.addSearchElement(templatedHitList);
 
 		/** Create & add another TemplatedHitLIst SearchComponent to the preset; 
 		 * 	SearchElementType can be overriden
 		 */
 		SearchElementDefinition viewHit = new SearchElementDefinition(TemplatedHitList.class);
 		viewHit.setType(SearchElement.Type.INSPECT);
-		viewHit.setAttributeValue("titleField", "article-title");
+		viewHit.setAttributeValue("titleField", "title");
 		viewHit.setAttributeValue("idField", "id");
-		viewHit.setAttributeValue("urlField", "article-title");
-		viewHit.setAttributeValue("template", "Now we have a template dedicated to the view here...");
-		preset.addSearchElement(viewHit);
+		viewHit.setAttributeValue("urlField", "title");
+		viewHit.setAttributeValue("template", "Here we should display Title "+
+					"- FullDescription (HTML si possible)"+
+					"- Left panel"+
+					"	- Topic Identifier: topicIdentifier"+
+					"	- Call Identifier: callIdentifier"+
+					"	- Call Deadline: callDeadline (MMM DD, YYYY)"+
+					"	- Further information:"+
+					"		- Call (link CallIdentifier)"+
+					"		- Topic (link topicIdentifier)");
+		presetTopic.addSearchElement(viewHit);
 		
 		/** Create & add a FieldSort SearchComponent to the preset; */
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
 		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
 		sortFields.add(FieldSort.getRelevancySort());
-		sortFields.add(new FieldSort.Value("Latest Article", "article-completion-date", Sort.DESC));
-		sortFields.add(new FieldSort.Value("Latest Reviewed", "article-revision-date", Sort.DESC));
+		sortFields.add(new FieldSort.Value("Deadline DESC", "callDeadline", Sort.DESC));
+		sortFields.add(new FieldSort.Value("Deadline ASC", "callDeadline", Sort.ASC));
 		fieldSort.setAttributeValue("values", sortFields);
-		preset.addSearchElement(fieldSort);
+		presetTopic.addSearchElement(fieldSort);
 				
-		/** this is a simple hitlist with no templates	
-		Create & add a HitLIst SearchComponent to the preset;
-		SearchElementDefinition hitList = new SearchElementDefinition(HitList.class);
-		hitList.setAttributeValue("titleField", "article-title");
-		hitList.setAttributeValue("idField", "id");
-		hitList.setAttributeValue("urlField", "article-title");
-		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("article-abstract");
-		fields.add("author");
-		fields.add("publication-type");
-		fields.add("article-completion-date");
-		fields.add("article-revision-date");
-		hitList.setAttributeValue("fields", fields);
-		preset.addSearchElement(hitList);
-		*/
 		
 		/** Create & add a basicSearchStat SearchComponent to the preset;*/
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-		preset.addSearchElement(basicStatus);
+		presetTopic.addSearchElement(basicStatus);
 		
-		/** Create & add a facet to the preset. */
-		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet.setAttributeValue("fieldName", "publication-type");
-		fieldFacet.setLabel("Type");
-		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
-		fieldFacet.setAttributeValue("sort", Sort.DESC);
-		preset.addSearchElement(fieldFacet);
+		/** Create & add a facet to the presetTopic. */
+		SearchElementDefinition callFacet = new SearchElementDefinition(FieldFacet.class);
+		callFacet.setAttributeValue("fieldName", "callIdentifier");
+		callFacet.setLabel("Call");
+		callFacet.setAttributeValue("order", Order.BY_VALUE);
+		callFacet.setAttributeValue("sort", Sort.DESC);
+		presetTopic.addSearchElement(callFacet);
+		
+		/** Ideally this is a range facet. We agreed that for now it will be a list of months 
+		 *  For instance(March 14, April 14, May 14, June 14, ...) */
+		SearchElementDefinition deadlineFacet = new SearchElementDefinition(FieldFacet.class);
+		deadlineFacet.setAttributeValue("fieldName", "callDeadline");
+		deadlineFacet.setLabel("Deadline");
+		deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
+		deadlineFacet.setAttributeValue("sort", Sort.DESC);
+		presetTopic.addSearchElement(deadlineFacet);
+		
+		SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
+		flagFacet.setAttributeValue("fieldName", "flags");
+		flagFacet.setLabel("Flags");
+		flagFacet.setAttributeValue("order", Order.BY_VALUE);
+		flagFacet.setAttributeValue("sort", Sort.DESC);
+		presetTopic.addSearchElement(flagFacet);
 		
 		
 		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
-		preset.addSearchElement(pagination);
+		presetTopic.addSearchElement(pagination);
 		
-		searchbox.addPresetDefinition(preset);
+		searchbox.addPresetDefinition(presetTopic);
 		
-		PresetDefinition articles = new PresetDefinition(collection);
-		articles.setAttributeValue("label","Articles");
-		articles.setSlug("articles");
-		searchbox.addPresetDefinition(articles);
+		PresetDefinition topicsDef = new PresetDefinition(collection);
+		topicsDef.setAttributeValue("label","Topics");
+		topicsDef.setSlug("topics");
+		searchbox.addPresetDefinition(topicsDef);
 
-		PresetDefinition press = new PresetDefinition(collection);
-		press.setAttributeValue("label","Press");
-		press.setSlug("press");
-		searchbox.addPresetDefinition(press);
+		
 		
 		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
 		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
@@ -260,13 +333,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                  Welcome                         *");
 		LOGGER.info("****************************************************");
-		LOGGER.info("*                                                  *");
-		LOGGER.info("*   __                     _     _                 *");
-		LOGGER.info("*  / _\\ ___  __ _ _ __ ___| |__ | |__   _____  __  *");
-		LOGGER.info("*  \\ \\ / _ \\/ _` | '__/ __| '_ \\| '_ \\ / _ \\ \\/ /  *");
-		LOGGER.info("*  _\\ \\  __/ (_| | | | (__| | | | |_) | (_) >  <   *");
-		LOGGER.info("*  \\__/\\___|\\__,_|_|  \\___|_| |_|_.__/ \\___/_/\\_\\  *");
-		LOGGER.info("*                                                  *");
+		LOGGER.info("*                   OPPFIN                         *");
 		LOGGER.info("*                                                  *");
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                                                  *");
