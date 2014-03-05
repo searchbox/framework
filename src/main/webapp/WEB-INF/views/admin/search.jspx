@@ -209,7 +209,7 @@
 								<div class="row">
 									<h4>Field Attributes</h4>
 
-									<table id="fieldAttributes" class="table table-striped">
+									<table id="fieldAttributes" class="table table-striped tablesorter-bootstrap">
 										<thead>
 											<tr>
 												<th>key</th>
