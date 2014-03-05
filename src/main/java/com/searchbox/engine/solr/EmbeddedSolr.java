@@ -17,23 +17,22 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.SolrResponseBase;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.ContentStreamBase;
@@ -216,20 +215,88 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	public boolean updateForField(Field field, FieldAttribute fieldAttribute) {
 		
 		/** Get the translation for the field's key */
-		
+		Set<String> fieldNames = this.getKeyForField(field, fieldAttribute);
 		
 		
 		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
-		List<CopyField> copyFields = schema.getCopyFieldsList(field.getKey());
-		
-		
-		return false;
-	}
 
+		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
+			fieldNames.remove(copyField.getDestination().getName());
+		}
+
+		Map<String, Collection<String>> copyFields = new HashMap<String, Collection<String>>();
+		copyFields.put(field.getKey(), fieldNames);
+		schema.addCopyFields(copyFields);
+		
+		return true;
+	}
+	
+	private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
+	private static final String HIGHLIGHT_FIELD = "_txt";
+	private static final String SORTABLE_FIELD = "s";
+	
+	private static final String DATE_FIELD = "dt";
+	private static final String BOOLEAN_FIELD = "b";
+	private static final String INTEGER_FIELD = "i";
+	private static final String FLOAT_FIELD = "f";
+	private static final String DOUBLE_FIELD = "d";
+	private static final String LONG_FIELD = "l";
+	private static final String TEXT_FIELD = "";
+
+	private static final String SPELLCHECK_FIELD = "spell";
+	private static final String SUGGESTION_FIELD = "suggest";
+
+	
+	
 	@Override
-	public List<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
+		Set<String> fields = new TreeSet<String>();
+		String append = "";
+		String prepend = "_";
+		
+		
+		if(fieldAttribute.getSortable()){
+			append = SORTABLE_FIELD; 
+		} else {
+			prepend += "t";
+		}
+		
+		if(Boolean.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += BOOLEAN_FIELD;
+		} else if(Date.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += DATE_FIELD;
+		} else if(Integer.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += INTEGER_FIELD;
+		} else if(Float.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += FLOAT_FIELD;
+		} else if(Double.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += DOUBLE_FIELD;
+		} else if(Long.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend += LONG_FIELD;
+		} else if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			prepend = TEXT_FIELD;
+		}
+		
+		
+		if(fieldAttribute.getSearchable()){
+			fields.add(field.getKey()+SEARCHABLE_TEXT_NO_LANG_FIELD);
+		}
+		
+		if(fieldAttribute.getHighlight()){
+			fields.add(field.getKey()+HIGHLIGHT_FIELD);
+		}
+		
+		if(fieldAttribute.getSpelling()){
+			fields.add(SPELLCHECK_FIELD);
+		}
+		
+		if(fieldAttribute.getSuggestion()){
+			fields.add(SUGGESTION_FIELD);
+		}
+		
+		fields.add(field.getKey()+prepend+append);
+
+		return fields;
 	}
 
 	@Override

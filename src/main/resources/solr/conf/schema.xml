@@ -166,8 +166,8 @@
         
         NB: use of "*" dynamic fields will disable field type guessing and adding
         unknown fields to the schema. --> 
-    <!--dynamicField name="*" type="ignored" multiValued="true" /-->
-   
+    <dynamicField name="*" type="string" stored="true" indexed="true" multiValued="true" />
+
   </fields>
 
 
