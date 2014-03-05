@@ -25,9 +25,13 @@
   <spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
   <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
 
-	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+  <spring:url value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css" var="social_buttons_css" />
+
+
+  <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
+  <link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
 

@@ -27,24 +27,42 @@
 		<jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
 		<div id="main-content" role="main">
-		
+
 			<div class="row" id="main-search-content">
 
-				<div class="row" id="column-top">
+				<div class="row" id="search-bar">
 
-					<div class="col-md-3 col-left">
+					<div class="col-md-3 col-sm-5 col-left">
 
 						<div class="media">
 							<a class="pull-left" href="#"> <spring:url
 									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
 								src='${searchbox_logo}' class="media-object" alt="Searchbox"
-								id="logo-image" width="260px" />
+								id="logo-image" />
 							</a>
 						</div>
 					</div>
 
-					<div class="col-md-6">
-					 <jsp:include page="/WEB-INF/views/login.jspx" />
+					<div class="clearfix visible-xs" style="margin-bottom: 10px">
+						<!-- clear -->
+					</div>
+
+					<div class="col-md-7 col-sm-7">
+					<h1>Welcome to your searchbox</h1>
+					</div>
+				</div>
+				
+				<div class="row" id="info">
+				
+          <div class="col-md-4">
+					  <div class="panel panel-default"
+		          id="admin_${element.getClass().getSimpleName()}">
+		          <div class="panel-heading">Server Information</div>
+		          <div class="panel-body">Some stats go here...</div>
+	          </div>
+          </div>
+          <div class="col-md-6">
+            <jsp:include page="/WEB-INF/views/login.jspx"/>
           </div>
 				</div>
 
@@ -74,17 +92,18 @@
 												<td>${item.count }</td>
 												<td>${searchbox.name }</td>
 												<td>${searchbox.alias }</td>
-												<spring:url value="/${searchbox.slug }/search" var="searchboxUrl"/>
+												<spring:url value="/${searchbox.slug }/search"
+													var="searchboxUrl" />
 												<td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
 												<td></td>
 												<td>
-												<div class="btn-group btn-group-sm">
-                <spring:url var="adminUrl"
-                  value="/${searchbox.slug }/admin" />
-                <a href="${adminUrl }" class="btn btn-default">
-                  <span class="glyphicon glyphicon-cog"></span>
-                </a>
-												</div>
+													<div class="btn-group btn-group-sm">
+														<spring:url var="adminUrl"
+															value="/${searchbox.slug }/admin" />
+														<a href="${adminUrl }" class="btn btn-default"> <span
+															class="glyphicon glyphicon-cog"></span>
+														</a>
+													</div>
 												</td>
 											</tr>
 										</c:forEach>
@@ -173,7 +192,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+		</div>
 </body>
 	</html>
 </jsp:root>

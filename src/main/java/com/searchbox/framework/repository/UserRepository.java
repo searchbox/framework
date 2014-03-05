@@ -21,5 +21,5 @@ import com.searchbox.framework.domain.User;
 
 public interface UserRepository extends CrudRepository<User, Long>{
 	
-	public User getUserByUsername(String username);
+	public User findByEmail(String email);
 }

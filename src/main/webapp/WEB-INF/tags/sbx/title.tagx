@@ -8,10 +8,24 @@
 
 
 	<jsp:directive.attribute name="hit"
-		type="com.searchbox.core.search.result.Hit" required="true"
-		rtexprvalue="true" description="element to display" />
-	
-    <a href="http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}">
-      <h5 class="result-title">${hit.getTitle()}</h5>
-    </a>
+		type="com.searchbox.core.search.result.Hit" required="true" rtexprvalue="true" description="element to display" />
+	<jsp:directive.attribute name="link"
+      type="String" required="false" rtexprvalue="true" description="element to display" />
+    
+    <h5 class="result-title">
+    
+      <c:choose>
+        <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
+          <c:when test="${not empty link}">
+            <a target="_blank" href="${link}">${hit.getTitle()}</a>
+          </c:when>
+          <c:when test="${not empty hit.getId()}">
+            <spring:url var="hitUrl" value="/${searchbox.getSlug() }/view/${preset.getSlug()}/?ff=id[${hit.getId()}]"/>
+            <a href="${hitUrl}">${hit.getTitle()}</a>
+          </c:when>
+          <c:otherwise>
+            ${hit.getTitle()}
+          </c:otherwise>                
+     </c:choose>
+    </h5>
 </jsp:root>

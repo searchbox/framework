@@ -20,6 +20,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
+import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 
 @Entity
@@ -60,7 +61,8 @@ public class FieldAttributeDefinition extends UnknownClassDefinition implements 
 	@Override
 	public FieldAttribute getInstance() {
 		FieldAttribute attribute = (FieldAttribute) super.toObject();
-		attribute.setKey(this.field.getKey());
+		attribute.setField(new Field(this.field.getClazz(), this.field.getKey()));
+//		attribute.setKey(this.field.getKey());
 		return attribute;
 	}
 }

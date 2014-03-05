@@ -17,23 +17,19 @@ package com.searchbox.core.engine;
 
 import java.util.List;
 
-import javax.persistence.MappedSuperclass;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
-@MappedSuperclass
 public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
-	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(AbstractSearchEngine.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchEngine.class);
 	
 	@Autowired
 	private ApplicationContext context;
@@ -44,9 +40,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
 	protected Class<Q> queryClass;
 	protected Class<R> responseClass;
-	
-	private Boolean isLoaded = false;
-	
+		
 	protected AbstractSearchEngine(Class<Q> queryClass, Class<R> responseClass){
 		this.queryClass = queryClass;
 		this.responseClass = responseClass;
@@ -58,13 +52,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 		this.responseClass = responseClass;
 	}
 	
-	protected abstract boolean _load();
-	
-	public boolean load(){
-		boolean loaded = _load();
-		this.isLoaded = true;
-		return loaded;
-	}
+	public abstract void init();
 	
 	@Override
 	public Class<Q> getQueryClass() {
@@ -77,24 +65,11 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	}
 	
 	@Override
-	public Boolean isLoaded(){
-		return this.isLoaded;
-	}
-	
-	protected void lodaed(){
-		this.isLoaded = true;
-	}
-	
-	@Override
 	public Q newQuery(){
 		try {
 			return queryClass.newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.error("Could not create new Query Object for searchEngine",e);
 		}
 		return null;
 	}
@@ -111,7 +86,7 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	}
 	
 	@Override
-	public Boolean supportsCondition(SearchCondition condition) {
+	public Boolean supportsCondition(AbstractSearchCondition condition) {
 		// TODO Auto-generated method stub
 		return true;
 	}

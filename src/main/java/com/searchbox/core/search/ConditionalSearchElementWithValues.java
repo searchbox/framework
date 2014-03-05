@@ -15,8 +15,10 @@
  ******************************************************************************/
 package com.searchbox.core.search;
 
+import com.searchbox.core.SearchCondition;
 
-public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends SearchCondition> 
+
+public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends AbstractSearchCondition> 
 		extends SearchElementWithValues<K>
 		implements GenerateSearchCondition<T>, SearchConditionToElementMerger {
 
@@ -31,5 +33,16 @@ public abstract class ConditionalSearchElementWithValues<K extends ValueElement,
 	@Override
 	public abstract T getSearchCondition();
 
-	public abstract void mergeSearchCondition(SearchCondition condition);
+	public abstract void mergeSearchCondition(AbstractSearchCondition condition);
+	
+	public abstract Class<?> getConditionClass();
+	
+	public String getUrlParam() {
+		Class<?> clazz = this.getConditionClass();
+		if(clazz.isAnnotationPresent(SearchCondition.class)){
+			return clazz.getAnnotation(SearchCondition.class).urlParam();
+		} else {
+			return "missingAnnotationOnSearchConditionClass";
+		}
+	}
 }

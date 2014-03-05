@@ -27,8 +27,8 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.GenerateSearchCondition;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
@@ -36,7 +36,7 @@ import com.searchbox.core.search.debug.SearchError;
 @Service
 public class SearchService {
 
-	private static Logger logger = LoggerFactory.getLogger(SearchService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
 	@Autowired
 	private SearchAdapterService adapterService;
@@ -50,11 +50,11 @@ public class SearchService {
 	public Set<SearchElement> execute(SearchEngine searchEngine, 
 			Set<SearchElement> searchElements,
 			Set<FieldAttribute> fieldAttributes,
-			Set<SearchCondition> conditions) {
+			Set<AbstractSearchCondition> conditions) {
 
 		Object query = searchEngine.newQuery();
 
-		Set<SearchCondition> presetConditions = new TreeSet<SearchCondition>();
+		Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
 		// Weave in all SearchElement in Query
 		adapterService.doPreSearchAdapt(searchEngine, null, query, fieldAttributes, searchElements);
@@ -62,45 +62,46 @@ public class SearchService {
 		for (SearchElement element : searchElements) {
 			if (element.getClass().isAssignableFrom(
 					GenerateSearchCondition.class)) {
-				logger.debug("This is a filter right here.");
+				LOGGER.debug("This is a filter right here.");
 				presetConditions.add(((GenerateSearchCondition<?>) element)
 						.getSearchCondition());
 			}
 		}
 
 		// Weave in all UI Conditions in query
-		logger.debug("Adapting condition from UI: " + conditions);
-		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+		LOGGER.debug("Adapting condition from UI: " + conditions);
+		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
 				fieldAttributes, conditions, searchElements);
 
 		// Weave in all presetConditions in query
-		logger.debug("Adapting condition from Preset: " + presetConditions);
-		adapterService.doPreSearchAdapt(searchEngine, SearchCondition.class, query, 
+		LOGGER.debug("Adapting condition from Preset: " + presetConditions);
+		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
 			fieldAttributes, presetConditions, searchElements);
 	
 
 		// Executing the query on the search engine!!!
 		Object result = null;
 		try {
-			logger.debug("Using: " + searchEngine);
+			LOGGER.debug("Using: " + searchEngine);
 			result = reflectionExecute(searchEngine, query);
 		} catch (Exception e) {
 			SearchElement error = new SearchError(e.getMessage(), e);
 			error.setPosition(100000);
-			logger.debug("Adding search element: " + error);
+			LOGGER.debug("Adding search element: " + error);
 			searchElements.add(error);
-			logger.error("Could not use searchEngine!!!", e);
+			LOGGER.error("Could not use searchEngine!!!", e);
 		}
 
 		// Weave in SearchResponse to element
-		adapterService.doPostSearchAdapt(searchEngine, result.getClass(), query, 
+		Class<?> resultClass =  result.getClass();
+		adapterService.doPostSearchAdapt(searchEngine, resultClass, query, 
 				fieldAttributes, conditions, presetConditions, result, searchElements);
 		
 		// Executing a merge on all SearchConditions
 		for (SearchElement element : searchElements) {
 			if (SearchConditionToElementMerger.class.isAssignableFrom(element
 					.getClass())) {
-				for (SearchCondition condition : conditions) {
+				for (AbstractSearchCondition condition : conditions) {
 					if (condition != null) {
 						((SearchConditionToElementMerger) element)
 								.mergeSearchCondition(condition);
@@ -109,17 +110,16 @@ public class SearchService {
 			}
 		}
 
-		logger.debug("we got: " + searchElements.size() + " elements");
+		LOGGER.debug("we got: " + searchElements.size() + " elements");
 
 		return searchElements;
 	}
 
 	private Object reflectionExecute(final SearchEngine<?, ?> engine,
-			final Object query) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			final Object query) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException {
 		Method execute = engine.getClass().getMethod("execute",
 				engine.getQueryClass());
-		Object result = execute.invoke(engine, query);
-		return result;
+		return execute.invoke(engine, query);
 	}
 }

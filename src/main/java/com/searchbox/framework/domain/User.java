@@ -15,9 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,14 +28,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
 
-import com.searchbox.framework.domain.UserRole.Role;
+import com.searchbox.framework.web.user.SocialMediaService;
 
 
 @Entity
-public class User implements UserDetails{
+public class User implements SocialUserDetails, UserDetails {
 
 	/**
 	 * 
@@ -51,29 +56,37 @@ public class User implements UserDetails{
 	private long version;
 	
 	@Column(nullable=false, unique=true)
-	private String username;
+	private String email;
 	
 	private String password;
+
+	private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+	    
+	private SocialMediaService SignInProvider;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private Map<Searchbox, UserRole> roles;
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="user")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	List<UserRole> roles = new ArrayList<UserRole>();
+	//private Map<Searchbox, UserRole> roles = new HashMap<Searchbox,UserRole>();
+
+
 	public User(){
-		roles = new HashMap<Searchbox,UserRole>();
-	}
-
-	public User(String username, String password){
-		this.username = username;
+	}	
+	
+	public User(String email, String password){
+		this.email = email;
 		this.password = password;
-		roles = new HashMap<Searchbox,UserRole>();
 	}
 	
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -84,37 +97,82 @@ public class User implements UserDetails{
 		this.password = password;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public List<UserRole> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<UserRole> roles) {
+		this.roles = roles;
+	}
+
+	public SocialMediaService getSignInProvider() {
+		return SignInProvider;
+	}
+
+	public void setSignInProvider(SocialMediaService signInProvider) {
+		SignInProvider = signInProvider;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.roles;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+	
+	public String setUsername() {
+		return this.email;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.accountNonExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return this.accountNonLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return this.credentialsNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.enabled;
 	}
 
-	public void addRole(Searchbox searchbox, Role role) {
-		this.roles.put(searchbox, new UserRole(this, role));
-	}	
+	@Override
+	public String getUserId() {
+		return getUsername();
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this,
+				ToStringStyle.SHORT_PREFIX_STYLE);
+	}
 }

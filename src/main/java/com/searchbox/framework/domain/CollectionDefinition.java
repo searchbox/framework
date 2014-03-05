@@ -15,7 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,27 +27,57 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Field;
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class CollectionDefinition extends UnknownClassDefinition implements ElementFactory<Collection> {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class CollectionDefinition extends UnknownClassDefinition implements
+		ElementFactory<Collection> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionDefinition.class);
 
 	@ManyToOne
 	private SearchEngineDefinition searchEngine;
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
-	
+
+	protected String name;
+
+	protected Boolean autoStart = false;
+
 	public CollectionDefinition() {
 		super();
 	}
-	
-	public CollectionDefinition(String name, SearchEngineDefinition definition) {
-		super();
-		this.searchEngine = definition;
+
+	@SuppressWarnings("unchecked")
+	public CollectionDefinition(Class<?> clazz, String name) {
+		super(clazz);
+		this.name = name;
+		try {
+			Method method = clazz.getMethod("GET_FIELDS");
+			if (method != null) {
+				List<Field> fields = (List<Field>)method.invoke(null);
+				for(Field field:fields){
+					FieldDefinition fieldDef = new FieldDefinition(field.getClazz(), field.getKey());
+					if(!this.fieldDefinitions.contains(fieldDef)){
+						this.fieldDefinitions.add(fieldDef);
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.warn("Could not use GET_FIELD method on collection: " + name,e);
+		}
+
 	}
-	
+
 	public SearchEngineDefinition getSearchEngine() {
 		return searchEngine;
 	}
@@ -70,18 +102,40 @@ public class CollectionDefinition extends UnknownClassDefinition implements Elem
 		this.fieldDefinitions = fieldDefinitions;
 	}
 
-	public FieldDefinition getFieldDefinition(String key){
-		for(FieldDefinition def:this.fieldDefinitions){
-			if(def.getKey().equals(key)){
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getAutoStart() {
+		return autoStart;
+	}
+
+	public void setAutoStart(Boolean autoStart) {
+		this.autoStart = autoStart;
+	}
+
+	public FieldDefinition getFieldDefinition(String key) {
+		for (FieldDefinition def : this.fieldDefinitions) {
+			if (def.getKey().equals(key)) {
 				return def;
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Collection getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		Collection collection = (Collection) super.toObject();
+		collection.setName(this.getName());
+		for (FieldDefinition fieldDef : this.fieldDefinitions) {
+			collection.getFields().add(
+					new Field(fieldDef.getClazz(), fieldDef.getKey()));
+		}
+		collection.setSearchEngine(searchEngine.getInstance());
+		return collection;
 	}
 }

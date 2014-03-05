@@ -15,20 +15,32 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
-import javax.persistence.MappedSuperclass;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@MappedSuperclass
+import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.engine.SearchEngine;
+
 public class Collection {
 
 	/**
      */
+	@SearchAttribute
 	protected String name;
 	
+	@SearchAttribute
 	protected String description;
-
+	
+	protected List<Field> fields = new ArrayList<Field>();
+	
+	@SearchAttribute
+	protected SearchEngine<?, ?> searchEngine;
+	
+	public Collection(){}
+	
 	public Collection(String name) {
 		this.name = name;
 	}
@@ -44,4 +56,28 @@ public class Collection {
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
+	}
+	
+	public SearchEngine<?, ?> getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+		this.searchEngine = searchEngine;
+	}
 }

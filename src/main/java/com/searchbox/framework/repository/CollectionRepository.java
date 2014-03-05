@@ -15,10 +15,14 @@
  ******************************************************************************/
 package com.searchbox.framework.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.framework.domain.CollectionDefinition;
 
 public interface CollectionRepository extends CrudRepository<CollectionDefinition, Long> {
+	
+	public List<CollectionDefinition> findAllByAutoStart(Boolean autoStart); 
 
 }

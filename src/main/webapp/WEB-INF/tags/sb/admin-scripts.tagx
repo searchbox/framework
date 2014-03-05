@@ -13,8 +13,24 @@
 	<spring:url
 		value="http://cdnjs.cloudflare.com/ajax/libs/x-editable/${xeditableVersion }/bootstrap3-editable/js/bootstrap-editable.min.js"
 		var="xeditable_js_url" />
+  <spring:url
+    value="http://ifightcrime.github.io/bootstrap-growl/jquery.bootstrap-growl.min.js"
+    var="bootstrap_growl_js_url" />
+  <spring:url
+    value="http://mottie.github.io/tablesorter/js/jquery.tablesorter.js"
+    var="tablesorter_js_url" />
+   <spring:url
+    value="http://mottie.github.io/tablesorter/css/theme.bootstrap.css"
+    var="tablesorter_css_url" />
+    
+    
 	
-	 <link rel="stylesheet" type="text/css" href="${xeditable_css_url}" />	
-	<script src="${xeditable_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+   <link rel="stylesheet" type="text/css" href="${xeditable_css_url}" />  
+   <link rel="stylesheet" type="text/css" href="${tablesorter_css_url}" />
+     
+  <script src="${xeditable_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${bootstrap_growl_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${tablesorter_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
 
 </jsp:root>

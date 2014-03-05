@@ -15,36 +15,51 @@
  ******************************************************************************/
 package com.searchbox.framework.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.collection.PubmedCollection;
-import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.framework.event.EngineReadyEvent;
+import com.searchbox.collection.SynchronizedCollection;
+import com.searchbox.core.dm.Collection;
+import com.searchbox.framework.domain.CollectionDefinition;
+import com.searchbox.framework.event.SearchboxReady;
+import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
-public class CollectionService implements ApplicationListener<EngineReadyEvent> {
+public class CollectionService implements ApplicationListener<SearchboxReady> {
 	
-	private static Logger logger = LoggerFactory.getLogger(CollectionService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionService.class);
 
 	@Autowired
-	AutowireCapableBeanFactory factory;
+	CollectionRepository repository;
+	
+	public List<Collection> findAutoStartCollection(){
+		List<Collection> collections = new ArrayList<Collection>();
+		for(CollectionDefinition collDef:repository.findAllByAutoStart(true)){
+			collections.add(collDef.getInstance());
+		}
+		return collections;
+	}
 	
 	@Override
-	public void onApplicationEvent(EngineReadyEvent event) {
-		// TODO here we have to get the collection of the engine
-		// and update their fields :)
+	public void onApplicationEvent(SearchboxReady event) {
 		
-		SearchEngine<?, ?> engine = (SearchEngine<?, ?>)event.getSource();
-		logger.info("SearchEngine " + engine.getName() + " is ready for some action!!!");
+		LOGGER.info("Searchbox is ready. Loading autoStart collections");
 		
-		
-		PubmedCollection pubmecCollection = factory.createBean(PubmedCollection.class);
-		pubmecCollection.importCollection();
-		
+		for(Collection collection:findAutoStartCollection()){
+			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
+				LOGGER.info("Starting synchronization for \"" + collection.getName()+"\"");
+				try {
+					((SynchronizedCollection)collection).synchronize();
+				} catch (Exception e) {
+					LOGGER.error("Could not synchronize collection: " + collection.getName(),e);
+				}
+			}
+		}		
 	}
 }

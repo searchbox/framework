@@ -3,7 +3,6 @@
 /*************************************************************/
 /* Theme and layout related stuff */
 /*************************************************************/
-
 .btn-black,.btn-black:hover {
   color: #fff;
   background-color: black;
@@ -14,8 +13,8 @@
   font-weight: bold;
 }
 
-.dropdown-menu{
-  z-index:1002;
+.dropdown-menu {
+  z-index: 1002;
 }
 
 /** General style - layout related **/
@@ -35,7 +34,7 @@ body,html {
 }
 
 body #main-content {
-  padding:0px 30px 0 30px;
+  padding: 0px 30px 0 30px;
 }
 
 /*************************************************************/
@@ -68,33 +67,34 @@ body #main-content {
 /*************************************************************/
 
 /**  Top navbar **/
-#navbar-top-container{
+#navbar-top-container {
   padding: 0 15px 0px 15px;
-  background-color:black;
+  background-color: black;
 }
 
-#navbar-top-container .navbar-toggle{
-  margin-top:4px;
-  margin-bottom:4px;
-  border:none;
+#navbar-top-container .navbar-toggle {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: none;
 }
 
-#navbar-top-container>.navbar-header, #navbar-top-container>.navbar-collapse {
+#navbar-top-container>.navbar-header,#navbar-top-container>.navbar-collapse
+  {
   margin-right: -15px;
   margin-left: -15px;
-  padding:0 15px 0 15px;
+  padding: 0 15px 0 15px;
 }
 
 #navbar-top {
   border-bottom: 5px solid #1EBBC0;
-  height: auto!important;
+  height: auto !important;
   background-image: none;
   margin-bottom: 0px;
   position: relative;
 }
 
 .nav-collapse.collapse.in {
-height: auto !important;
+  height: auto !important;
 }
 
 .navbar-nav>li>a {
@@ -114,11 +114,14 @@ height: auto !important;
   box-shadow: none;
 }
 
-.navbar-collapse.in #preset-bar li.active a, .navbar-collapse.collapsing #preset-bar li.active a{
-  background-color:gray;
+.navbar-collapse.in #preset-bar li.active a,.navbar-collapse.collapsing #preset-bar li.active a
+  {
+  background-color: gray;
 }
-.navbar-collapse.in #preset-bar li.active>a:after, .navbar-collapse.collapsing #preset-bar li.active>a:after{
-  display:none;
+
+.navbar-collapse.in #preset-bar li.active>a:after,.navbar-collapse.collapsing #preset-bar li.active>a:after
+  {
+  display: none;
 }
 
 #preset-bar a {
@@ -149,7 +152,7 @@ input:focus,textarea:focus {
   border-color: rgba(30, 187, 192, 0.8) !important;
 }
 
-#search-bar .search-query, #search-bar .btn-search {
+#search-bar .search-query,#search-bar .btn-search {
   height: 44px;
 }
 
@@ -180,7 +183,7 @@ input:focus,textarea:focus {
 #search-bar #logo-wrapper {
   width: 270px;
   margin-right: 25px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 #search-bar #search-field {
@@ -188,7 +191,7 @@ input:focus,textarea:focus {
   min-height: 42px;
   font-size: 20px;
   margin-right: 8px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   min-width: 60%;
   border-radius: 3px;
   padding-right: 35px;
@@ -238,11 +241,13 @@ a.clear_input:hover {
 /*************************************************************/
 #search-status-bar {
   float: left;
-  width:100%;
-  margin-top:5px;
-  min-height:33px;
-  padding-bottom:10px;
-  padding-left:15px;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  min-height: 33px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  min-height: 33px;
 }
 
 #search-status-bar .status-text {
@@ -250,21 +255,21 @@ a.clear_input:hover {
   font-size: 12px;
 }
 
-#search-status-bar h4{
-  margin:0;
+#search-status-bar h4 {
+  margin: 0;
 }
 
-#search-status-bar span.label{
+#search-status-bar span.label {
   padding: 5px 14px;
   margin-right: 10px;
 }
 
-#search-status-bar #sort-combo{
-  float:right;
+#search-status-bar #sort-combo {
+  float: right;
 }
 
-#search-status-bar .sort-col{
-  padding-right:0;
+#search-status-bar .sort-col {
+  padding-right: 0;
 }
 
 #status {
@@ -281,8 +286,8 @@ a.clear_input:hover {
 /*************************************************************/
 
 /*******************     CSS Checkbox      *******************/
-#main-col-left{
-  z-index:1000;
+#main-col-left {
+  z-index: 1000;
 }
 
 #main-col-left h3.panel-title {
@@ -350,9 +355,120 @@ a.clear_input:hover {
 /*************************************************************/
 /*                          Results                          */
 /*************************************************************/
-#main-col-center h5{
-  margin-top:0;
+#main-col-center h5 {
+  margin-top: 0;
 }
+
+#result-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#result-list li .result-title {
+  margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#result-list li {
+  margin-bottom: 15px;
+}
+
+#result-list .label {
+  margin-right: 10px;
+}
+
+/*************************************************************/
+/*                    BasicPagination                        */
+/*************************************************************/
+#basic-pagination {
+  text-align: center;
+  margin-bottom: 40px;
+  float: none;
+  margin-top: 40px;
+}
+
+#basic-pagination a,#basic-pagination span {
+  margin: 0px 4px 0 4px;
+  border: none;
+  color: #333;
+  display: inline-block;
+  line-height: 18px;
+  position: relative;
+  float: none;
+  padding: 5px 11px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px
+}
+
+#basic-pagination a:hover {
+  text-decoration: none
+}
+
+#basic-pagination .prevLink,#basic-pagination .nextLink,#basic-pagination a:hover
+  {
+  background: #1B1B1B;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+#basic-pagination .currentStep {
+  border: none;
+  background-color: #1B1B1B;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#basic-pagination .prevLink {
+  margin: 0 4px 4px 0;
+}
+
+#basic-pagination.nextLink {
+  margin: 4px 0 0 4px;
+}
+
+#basic-pagination .prevLink::after {
+  border-right: 14px solid #1B1B1B;
+  right: 98%;
+}
+
+#basic-pagination .nextLink::after {
+  border-left: 14px solid #1B1B1B;
+  left: 98%;
+}
+
+#basic-pagination .prevLink::after,#basic-pagination .nextLink::after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  position: absolute;
+  top: 50%;
+  margin-top: -13px;
+  z-index: 2;
+}
+
+@media ( min-width : 768px) {
+  #basic-pagination a, #basic-pagination span {
+    padding: 5px 11px;
+  }
+  #basic-pagination .gap{
+    display:inline-block;
+  }
+}
+
+@media ( max-width : 768px) {
+  #basic-pagination a, #basic-pagination span {
+    padding: 5px 5px;
+  }
+  #basic-pagination .gap{
+    display:none;
+  }
+}
+
 /*************************************************************/
 /*                           Footer                          */
 /*************************************************************/
@@ -362,13 +478,13 @@ a.clear_input:hover {
 }
 
 /** Making the footer always appear at the bottom of the page **/
-#main-search-content{
-  padding-bottom:80px;
+#main-search-content {
+  padding-bottom: 80px;
 }
 
 #wrap {
-	min-height:100%;
-	position:relative;
+  min-height: 100%;
+  position: relative;
 }
 
 #footer {
@@ -394,18 +510,15 @@ div.resultrow {
 /*************************************************************/
 /*                    Debug utilities                        */
 /*************************************************************/
-.debug-wrapper{
+.debug-wrapper {
   border: dashed 1px aqua;
-  display: inherit; 
+  display: inherit;
   padding: 2px;
   background-color: lightcyan;
 }
 
 .popover {
-    max-width: 850px;
-    width: auto;
-    z-index:2000;
+  max-width: 850px;
+  width: auto;
+  z-index: 2000;
 }
-
-
-

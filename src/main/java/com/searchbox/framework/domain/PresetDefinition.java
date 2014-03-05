@@ -24,10 +24,13 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 
@@ -36,33 +39,39 @@ import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.HitList;
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class PresetDefinition extends UnknownClassDefinition implements ElementFactory<Preset>{
-	
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class PresetDefinition extends UnknownClassDefinition implements
+		ElementFactory<Preset> {
+
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PresetDefinition.class);
+
 	@ManyToOne
 	private Searchbox searchbox;
 
 	@ManyToOne
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private CollectionDefinition collection;
-	
-	@OneToMany(mappedBy="preset", cascade=CascadeType.ALL)
+
+	@OneToMany(mappedBy = "preset", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Order
 	private Set<SearchElementDefinition> searchElements;
-	
+
 	private String slug;
-	
+
 	private String label;
-	
+
 	private String description;
-	
+
 	private Integer position;
-	
-	@OneToMany(targetEntity=FieldAttributeDefinition.class, cascade=CascadeType.ALL)
+
+	@OneToMany(targetEntity = FieldAttributeDefinition.class, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<FieldAttributeDefinition> fieldAttributes;
-	
-	public PresetDefinition(){
+
+	public PresetDefinition() {
 		super(Preset.class);
 		searchElements = new HashSet<SearchElementDefinition>();
 		fieldAttributes = new HashSet<FieldAttributeDefinition>();
@@ -72,7 +81,16 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
 		super(Preset.class);
 		this.collection = collection;
 		searchElements = new HashSet<SearchElementDefinition>();
-		fieldAttributes = new HashSet<FieldAttributeDefinition>(); 
+		fieldAttributes = new HashSet<FieldAttributeDefinition>();
+	}
+
+	@PostLoad
+	public void postLoad() {
+		for (FieldDefinition fieldDef : collection.getFieldDefinitions()) {
+			if (this.getFieldAttributeByField(fieldDef) == null) {
+				this.addFieldAttribute(new FieldAttributeDefinition(fieldDef));
+			}
+		}
 	}
 
 	public Searchbox getSearchbox() {
@@ -103,8 +121,7 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
 		return fieldAttributes;
 	}
 
-	public void setFieldAttributes(
-			Set<FieldAttributeDefinition> fieldAttributes) {
+	public void setFieldAttributes(Set<FieldAttributeDefinition> fieldAttributes) {
 		this.fieldAttributes = fieldAttributes;
 	}
 
@@ -142,73 +159,77 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
 
 	public void addSearchElement(SearchElementDefinition definition) {
 		definition.setPreset(this);
-		definition.setPosition(this.searchElements.size()+1);
+		definition.setPosition(this.searchElements.size() + 1);
 		this.searchElements.add(definition);
-		
+
 	}
-	
+
 	public void addFieldAttribute(FieldAttributeDefinition definition) {
 		boolean exists = false;
-		for(FieldAttributeDefinition attr:fieldAttributes){
-			if(attr.getField().equals(definition)){
+		for (FieldAttributeDefinition attr : fieldAttributes) {
+			if (attr.getField().equals(definition.getField())) {
 				BeanUtils.copyProperties(definition, attr);
 				exists = true;
 			}
 		}
-		if(!exists){
+		if (!exists) {
 			definition.setPreset(this);
 			this.fieldAttributes.add(definition);
 		}
 	}
-	
-	public FieldAttributeDefinition getFieldAttributeByKey(String key){
-		for(FieldAttributeDefinition adef:this.fieldAttributes){
-			if(adef.getField().getKey().equals(key)){
+
+	public FieldAttributeDefinition getFieldAttributeByKey(String key) {
+		for (FieldAttributeDefinition adef : this.fieldAttributes) {
+			if (adef.getField().getKey().equals(key)) {
 				return adef;
 			}
 		}
 		return null;
 	}
-	
-	public FieldAttributeDefinition getFieldAttributeByField(FieldDefinition field){
-		for(FieldAttributeDefinition adef:this.fieldAttributes){
-			if(adef.getField().equals(field)){
+
+	public FieldAttributeDefinition getFieldAttributeByField(
+			FieldDefinition field) {
+		for (FieldAttributeDefinition adef : this.fieldAttributes) {
+			if (adef.getField().equals(field)) {
 				return adef;
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setClazz(Class<?> clazz){
+	public void setClazz(Class<?> clazz) {
 		super.setClazz(Preset.class);
 	}
 
-	public static PresetDefinition BasicPreset(Searchbox sb, CollectionDefinition collection){
+	public static PresetDefinition BasicPreset(Searchbox sb,
+			CollectionDefinition collection) {
 		PresetDefinition pdef = new PresetDefinition(collection);
 		pdef.setSlug("all");
 		pdef.setAttributeValue("label", "Basic Preset");
-		
-		SearchElementDefinition query = new SearchElementDefinition("EdismaxQuery", EdismaxQuery.class);
+
+		SearchElementDefinition query = new SearchElementDefinition(
+				"EdismaxQuery", EdismaxQuery.class);
 		pdef.addSearchElement(query);
-		
-		SearchElementDefinition result = new SearchElementDefinition("HitList", HitList.class);
+
+		SearchElementDefinition result = new SearchElementDefinition("HitList",
+				HitList.class);
 		pdef.addSearchElement(result);
-		
+
 		return pdef;
 	}
-	
+
 	@PrePersist
-	public void checkPresetAttributes(){
-		//THis is for a SearchEngine Managed Collection!!!
-		for(FieldDefinition fdef:collection.getFieldDefinitions()){
+	public void checkPresetAttributes() {
+		// THis is for a SearchEngine Managed Collection!!!
+		for (FieldDefinition fdef : collection.getFieldDefinitions()) {
 			boolean exists = false;
-			for(FieldAttributeDefinition attr:fieldAttributes){
-				if(attr.getField().equals(fdef)){
+			for (FieldAttributeDefinition attr : fieldAttributes) {
+				if (attr.getField().equals(fdef)) {
 					exists = true;
 				}
 			}
-			if(!exists){
+			if (!exists) {
 				this.addFieldAttribute(new FieldAttributeDefinition(fdef));
 			}
 		}
@@ -216,50 +237,54 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
 
 	// TODO put that in a JUNIT
 	public static void main(String... args) {
-		
-		Searchbox sb = new Searchbox("test","testing");
+
+		Searchbox sb = new Searchbox("test", "testing");
 		sb.setSlug("pubmed");
-		
-//		//The base collection for searchbox
-//		CollectionDefinition collection = new CollectionDefinition("testCollection");
-//		collection.setName("pubmed");
-//		ArrayList<FieldDefinition> collectionFields = new ArrayList<FieldDefinition>();
-//		collectionFields.add(FieldDefinition.StringFieldDef("id"));
-//		collectionFields.add(FieldDefinition.StringFieldDef("title"));
-//		collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
-//		collection.setFieldDefinitions(collectionFields);
-//
-//		PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
-//
-//		pdef.slug = "search-all";
-//		pdef.label = "Hello World";
-//		
-//		SearchElementDefinition fdef = new SearchElementDefinition("FieldFacet", FieldFacet.class);
-//		fdef.setAttributeValue("fieldName", "MyField");
-//		fdef.setAttributeValue("label", "Categories");
-//		pdef.addSearchElementDeifinition(fdef);
-//		
-//		PresetFieldAttributeDefinition fieldAttr = new PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
-//		fieldAttr.setSearchable(true);
-//		pdef.addFieldAttributeDefinition(fieldAttr);
-		
-//		Preset elem = pdef.getElement();
-//		System.out.println("Preset label: " + elem.getLabel());
-//		System.out.println("Preset slug: " + elem.getSlug());
-//		
-//		for(SearchElement element:elem.getSearchElements()){
-//			System.out.println("SearchElement label: " + element.getLabel());
-//		}
-//		
-//		for(PresetFieldAttribute element:elem.getFieldAttributes()){
-//			System.out.println("PresetFieldAttribute: " + element);
-//		}
+
+		// //The base collection for searchbox
+		// CollectionDefinition collection = new
+		// CollectionDefinition("testCollection");
+		// collection.setName("pubmed");
+		// ArrayList<FieldDefinition> collectionFields = new
+		// ArrayList<FieldDefinition>();
+		// collectionFields.add(FieldDefinition.StringFieldDef("id"));
+		// collectionFields.add(FieldDefinition.StringFieldDef("title"));
+		// collectionFields.add(FieldDefinition.StringFieldDef("article-abstract"));
+		// collection.setFieldDefinitions(collectionFields);
+		//
+		// PresetDefinition pdef = PresetDefinition.BasicPreset(sb, collection);
+		//
+		// pdef.slug = "search-all";
+		// pdef.label = "Hello World";
+		//
+		// SearchElementDefinition fdef = new
+		// SearchElementDefinition("FieldFacet", FieldFacet.class);
+		// fdef.setAttributeValue("fieldName", "MyField");
+		// fdef.setAttributeValue("label", "Categories");
+		// pdef.addSearchElementDeifinition(fdef);
+		//
+		// PresetFieldAttributeDefinition fieldAttr = new
+		// PresetFieldAttributeDefinition(collection.getFieldDefinition("title"));
+		// fieldAttr.setSearchable(true);
+		// pdef.addFieldAttributeDefinition(fieldAttr);
+
+		// Preset elem = pdef.getElement();
+		// System.out.println("Preset label: " + elem.getLabel());
+		// System.out.println("Preset slug: " + elem.getSlug());
+		//
+		// for(SearchElement element:elem.getSearchElements()){
+		// System.out.println("SearchElement label: " + element.getLabel());
+		// }
+		//
+		// for(PresetFieldAttribute element:elem.getFieldAttributes()){
+		// System.out.println("PresetFieldAttribute: " + element);
+		// }
 	}
 
 	@Override
 	public Preset getInstance() {
 		Preset preset = (Preset) super.toObject();
 		BeanUtils.copyProperties(this, preset);
-		return preset;		
+		return preset;
 	}
 }

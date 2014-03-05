@@ -24,10 +24,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-import com.searchbox.core.dm.Field;
-
 @Entity
-public class FieldDefinition extends Field{
+public class FieldDefinition {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,12 +35,32 @@ public class FieldDefinition extends Field{
 	@Column(name="OPTLOCK")
 	private long version;
 	
+	private Class<?> clazz;
+	
+	private String key;
+	
 	public FieldDefinition() {
-		super();
 	}
 	
 	public FieldDefinition(Class<?> clazz, String key) {
-		super(clazz, key);
+		this.clazz = clazz;
+		this.key = key;
+	}
+	
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public long getId() {

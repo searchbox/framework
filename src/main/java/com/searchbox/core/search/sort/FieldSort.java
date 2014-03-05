@@ -18,22 +18,18 @@ package com.searchbox.core.search.sort;
 import java.io.Serializable;
 import java.util.SortedSet;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
-
-import com.searchbox.core.PreSearchAdapter;
-import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalValueElement;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 
-@SearchComponent(urlParam="s")
+@SearchComponent
 public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
 	
 	@SearchAttribute
@@ -104,9 +100,15 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 		public int compareTo(ValueElement other) {
 			return this.fieldName.compareTo(((FieldSort.Value)other).fieldName);
 		}
+
+		@Override
+		public Class<?> getConditionClass() {
+			return FieldSort.Condition.class;
+		}
 	}
 
-	public static class Condition extends SearchCondition {
+	@SearchCondition(urlParam="s")
+	public static class Condition extends AbstractSearchCondition {
 
 		String fieldName;
 		Sort sort;
@@ -118,7 +120,7 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 	}
 
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if(FieldSort.Condition.class.isAssignableFrom(condition.getClass())){
 			FieldSort.Condition sortCondition = (FieldSort.Condition)condition;
 			for(FieldSort.Value value:this.getValues()){
@@ -149,20 +151,4 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 			}
 		}
 	}
-}
-
-@SearchAdapter
-class FieldSortSolrAdatptor {
-
-	@PreSearchAdapter
-	public SolrQuery setSortCondition(FieldSort.Condition condition,
-			SolrQuery query) {
-		if(condition.sort.equals(Sort.ASC)) {
-			query.addSort(condition.fieldName, ORDER.asc);
-		} else {
-			query.addSort(condition.fieldName, ORDER.desc);
-		}
-		return query;
-	}
-
 }

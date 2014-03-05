@@ -34,9 +34,9 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.repository.PresetRepository;
@@ -54,7 +54,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	@Autowired
 	private SearchboxRepository searchboxRepository;
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ApplicationConversionService.class);
 
 	private Map<String, Class<?>> searchConditions;
@@ -66,29 +66,21 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	@PostConstruct
 	public void init() {
 
-		logger.info("Scanning for SearchComponents");
+		LOGGER.info("Scanning for SearchComponents");
 		Map<Class<?>, String> conditionUrl = new HashMap<Class<?>, String>();		
 		ClassPathScanningCandidateComponentProvider scanner;
 		
 
 		//Getting all the SearchElements
 		scanner = new ClassPathScanningCandidateComponentProvider(false);
-		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchComponent.class));
+		scanner.addIncludeFilter(new AnnotationTypeFilter(SearchCondition.class));
 		for (BeanDefinition bean:scanner.findCandidateComponents("com.searchbox")) {
 			try {
 				Class<?> clazz = Class.forName(bean.getBeanClassName());
-				String urlParam = clazz.getAnnotation(SearchComponent.class).urlParam();
-				if(urlParam != null && !urlParam.isEmpty()){
-					logger.info("Getting condition for: "+ urlParam + " in class: " + clazz.getSimpleName());
-					ParameterizedType pi = (ParameterizedType)clazz.getGenericSuperclass();
-					for (Type piarg : pi.getActualTypeArguments()) {					
-						if (SearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
-							conditionUrl.put(((Class<?>) piarg), urlParam);
-						}
-					}
-				}
+				String urlParam = clazz.getAnnotation(SearchCondition.class).urlParam();
+				conditionUrl.put(clazz, urlParam);				
 			} catch (Exception e) {
-				logger.error("Could not introspect SearchElement: " + bean,e);
+				LOGGER.error("Could not introspect SearchElement: " + bean,e);
 			}
 		}
 		
@@ -102,18 +94,18 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 				for (Type i : clazz.getGenericInterfaces()) {
 					ParameterizedType pi = (ParameterizedType) i;
 					for (Type piarg : pi.getActualTypeArguments()) {								
-						if (SearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
+						if (AbstractSearchCondition.class.isAssignableFrom(((Class<?>) piarg))) {
 							Class<?> conditionClass = ((Class<?>) piarg);
 							searchConditions.put(conditionUrl.get(conditionClass), ((Class<?>) piarg));
 							this.addConverter((Converter<?, ?>) clazz.newInstance());
-							logger.info("Registered Converter "+ clazz.getSimpleName()
+							LOGGER.info("Registered Converter "+ clazz.getSimpleName()
 									+ " for " + ((Class<?>) piarg).getSimpleName()
 									+ " with prefix: " + conditionUrl.get(conditionClass));
 						}
 					}
 				}
 			} catch (Exception e) {
-				logger.error("Could not create Converter for: "+ bean.getBeanClassName(), e);
+				LOGGER.error("Could not create Converter for: "+ bean.getBeanClassName(), e);
 			}
 		}
 
@@ -179,7 +171,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 					return context.getClassLoader().loadClass(source);
 					// Class.forName(source);
 				} catch (ClassNotFoundException e) {
-					logger.error("Could not convert \"" + source
+					LOGGER.error("Could not convert \"" + source
 							+ "\" to class.", e);
 				}
 				return null;
@@ -189,7 +181,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	}
 	
 	public boolean isSearchConditionParam(String paramName) {
-		logger.debug("checking if " + paramName
+		LOGGER.debug("checking if " + paramName
 				+ " is a parameter for any SearchComponent");
 		return this.searchConditions.keySet().contains(paramName);
 	}

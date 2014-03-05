@@ -16,6 +16,7 @@
 package com.searchbox.framework.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -38,8 +39,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.CachedContent;
-import com.searchbox.core.search.SearchCondition;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
@@ -55,10 +56,10 @@ import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.SearchService;
 
 @Controller
-@RequestMapping("/{searchbox}/search")
+@RequestMapping("/{searchbox}")
 public class SearchController {
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchController.class);
 
 	@Autowired
@@ -91,14 +92,18 @@ public class SearchController {
 	public SearchController() {
 	}
 
-	protected String getView() {
-		return "search/index";
+	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+		return "/" + searchbox.getSlug() + "/search/" + preset.getSlug();
 	}
 	
-	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-		return "/"+searchbox.getSlug()+"/search/"+preset.getSlug();
+	protected String getViewViewName(){
+		return "search/view";
 	}
-		
+	
+	protected String getSearchViewName(){
+		return "search/search";
+	}
+
 	@ModelAttribute("searchboxes")
 	public List<Searchbox> getAllSearchboxes() {
 		ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
@@ -115,53 +120,101 @@ public class SearchController {
 		return presetRepository.findAllBySearchbox(searchbox);
 	}
 
-	@RequestMapping(value = { "", "/" })
+	@RequestMapping(value = { "/search", "/search/" })
 	public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
 
-		logger.info("Missing preset. Redirecting to first preset of searchbox: "
+		LOGGER.info("Missing preset. Redirecting to first preset of searchbox: "
 				+ searchbox.getName());
 		PresetDefinition preset = searchbox.getPresets().get(0);
-		ModelAndView redirect = new ModelAndView(
-				new RedirectView(getSearchUrl(searchbox,preset), true));
+		ModelAndView redirect = new ModelAndView(new RedirectView(getSearchUrl(
+				searchbox, preset), true));
 		return redirect;
 
 	}
 
-	@RequestMapping("/{preset}")
+	@RequestMapping("/view/{preset}")
+	public ModelAndView executeView(
+			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+			@PathVariable Searchbox searchbox,
+			@PathVariable PresetDefinition preset, HttpServletRequest request,
+			ModelAndView model, RedirectAttributes redirectAttributes) {
+
+		LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+		model.setViewName(getViewViewName());
+
+		SearchResult result = new SearchResult();
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+				request, SearchElement.Type.QUERY, SearchElement.Type.FILTER, 
+				SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
+				SearchElement.Type.STAT);
+		for (SearchElement element : resultElements) {
+			LOGGER.debug("Adding to result view element["
+					+ element.getPosition() + "] = " + element.getLabel());
+			result.addElement(element);
+		}
+
+		model.addObject("result", result);
+		model.addObject("preset", preset);
+
+		return model;
+	}
+
+	@RequestMapping("/search/{preset}")
 	public ModelAndView executeSearch(
 			@ModelAttribute("searchboxes") List<Searchbox> searchboxes,
 			@PathVariable Searchbox searchbox,
 			@PathVariable PresetDefinition preset, HttpServletRequest request,
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
-		logger.info("search page for: " + searchbox + " with preset:" + preset);
-		model.setViewName(this.getView());
+		LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+		model.setViewName(getSearchViewName());
+
+		SearchResult result = new SearchResult();
+		Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+				request, SearchElement.Type.QUERY, SearchElement.Type.FACET,
+				SearchElement.Type.FILTER, SearchElement.Type.SORT,
+				SearchElement.Type.DEBUG, SearchElement.Type.VIEW, 
+				SearchElement.Type.STAT);
+
+		for (SearchElement element : resultElements) {
+			LOGGER.debug("Adding to result view element["
+					+ element.getPosition() + "] = " + element.getLabel());
+			result.addElement(element);
+		}
+
+		model.addObject("result", result);
+		model.addObject("preset", preset);
+
+		return model;
+	}
+
+	protected Set<SearchElement> executeRequest(Searchbox searchbox,
+			PresetDefinition preset, HttpServletRequest request,
+			SearchElement.Type... types) {
 
 		// Fetch all search Conditions within HTTP params
-		Set<SearchCondition> conditions = new HashSet<SearchCondition>();
+		Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
 		for (String param : applicationConversionService
 				.getSearchConditionParams()) {
 			if (request.getParameterValues(param) != null) {
 				for (String value : request.getParameterValues(param)) {
 					if (value != null && !value.isEmpty()) {
 						try {
-							SearchCondition cond = (SearchCondition) conversionService
+							AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
 									.convert(
 											value,
 											applicationConversionService
 													.getSearchConditionClass(param));
 							conditions.add(cond);
 						} catch (Exception e) {
-							logger.error("Could not convert " + value, e);
+							LOGGER.error("Could not convert " + value, e);
 						}
 					}
 				}
 			}
 		}
-
-		SearchResult result = new SearchResult();
 
 		// Build the Preset DTO with dependancies
 		Set<SearchElement> searchElements = new TreeSet<SearchElement>();
@@ -170,25 +223,34 @@ public class SearchController {
 				.getSearchElements()) {
 			try {
 				SearchElement searchElement = elementdefinition.getInstance();
-				if (CachedContent.class.isAssignableFrom(searchElement
-						.getClass())) {
-					Integer hash = ((CachedContent) searchElement)
-							.getContentHash();
+				if (Arrays.asList(types).contains(
+						searchElement.getElementType())) {
 
-					String tempFile = searchElement.getClass().getSimpleName()
-							+ "_" + searchElement.getPosition() + "_" + hash
-							+ ".jspx";
-					if (!directoryService.fileExists(tempFile)) {
-						directoryService.createFile(tempFile,
-								((CachedContent) searchElement).getContent());
+					if (CachedContent.class.isAssignableFrom(searchElement
+							.getClass())) {
+						Integer hash = ((CachedContent) searchElement)
+								.getContentHash();
+
+						String tempFile = searchElement.getClass()
+								.getSimpleName()
+								+ "_"
+								+ searchElement.getPosition()
+								+ "_"
+								+ hash
+								+ ".jspx";
+						if (!directoryService.fileExists(tempFile)) {
+							directoryService.createFile(tempFile,
+									((CachedContent) searchElement)
+											.getContent());
+						}
+						((CachedContent) searchElement)
+								.setPath(directoryService
+										.getApplicationRelativePath(tempFile));
 					}
-					((CachedContent) searchElement).setPath(directoryService
-							.getApplicationRelativePath(tempFile));
+					searchElements.add(searchElement);
 				}
-
-				searchElements.add(searchElement);
 			} catch (Exception e) {
-				logger.error("Could not get SearchElement for: "
+				LOGGER.error("Could not get SearchElement for: "
 						+ elementdefinition, e);
 			}
 		}
@@ -198,22 +260,14 @@ public class SearchController {
 			fieldAttributes.add(def.getInstance());
 		}
 
-		SearchEngine<?, ?> searchEngine = searchEngineService
-				.getSearchEngine(preset.getCollection().getSearchEngine()
-						.getName());
+		SearchEngine<?, ?> searchEngine =
+				preset.getCollection().getSearchEngine().getInstance();
+		
+		LOGGER.info("Current SearchEngine: " + searchEngine);
 
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
 				searchElements, fieldAttributes, conditions);
 
-		for (SearchElement element : resultElements) {
-			logger.debug("Adding to result view element["
-					+ element.getPosition() + "] = " + element.getLabel());
-			result.addElement(element);
-		}
-
-		model.addObject("result", result);
-		model.addObject("preset", preset);
-
-		return model;
+		return resultElements;
 	}
 }

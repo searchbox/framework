@@ -15,18 +15,14 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
-import javax.persistence.MappedSuperclass;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.searchbox.core.SearchAttribute;
 
-@MappedSuperclass
 public class FieldAttribute {
 	
-	@SearchAttribute
-	protected String key = "";
+	protected Field field;
 	
 	@SearchAttribute
 	protected String label = "";
@@ -47,19 +43,14 @@ public class FieldAttribute {
 	protected Boolean suggestion = false;
 	
 	@SearchAttribute
+	protected Boolean id = false;
+	
+	@SearchAttribute("1f")
 	protected Float boost = 1f;
 
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	public String getLabel() {
 		return label;
@@ -109,6 +100,14 @@ public class FieldAttribute {
         this.suggestion = suggestion;
     }
 
+	public Boolean getId() {
+		return id;
+	}
+
+	public void setId(Boolean isId) {
+		this.id = isId;
+	}
+
 	public Float getBoost() {
         return this.boost;
     }
@@ -116,4 +115,12 @@ public class FieldAttribute {
 	public void setBoost(Float boost) {
         this.boost = boost;
     }
+
+	public void setField(Field field) {
+		this.field = field;
+	}
+	
+	public Field getField(){
+		return this.field;
+	}
 }

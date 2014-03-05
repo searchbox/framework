@@ -15,30 +15,37 @@
  ******************************************************************************/
 package com.searchbox.core.search.paging;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.QueryResponse;
-
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
-import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
-import com.searchbox.core.search.ConditionalValueElement;
-import com.searchbox.core.search.SearchCondition;
+import com.searchbox.core.search.AbstractSearchCondition;
+import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchElementWithConditionalValues;
-import com.searchbox.core.search.ValueElement;
-import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
-@SearchComponent(urlParam="p")
-public class BasicPagination extends SearchElementWithConditionalValues<BasicPagination.Page, BasicPagination.PageCondition>{
+@SearchComponent
+public class BasicPagination extends ConditionalSearchElement<BasicPagination.PageCondition>{
 		
-	private Integer hitsPerPage;
+	@SearchAttribute
+	private Integer hitsPerPage = 10;
+	
+	private Integer currentPage = 0;
+	private Integer maxPage;
 	
 	private Long numberOfHits;
 	
 	public BasicPagination(){
-		super("Basic Pagination",SearchElement.Type.VIEW);
+		super();
+		this.type = SearchElement.Type.VIEW;
+	}
+
+	
+	public Integer getMaxPage() {
+		return maxPage;
+	}
+
+	public void setMaxPage(Integer maxPage) {
+		this.maxPage = maxPage;
 	}
 
 	public Integer getHitsPerPage() {
@@ -57,76 +64,32 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		this.numberOfHits = l;
 	}
 
+	public Integer getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(Integer currentPage) {
+		this.currentPage = currentPage;
+	}
+
 	@Override
-	public void mergeSearchCondition(SearchCondition condition) {
+	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if(PageCondition.class.equals(condition.getClass())){
 			PageCondition pcondition = (PageCondition)condition;
-			for(Page page:this.getValues()){
-				if((page.start) == pcondition.start){
-					page.selected = true;
-				}
-			}
+				this.currentPage = pcondition.getPage();
 		}
 	}
 
-	public class Page extends ConditionalValueElement<PageCondition>{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 4978333478047395794L;
-
-		Integer start;
-		
-		boolean selected;
-		
-		public Page() {
-			super("Page attr");
-		}
-		
-		public Page(Integer start) {
-			super("Page attr");
-			this.start = start;
-		}
-
-		public Integer getPage() {
-			return (int) Math.ceil(start/(double)hitsPerPage)+1;
-		}
-		
-		public Integer getStart(){
-			return start;
-		}
-
-		public boolean isSelected() {
-			return selected;
-		}
-
-		public void setSelected(boolean selected) {
-			this.selected = selected;
-		}
-
-		@Override
-		public String geParamValue() {
-			return Integer.toString(start);
-		}
-
-		@Override
-		public PageCondition getSearchCondition() {
-			return new BasicPagination.PageCondition(start);
-		}
-
-		@Override
-		public int compareTo(ValueElement other) {
-			Page opage = (Page)other;
-			return this.start.compareTo(opage.start);
-		}
-		
-	}
 	
-	public static class PageCondition extends SearchCondition {
-		Integer start;
-		public PageCondition(Integer start) {
-			this.start = start;
+	@SearchCondition(urlParam="p")
+	public static class PageCondition extends AbstractSearchCondition {
+		Integer page;
+		public PageCondition(Integer page) {
+			this.page = page;
+		}
+		
+		public Integer getPage(){
+			return this.page;
 		}
 	}
 
@@ -140,38 +103,19 @@ public class BasicPagination extends SearchElementWithConditionalValues<BasicPag
 		}
 
 	}
-}
 
-@SearchAdapter
-class BasicPaginationAdaptor  {
-
-	
-	@PostSearchAdapter
-	public BasicPagination getPaginationSettings(BasicPagination searchElement,
-			SolrQuery query, QueryResponse response) {
-		
-		Integer hitsPerPage = query.getRows();
-		Long numberOfHits = response.getResults().getNumFound();
-
-		//If rows in not set, we must gues sit form resultset
-		if(hitsPerPage == null){
-			hitsPerPage = response.getResults().size();
-		}
-		
-		//TODO... dont make all pages.
-		for(int p=0; p*hitsPerPage<numberOfHits; p++){
-			searchElement.addValueElement(searchElement.new Page(p*hitsPerPage));
-		}
-		
-		searchElement.setNumberOfHits(numberOfHits);
-		searchElement.setHitsPerPage(hitsPerPage);
-		return searchElement;
+	@Override
+	public String geParamValue() {
+		return this.currentPage+"";
 	}
 
-	@PreSearchAdapter
-	public SolrQuery setPagination(PageCondition condition,
-			SolrQuery query) {
-		query.setStart(condition.start);
-		return query;
+	@Override
+	public PageCondition getSearchCondition() {
+		return new PageCondition(this.currentPage);
+	}
+
+	@Override
+	public Class<?> getConditionClass() {
+		return PageCondition.class;
 	}
 }

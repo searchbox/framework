@@ -39,12 +39,13 @@ import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.ref.ReflectionUtils;
 
 @Service
 public class SearchAdapterService implements
 		ApplicationListener<ContextRefreshedEvent> {
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchAdapterService.class);
 
 	@Autowired
@@ -71,27 +72,35 @@ public class SearchAdapterService implements
 			Object adapter = bean.getValue();
 			for (Method method : adapter.getClass().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(PreSearchAdapter.class)) {
-					logger.debug("Registering Pre adapt: "
-							+ method.getName());
-					this.preSearchMethods.put(method,adapter);
+					this.addPreSearchMethod(method,adapter);
 				} else if(method.isAnnotationPresent(PostSearchAdapter.class)) {
-					logger.debug("Registering Post adapt: "
-							+ method.getName());
-					this.postSearchMethods.put(method,adapter);
+					this.addPPostSearchMethod(method,adapter);
 				}
 			}
 		}
 	}
 
+	public void addPPostSearchMethod(Method method, Object adapter) {
+		LOGGER.debug("Registering Post adapt: "
+				+ method.getName());
+		this.postSearchMethods.put(method,adapter);		
+	}
+
+	public void addPreSearchMethod(Method method, Object adapter) {
+		LOGGER.debug("Registering Pre adapt: "
+				+ method.getName());
+		this.preSearchMethods.put(method,adapter);
+	}
+
 	public void doPreSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
-		//This is because "Arrays.asList(objects)" does not support remove;
+		/*This is because "Arrays.asList(objects)" does not support remove;*/
 		ArrayList<Object> arguments = new ArrayList<Object>();
 		arguments.addAll(Arrays.asList(objects));
 		this.doAdapt(requiredArg, this.preSearchMethods, arguments);
 	}
 
 	public void doPostSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
-		//This is because "Arrays.asList(objects)" does not support remove;
+		/*This is because "Arrays.asList(objects)" does not support remove;*/
 		ArrayList<Object> arguments = new ArrayList<Object>();
 		arguments.addAll(Arrays.asList(objects));
 		this.doAdapt(requiredArg, this.postSearchMethods, arguments);
@@ -104,11 +113,11 @@ public class SearchAdapterService implements
 		Map<Class<?>, List<Object>> arguments = mapArguments(new HashMap<Class<?>, List<Object>>(), objects);
 		
 
-		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
-		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXO filter: " + ((requiredArg==null)?"null":requiredArg.getSimpleName()));	
-		logger.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
+		LOGGER.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
+		LOGGER.trace("XOXOXOXOXOXOXOXOXOXOXOXO filter: " + ((requiredArg==null)?"null":requiredArg.getSimpleName()));	
+		LOGGER.trace("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
 		for(Class<?> clazz:arguments.keySet()){
-			logger.trace("Bag for class: " + clazz.getSimpleName());
+			LOGGER.trace("Bag for class: " + clazz.getSimpleName());
 			for(Object obj:arguments.get(clazz)){
 				if(Collection.class.isAssignableFrom(obj.getClass())){
 					Iterator<?> obji = ((Collection<?>)obj).iterator();
@@ -116,13 +125,13 @@ public class SearchAdapterService implements
 					while(obji.hasNext()){
 						out += obji.next().getClass().getSimpleName()+", ";
 					}
-					logger.trace(out);
+					LOGGER.trace(out);
 				} else {
-					logger.trace("\tin bag: " + obj.getClass().getSimpleName());
+					LOGGER.trace("\tin bag: " + obj.getClass().getSimpleName());
 				}
 			}
 		}
-		logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
+		LOGGER.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
 
 
 		for (Method method : matchingdMethods(requiredArg, methods.keySet(), arguments.keySet())) {
@@ -130,14 +139,14 @@ public class SearchAdapterService implements
 			Object[][] parameters = new Object[paramTypes.length][];
 			
 			//Generate parameter matrix for permutation.
-			logger.debug("Got a matching method: " + method.getName());
+			LOGGER.debug("Got a matching method: " + method.getName());
 			int x = 0;
 			for(Class<?> paramType:paramTypes){
 				
-				logger.debug("Checking for parameter of param: " + (x)  + " as " + paramType.getSimpleName());
+//				LOGGER.debug("Checking for parameter of param: " + (x)  + " as " + paramType.getSimpleName());
 				List<Object> currentparamters = new ArrayList<Object>();
 				for(Entry<Class<?>, List<Object>> entry:arguments.entrySet()){
-					logger.debug("\t is " + paramType.isAssignableFrom(entry.getKey()) + " class: " +  entry.getKey().getSimpleName() + " should be list: " +entry.getValue().getClass());
+//					LOGGER.debug("\t is " + paramType.isAssignableFrom(entry.getKey()) + " class: " +  entry.getKey().getSimpleName() + " should be list: " +entry.getValue().getClass());
 					if(paramType.isAssignableFrom(entry.getKey())){
 						for(Object goodparam:entry.getValue()){
 							currentparamters.add(goodparam);
@@ -148,26 +157,25 @@ public class SearchAdapterService implements
 				x++;
 			}
 			
-			logger.debug("We'll need " + paramTypes.length + " params");
-			logger.debug("Method bag is: ");
+			LOGGER.debug("We'll need " + paramTypes.length + " params");
+			LOGGER.debug("Method bag is: ");
 			for(int i=0; i<paramTypes.length; i++){
-				logger.debug("Bag for param: " + paramTypes[i].getSimpleName() + " is this bag a list? " + parameters[i].getClass().getSimpleName());
+				LOGGER.debug("Bag for param: " + paramTypes[i].getSimpleName() + " is this bag a list? " + parameters[i].getClass().getSimpleName());
 				for(Object obj:parameters[i]){
-					logger.debug("\tin bag: " + obj.getClass().getSimpleName());
+					LOGGER.debug("\tin bag: " + obj.getClass().getSimpleName()+"\t"+obj.toString());
 				}
 			}
 			
 			//Execute method with permutated arguments.
-			List<Object[]> argumentBags = findAllArgumentPermutations(parameters, 0,
-					new Object[paramTypes.length], new ArrayList<Object[]>());
+			List<Object[]> argumentBags = ReflectionUtils.findAllArgumentPermutations(parameters);
 			for(Object[] argumentsInBag:argumentBags){
-				logger.trace("Found a working permutation for method: " + method.getName());
+				LOGGER.trace("Found a working permutation for method: " + method.getName());
 				for(Object obj:argumentsInBag){
-					logger.trace("\t"+obj.getClass().getSimpleName()+", "+obj.toString());
+					LOGGER.trace("\t"+obj.getClass().getSimpleName()+", "+obj.toString());
 				}
 				this.executeMethod(methods.get(method), method, argumentsInBag);
 			}
-			logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
+			LOGGER.trace("~~~~~~~~~~~~~~~~~~~~~~~~");
 		}
 	}
 	
@@ -198,13 +206,13 @@ public class SearchAdapterService implements
 		List<Method> matchingMethods = new ArrayList<Method>();
 		boolean hasRequiredClass = (requiredClass == null)?true:false;
 		for (Method method : methods) {
-			logger.trace("~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~~+");
-			logger.trace("Mathing Method: " + method.getName());
+			LOGGER.trace("~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~~+");
+			LOGGER.trace("Mathing Method: " + method.getName());
 			int match = 0;
 			Class<?>[] paramTypes = method.getParameterTypes();
 			for (Class<?> paramType : paramTypes) {
 				for(Class<?> clazz:classSet){
-					logger.trace("\tclass: " + clazz.getSimpleName() +
+					LOGGER.trace("\tclass: " + clazz.getSimpleName() +
 							"\tparamType: " + paramType.getSimpleName() +
 							"\t" + paramType.isAssignableFrom(clazz) +
 							((requiredClass==null)?"":"\trequired:"+requiredClass.isAssignableFrom(paramType)));
@@ -218,7 +226,7 @@ public class SearchAdapterService implements
 					
 				}
 			}
-			logger.trace("Mathing for method is: " + (hasRequiredClass && (match == paramTypes.length)));
+			LOGGER.trace("Mathing for method is: " + (hasRequiredClass && (match == paramTypes.length)));
 			if(hasRequiredClass && (match == paramTypes.length)) {
 				matchingMethods.add(method);
 			}
@@ -232,33 +240,12 @@ public class SearchAdapterService implements
 			method.invoke(caller, arguments);
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			logger.error("Method name: "+ method.getName());
+			LOGGER.error("Method name: "+ method.getName());
 			for(Object object:arguments){
-				logger.error("\t Param: " + object.getClass().getSimpleName()+"\t"+object.toString());
+				LOGGER.error("\t Param: " + object.getClass().getSimpleName()+"\t"+object.toString());
 			}
-			logger.error("Could not invoke method " + method.getName()
+			LOGGER.error("Could not invoke method " + method.getName()
 					+ " on: " + caller.getClass().getSimpleName(), e);
-		}
-	}
-	
-	/** Permute all possible parameters
-	 * 
-	 * @param caller
-	 * @param method
-	 * @param allArguments
-	 * @param offset
-	 * @param arguments
-	 */
-	private List<Object[]> findAllArgumentPermutations(Object[][] allArguments, int offset, Object[] arguments, List<Object[]> results) {
-		if(offset<arguments.length){
-			for(int i = 0; i<allArguments[offset].length; i++){
-				arguments[offset] = allArguments[offset][i];
-				findAllArgumentPermutations(allArguments, offset+1,arguments, results);
-			}
-			return results;
-		} else {
-			results.add(arguments);
-			return results;
 		}
 	}
 }

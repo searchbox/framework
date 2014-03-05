@@ -16,8 +16,6 @@
 package com.searchbox.domain.search;
 
 
-import org.junit.Test;
-import org.junit.Assert;
 
 
 public class SearchConditionTest {
