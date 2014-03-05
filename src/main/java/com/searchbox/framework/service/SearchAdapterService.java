@@ -96,6 +96,7 @@ public class SearchAdapterService implements
 		/*This is because "Arrays.asList(objects)" does not support remove;*/
 		ArrayList<Object> arguments = new ArrayList<Object>();
 		arguments.addAll(Arrays.asList(objects));
+		arguments.add(engine);
 		this.doAdapt(requiredArg, this.preSearchMethods, arguments);
 	}
 
@@ -103,6 +104,7 @@ public class SearchAdapterService implements
 		/*This is because "Arrays.asList(objects)" does not support remove;*/
 		ArrayList<Object> arguments = new ArrayList<Object>();
 		arguments.addAll(Arrays.asList(objects));
+		arguments.add(engine);
 		this.doAdapt(requiredArg, this.postSearchMethods, arguments);
 	}
 
