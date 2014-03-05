@@ -45,7 +45,7 @@ public class FieldAttribute {
 	@SearchAttribute
 	protected Boolean id = false;
 	
-	@SearchAttribute
+	@SearchAttribute("1f")
 	protected Float boost = 1f;
 
 	public String toString() {

@@ -20,11 +20,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
+import org.springframework.beans.BeanUtils;
+
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.framework.domain.UnknownAttributeDefinition;
+import com.searchbox.framework.web.SearchController;
 
 public class ReflectionUtils {
 
+	private static Logger logger = LoggerFactory
+			.getLogger(ReflectionUtils.class);
 	
 	public static void copyAllFields(Object from, Object to){
 		for(Field fromField:findAllFields(from.getClass())){
@@ -45,7 +53,17 @@ public class ReflectionUtils {
 		if(searchElement != null){
 			for(Field field:searchElement.getDeclaredFields()){
 				if(field.isAnnotationPresent(SearchAttribute.class)){
-					attributes.add(new UnknownAttributeDefinition(field.getType(), field.getName()));
+					UnknownAttributeDefinition attrDef = new UnknownAttributeDefinition(field.getType(), field.getName());
+					String value = field.getAnnotation(SearchAttribute.class).value();
+					if(value != null && !value.isEmpty()){
+						try {
+							Object ovalue = BeanUtils.instantiateClass(field.getType().getConstructor(String.class), value);
+							attrDef.setValue(ovalue);
+						} catch (Exception e) {
+							logger.warn("Could not build default value for SearchAttribute \""+field.getName()+"\"");
+						}
+					}
+					attributes.add(attrDef);
 				}
 			}
 			inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);
