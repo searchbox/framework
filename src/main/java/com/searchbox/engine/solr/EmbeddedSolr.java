@@ -17,27 +17,42 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
+import org.apache.solr.client.solrj.request.UpdateRequest;
+import org.apache.solr.client.solrj.response.SolrResponseBase;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
+import org.apache.solr.schema.CopyField;
+import org.apache.solr.schema.IndexSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.AbstractSearchEngine;
+import com.searchbox.core.engine.ManagedSearchEngine;
 
-public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> {
+public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
+	implements ManagedSearchEngine {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EmbeddedSolr.class);
@@ -58,6 +73,7 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 	private String coreName;
 
 	private static EmbeddedSolrServer server = null;
+	private static SolrCore core = null;
 
 	public EmbeddedSolr() {
 		super(SolrQuery.class, SolrResponse.class);
@@ -88,15 +104,19 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 				CoreDescriptor dcore = new CoreDescriptor(coreContainer,
 						coreName, coreInstanceDir, properties);
 
-				SolrCore core = coreContainer.create(dcore);
-				coreContainer.register(core, false);
+				EmbeddedSolr.core = coreContainer.create(dcore);
 				
-				LOGGER.info("Solr Core config: " + core.getConfigResource());
-				LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
-				LOGGER.info("Solr Data dir: " + core.getDataDir());
+				coreContainer.register(EmbeddedSolr.core, false);
+				
+				LOGGER.info("Solr Core config: " + EmbeddedSolr.core.getConfigResource());
+				LOGGER.info("Solr SchemaResource: " + EmbeddedSolr.core.getSchemaResource());
+				LOGGER.info("Solr Data dir: " + EmbeddedSolr.core.getDataDir());
 
+				
 				EmbeddedSolr.server = new EmbeddedSolrServer(coreContainer,
 						"pubmed");
+				
+				
 
 			} catch (Exception e) {
 				LOGGER.error("Could not start search engine", e);
@@ -176,7 +196,46 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 
 	@Override
 	public boolean indexMap(Map<String, Object> fields) {
-		// TODO Auto-generated method stub
+		SolrInputDocument document = new SolrInputDocument();
+		for(Entry<String, Object> entry:fields.entrySet()){
+			document.addField(entry.getKey(), entry.getValue());
+		}
+		UpdateRequest update = new UpdateRequest();
+		update.add(document);
+		try {
+			UpdateResponse response = update.process(EmbeddedSolr.server);
+			LOGGER.info("Updated FieldMap with status: " + response.getStatus());
+			return true;
+		} catch (Exception e){
+			LOGGER.error("Could not index FieldMap",e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateForField(Field field, FieldAttribute fieldAttribute) {
+		
+		/** Get the translation for the field's key */
+		
+		
+		
+		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
+		List<CopyField> copyFields = schema.getCopyFieldsList(field.getKey());
+		
+		
 		return false;
+	}
+
+	@Override
+	public List<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getKeyForField(Field field, FieldAttribute fieldAttribute,
+			String operation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
