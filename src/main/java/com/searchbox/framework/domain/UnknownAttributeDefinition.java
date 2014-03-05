@@ -33,7 +33,7 @@ import org.springframework.util.SerializationUtils;
 @Entity
 public class UnknownAttributeDefinition {
 	
-	private static Logger logger = LoggerFactory.getLogger(UnknownAttributeDefinition.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnknownAttributeDefinition.class);
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -103,7 +103,7 @@ public class UnknownAttributeDefinition {
 		try {
 			return SerializationUtils.deserialize(valueAsByteArray);
 		} catch (Exception e){
-			logger.error("Could not deserialize value: " + this, e);
+			LOGGER.error("Could not deserialize value: " + this, e);
 			return null;
 		}
 	}
@@ -113,7 +113,7 @@ public class UnknownAttributeDefinition {
 		this.valueAsByteArray = SerializationUtils
 				.serialize((Serializable) value);
 		} catch (Exception e){
-			logger.error("Could not serialize value: " + this, e);
+			LOGGER.error("Could not serialize value: " + this, e);
 		}
 	}
 }

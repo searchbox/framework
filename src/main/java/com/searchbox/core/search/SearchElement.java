@@ -30,7 +30,7 @@ import com.searchbox.core.search.sort.FieldSort.Condition;
 @SearchComponent
 public abstract class SearchElement implements Comparable<SearchElement>{
 	
-	private static Logger logger = LoggerFactory.getLogger(SearchElement.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchElement.class);
 	
 	public final static String URL_PARAM = "xoxo";
 	
@@ -119,12 +119,12 @@ public abstract class SearchElement implements Comparable<SearchElement>{
 
 		@Override
 		public Condition convert(String source) {
-			logger.error("A searchElemenet is missing its URL_PARAM!!!");
-			logger.error("please make sure to define a \"public static final String URL_PARAM = ...\" ");
-			logger.error("within your SearchElement class. That URL_PARAM is used on forms (jspx) as");
-			logger.error("as to identify the proper converter to your class. IE:");
-			logger.error("@SearchConverter(urlParam=MyOwnSearchElement.URL_PARAM)");
-			logger.error("public static class Converter implements org.spring...Converter<String, MyOwnSearchElement> {");
+			LOGGER.error("A searchElemenet is missing its URL_PARAM!!!");
+			LOGGER.error("please make sure to define a \"public static final String URL_PARAM = ...\" ");
+			LOGGER.error("within your SearchElement class. That URL_PARAM is used on forms (jspx) as");
+			LOGGER.error("as to identify the proper converter to your class. IE:");
+			LOGGER.error("@SearchConverter(urlParam=MyOwnSearchElement.URL_PARAM)");
+			LOGGER.error("public static class Converter implements org.spring...Converter<String, MyOwnSearchElement> {");
 			return null;
 		}
 	}

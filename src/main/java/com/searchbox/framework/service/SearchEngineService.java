@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class SearchEngineService {
 	
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(SearchEngineService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchEngineService.class);
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;

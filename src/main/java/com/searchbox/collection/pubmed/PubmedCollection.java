@@ -55,7 +55,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	@Autowired
 	StepBuilderFactory stepBuilderFactory;
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PubmedCollection.class);
 	
 	public static List<Field> GET_FIELDS(){
@@ -98,7 +98,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 					Resource resource = context
 							.getResource("classpath:data/pubmedIndex.xml");
 					if (resource.exists()) {
-						logger.info("Read has created this resource: "
+						LOGGER.info("Read has created this resource: "
 								+ resource.getFilename());
 						return resource;
 					}
@@ -112,7 +112,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 		return new ItemProcessor<Resource, File>() {
 			@Override
 			public File process(Resource item) throws Exception {
-				logger.info("Processing stuff here...");
+				LOGGER.info("Processing stuff here...");
 				return item.getFile();
 			}
 		};

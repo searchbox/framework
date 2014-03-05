@@ -31,7 +31,7 @@
 //@SessionAttributes("user")
 //public class RegistrationController {
 //
-//    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
+//    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 //
 //    protected static final String ERROR_CODE_EMAIL_EXIST = "NotExist.user.email";
 //    protected static final String MODEL_NAME_REGISTRATION_DTO = "user";
@@ -49,12 +49,12 @@
 //     */
 //    @RequestMapping(value = "/user/register", method = RequestMethod.GET)
 //    public String showRegistrationForm(WebRequest request, Model model) {
-//        logger.debug("Rendering registration page.");
+//        LOGGER.debug("Rendering registration page.");
 //
 //        Connection<?> connection = ProviderSignInUtils.getConnection(request);
 //
 //        RegistrationForm registration = createRegistrationDTO(connection);
-//        logger.debug("Rendering registration form with information: {}", registration);
+//        LOGGER.debug("Rendering registration form with information: {}", registration);
 //
 //        model.addAttribute(MODEL_NAME_REGISTRATION_DTO, registration);
 //
@@ -91,27 +91,27 @@
 //    public String registerUserAccount(@Valid @ModelAttribute("user") RegistrationForm userAccountData,
 //                                      BindingResult result,
 //                                      WebRequest request) throws DataException {
-//        logger.debug("Registering user account with information: {}", userAccountData);
+//        LOGGER.debug("Registering user account with information: {}", userAccountData);
 //        if (result.hasErrors()) {
-//            logger.debug("Validation errors found. Rendering form view.");
+//            LOGGER.debug("Validation errors found. Rendering form view.");
 //            return VIEW_NAME_REGISTRATION_PAGE;
 //        }
 //
-//        logger.debug("No validation errors found. Continuing registration process.");
+//        LOGGER.debug("No validation errors found. Continuing registration process.");
 //
 //        User registered = createUserAccount(userAccountData, result);
 //
 //        //If email address was already found from the database, render the form view.
 //        if (registered == null) {
-//            logger.debug("An email address was found from the database. Rendering form view.");
+//            LOGGER.debug("An email address was found from the database. Rendering form view.");
 //            return VIEW_NAME_REGISTRATION_PAGE;
 //        }
 //
-//        logger.debug("Registered user account with information: {}", registered);
+//        LOGGER.debug("Registered user account with information: {}", registered);
 //
 //        //Logs the user in.
 //        SecurityUtil.logInUser(registered);
-//        logger.debug("User {} has been signed in");
+//        LOGGER.debug("User {} has been signed in");
 //        //If the user is signing in by using a social provider, this method call stores
 //        //the connection to the UserConnection table. Otherwise, this method does not
 //        //do anything.
@@ -125,14 +125,14 @@
 //     * from the database, this method adds a field error to the email field of the form object.
 //     */
 //    private User createUserAccount(RegistrationForm userAccountData, BindingResult result) {
-//        logger.debug("Creating user account with information: {}", userAccountData);
+//        LOGGER.debug("Creating user account with information: {}", userAccountData);
 //        User registered = null;
 //
 //        try {
 //            registered = service.registerNewUserAccount(userAccountData);
 //        }
 //        catch (RuntimeException ex) {
-//            logger.debug("An email address: {} exists.", userAccountData.getEmail());
+//            LOGGER.debug("An email address: {} exists.", userAccountData.getEmail());
 //            addFieldError(
 //                    MODEL_NAME_REGISTRATION_DTO,
 //                    RegistrationForm.FIELD_NAME_EMAIL,
@@ -145,7 +145,7 @@
 //    }
 //
 //    private void addFieldError(String objectName, String fieldName, String fieldValue,  String errorCode, BindingResult result) {
-//        logger.debug(
+//        LOGGER.debug(
 //                "Adding field error object's: {} field: {} with error code: {}",
 //                objectName,
 //                fieldName,
@@ -162,6 +162,6 @@
 //        );
 //
 //        result.addError(error);
-//        logger.debug("Added field error: {} to binding result: {}", error, result);
+//        LOGGER.debug("Added field error: {} to binding result: {}", error, result);
 //    }
 //}

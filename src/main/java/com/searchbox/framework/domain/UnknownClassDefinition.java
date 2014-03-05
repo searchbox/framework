@@ -49,7 +49,7 @@ import com.searchbox.core.ref.ReflectionUtils;
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class UnknownClassDefinition {
 	
-	private static Logger logger = LoggerFactory.getLogger(UnknownClassDefinition.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnknownClassDefinition.class);
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -91,7 +91,7 @@ public class UnknownClassDefinition {
 //			element = factory.createBean(this.getClazz(), Autowire.BY_TYPE, true);
 //			element = this.getClazz().newInstance();
 		} catch (Exception e) {
-			logger.error("Could not create new instance of: " + this.getClazz(),e);
+			LOGGER.error("Could not create new instance of: " + this.getClazz(),e);
 			throw new RuntimeException("Could not construct element for class: " + getClazz());
 		}
 		
@@ -101,19 +101,19 @@ public class UnknownClassDefinition {
 				try {
 					setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
 					if(setter == null){
-						logger.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
+						LOGGER.error("Could not find setter: " + element.getClass().getName()+"#"+attribute.getName());
 						throw new RuntimeException("Could not construct element for class: " + getClazz());
 					} else {
 						setter.setAccessible(true);
 						setter.invoke(element, attribute.getValue());
 					}
 				} catch (Exception e) {
-					logger.error("Error in setter: " + element.getClass().getName()+
+					LOGGER.error("Error in setter: " + element.getClass().getName()+
 							"#"+setter.getName()+"["+attribute.getType().getName()+"]");
-					logger.error("Attribute Value is: " + attribute.getValue());
-					logger.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
+					LOGGER.error("Attribute Value is: " + attribute.getValue());
+					LOGGER.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
 					if(setter != null){
-						logger.error("\tsetter args: " + setter.getParameterTypes()[0].getName());
+						LOGGER.error("\tsetter args: " + setter.getParameterTypes()[0].getName());
 					}
 					throw new RuntimeException("Could not construct element for class: " + getClazz());
 				}
@@ -169,7 +169,7 @@ public class UnknownClassDefinition {
 		if(attr != null){
 			this.getAttributeByName(name).setValue(value);
 		} else {
-			logger.error("Could not set Attribute \""+name+"\" for element: " + this.clazz.getSimpleName());
+			LOGGER.error("Could not set Attribute \""+name+"\" for element: " + this.clazz.getSimpleName());
 		}
 		return this;
 	}

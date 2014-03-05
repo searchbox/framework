@@ -45,7 +45,7 @@ import com.searchbox.framework.repository.SearchboxRepository;
 public class HomeController {
 	
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired
 	SearchboxRepository searchboxRepository;
@@ -89,12 +89,12 @@ public class HomeController {
 //	@ModelAttribute("user")
 //	public User getCurrentUser(){
 //		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		logger.info("Got auth {}", auth);
+//		LOGGER.info("Got auth {}", auth);
 //		if(auth.getClass().isAssignableFrom(User.class)){
-//			logger.info("Got user with roles {}", auth.getAuthorities());
+//			LOGGER.info("Got user with roles {}", auth.getAuthorities());
 //			return (User) auth;
 //		} else {
-//			logger.info("Anonymous User...");
+//			LOGGER.info("Anonymous User...");
 //			return new User();
 //		}
 //	}

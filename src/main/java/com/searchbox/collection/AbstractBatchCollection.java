@@ -25,7 +25,7 @@ import com.searchbox.core.dm.Collection;
 public abstract class AbstractBatchCollection extends Collection implements
 		FileIndexing, SynchronizedCollection {
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractBatchCollection.class);
 
 	@Autowired
@@ -61,7 +61,7 @@ public abstract class AbstractBatchCollection extends Collection implements
 				  .addLong("time",System.currentTimeMillis()).toJobParameters();
 			
 		JobExecution jobExecution = launcher.run(this.getJob(), params);
-		logger.info("JobExecution for pubmed: "
+		LOGGER.info("JobExecution for pubmed: "
 				+ jobExecution.getExitStatus().getExitCode());
 
 

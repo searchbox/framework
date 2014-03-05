@@ -33,7 +33,7 @@ import com.searchbox.framework.repository.CollectionRepository;
 @Service
 public class CollectionService implements ApplicationListener<SearchboxReady> {
 	
-	private static Logger logger = LoggerFactory.getLogger(CollectionService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionService.class);
 
 	@Autowired
 	CollectionRepository repository;
@@ -49,15 +49,15 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 	@Override
 	public void onApplicationEvent(SearchboxReady event) {
 		
-		logger.info("Searchbox is ready. Loading autoStart collections");
+		LOGGER.info("Searchbox is ready. Loading autoStart collections");
 		
 		for(Collection collection:findAutoStartCollection()){
 			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
-				logger.info("Starting synchronization for \"" + collection.getName()+"\"");
+				LOGGER.info("Starting synchronization for \"" + collection.getName()+"\"");
 				try {
 					((SynchronizedCollection)collection).synchronize();
 				} catch (Exception e) {
-					logger.error("Could not synchronize collection: " + collection.getName(),e);
+					LOGGER.error("Could not synchronize collection: " + collection.getName(),e);
 				}
 			}
 		}		

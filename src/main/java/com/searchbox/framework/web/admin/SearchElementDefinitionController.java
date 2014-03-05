@@ -55,7 +55,7 @@ import com.searchbox.framework.repository.SearchElementRepository;
 @RequestMapping("/{searchbox}/admin/searchElementDefinition")
 public class SearchElementDefinitionController {
 
-	private static Logger logger = LoggerFactory.getLogger(SearchElementDefinitionController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchElementDefinitionController.class);
 	
 	@Autowired
 	ConversionService conversionService;
@@ -90,15 +90,15 @@ public class SearchElementDefinitionController {
     public ModelAndView update(@Valid SearchElementDefinition elementDefinition,
     		BindingResult bindingResult, HttpServletRequest httpServletRequest,
     		ServerHttpResponse response) {
-		logger.info("Creating an filed element: " + elementDefinition.getClazz().getSimpleName() + 
+		LOGGER.info("Creating an filed element: " + elementDefinition.getClazz().getSimpleName() + 
 				" for preset: " + elementDefinition.getPreset().getSlug());
 	
 		ModelAndView model = new ModelAndView("admin/SearchElementDefinition/updateForm");
 		
 		if (bindingResult.hasErrors()) {
-			logger.error("Bindding has error...");
+			LOGGER.error("Bindding has error...");
         	for(ObjectError error:bindingResult.getAllErrors()){
-        		logger.error("Error: " + error.getDefaultMessage());
+        		LOGGER.error("Error: " + error.getDefaultMessage());
         	}
         	response.setStatusCode(HttpStatus.PRECONDITION_FAILED);
             return model;
@@ -106,7 +106,7 @@ public class SearchElementDefinitionController {
 		try {
 			elementDefinition = repository.save(elementDefinition);
 		} catch (Exception e){
-			logger.error("Could not save elementDefinition",e);
+			LOGGER.error("Could not save elementDefinition",e);
 		}
         model.addObject("searchElementDefinition", elementDefinition);
         return model;
@@ -114,14 +114,14 @@ public class SearchElementDefinitionController {
 	
 	@RequestMapping(params = "form")
     public String create(Model uiModel) {
-		logger.info("Creating EMPTY filed element");
+		LOGGER.info("Creating EMPTY filed element");
         //populateEditForm(uiModel, new SearchElementDefinition());
         return "/admin/searchElementDefinition/create";
     }
 
 	@RequestMapping(value = "/{id}")
     public ModelAndView show(@PathVariable("id") Long id) {
-		logger.info("VIEW an filed element");
+		LOGGER.info("VIEW an filed element");
 		SearchElementDefinition elementDef =  repository.findOne(id);
 		ModelAndView model = new ModelAndView("admin/SearchElementDefinition/updateForm");
         model.addObject("searchElementDefinition", elementDef);

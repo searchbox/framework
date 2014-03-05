@@ -26,7 +26,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class SearchboxWebApplicationInitializer extends
 		AbstractAnnotationConfigDispatcherServletInitializer {
 	
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchboxWebApplicationInitializer.class);
 		
 	private static double JAVA_VERSION = getVersion();
@@ -35,7 +35,7 @@ public class SearchboxWebApplicationInitializer extends
 		super();
 		
 		if(JAVA_VERSION < 1.7){
-			logger.error("Java 7 is required to run Searchbox. Current version: "+
+			LOGGER.error("Java 7 is required to run Searchbox. Current version: "+
 						JAVA_VERSION + ". Please update your system.");
 			//throw new Exception("bad value");
 			System.exit(0);
@@ -68,7 +68,7 @@ public class SearchboxWebApplicationInitializer extends
 	 */
 	private static double getVersion() {
 		String version = System.getProperty("java.version");
-		logger.info("Checking java version. Version found :" + version);
+		LOGGER.info("Checking java version. Version found :" + version);
 		int pos = 0, count = 0;
 		for (; pos < version.length() && count < 2; pos++) {
 			if (version.charAt(pos) == '.') {

@@ -23,7 +23,7 @@ import com.searchbox.framework.repository.CollectionRepository;
 public class CollectionDefinitionController {
 	
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(CollectionDefinitionController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionDefinitionController.class);
 		
 	@Autowired
 	CollectionRepository repository;

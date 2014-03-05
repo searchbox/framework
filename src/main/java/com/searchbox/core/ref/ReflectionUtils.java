@@ -29,7 +29,7 @@ import com.searchbox.framework.domain.UnknownAttributeDefinition;
 
 public class ReflectionUtils {
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ReflectionUtils.class);
 	
 	public static void copyAllFields(Object from, Object to){
@@ -58,7 +58,7 @@ public class ReflectionUtils {
 							Object ovalue = BeanUtils.instantiateClass(field.getType().getConstructor(String.class), value);
 							attrDef.setValue(ovalue);
 						} catch (Exception e) {
-							logger.warn("Could not build default value for SearchAttribute \""+field.getName()+"\"");
+							LOGGER.warn("Could not build default value for SearchAttribute \""+field.getName()+"\"");
 						}
 					}
 					attributes.add(attrDef);

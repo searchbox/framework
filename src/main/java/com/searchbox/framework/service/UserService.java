@@ -15,7 +15,7 @@ import com.searchbox.framework.web.user.RegistrationForm;
 @Transactional
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
    
 	private PasswordEncoder passwordEncoder;
 
@@ -37,17 +37,17 @@ public class UserService {
 	
 	public User registerNewUserAccount(RegistrationForm userAccountData)
 			throws RuntimeException {
-		logger.debug("Registering new user account with information: {}",
+		LOGGER.debug("Registering new user account with information: {}",
 				userAccountData);
 
 		if (emailExist(userAccountData.getEmail())) {
-			logger.debug("Email: {} exists. Throwing exception.",
+			LOGGER.debug("Email: {} exists. Throwing exception.",
 					userAccountData.getEmail());
 			throw new RuntimeException("The email address: "
 					+ userAccountData.getEmail() + " is already in use.");
 		}
 
-		logger.debug("Email: {} does not exist. Continuing registration.",
+		LOGGER.debug("Email: {} does not exist. Continuing registration.",
 				userAccountData.getEmail());
 
 		String encodedPassword = encodePassword(userAccountData);
@@ -68,26 +68,26 @@ public class UserService {
 
 //		User registered = user.build();
 
-		logger.debug("Persisting new user with information: {}", registered);
+		LOGGER.debug("Persisting new user with information: {}", registered);
 
 		return repository.save(registered);
 	}
 
 	private boolean emailExist(String email) {
-		logger.debug(
+		LOGGER.debug(
 				"Checking if email {} is already found from the database.",
 				email);
 
 		User user = repository.findByEmail(email);
 
 		if (user != null) {
-			logger.debug(
+			LOGGER.debug(
 					"User account: {} found with email: {}. Returning true.",
 					user, email);
 			return true;
 		}
 
-		logger.debug("No user account found with email: {}. Returning false.",
+		LOGGER.debug("No user account found with email: {}. Returning false.",
 				email);
 
 		return false;
@@ -97,7 +97,7 @@ public class UserService {
 		String encodedPassword = null;
 
 		if (dto.isNormalRegistration()) {
-			logger.debug("Registration is normal registration. Encoding password.");
+			LOGGER.debug("Registration is normal registration. Encoding password.");
 			encodedPassword = passwordEncoder.encode(dto.getPassword());
 		}
 

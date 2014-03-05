@@ -40,7 +40,7 @@ import com.searchbox.core.dm.Field;
 public class CollectionDefinition extends UnknownClassDefinition implements
 		ElementFactory<Collection> {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CollectionDefinition.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionDefinition.class);
 
 	@ManyToOne
 	private SearchEngineDefinition searchEngine;
@@ -73,7 +73,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 				}
 			}
 		} catch (Exception e) {
-			logger.warn("Could not use GET_FIELD method on collection: " + name,e);
+			LOGGER.warn("Could not use GET_FIELD method on collection: " + name,e);
 		}
 
 	}

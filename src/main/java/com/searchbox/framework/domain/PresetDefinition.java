@@ -44,7 +44,7 @@ public class PresetDefinition extends UnknownClassDefinition implements
 		ElementFactory<Preset> {
 
 	@SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PresetDefinition.class);
 
 	@ManyToOne

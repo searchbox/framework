@@ -43,7 +43,7 @@ import com.searchbox.core.engine.AbstractSearchEngine;
 
 public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> {
 
-	private static Logger logger = LoggerFactory.getLogger(EmbeddedSolr.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedSolr.class);
 
 	@SearchAttribute
 	private String solrHome;
@@ -74,7 +74,7 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 	public void init() {
 		if(EmbeddedSolr.server == null){
 			try {
-				logger.info("Embedded solr.solr.home is: " + this.solrHome);
+				LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
 				System.setProperty("solr.solr.home", this.solrHome);
 	
 				CoreContainer coreContainer = new CoreContainer();
@@ -98,16 +98,16 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 						coreInstanceDir);
 				SolrCore core = new SolrCore(coreName, dataDirName, config, schema,
 						cd);
-				logger.info("Solr Core config: " + core.getConfigResource());
-				logger.info("Solr Instance dir: " + core.getIndexDir());
-				logger.info("Solr Data dir: " + core.getDataDir());
+				LOGGER.info("Solr Core config: " + core.getConfigResource());
+				LOGGER.info("Solr Instance dir: " + core.getIndexDir());
+				LOGGER.info("Solr Data dir: " + core.getDataDir());
 				coreContainer.register(core, false);
 	
 				EmbeddedSolr.server = new EmbeddedSolrServer(coreContainer, "pubmed");
 				
 	
 			} catch (Exception e) {
-				logger.error("Could not start search engine", e);
+				LOGGER.error("Could not start search engine", e);
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 
 	@Override
 	public boolean indexFile(File file) {
-		logger.info("Indexing for pubmed: " + file.getAbsolutePath());
+		LOGGER.info("Indexing for pubmed: " + file.getAbsolutePath());
 		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
 		contentstream.setContentType("text/xml");
 		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest("/update");
@@ -171,12 +171,12 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
 		UpdateResponse response;
 		try {
 			response = request.process(EmbeddedSolr.server);
-			logger.info("Solr Response: " + response);
+			LOGGER.info("Solr Response: " + response);
 			response = EmbeddedSolr.server.commit();
-			logger.info("Solr commit: " + response);
+			LOGGER.info("Solr commit: " + response);
 			return true;
 		} catch (SolrServerException | IOException e) {
-			logger.error("Could not index file: " + file,e);
+			LOGGER.error("Could not index file: " + file,e);
 		}
 		return false;
 	}

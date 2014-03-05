@@ -30,7 +30,7 @@ import com.searchbox.core.SearchCondition;
 @SearchCondition(urlParam="")
 public abstract class AbstractSearchCondition {
 	
-	private static Logger logger = LoggerFactory.getLogger(AbstractSearchCondition.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchCondition.class);
 	
 	private Float boost = 1f;
 	
@@ -109,7 +109,7 @@ public abstract class AbstractSearchCondition {
 					}
 				}
 			} catch (Exception e) {
-				logger.error("Could not compare Objects",e);
+				LOGGER.error("Could not compare Objects",e);
 				return false;
 			}
 		}

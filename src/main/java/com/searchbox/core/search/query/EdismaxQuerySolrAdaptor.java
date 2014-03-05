@@ -13,7 +13,7 @@ import com.searchbox.core.dm.FieldAttribute;
 @SearchAdapter
 public class EdismaxQuerySolrAdaptor {
 	
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EdismaxQuerySolrAdaptor.class);
 	
 	@PreSearchAdapter
@@ -27,10 +27,10 @@ public class EdismaxQuerySolrAdaptor {
 	@PreSearchAdapter
 	public void setQueryFields(EdismaxQuery SearchElement,
 			SolrQuery query, FieldAttribute fieldAttribute) {
-		logger.debug("Checking Field Attr for EdismaxQuery -- Field: {} ", fieldAttribute.getField().getKey());
+		LOGGER.debug("Checking Field Attr for EdismaxQuery -- Field: {} ", fieldAttribute.getField().getKey());
 
 		if(fieldAttribute.getSearchable()){
-			logger.debug("Found searchable field: {}", fieldAttribute.getField().getKey());
+			LOGGER.debug("Found searchable field: {}", fieldAttribute.getField().getKey());
 			Float boost = (fieldAttribute.getBoost()!=null)?fieldAttribute.getBoost():1.0f;
 			String currentFields = query.get(DisMaxParams.QF);
 			query.set(DisMaxParams.QF, 

@@ -54,7 +54,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	@Autowired
 	private SearchboxRepository searchboxRepository;
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ApplicationConversionService.class);
 
 	private Map<String, Class<?>> searchConditions;
@@ -66,7 +66,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	@PostConstruct
 	public void init() {
 
-		logger.info("Scanning for SearchComponents");
+		LOGGER.info("Scanning for SearchComponents");
 		Map<Class<?>, String> conditionUrl = new HashMap<Class<?>, String>();		
 		ClassPathScanningCandidateComponentProvider scanner;
 		
@@ -80,7 +80,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 				String urlParam = clazz.getAnnotation(SearchCondition.class).urlParam();
 				conditionUrl.put(clazz, urlParam);				
 			} catch (Exception e) {
-				logger.error("Could not introspect SearchElement: " + bean,e);
+				LOGGER.error("Could not introspect SearchElement: " + bean,e);
 			}
 		}
 		
@@ -98,14 +98,14 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 							Class<?> conditionClass = ((Class<?>) piarg);
 							searchConditions.put(conditionUrl.get(conditionClass), ((Class<?>) piarg));
 							this.addConverter((Converter<?, ?>) clazz.newInstance());
-							logger.info("Registered Converter "+ clazz.getSimpleName()
+							LOGGER.info("Registered Converter "+ clazz.getSimpleName()
 									+ " for " + ((Class<?>) piarg).getSimpleName()
 									+ " with prefix: " + conditionUrl.get(conditionClass));
 						}
 					}
 				}
 			} catch (Exception e) {
-				logger.error("Could not create Converter for: "+ bean.getBeanClassName(), e);
+				LOGGER.error("Could not create Converter for: "+ bean.getBeanClassName(), e);
 			}
 		}
 
@@ -171,7 +171,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 					return context.getClassLoader().loadClass(source);
 					// Class.forName(source);
 				} catch (ClassNotFoundException e) {
-					logger.error("Could not convert \"" + source
+					LOGGER.error("Could not convert \"" + source
 							+ "\" to class.", e);
 				}
 				return null;
@@ -181,7 +181,7 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 	}
 	
 	public boolean isSearchConditionParam(String paramName) {
-		logger.debug("checking if " + paramName
+		LOGGER.debug("checking if " + paramName
 				+ " is a parameter for any SearchComponent");
 		return this.searchConditions.keySet().contains(paramName);
 	}

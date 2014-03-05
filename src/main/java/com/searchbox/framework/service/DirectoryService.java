@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DirectoryService {
 	
-	private static Logger logger = LoggerFactory.getLogger(DirectoryService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DirectoryService.class);
 
 	@Autowired
 	ApplicationContext context;
@@ -45,22 +45,22 @@ public class DirectoryService {
 		File file;
 		try {
 			file = new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
-			logger.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
+			LOGGER.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
 			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
 			return relative;
 		} catch (IOException e) {
-			logger.error("Could not create temp file in directoryService",e);
+			LOGGER.error("Could not create temp file in directoryService",e);
 		}
 		return null;
 	}
 	
 	public String getApplicationRelativePath(File file){
 		try {
-			logger.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
+			LOGGER.debug("Application absolutePath: " + context.getResource("").getFile().getAbsolutePath() );
 			String relative = context.getResource("").getFile().toURI().relativize(file.toURI()).getPath();
 			return relative;
 		} catch (IOException e) {
-			logger.error("Could not get application-relative path in directoryService",e);
+			LOGGER.error("Could not get application-relative path in directoryService",e);
 		}
 		return null;
 	}
@@ -72,7 +72,7 @@ public class DirectoryService {
 			newFile = new File(tempDir.getFile().getAbsolutePath()+"/"+fname);
 			return newFile.exists();
 		} catch (IOException e) {
-			logger.error("Could not create temp file in directoryService",e);
+			LOGGER.error("Could not create temp file in directoryService",e);
 		}
 		return false;
 	}
@@ -82,7 +82,7 @@ public class DirectoryService {
 		try {
 			FileUtils.writeStringToFile(file, content);
 		} catch (IOException e) {
-			logger.error("Could not write to temp file in directoryService",e);
+			LOGGER.error("Could not write to temp file in directoryService",e);
 		}
 		return file;
 	}
@@ -93,7 +93,7 @@ public class DirectoryService {
 			try {
 				tempDir.getFile().mkdirs();
 			} catch (IOException e) {
-				logger.error("Could not create temp file in directoryService",e);
+				LOGGER.error("Could not create temp file in directoryService",e);
 			}
 		}
 		try {
@@ -101,7 +101,7 @@ public class DirectoryService {
 			newFile.deleteOnExit();
 			return newFile;
 		} catch (IOException e) {
-			logger.error("Could not create temp file in directoryService",e);
+			LOGGER.error("Could not create temp file in directoryService",e);
 
 		}
 		return null;

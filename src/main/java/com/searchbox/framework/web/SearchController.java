@@ -59,7 +59,7 @@ import com.searchbox.framework.service.SearchService;
 @RequestMapping("/{searchbox}")
 public class SearchController {
 
-	private static Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchController.class);
 
 	@Autowired
@@ -125,7 +125,7 @@ public class SearchController {
 			HttpServletRequest request, ModelAndView model,
 			RedirectAttributes redirectAttributes) {
 
-		logger.info("Missing preset. Redirecting to first preset of searchbox: "
+		LOGGER.info("Missing preset. Redirecting to first preset of searchbox: "
 				+ searchbox.getName());
 		PresetDefinition preset = searchbox.getPresets().get(0);
 		ModelAndView redirect = new ModelAndView(new RedirectView(getSearchUrl(
@@ -141,7 +141,7 @@ public class SearchController {
 			@PathVariable PresetDefinition preset, HttpServletRequest request,
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
-		logger.info("search page for: " + searchbox + " with preset:" + preset);
+		LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
 		model.setViewName(getViewViewName());
 
 		SearchResult result = new SearchResult();
@@ -150,7 +150,7 @@ public class SearchController {
 				SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
 				SearchElement.Type.STAT);
 		for (SearchElement element : resultElements) {
-			logger.debug("Adding to result view element["
+			LOGGER.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
 			result.addElement(element);
 		}
@@ -168,7 +168,7 @@ public class SearchController {
 			@PathVariable PresetDefinition preset, HttpServletRequest request,
 			ModelAndView model, RedirectAttributes redirectAttributes) {
 
-		logger.info("search page for: " + searchbox + " with preset:" + preset);
+		LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
 		model.setViewName(getSearchViewName());
 
 		SearchResult result = new SearchResult();
@@ -179,7 +179,7 @@ public class SearchController {
 				SearchElement.Type.STAT);
 
 		for (SearchElement element : resultElements) {
-			logger.debug("Adding to result view element["
+			LOGGER.debug("Adding to result view element["
 					+ element.getPosition() + "] = " + element.getLabel());
 			result.addElement(element);
 		}
@@ -209,7 +209,7 @@ public class SearchController {
 													.getSearchConditionClass(param));
 							conditions.add(cond);
 						} catch (Exception e) {
-							logger.error("Could not convert " + value, e);
+							LOGGER.error("Could not convert " + value, e);
 						}
 					}
 				}
@@ -250,7 +250,7 @@ public class SearchController {
 					searchElements.add(searchElement);
 				}
 			} catch (Exception e) {
-				logger.error("Could not get SearchElement for: "
+				LOGGER.error("Could not get SearchElement for: "
 						+ elementdefinition, e);
 			}
 		}
@@ -263,7 +263,7 @@ public class SearchController {
 		SearchEngine<?, ?> searchEngine =
 				preset.getCollection().getSearchEngine().getInstance();
 		
-		logger.info("Current SearchEngine: " + searchEngine);
+		LOGGER.info("Current SearchEngine: " + searchEngine);
 
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
 				searchElements, fieldAttributes, conditions);
