@@ -15,12 +15,6 @@ import com.searchbox.framework.service.SearchAdapterService;
 public class SearchAdapterTest {
 
 	
-	public static void main(String... args){
-		SearchAdapterService service = new SearchAdapterService();
-
-	}
-	
-	
 	@Test
 	public void PreAdapterMethod(){
 		
