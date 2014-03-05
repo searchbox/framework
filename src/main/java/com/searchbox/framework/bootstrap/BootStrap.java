@@ -333,7 +333,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                  Welcome                         *");
 		LOGGER.info("****************************************************");
-		LOGGER.info("*                   OPPFIN                         *");
+		LOGGER.info("*                                                  *");
+		LOGGER.info("*                               __ _");
+		LOGGER.info("*             ___  _ __  _ __  / _(_)_ __");
+		LOGGER.info("*            / _ \\| '_ \\| '_ \\| |_| | '_ \\");
+		LOGGER.info("*           | (_) | |_) | |_) |  _| | | | |");
+		LOGGER.info("*            \\___/| .__/| .__/|_| |_|_| |_|");
+		LOGGER.info("*                 |_|   |_|");
 		LOGGER.info("*                                                  *");
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                                                  *");
