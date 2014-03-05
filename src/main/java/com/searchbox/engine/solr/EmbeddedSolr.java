@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
@@ -47,11 +48,11 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.ManagedSearchEngine;
 
-public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
-	implements ManagedSearchEngine {
+public class EmbeddedSolr extends SolrSearchEngine {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EmbeddedSolr.class);
@@ -75,12 +76,18 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	private static SolrCore core = null;
 
 	public EmbeddedSolr() {
-		super(SolrQuery.class, SolrResponse.class);
+		super();
 	}
 
 	public EmbeddedSolr(String name, String solrHome) {
-		super(name, SolrQuery.class, SolrResponse.class);
+		super(name);
 		this.solrHome = solrHome;
+	}
+	
+
+	@Override
+	protected SolrServer getSolrServer() {
+		return EmbeddedSolr.server;
 	}
 
 	public void init() {
@@ -120,15 +127,6 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 			} catch (Exception e) {
 				LOGGER.error("Could not start search engine", e);
 			}
-		}
-	}
-
-	@Override
-	public SolrResponse execute(SolrQuery query) {
-		try {
-			return EmbeddedSolr.server.query(query);
-		} catch (SolrServerException e) {
-			throw new RuntimeException("Could nexecute Query on  engine", e);
 		}
 	}
 
@@ -173,136 +171,18 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	}
 
 	@Override
-	public boolean indexFile(File file) {
-		LOGGER.info("Indexing for pubmed: " + file.getAbsolutePath());
-		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
-		contentstream.setContentType("text/xml");
-		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(
-				"/update");
-		request.addContentStream(contentstream);
-		UpdateResponse response;
-		try {
-			response = request.process(EmbeddedSolr.server);
-			LOGGER.info("Solr Response: " + response);
-			response = EmbeddedSolr.server.commit();
-			LOGGER.info("Solr commit: " + response);
-			return true;
-		} catch (SolrServerException | IOException e) {
-			LOGGER.error("Could not index file: " + file, e);
-		}
-		return false;
-	}
-
-	@Override
-	public boolean indexMap(Map<String, Object> fields) {
-		SolrInputDocument document = new SolrInputDocument();
-		for(Entry<String, Object> entry:fields.entrySet()){
-			document.addField(entry.getKey(), entry.getValue());
-		}
-		UpdateRequest update = new UpdateRequest();
-		update.add(document);
-		try {
-			UpdateResponse response = update.process(EmbeddedSolr.server);
-			LOGGER.info("Updated FieldMap with status: " + response.getStatus());
-			return true;
-		} catch (Exception e){
-			LOGGER.error("Could not index FieldMap",e);
-			return false;
-		}
-	}
-
-	@Override
-	public boolean updateForField(Field field, FieldAttribute fieldAttribute) {
-		
-		/** Get the translation for the field's key */
-		Set<String> fieldNames = this.getKeyForField(field, fieldAttribute);
-		
+	protected boolean addCopyFields(Field field, Set<String> copyFields) {
 		
 		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
 
 		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
-			fieldNames.remove(copyField.getDestination().getName());
+			copyFields.remove(copyField.getDestination().getName());
 		}
 
-		Map<String, Collection<String>> copyFields = new HashMap<String, Collection<String>>();
-		copyFields.put(field.getKey(), fieldNames);
-		schema.addCopyFields(copyFields);
+		Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+		copyFieldsMap.put(field.getKey(), copyFields);
+		schema.addCopyFields(copyFieldsMap);
 		
 		return true;
-	}
-	
-	private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
-	private static final String HIGHLIGHT_FIELD = "_txt";
-	private static final String SORTABLE_FIELD = "s";
-	
-	private static final String DATE_FIELD = "dt";
-	private static final String BOOLEAN_FIELD = "b";
-	private static final String INTEGER_FIELD = "i";
-	private static final String FLOAT_FIELD = "f";
-	private static final String DOUBLE_FIELD = "d";
-	private static final String LONG_FIELD = "l";
-	private static final String TEXT_FIELD = "";
-
-	private static final String SPELLCHECK_FIELD = "spell";
-	private static final String SUGGESTION_FIELD = "suggest";
-
-	
-	
-	@Override
-	public Set<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
-		Set<String> fields = new TreeSet<String>();
-		String append = "";
-		String prepend = "_";
-		
-		
-		if(fieldAttribute.getSortable()){
-			append = SORTABLE_FIELD; 
-		} else {
-			prepend += "t";
-		}
-		
-		if(Boolean.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += BOOLEAN_FIELD;
-		} else if(Date.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += DATE_FIELD;
-		} else if(Integer.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += INTEGER_FIELD;
-		} else if(Float.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += FLOAT_FIELD;
-		} else if(Double.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += DOUBLE_FIELD;
-		} else if(Long.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend += LONG_FIELD;
-		} else if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend = TEXT_FIELD;
-		}
-		
-		
-		if(fieldAttribute.getSearchable()){
-			fields.add(field.getKey()+SEARCHABLE_TEXT_NO_LANG_FIELD);
-		}
-		
-		if(fieldAttribute.getHighlight()){
-			fields.add(field.getKey()+HIGHLIGHT_FIELD);
-		}
-		
-		if(fieldAttribute.getSpelling()){
-			fields.add(SPELLCHECK_FIELD);
-		}
-		
-		if(fieldAttribute.getSuggestion()){
-			fields.add(SUGGESTION_FIELD);
-		}
-		
-		fields.add(field.getKey()+prepend+append);
-
-		return fields;
-	}
-
-	@Override
-	public String getKeyForField(Field field, FieldAttribute fieldAttribute,
-			String operation) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
