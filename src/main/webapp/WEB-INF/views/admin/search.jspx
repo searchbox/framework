@@ -209,10 +209,9 @@
 								<div class="row">
 									<h4>Field Attributes</h4>
 
-									<table class="table table-striped">
+									<table id="fieldAttributes" class="table table-striped">
 										<thead>
 											<tr>
-												<th></th>
 												<th>key</th>
 												<th>type</th>
 												<th>label</th>
@@ -231,7 +230,6 @@
 												<c:set var="trclass" value="" />
 
 												<tr>
-													<td><p class="form-control-static">${item.count }</p></td>
 													<td nowrap="nowrap" class="nowrap"><p
 															class="form-control-static">${attr.field.getKey() }</p></td>
 													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
@@ -254,6 +252,7 @@
 									<script>
 										$.fn.editable.defaults.mode = 'inline';
 										$('.editable').editable();
+										$("#fieldAttributes").tablesorter({ sortList: [[0,0], [1,0]] });
 									</script>
 
 								</div>
