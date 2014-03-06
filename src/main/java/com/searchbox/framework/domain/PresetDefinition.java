@@ -206,7 +206,7 @@ public class PresetDefinition extends UnknownClassDefinition implements
 			CollectionDefinition collection) {
 		PresetDefinition pdef = new PresetDefinition(collection);
 		pdef.setSlug("all");
-		pdef.setAttributeValue("label", "Basic Preset");
+		pdef.setLabel("Basic Preset");
 
 		SearchElementDefinition query = new SearchElementDefinition(
 				"EdismaxQuery", EdismaxQuery.class);
