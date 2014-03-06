@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.collection.oppfin.OppfinTopicCollection;
-import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -216,6 +215,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("descriptionRaw"));
 		fieldAttr2.setAttributeValue("searchable",true);
+		fieldAttr.setAttributeValue("label", "description");
 		presetTopic.addFieldAttribute(fieldAttr2);
 		
 		/** Create & add a querydebug SearchComponent to the preset; */
@@ -261,7 +261,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
 		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
 		sortFields.add(FieldSort.getRelevancySort());
-		sortFields.add(new FieldSort.Value("Deadline DESC", "callDeadline", Sort.DESC));
+		sortFields.add(new FieldSort.Value("By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.DESC));
 		sortFields.add(new FieldSort.Value("Deadline ASC", "callDeadline", Sort.ASC));
 		fieldSort.setAttributeValue("values", sortFields);
 		presetTopic.addSearchElement(fieldSort);
