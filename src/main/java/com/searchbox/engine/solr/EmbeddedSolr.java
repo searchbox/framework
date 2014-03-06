@@ -103,8 +103,7 @@ public class EmbeddedSolr extends SolrSearchEngine {
 				LOGGER.info("Solr Data dir: " + EmbeddedSolr.core.getDataDir());
 
 				
-				EmbeddedSolr.server = new EmbeddedSolrServer(coreContainer,
-						"pubmed");
+				EmbeddedSolr.server = new EmbeddedSolrServer(coreContainer, coreName);
 				
 				
 
