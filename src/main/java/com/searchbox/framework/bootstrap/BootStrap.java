@@ -219,6 +219,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr.setAttributeValue("label", "description");
 		presetTopic.addFieldAttribute(fieldAttr2);
 		
+		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("article-completion-date"));
+		fieldAttr3.setAttributeValue("sortable",true);
+		preset.addFieldAttribute(fieldAttr3);
+		
+		FieldAttributeDefinition fieldAttr4 = new FieldAttributeDefinition(collection.getFieldDefinition("article-revision-date"));
+		fieldAttr4.setAttributeValue("sortable",true);
+		preset.addFieldAttribute(fieldAttr4);
+		
 		/** Create & add a querydebug SearchComponent to the preset; */
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
 		presetTopic.addSearchElement(querydebug);
