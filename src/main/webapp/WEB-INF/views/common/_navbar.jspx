@@ -22,14 +22,14 @@
       <nav class="collapse navbar-collapse bs-navbar-collapse left"
         role="navigation">
         <ul class="nav navbar-nav" id="preset-bar">
-          <c:forEach var="preset" items="${presets}">
+          <c:forEach var="ppreset" items="${presets}">
             <c:choose>
-              <c:when test="${preset.slug.equals(currentPreset.slug)}">
-                <li class="active"><a href="${preset.slug }">${preset.label }</a></li>
+              <c:when test="${ppreset.slug.equals(preset.slug)}">
+                <li class="active"><a href="${ppreset.slug }">${ppreset.label }</a></li>
               </c:when>
               <c:otherwise>
                 <li><a href="#"
-                  onclick="document.getElementById('searchForm').action='${preset.slug }';document.getElementById('searchForm').submit();">${preset.label }</a></li>
+                  onclick="document.getElementById('searchForm').action='${ppreset.slug }';document.getElementById('searchForm').submit();">${ppreset.label }</a></li>
               </c:otherwise>
             </c:choose>
           </c:forEach>
