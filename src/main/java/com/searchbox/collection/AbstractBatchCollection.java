@@ -1,6 +1,5 @@
 package com.searchbox.collection;
 
-import java.io.File;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -23,8 +22,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import com.searchbox.core.dm.Collection;
 
 @Configurable
-public abstract class AbstractBatchCollection extends Collection implements
-		FileIndexing, SynchronizedCollection {
+public abstract class AbstractBatchCollection extends Collection 
+	implements SynchronizedCollection {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractBatchCollection.class);
@@ -67,11 +66,6 @@ public abstract class AbstractBatchCollection extends Collection implements
 				+ jobExecution.getExitStatus().getExitCode());
 
 
-	}
-
-	@Override
-	public boolean indexFile(File file) {
-		return this.searchEngine.indexFile(file);
 	}
 	
 	protected abstract Job getJob();

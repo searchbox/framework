@@ -2,6 +2,7 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,9 +88,9 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		UpdateResponse response;
 		try {
 			response = request.process(this.getSolrServer());
-			LOGGER.info("Solr Response: " + response);
+			LOGGER.debug("Solr Response: " + response);
 			response = this.getSolrServer().commit();
-			LOGGER.info("Solr commit: " + response);
+			LOGGER.debug("Solr commit: " + response);
 			return true;
 		} catch (SolrServerException | IOException e) {
 			LOGGER.error("Could not index file: " + file, e);
@@ -101,13 +102,21 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	public boolean indexMap(Map<String, Object> fields) {
 		SolrInputDocument document = new SolrInputDocument();
 		for(Entry<String, Object> entry:fields.entrySet()){
-			document.addField(entry.getKey(), entry.getValue());
+			if(Collection.class.isAssignableFrom(entry.getValue().getClass())){
+				for(Object value:((Collection<?>)entry.getValue())){
+					document.addField(entry.getKey(), value);
+				}
+			} else {
+				document.addField(entry.getKey(), entry.getValue());
+			}
 		}
 		UpdateRequest update = new UpdateRequest();
 		update.add(document);
 		try {
 			UpdateResponse response = update.process(this.getSolrServer());
-			LOGGER.info("Updated FieldMap with status: " + response.getStatus());
+			LOGGER.debug("Updated FieldMap with status: " + response.getStatus());
+			response = this.getSolrServer().commit();
+			LOGGER.debug("Solr commit: " + response);
 			return true;
 		} catch (Exception e){
 			LOGGER.error("Could not index FieldMap",e);
