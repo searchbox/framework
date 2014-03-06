@@ -24,8 +24,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
+import com.searchbox.core.dm.Field;
+
 @Entity
-public class FieldDefinition {
+public class FieldDefinition implements ElementFactory<Field> {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -124,5 +126,10 @@ public class FieldDefinition {
 		} else if (!getKey().equals(other.getKey()))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Field getInstance() {
+		return new Field(this.getClazz(), this.getKey());
 	}
 }
