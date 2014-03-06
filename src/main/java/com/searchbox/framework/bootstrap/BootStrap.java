@@ -136,7 +136,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** SearchAll preset */
 		LOGGER.info("++ Creating Search All preset");
 		PresetDefinition preset = new PresetDefinition(collection);
-		preset.setAttributeValue("label","Search All");
+		preset.setLabel("Search All");
 		preset.setSlug("all");
 		
 		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
@@ -226,12 +226,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		searchbox.addPresetDefinition(preset);
 		
 		PresetDefinition articles = new PresetDefinition(collection);
-		articles.setAttributeValue("label","Articles");
+		articles.setLabel("Articles");
 		articles.setSlug("articles");
 		searchbox.addPresetDefinition(articles);
 
 		PresetDefinition press = new PresetDefinition(collection);
-		press.setAttributeValue("label","Press");
+		press.setLabel("Press");
 		press.setSlug("press");
 		searchbox.addPresetDefinition(press);
 		
@@ -268,13 +268,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("*  _\\ \\  __/ (_| | | | (__| | | | |_) | (_) >  <   *");
 		LOGGER.info("*  \\__/\\___|\\__,_|_|  \\___|_| |_|_.__/ \\___/_/\\_\\  *");
 		LOGGER.info("*                                                  *");
-		
-		LOGGER.info("                               __ _");
-		LOGGER.info("             ___  _ __  _ __  / _(_)_ __");
-		LOGGER.info("            / _ \\| '_ \\| '_ \\| |_| | '_ \\");
-		LOGGER.info("           | (_) | |_) | |_) |  _| | | | |");
-		LOGGER.info("            \\___/| .__/| .__/|_| |_|_| |_|");
-		LOGGER.info("                 |_|   |_|");
 		LOGGER.info("*                                                  *");
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                                                  *");
