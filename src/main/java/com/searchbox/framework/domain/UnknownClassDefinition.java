@@ -92,7 +92,6 @@ public class UnknownClassDefinition {
 //			element = this.getClazz().newInstance();
 		} catch (Exception e) {
 			LOGGER.error("Could not create new instance of: " + this.getClazz(),e);
-			throw new RuntimeException("Could not construct element for class: " + getClazz());
 		}
 		
 		for(UnknownAttributeDefinition attribute:this.getAttributes()){
@@ -109,13 +108,8 @@ public class UnknownClassDefinition {
 					}
 				} catch (Exception e) {
 					LOGGER.error("Error in setter: " + element.getClass().getName()+
-							"#"+setter.getName()+"["+attribute.getType().getName()+"]");
-					LOGGER.error("Attribute Value is: " + attribute.getValue());
-					LOGGER.error("Attribute Value Class is: " + attribute.getValue().getClass().getName());
-					if(setter != null){
-						LOGGER.error("\tsetter args: " + setter.getParameterTypes()[0].getName());
-					}
-					throw new RuntimeException("Could not construct element for class: " + getClazz());
+							"#"+setter.getName()+"["+attribute.getType()+"]");
+					throw new RuntimeException("Could not construct element for class: " + getClazz(), e);
 				}
 			}
 		}

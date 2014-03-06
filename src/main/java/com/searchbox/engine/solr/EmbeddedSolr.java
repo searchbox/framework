@@ -16,27 +16,15 @@
 package com.searchbox.engine.solr;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
-import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.SolrResponseBase;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
@@ -47,12 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
-import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.engine.AbstractSearchEngine;
-import com.searchbox.core.engine.ManagedSearchEngine;
 
-public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
-	implements ManagedSearchEngine {
+public class EmbeddedSolr extends SolrSearchEngine {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EmbeddedSolr.class);
@@ -76,12 +60,18 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	private static SolrCore core = null;
 
 	public EmbeddedSolr() {
-		super(SolrQuery.class, SolrResponse.class);
+		super();
 	}
 
 	public EmbeddedSolr(String name, String solrHome) {
-		super(name, SolrQuery.class, SolrResponse.class);
+		super(name);
 		this.solrHome = solrHome;
+	}
+	
+
+	@Override
+	protected SolrServer getSolrServer() {
+		return EmbeddedSolr.server;
 	}
 
 	public void init() {
@@ -121,15 +111,6 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 			} catch (Exception e) {
 				LOGGER.error("Could not start search engine", e);
 			}
-		}
-	}
-
-	@Override
-	public SolrResponse execute(SolrQuery query) {
-		try {
-			return EmbeddedSolr.server.query(query);
-		} catch (SolrServerException e) {
-			throw new RuntimeException("Could nexecute Query on  engine", e);
 		}
 	}
 
@@ -174,68 +155,20 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	}
 
 	@Override
-	public boolean indexFile(File file) {
-		LOGGER.info("Indexing for pubmed: " + file.getAbsolutePath());
-		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
-		contentstream.setContentType("text/xml");
-		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(
-				"/update");
-		request.addContentStream(contentstream);
-		UpdateResponse response;
-		try {
-			response = request.process(EmbeddedSolr.server);
-			LOGGER.info("Solr Response: " + response);
-			response = EmbeddedSolr.server.commit();
-			LOGGER.info("Solr commit: " + response);
-			return true;
-		} catch (SolrServerException | IOException e) {
-			LOGGER.error("Could not index file: " + file, e);
-		}
-		return false;
-	}
-
-	@Override
-	public boolean indexMap(Map<String, Object> fields) {
-		SolrInputDocument document = new SolrInputDocument();
-		for(Entry<String, Object> entry:fields.entrySet()){
-			document.addField(entry.getKey(), entry.getValue());
-		}
-		UpdateRequest update = new UpdateRequest();
-		update.add(document);
-		try {
-			UpdateResponse response = update.process(EmbeddedSolr.server);
-			LOGGER.info("Updated FieldMap with status: " + response.getStatus());
-			return true;
-		} catch (Exception e){
-			LOGGER.error("Could not index FieldMap",e);
-			return false;
-		}
-	}
-
-	@Override
-	public boolean updateForField(Field field, FieldAttribute fieldAttribute) {
-		
-		/** Get the translation for the field's key */
-		
-		
+	protected boolean addCopyFields(Field field, Set<String> copyFields) {
 		
 		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
-		List<CopyField> copyFields = schema.getCopyFieldsList(field.getKey());
 		
+		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
+			copyFields.remove(copyField.getDestination().getName());
+		}
+
+		Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+		copyFieldsMap.put(field.getKey(), copyFields);
+		schema = schema.addCopyFields(copyFieldsMap);
 		
-		return false;
-	}
-
-	@Override
-	public List<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getKeyForField(Field field, FieldAttribute fieldAttribute,
-			String operation) {
-		// TODO Auto-generated method stub
-		return null;
+		EmbeddedSolr.core.setLatestSchema(schema);
+		
+		return true;
 	}
 }

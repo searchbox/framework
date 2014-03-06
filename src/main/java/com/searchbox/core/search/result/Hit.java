@@ -118,5 +118,63 @@ public class Hit extends ValueElement  {
 	public int compareTo(ValueElement other) {
 		return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((IDFieldName == null) ? 0 : IDFieldName.hashCode());
+		result = prime * result
+				+ ((TitleFieldName == null) ? 0 : TitleFieldName.hashCode());
+		result = prime * result
+				+ ((URLFieldName == null) ? 0 : URLFieldName.hashCode());
+		result = prime * result
+				+ ((fieldValues == null) ? 0 : fieldValues.hashCode());
+		result = prime * result + ((score == null) ? 0 : score.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Hit))
+			return false;
+		Hit other = (Hit) obj;
+		if (IDFieldName == null) {
+			if (other.IDFieldName != null)
+				return false;
+		} else if (!IDFieldName.equals(other.IDFieldName))
+			return false;
+		if (TitleFieldName == null) {
+			if (other.TitleFieldName != null)
+				return false;
+		} else if (!TitleFieldName.equals(other.TitleFieldName))
+			return false;
+		if (URLFieldName == null) {
+			if (other.URLFieldName != null)
+				return false;
+		} else if (!URLFieldName.equals(other.URLFieldName))
+			return false;
+		if (fieldValues == null) {
+			if (other.fieldValues != null)
+				return false;
+		} else if (!fieldValues.equals(other.fieldValues))
+			return false;
+		if (score == null) {
+			if (other.score != null)
+				return false;
+		} else if (!score.equals(other.score))
+			return false;
+		return true;
+	}
 }

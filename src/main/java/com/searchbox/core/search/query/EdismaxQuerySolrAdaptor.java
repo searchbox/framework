@@ -1,6 +1,7 @@
 package com.searchbox.core.search.query;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.DisMaxParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.FieldAttribute.USE;
+import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class EdismaxQuerySolrAdaptor {
@@ -19,13 +22,12 @@ public class EdismaxQuerySolrAdaptor {
 	@PreSearchAdapter
 	public void setDefaultQuery(SolrQuery query){
 		query.setParam("defType", "edismax");
-		query.setRequestHandler("edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
 	}
 	
 	
 	@PreSearchAdapter
-	public void setQueryFields(EdismaxQuery SearchElement,
+	public void setQueryFields(SolrSearchEngine searchEngine, EdismaxQuery SearchElement,
 			SolrQuery query, FieldAttribute fieldAttribute) {
 		LOGGER.debug("Checking Field Attr for EdismaxQuery -- Field: {} ", fieldAttribute.getField().getKey());
 
@@ -35,19 +37,17 @@ public class EdismaxQuerySolrAdaptor {
 			String currentFields = query.get(DisMaxParams.QF);
 			query.set(DisMaxParams.QF, 
 					((currentFields!=null && !currentFields.isEmpty())?currentFields+" ":"")+
-							fieldAttribute.getField().getKey()+"^"+boost);
+							searchEngine.getKeyForField(fieldAttribute, USE.SEARCH)+"^"+boost);
 		}
 	}
 
 	@PostSearchAdapter
-	public EdismaxQuery udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
+	public void udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
 		searchElement.setQuery(query.getQuery());			
-		return searchElement;
 	}
 
 	@PreSearchAdapter
-	public SolrQuery getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
-		query.setQuery(condition.getQuery());
-		return query;
+	public void getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
+		query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
 	}
 }

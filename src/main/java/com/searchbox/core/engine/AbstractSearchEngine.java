@@ -19,9 +19,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
@@ -30,9 +28,6 @@ import com.searchbox.core.search.SearchElement;
 public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchEngine.class);
-	
-	@Autowired
-	private ApplicationContext context;
 	
 	protected String name;
 	
@@ -70,8 +65,8 @@ public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
 			return queryClass.newInstance();
 		} catch (Exception e) {
 			LOGGER.error("Could not create new Query Object for searchEngine",e);
+			throw new RuntimeException("Could not create new Query Object for searchEngine",e);
 		}
-		return null;
 	}
 	
 	@Override

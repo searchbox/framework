@@ -39,7 +39,9 @@ public class Collection {
 	@SearchAttribute
 	protected SearchEngine<?, ?> searchEngine;
 	
-	public Collection(){}
+	public Collection(){
+		
+	}
 	
 	public Collection(String name) {
 		this.name = name;

@@ -22,6 +22,10 @@ import com.searchbox.core.SearchAttribute;
 
 public class FieldAttribute {
 	
+	public enum USE {
+		MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
+	}
+	
 	protected Field field;
 	
 	@SearchAttribute
@@ -47,6 +51,14 @@ public class FieldAttribute {
 	
 	@SearchAttribute("1f")
 	protected Float boost = 1f;
+	
+	public FieldAttribute(){
+		
+	}
+	
+	public FieldAttribute(Field field){
+		this.field = field;
+	}
 
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);

@@ -32,14 +32,14 @@ public class SearchAdapterTest {
 		
 		
 		FieldAttribute fieldAttr = new FieldAttribute();
-		fieldAttr.setField(Field.StringField("article-title"));
+		fieldAttr.setField(Field.stringField("article-title"));
 		fieldAttr.setSearchable(true);
 		
 		FieldAttribute fieldAttr1 = new FieldAttribute();
-		fieldAttr1.setField(Field.StringField("journal-title"));
+		fieldAttr1.setField(Field.stringField("journal-title"));
 		
 		FieldAttribute fieldAttr2 = new FieldAttribute();
-		fieldAttr2.setField(Field.StringField("article-abstract"));
+		fieldAttr2.setField(Field.stringField("article-abstract"));
 		fieldAttr2.setSearchable(true);
 		
 		service.doPreSearchAdapt(null, null, new SolrQuery(), fieldAttr, fieldAttr1, fieldAttr2, q);
