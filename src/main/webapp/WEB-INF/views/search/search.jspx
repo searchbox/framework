@@ -64,7 +64,7 @@
             <div class="row" id="search-status-bar">
 
               <!-- Found x results in x time -->
-              <div class="col-md-3 col-sm-5 col-xs-7">
+              <div class="col-md-3 col-sm-5 col-xs-7 col-left">
                 <c:forEach items="${result.getElements('STAT')}"
                   var="element">
                   <sb:include element="${element }" result="${result }"
