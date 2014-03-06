@@ -15,13 +15,19 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Field {
+public class Field implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7579715557196299051L;
+	
 	protected Class<?> clazz;
 	/**
      */

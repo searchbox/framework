@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.collection.pubmed.PubmedCollection;
+import com.searchbox.core.dm.Field;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -212,7 +213,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		/** Create & add a facet to the preset. */
 		SearchElementDefinition fieldFacet = new SearchElementDefinition(FieldFacet.class);
-		fieldFacet.setAttributeValue("fieldName", "publication-type");
+		fieldFacet.setAttributeValue("field", Field.StringField("publication-type"));
 		fieldFacet.setLabel("Type");
 		fieldFacet.setAttributeValue("order", Order.BY_VALUE);
 		fieldFacet.setAttributeValue("sort", Sort.DESC);

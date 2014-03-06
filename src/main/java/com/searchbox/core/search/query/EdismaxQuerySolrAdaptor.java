@@ -1,6 +1,7 @@
 package com.searchbox.core.search.query;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.DisMaxParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,6 @@ public class EdismaxQuerySolrAdaptor {
 
 	@PreSearchAdapter
 	public void getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
-		query.setQuery(condition.getQuery());
+		query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
 	}
 }
