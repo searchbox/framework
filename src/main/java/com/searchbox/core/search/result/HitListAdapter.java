@@ -6,14 +6,14 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 
 @SearchAdapter
 public class HitListAdapter {
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public SolrQuery setRequieredFields(HitList searchElement,
 			SolrQuery query) {
 		for(String field:searchElement.getFields()){
@@ -32,7 +32,7 @@ public class HitListAdapter {
 		return query;
 	}
 
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public HitList generateHits(HitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();

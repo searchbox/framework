@@ -185,7 +185,9 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		}
 		
 		usages.put(USE.DEFAULT,field.getKey()+prepend+append);
-
+		if(fieldAttribute.getSortable()){
+			usages.put(USE.SORT,field.getKey()+prepend+append);
+		}
 		
 		if(fieldAttribute.getSearchable()){
 			if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){

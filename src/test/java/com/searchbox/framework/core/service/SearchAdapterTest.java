@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.Test;
 
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.query.EdismaxQuery;

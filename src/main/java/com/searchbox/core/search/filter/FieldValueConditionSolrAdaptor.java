@@ -8,8 +8,9 @@ import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
@@ -18,7 +19,7 @@ public class FieldValueConditionSolrAdaptor {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(FieldValueConditionSolrAdaptor.class);
 	
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void createFilterQueries(SolrSearchEngine engine, FieldValueCondition condition, SolrQuery query) {
 		
 		String conditionValue = ClientUtils.escapeQueryChars(condition.getValue());

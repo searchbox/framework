@@ -8,14 +8,14 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 
 @SearchAdapter
 public class TemplatedHitListAdapter  {
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void setRequieredFieldsForTemplate(TemplatedHitList searchElement,
 			SolrQuery query) {
 		Set<String> fields = new HashSet<String>();
@@ -35,7 +35,7 @@ public class TemplatedHitListAdapter  {
 		query.setFields(fields.toArray(new String[0]));
 	}
 
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response) {
 		
 		Iterator<SolrDocument> documents = response.getResults().iterator();

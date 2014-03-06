@@ -6,9 +6,9 @@ import org.apache.solr.common.params.DisMaxParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.engine.solr.SolrSearchEngine;
@@ -19,14 +19,14 @@ public class EdismaxQuerySolrAdaptor {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EdismaxQuerySolrAdaptor.class);
 	
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void setDefaultQuery(SolrQuery query){
 		query.setParam("defType", "edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
 	}
 	
 	
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void setQueryFields(SolrSearchEngine searchEngine, EdismaxQuery SearchElement,
 			SolrQuery query, FieldAttribute fieldAttribute) {
 		LOGGER.debug("Checking Field Attr for EdismaxQuery -- Field: {} ", fieldAttribute.getField().getKey());
@@ -42,12 +42,12 @@ public class EdismaxQuerySolrAdaptor {
 		}
 	}
 
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public void udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
 		searchElement.setQuery(query.getQuery());			
 	}
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
 		query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
 	}

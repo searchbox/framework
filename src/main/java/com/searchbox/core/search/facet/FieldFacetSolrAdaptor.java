@@ -8,9 +8,9 @@ import org.apache.solr.common.params.FacetParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
@@ -19,7 +19,7 @@ public class FieldFacetSolrAdaptor {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(FieldFacetSolrAdaptor.class);
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public SolrQuery addFacetField(SolrSearchEngine engine, FieldFacet facet,
 			SolrQuery query) {
 		
@@ -45,7 +45,7 @@ public class FieldFacetSolrAdaptor {
 		return query;
 	}
 
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public void getFacetValues(SolrSearchEngine engine, FieldFacet fieldFacet,
 			QueryResponse response) {
 		if(fieldFacet.getField() == null){
