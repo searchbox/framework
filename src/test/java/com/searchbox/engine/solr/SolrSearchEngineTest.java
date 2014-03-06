@@ -20,10 +20,14 @@ public class SolrSearchEngineTest {
 
 	private static final String FIELD_NAME_SEARCH = "title_txt";
 	private static final String FIELD_NAME_DEFAULT = "title";
-	
+
+	private static final String FIELD_YEARS_DEFAULT = "years";
+	private static final String FIELD_YEARS_SEARCH = "years_tis";
+
 	SolrSearchEngine engine;
 	
 	FieldAttribute attr;
+	FieldAttribute attr2;
 	
 	@Before
 	public void setSearchEngine(){
@@ -31,6 +35,10 @@ public class SolrSearchEngineTest {
 		attr.setField(Field.StringField(FIELD_NAME_DEFAULT));
 		attr.setHighlight(true);
 		attr.setSearchable(true);
+		
+		this.attr2 = new FieldAttribute();
+		attr2.setField(Field.IntField(FIELD_YEARS_DEFAULT));
+		attr2.setSearchable(true);
 		
 		this.engine = new SolrSearchEngine(){
 
@@ -56,7 +64,6 @@ public class SolrSearchEngineTest {
 		
 		Assert.assertTrue("Missing field in fieldNames from engine", fieldNames.size()==2);
 		Assert.assertTrue("Wrong field in fieldNames from engine", fieldNames.contains(FIELD_NAME_SEARCH));
-		Assert.assertTrue("Wring field in fieldNames from engine", fieldNames.contains(FIELD_NAME_DEFAULT));
 	}
 	
 	@Test
@@ -67,6 +74,16 @@ public class SolrSearchEngineTest {
 		
 		Assert.assertTrue("Missing fieldName for USE.MATCH from engine", fieldName != null && !fieldName.isEmpty());
 		Assert.assertTrue("Wrong fieldName for USE.MATCH from engine", fieldName.equals(FIELD_NAME_SEARCH));
+	}
+	
+	@Test
+	public void testKeyForIntegerAttributeByUSE(){
+		
+		String fieldName = this.engine.getKeyForField(this.attr2,USE.SEARCH);
+		LOGGER.info("Got fieldName: " + fieldName);
+		
+		Assert.assertTrue("Missing fieldName for USE.MATCH from engine", fieldName != null && !fieldName.isEmpty());
+		Assert.assertTrue("Wrong fieldName for USE.MATCH from engine", fieldName.equals(FIELD_YEARS_SEARCH));
 	}
 
 }
