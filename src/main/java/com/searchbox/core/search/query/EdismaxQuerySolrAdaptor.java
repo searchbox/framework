@@ -36,7 +36,7 @@ public class EdismaxQuerySolrAdaptor {
 			String currentFields = query.get(DisMaxParams.QF);
 			query.set(DisMaxParams.QF, 
 					((currentFields!=null && !currentFields.isEmpty())?currentFields+" ":"")+
-							searchEngine.getKeyForField(fieldAttribute, USE.MATCH)+"^"+boost);
+							searchEngine.getKeyForField(fieldAttribute, USE.SEARCH)+"^"+boost);
 		}
 	}
 

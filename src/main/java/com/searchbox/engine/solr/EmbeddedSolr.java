@@ -16,27 +16,15 @@
 package com.searchbox.engine.solr;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
@@ -47,10 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
-import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.dm.FieldAttribute.USE;
-import com.searchbox.core.engine.AbstractSearchEngine;
-import com.searchbox.core.engine.ManagedSearchEngine;
 
 public class EmbeddedSolr extends SolrSearchEngine {
 
@@ -174,14 +158,16 @@ public class EmbeddedSolr extends SolrSearchEngine {
 	protected boolean addCopyFields(Field field, Set<String> copyFields) {
 		
 		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
-
+		
 		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
 			copyFields.remove(copyField.getDestination().getName());
 		}
 
 		Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
 		copyFieldsMap.put(field.getKey(), copyFields);
-		schema.addCopyFields(copyFieldsMap);
+		schema = schema.addCopyFields(copyFieldsMap);
+		
+		EmbeddedSolr.core.setLatestSchema(schema);
 		
 		return true;
 	}

@@ -62,7 +62,7 @@ public class SolrSearchEngineTest {
 	@Test
 	public void testKeyForAttributeByUSE(){
 		
-		String fieldName = this.engine.getKeyForField(this.attr,USE.MATCH);
+		String fieldName = this.engine.getKeyForField(this.attr,USE.SEARCH);
 		LOGGER.info("Got fieldName: " + fieldName);
 		
 		Assert.assertTrue("Missing fieldName for USE.MATCH from engine", fieldName != null && !fieldName.isEmpty());

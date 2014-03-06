@@ -86,7 +86,7 @@ public class PresetDefinition extends UnknownClassDefinition implements
 
 	@PostLoad
 	public void postLoad() {
-		for (FieldDefinition fieldDef : collection.getFieldDefinitions()) {
+		for (FieldDefinition fieldDef : collection.getFields()) {
 			if (this.getFieldAttributeByField(fieldDef) == null) {
 				this.addFieldAttribute(new FieldAttributeDefinition(fieldDef));
 			}
@@ -222,7 +222,7 @@ public class PresetDefinition extends UnknownClassDefinition implements
 	@PrePersist
 	public void checkPresetAttributes() {
 		// THis is for a SearchEngine Managed Collection!!!
-		for (FieldDefinition fdef : collection.getFieldDefinitions()) {
+		for (FieldDefinition fdef : collection.getFields()) {
 			boolean exists = false;
 			for (FieldAttributeDefinition attr : fieldAttributes) {
 				if (attr.getField().equals(fdef)) {

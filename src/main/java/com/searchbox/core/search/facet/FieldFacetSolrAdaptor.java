@@ -9,12 +9,16 @@ import org.apache.solr.common.params.FacetParams;
 import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class FieldFacetSolrAdaptor {
 
 	@PreSearchAdapter
-	public SolrQuery addFacetField(FieldFacet facet, SolrQuery query) {
+	public SolrQuery addFacetField(SolrSearchEngine engine, FieldFacet facet,
+			SolrQuery query) {
+		
+		//String facetKey = engine.getKeyForField
 		boolean defined = false;
 		String[] facetFields = query.getFacetFields();
 		if (facetFields != null) {

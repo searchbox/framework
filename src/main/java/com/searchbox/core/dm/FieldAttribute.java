@@ -23,7 +23,7 @@ import com.searchbox.core.SearchAttribute;
 public class FieldAttribute {
 	
 	public enum USE {
-		MATCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
+		MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
 	}
 	
 	protected Field field;

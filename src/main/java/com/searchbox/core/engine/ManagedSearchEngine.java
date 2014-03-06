@@ -2,7 +2,6 @@ package com.searchbox.core.engine;
 
 import java.util.Set;
 
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 

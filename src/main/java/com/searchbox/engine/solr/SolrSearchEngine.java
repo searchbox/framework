@@ -35,15 +35,15 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	
 	private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
 	private static final String HIGHLIGHT_FIELD = "_txt";
-	private static final String SORTABLE_FIELD = "s";
+	private static final String NON_SORTABLE_FIELD = "s";
 	
-	private static final String DATE_FIELD = "dt";
-	private static final String BOOLEAN_FIELD = "b";
-	private static final String INTEGER_FIELD = "i";
-	private static final String FLOAT_FIELD = "f";
-	private static final String DOUBLE_FIELD = "d";
-	private static final String LONG_FIELD = "l";
-	private static final String TEXT_FIELD = "";
+	private static final String DATE_FIELD = "_tdt";
+	private static final String BOOLEAN_FIELD = "_b";
+	private static final String INTEGER_FIELD = "_ti";
+	private static final String FLOAT_FIELD = "_tf";
+	private static final String DOUBLE_FIELD = "_td";
+	private static final String LONG_FIELD = "_tl";
+	private static final String TEXT_FIELD = "_s";
 
 	private static final String SPELLCHECK_FIELD = "spell";
 	private static final String SUGGESTION_FIELD = "suggest";
@@ -147,13 +147,11 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		Map<USE,String> usages = new HashMap<USE,String>();
 		
 		String append = "";
-		String prepend = "_";
+		String prepend = "";
 		
 		
-		if(fieldAttribute.getSortable()){
-			append = SORTABLE_FIELD; 
-		} else {
-			prepend += "t";
+		if(!fieldAttribute.getSortable()){
+			append = NON_SORTABLE_FIELD; 
 		}
 		
 		if(Boolean.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
@@ -169,12 +167,18 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		} else if(Long.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
 			prepend += LONG_FIELD;
 		} else if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-			prepend = TEXT_FIELD;
+			prepend += TEXT_FIELD;
 		}
 		
+		usages.put(USE.DEFAULT,field.getKey()+prepend+append);
+
 		
 		if(fieldAttribute.getSearchable()){
-			usages.put(USE.MATCH, field.getKey()+SEARCHABLE_TEXT_NO_LANG_FIELD);
+			if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+				usages.put(USE.SEARCH, field.getKey()+SEARCHABLE_TEXT_NO_LANG_FIELD);
+			} else {
+				usages.put(USE.SEARCH, field.getKey()+prepend+append);
+			}
 		}
 		
 		if(fieldAttribute.getHighlight()){
@@ -189,8 +193,6 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 			usages.put(USE.SUGGEST,SUGGESTION_FIELD);
 		}
 		
-		usages.put(USE.DEFAULT,field.getKey()+prepend+append);
-
 		return usages;
 	}
 }
