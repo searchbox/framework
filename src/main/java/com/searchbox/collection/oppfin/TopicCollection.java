@@ -174,10 +174,8 @@ public class TopicCollection extends AbstractBatchCollection implements
 			// loop array
 			Iterator<JSONObject> iterator = topics.iterator();
 
-			int i = 0;
 			public JSONObject read() {
 				if(iterator.hasNext()){
-					if((i++)>5) return null;
 					return iterator.next();
 				}
 				return null;
@@ -189,10 +187,10 @@ public class TopicCollection extends AbstractBatchCollection implements
 		return new ItemProcessor<JSONObject, Map<String, Object>>() {
 			
 			public Map<String,Object> process(JSONObject item) throws IOException {
-				LOGGER.info("Processing stuff here...");
 				// Populating useful variables
 				String topicIdentifier = (String) item.get("identifier");
 				String topicFileName = (String) item.get("topicFileName");
+				LOGGER.info("Processing topic["+topicIdentifier+"]");
 
 				// Pulling full HTML description from the web
 				String topicDetailHtml = getTopicDescription(topicFileName);
@@ -211,7 +209,6 @@ public class TopicCollection extends AbstractBatchCollection implements
 				doc.put("docType", "Topic H2020");
 				doc.put("programme", "H2020");
 
-				LOGGER.info("What's a flags: " +((JSONArray)item.get("flags")));
 				doc.put("tags", (JSONArray)item.get("tags"));
 				doc.put("flags", (JSONArray)item.get("flags"));
 
