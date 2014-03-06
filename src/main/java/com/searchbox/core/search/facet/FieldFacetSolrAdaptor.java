@@ -5,6 +5,8 @@ import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.params.FacetParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.PreSearchAdapter;
@@ -13,6 +15,9 @@ import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class FieldFacetSolrAdaptor {
+	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(FieldFacetSolrAdaptor.class);
 
 	@PreSearchAdapter
 	public SolrQuery addFacetField(SolrSearchEngine engine, FieldFacet facet,
@@ -41,8 +46,12 @@ public class FieldFacetSolrAdaptor {
 	}
 
 	@PostSearchAdapter
-	public FieldFacet getFacetValues(SolrSearchEngine engine, FieldFacet fieldFacet,
+	public void getFacetValues(SolrSearchEngine engine, FieldFacet fieldFacet,
 			QueryResponse response) {
+		if(fieldFacet.getField() == null){
+			LOGGER.error("FieldFacet \""+fieldFacet.getLabel() +"\" has no field!!!");
+			return;
+		}
 		String facetKey = engine.getKeyForField(fieldFacet.getField());
 		if (response.getFacetFields() != null) {
 			for (FacetField facet : response.getFacetFields()) {
@@ -54,6 +63,5 @@ public class FieldFacetSolrAdaptor {
 				}
 			}
 		}
-		return fieldFacet;
 	}
 }
