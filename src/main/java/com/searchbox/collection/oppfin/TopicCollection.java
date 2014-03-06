@@ -74,7 +74,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 	private final static String CRAWLER_USER_AGENT_DEFAULT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11";
 	private final static String TOPIC_LIST_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/data/call/h2020/topics.json";
 	private final static String TOPIC_DETAIL_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/h2020/topics/%s.html";
-	private final static String TOPIC_DETAIL_BEGIN_DEFAULT = "<div class=\"tab-pane active\" id=\"tab1\"";
+	private final static String TOPIC_DETAIL_BEGIN_DEFAULT = "<div class=\"tab-pane active\" id=\"tab1\">";
 	private final static String TOPIC_DETAIL_END_DEFAULT = "</div>";
 
 	@Resource
