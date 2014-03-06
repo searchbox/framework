@@ -34,10 +34,11 @@ public class EdismaxQuerySolrAdaptor {
 		if(fieldAttribute.getSearchable()){
 			LOGGER.debug("Found searchable field: {}", fieldAttribute.getField().getKey());
 			Float boost = (fieldAttribute.getBoost()!=null)?fieldAttribute.getBoost():1.0f;
+			String key = searchEngine.getKeyForField(fieldAttribute, USE.SEARCH);
 			String currentFields = query.get(DisMaxParams.QF);
 			query.set(DisMaxParams.QF, 
 					((currentFields!=null && !currentFields.isEmpty())?currentFields+" ":"")+
-							searchEngine.getKeyForField(fieldAttribute, USE.SEARCH)+"^"+boost);
+							((key==null)?fieldAttribute.getField().getKey():key)+"^"+boost);
 		}
 	}
 
