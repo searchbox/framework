@@ -119,6 +119,7 @@ public class FieldFacet
 			return field.getKey() + "[" + this.value + "]"+
 					StringUtils.ClassToSlug(field.getClazz());
 		}
+		
 
 		@Override
 		public int compareTo(ValueElement other) {
@@ -136,7 +137,7 @@ public class FieldFacet
 			}
 			return diff * ((sort.equals(Sort.ASC)) ? 1 : -1);
 		}
-
+		
 		@Override
 		public Class<?> getConditionClass() {
 			return FieldValueCondition.class;

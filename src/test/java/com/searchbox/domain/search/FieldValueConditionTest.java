@@ -46,11 +46,11 @@ public class FieldValueConditionTest {
 	
 	@Test
 	public void testLoopConverter(){
-		FieldFacet facet = new FieldFacet("test Facet", Field.StringField("athor"));
+		FieldFacet facet = new FieldFacet("test Facet", Field.stringField("athor"));
 		
 		FieldFacet.Value value = facet.new Value("Stephane","stephane",3);
 		
-		FieldValueCondition orig = new FieldValueCondition(Field.StringField("athor"), "stephane",facet.getSticky());		
+		FieldValueCondition orig = new FieldValueCondition(Field.stringField("athor"), "stephane",facet.getSticky());		
 
 		AbstractSearchCondition condition = value.getSearchCondition();
 		

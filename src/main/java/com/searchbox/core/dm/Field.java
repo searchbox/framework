@@ -78,23 +78,28 @@ public class Field implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (!(obj instanceof Field)){
 			return false;
-		if (!(obj instanceof Field))
-			return false;
+		}
+		
 		Field other = (Field) obj;
-		if (clazz == null) {
-			if (other.clazz != null)
+		if (clazz == null ) {
+			if (other.clazz != null){
 				return false;
-		} else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName()))
+			}
+		} else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName())){
 			return false;
+		}
 		if (key == null) {
-			if (other.key != null)
+			if (other.key != null){
 				return false;
-		} else if (!key.equals(other.key))
+			}
+		} else if (!key.equals(other.key)){
 			return false;
+		}
 		return true;
 	}
 
@@ -102,19 +107,19 @@ public class Field implements Serializable {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 	
-	public static Field StringField(String key){
+	public static Field stringField(String key){
 		return new Field(String.class, key);
 	}
 	
-	public static Field DateField(String key){
+	public static Field dateField(String key){
 		return new Field(Date.class, key);
 	}
 	
-	public static Field IntField(String key){
+	public static Field intField(String key){
 		return new Field(Integer.class, key);
 	}
 	
-	public static Field FloatField(String key){
+	public static Field floatField(String key){
 		return new Field(Float.class, key);
 	}
 }

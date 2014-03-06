@@ -16,6 +16,7 @@
 package com.searchbox.collection.pubmed;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +60,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 			.getLogger(PubmedCollection.class);
 	
 	public static List<Field> GET_FIELDS(){
-		ArrayList<Field> fields = new ArrayList<Field>();
+		List<Field> fields = new ArrayList<Field>();
 		fields.add(new Field(String.class, "id"));
 		fields.add(new Field(Date.class, "article-creation-date"));
 		fields.add(new Field(Integer.class, "article-year"));
@@ -91,8 +92,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 			boolean hasmore = true;
 
 			@Override
-			public Resource read() throws Exception, UnexpectedInputException,
-					ParseException, NonTransientResourceException {
+			public Resource read() {
 				if (hasmore) {
 					hasmore = false;
 					Resource resource = context
@@ -111,7 +111,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	public ItemProcessor<Resource, File> itemProcessor() {
 		return new ItemProcessor<Resource, File>() {
 			@Override
-			public File process(Resource item) throws Exception {
+			public File process(Resource item) throws IOException {
 				LOGGER.info("Processing stuff here...");
 				return item.getFile();
 			}
@@ -121,7 +121,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	public ItemWriter<File> writer() {
 		ItemWriter<File> writer = new ItemWriter<File>() {
 			@Override
-			public void write(List<? extends File> items) throws Exception {
+			public void write(List<? extends File> items) {
 				for (File item : items) {
 					indexFile(item);
 				}

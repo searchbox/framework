@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 
 import com.searchbox.core.SearchAttribute;
@@ -42,7 +43,7 @@ public class ReflectionUtils {
 					toField.set(to, fromField.get(from));
 				}
 			} catch (Exception e) {
-				;
+				LOGGER.warn("Could not copye Fields.",e);
 			}			
 		}
 	}
@@ -54,12 +55,13 @@ public class ReflectionUtils {
 					UnknownAttributeDefinition attrDef = new UnknownAttributeDefinition(field.getType(), field.getName());
 					String value = field.getAnnotation(SearchAttribute.class).value();
 					if(value != null && !value.isEmpty()){
-						try {
+											try {
 							Object ovalue = BeanUtils.instantiateClass(field.getType().getConstructor(String.class), value);
 							attrDef.setValue(ovalue);
-						} catch (Exception e) {
-							LOGGER.warn("Could not build default value for SearchAttribute \""+field.getName()+"\"");
-						}
+						} catch (BeanInstantiationException
+								| NoSuchMethodException | SecurityException e) {
+							LOGGER.trace("Could not construct default value (not much of a problem)",e);
+						}						
 					}
 					attributes.add(attrDef);
 				}

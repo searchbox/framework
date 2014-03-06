@@ -32,12 +32,12 @@ public class SolrSearchEngineTest {
 	@Before
 	public void setSearchEngine(){
 		this.attr = new FieldAttribute();
-		attr.setField(Field.StringField(FIELD_NAME_DEFAULT));
+		attr.setField(Field.stringField(FIELD_NAME_DEFAULT));
 		attr.setHighlight(true);
 		attr.setSearchable(true);
 		
 		this.attr2 = new FieldAttribute();
-		attr2.setField(Field.IntField(FIELD_YEARS_DEFAULT));
+		attr2.setField(Field.intField(FIELD_YEARS_DEFAULT));
 		attr2.setSearchable(true);
 		
 		this.engine = new SolrSearchEngine(){
