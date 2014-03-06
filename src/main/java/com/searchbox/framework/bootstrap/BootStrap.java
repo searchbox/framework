@@ -201,7 +201,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		 */
 		LOGGER.info("++ Creating Topic preset");
 		PresetDefinition presetTopic = new PresetDefinition(collection);
-		presetTopic.setAttributeValue("label","Topic");
+		presetTopic.setLabel("Topic");
+		presetTopic.setDescription("H2020 open calls");
 		presetTopic.setSlug("topic");
 		
 		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
