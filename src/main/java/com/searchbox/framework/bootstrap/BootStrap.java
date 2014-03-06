@@ -29,8 +29,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.collection.oppfin.OppfinTopicCollection;
 import com.searchbox.collection.pubmed.PubmedCollection;
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -104,11 +104,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		User admin = userService.registerNewUserAccount("admin", "password");
 		User user = userService.registerNewUserAccount("user", "password");
 		
-		LOGGER.info("Bootstraping application with default data...");
+		LOGGER.info("Bootstraping application with oppfin data...");
 		
 		/** The base Searchbox. */
-		LOGGER.info("++ Creating pubmed searchbox");
-		Searchbox searchbox = new Searchbox("pubmed","Embeded pubmed Demo");
+		LOGGER.info("++ Creating oppfin searchbox");
+		Searchbox searchbox = new Searchbox("oppfin","Opportunity Finder Searchbox");
 		
 		
 		/** The embedded Solr SearchEngine */
@@ -116,20 +116,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchEngineDefinition engine = null;
 		try {
 			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-			engine.setAttributeValue("coreName", "pubmed");
+			engine.setAttributeValue("coreName", "oppfin");
 			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
 			engine.setAttributeValue("solrConfig",context.getResource("classpath:solr/conf/solrconfig.xml").getURL().getPath());
 			engine.setAttributeValue("solrSchema",context.getResource("classpath:solr/conf/schema.xml").getURL().getPath());
-			engine.setAttributeValue("dataDir", "target/data/pubmed/");
+			engine.setAttributeValue("dataDir", "target/data/oppfin/");
 			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			LOGGER.error("Could not set definition for SolrEmbededServer",e);
 		}
 		
 		/** The base collection for searchbox */
-		LOGGER.info("++ Creating pubmed Collection");
-		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"oppfin");
-		collection.setAutoStart(true);
+		LOGGER.info("++ Creating oppfin Collection");
+		CollectionDefinition collection = new CollectionDefinition(OppfinTopicCollection.class,"oppfin");
+		collection.setAutoStart(false);
 		collection.setSearchEngine(engine);	
 		collection = collectionRepository.save(collection);
 		
@@ -273,7 +273,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		/** Create & add a facet to the presetTopic. */
 		SearchElementDefinition callFacet = new SearchElementDefinition(FieldFacet.class);
-		callFacet.setAttributeValue("fieldName", "callIdentifier");
+		callFacet.setAttributeValue("field", collection.getFieldDefinition("callIdentifier").getInstance());
 		callFacet.setLabel("Call");
 		callFacet.setAttributeValue("order", Order.BY_VALUE);
 		callFacet.setAttributeValue("sort", Sort.DESC);
@@ -282,14 +282,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** Ideally this is a range facet. We agreed that for now it will be a list of months 
 		 *  For instance(March 14, April 14, May 14, June 14, ...) */
 		SearchElementDefinition deadlineFacet = new SearchElementDefinition(FieldFacet.class);
-		deadlineFacet.setAttributeValue("fieldName", "callDeadline");
+		deadlineFacet.setAttributeValue("fieldName", collection.getFieldDefinition("callDeadline").getInstance());
 		deadlineFacet.setLabel("Deadline");
 		deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
 		deadlineFacet.setAttributeValue("sort", Sort.DESC);
 		presetTopic.addSearchElement(deadlineFacet);
 		
 		SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
-		flagFacet.setAttributeValue("fieldName", "flags");
+		flagFacet.setAttributeValue("fieldName", collection.getFieldDefinition("flags").getInstance());
 		flagFacet.setLabel("Flags");
 		flagFacet.setAttributeValue("order", Order.BY_VALUE);
 		flagFacet.setAttributeValue("sort", Sort.DESC);
@@ -299,25 +299,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
 		presetTopic.addSearchElement(pagination);
 		
-		searchbox.addPresetDefinition(presetTopic);
-		
-		PresetDefinition topicsDef = new PresetDefinition(collection);
-		topicsDef.setAttributeValue("label","Topics");
-		topicsDef.setSlug("topics");
-		searchbox.addPresetDefinition(topicsDef);
-
-		
+		searchbox.addPresetDefinition(presetTopic);		
 		
 		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
 		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
 		searchbox.addUserRole(new UserRole(user, Role.USER));
 		repository.save(searchbox);
 				
-		/** Making another Searchbox for testing and UI. */
-		Searchbox anotherSearchbox = new Searchbox("custom","My Searchbox");
-		repository.save(anotherSearchbox);
+		
 
-		LOGGER.info("Bootstraping application with default data... done");
+		LOGGER.info("Bootstraping application with oppfin data... done");
 		
 		
 		}
