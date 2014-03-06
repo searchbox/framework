@@ -78,7 +78,7 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 
 	@Override
 	public boolean indexFile(File file) {
-		LOGGER.info("Indexing for pubmed: " + file.getAbsolutePath());
+		LOGGER.info("Indexing file: " + file.getAbsolutePath());
 		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
 		contentstream.setContentType("text/xml");
 		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(

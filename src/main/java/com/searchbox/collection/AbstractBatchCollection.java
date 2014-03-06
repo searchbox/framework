@@ -63,7 +63,7 @@ public abstract class AbstractBatchCollection extends Collection implements
 				  .addLong("time",System.currentTimeMillis()).toJobParameters();
 			
 		JobExecution jobExecution = launcher.run(this.getJob(), params);
-		LOGGER.info("JobExecution for pubmed: "
+		LOGGER.info("JobExecution for collection: "
 				+ jobExecution.getExitStatus().getExitCode());
 
 
