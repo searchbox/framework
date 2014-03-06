@@ -29,7 +29,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.collection.oppfin.OppfinTopicCollection;
+import com.searchbox.collection.oppfin.TopicCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -127,8 +127,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		/** The base collection for searchbox */
 		LOGGER.info("++ Creating oppfin Collection");
-		CollectionDefinition collection = new CollectionDefinition(OppfinTopicCollection.class,"oppfin");
-		collection.setAutoStart(false);
+		CollectionDefinition collection = new CollectionDefinition(TopicCollection.class,"oppfin");
+		collection.setAutoStart(true);
 		collection.setSearchEngine(engine);	
 		collection = collectionRepository.save(collection);
 		
@@ -234,6 +234,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("urlField", "title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
 														"<sbx:snippet value=\"${hit.fieldValues['descriptionRaw']}\"/>" +
+														"<p>${hit.fieldValues['flags']}</p>" +
 														"<sbx:tagAttribute limit=\"1\" label=\"Deadline\" values=\"${hit.fieldValues['callDeadline']}\"/>" +
 														"<sbx:tagAttribute limit=\"1\" label=\"Call\" values=\"${hit.fieldValues['callIdentifier']}\"/>"
 														);
@@ -283,14 +284,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** Ideally this is a range facet. We agreed that for now it will be a list of months 
 		 *  For instance(March 14, April 14, May 14, June 14, ...) */
 		SearchElementDefinition deadlineFacet = new SearchElementDefinition(FieldFacet.class);
-		deadlineFacet.setAttributeValue("fieldName", collection.getFieldDefinition("callDeadline").getInstance());
+		deadlineFacet.setAttributeValue("field", collection.getFieldDefinition("callDeadline").getInstance());
 		deadlineFacet.setLabel("Deadline");
 		deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
 		deadlineFacet.setAttributeValue("sort", Sort.DESC);
 		presetTopic.addSearchElement(deadlineFacet);
 		
 		SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
-		flagFacet.setAttributeValue("fieldName", collection.getFieldDefinition("flags").getInstance());
+		flagFacet.setAttributeValue("field", collection.getFieldDefinition("flags").getInstance());
 		flagFacet.setLabel("Flags");
 		flagFacet.setAttributeValue("order", Order.BY_VALUE);
 		flagFacet.setAttributeValue("sort", Sort.DESC);
