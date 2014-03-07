@@ -84,10 +84,12 @@
               <!-- Tags -->
               <div class="clearfix visible-xs" style="margin-bottom: 10px"><!-- clear --></div>
               <div class="col-md-5 col-md-pull-2 col-sm-5 col-sm-pull-2">
+              <!-- Tags 
                 <span class="label label-default">Default</span> <span
                   class="label label-primary">Primary</span> <span
                   class="label label-success">Success</span> <span
                   class="label label-success">Success</span>
+              -->
               </div>
             </div>
           </div>
