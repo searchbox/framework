@@ -23,5 +23,7 @@
 			<c:set var="content" value="${hit.highlights[field]}" />
 		</c:when>
 	</c:choose>
-	<sbx:out value="${content }" maxLengh="300" join=" ... "/>
+	<div>
+	 <sbx:out value="${content }" maxLengh="300" join=" ... "/>
+	</div>
 </jsp:root>
