@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
@@ -20,10 +21,14 @@ public class FieldFacetSolrAdaptor {
 			.getLogger(FieldFacetSolrAdaptor.class);
 
 	@SearchAdapterMethod(execute=Time.PRE)
-	public SolrQuery addFacetField(SolrSearchEngine engine, FieldFacet facet,
-			SolrQuery query) {
+	public void addFacetField(SolrSearchEngine engine, FieldFacet facet,
+			SolrQuery query, FieldAttribute attribute) {
 		
-		String facetKey = engine.getKeyForField(facet.getField());
+		if(!attribute.getField().getKey().equals(facet.getFieldName())){
+			return;
+		}
+		
+		String facetKey = engine.getKeyForField(attribute);
 		
 		boolean defined = false;
 		String[] facetFields = query.getFacetFields();
@@ -42,17 +47,23 @@ public class FieldFacetSolrAdaptor {
 				query.addFacetField(facetKey);
 			}
 		}
-		return query;
 	}
 
 	@SearchAdapterMethod(execute=Time.POST)
 	public void getFacetValues(SolrSearchEngine engine, FieldFacet fieldFacet,
-			QueryResponse response) {
+			QueryResponse response, FieldAttribute attribute) {
+		
+		if(!attribute.getField().getKey().equals(fieldFacet.getFieldName())){
+			return;
+		}
+		
 		if(fieldFacet.getField() == null){
 			LOGGER.error("FieldFacet \""+fieldFacet.getLabel() +"\" has no field!!!");
 			return;
 		}
-		String facetKey = engine.getKeyForField(fieldFacet.getField());
+		
+		String facetKey = engine.getKeyForField(attribute);
+		
 		if (response.getFacetFields() != null) {
 			for (FacetField facet : response.getFacetFields()) {
 				if (facet.getName().equals(facetKey)) {
