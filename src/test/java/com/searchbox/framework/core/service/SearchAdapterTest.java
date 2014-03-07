@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.Test;
 
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.query.EdismaxQuery;
@@ -24,8 +26,8 @@ public class SearchAdapterTest {
 		SearchAdapterService service = new SearchAdapterService();
 		
 		for (Method method : adapter.getClass().getDeclaredMethods()) {
-			if (method.isAnnotationPresent(PreSearchAdapter.class)) {
-				service.addPreSearchMethod(method, adapter);
+			if (method.isAnnotationPresent(SearchAdapterMethod.class)) {
+				service.addSearchAdapterMethod(Time.PRE, method, adapter);
 			}
 		}	
 		
@@ -41,7 +43,7 @@ public class SearchAdapterTest {
 		fieldAttr2.setField(Field.stringField("article-abstract"));
 		fieldAttr2.setSearchable(true);
 		
-		service.doPreSearchAdapt(null, null, new SolrQuery(), fieldAttr, fieldAttr1, fieldAttr2, q);
+		service.doAdapt(Time.PRE, null, new SolrQuery(), fieldAttr, fieldAttr1, fieldAttr2, q);
 
 		
 	}
