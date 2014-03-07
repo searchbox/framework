@@ -28,16 +28,17 @@ import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.ManagedSearchEngine;
 
-public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, SolrResponse> 
-	implements ManagedSearchEngine {
-	
+public abstract class SolrSearchEngine extends
+		AbstractSearchEngine<SolrQuery, SolrResponse> implements
+		ManagedSearchEngine {
+
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SolrSearchEngine.class);
-	
+
 	private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
 	private static final String HIGHLIGHT_FIELD = "_txt";
 	private static final String NON_SORTABLE_FIELD = "s";
-	
+
 	private static final String DATE_FIELD = "_tdt";
 	private static final String BOOLEAN_FIELD = "_b";
 	private static final String INTEGER_FIELD = "_ti";
@@ -49,8 +50,7 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	private static final String SPELLCHECK_FIELD = "spell";
 	private static final String SUGGESTION_FIELD = "suggest";
 
-	
-	public SolrSearchEngine(){
+	public SolrSearchEngine() {
 		super(SolrQuery.class, SolrResponse.class);
 	}
 
@@ -59,13 +59,13 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	}
 
 	protected abstract SolrServer getSolrServer();
-	
+
 	protected abstract boolean addCopyFields(Field field, Set<String> copyFields);
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -101,9 +101,9 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	@Override
 	public boolean indexMap(Map<String, Object> fields) {
 		SolrInputDocument document = new SolrInputDocument();
-		for(Entry<String, Object> entry:fields.entrySet()){
-			if(Collection.class.isAssignableFrom(entry.getValue().getClass())){
-				for(Object value:((Collection<?>)entry.getValue())){
+		for (Entry<String, Object> entry : fields.entrySet()) {
+			if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
+				for (Object value : ((Collection<?>) entry.getValue())) {
 					document.addField(entry.getKey(), value);
 				}
 			} else {
@@ -114,24 +114,25 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		update.add(document);
 		try {
 			UpdateResponse response = update.process(this.getSolrServer());
-			LOGGER.debug("Updated FieldMap with status: " + response.getStatus());
+			LOGGER.debug("Updated FieldMap with status: "
+					+ response.getStatus());
 			response = this.getSolrServer().commit();
 			LOGGER.debug("Solr commit: " + response);
 			return true;
-		} catch (Exception e){
-			LOGGER.error("Could not index FieldMap",e);
+		} catch (Exception e) {
+			LOGGER.error("Could not index FieldMap", e);
 			return false;
 		}
 	}
-		
+
 	@Override
 	public boolean updateForField(FieldAttribute fieldAttribute) {
 		/** Get the translation for the field's key */
 		Set<String> fieldNames = this.getAllKeysForField(fieldAttribute);
-		
+
 		return this.addCopyFields(fieldAttribute.getField(), fieldNames);
 	}
-	
+
 	@Override
 	public Set<String> getAllKeysForField(FieldAttribute fieldAttribute) {
 		Set<String> fields = new TreeSet<String>();
@@ -143,69 +144,94 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 	public String getKeyForField(FieldAttribute fieldAttribute) {
 		return this.getKeyForField(fieldAttribute, USE.DEFAULT);
 	}
-	
+
 	@Override
-	public String getKeyForField(FieldAttribute fieldAttribute,USE operation) {
+	public String getKeyForField(FieldAttribute fieldAttribute, USE operation) {
 		return this.mapFieldUsage(fieldAttribute).get(operation);
 	}
-	
-	private Map<USE,String> mapFieldUsage(FieldAttribute fieldAttribute){
-		
+
+	private Map<USE, String> mapFieldUsage(FieldAttribute fieldAttribute) {
+
 		Field field = fieldAttribute.getField();
-		
-		Map<USE,String> usages = new HashMap<USE,String>();
-		
+
+		Map<USE, String> usages = new HashMap<USE, String>();
+
 		String append = "";
 		String prepend = "";
-		
-		
-		if(!fieldAttribute.getSortable()){
-			append = NON_SORTABLE_FIELD; 
+
+		if (!fieldAttribute.getSortable()) {
+			append = NON_SORTABLE_FIELD;
 		}
-		
-		if(Boolean.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+
+		if (Boolean.class
+				.isAssignableFrom(fieldAttribute.getField().getClazz())) {
 			prepend += BOOLEAN_FIELD;
-		} else if(Date.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + BOOLEAN_FIELD + append);
+
+		} else if (Date.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += DATE_FIELD;
-		} else if(Integer.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + DATE_FIELD + append);
+
+		} else if (Integer.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += INTEGER_FIELD;
-		} else if(Float.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + INTEGER_FIELD + append);
+
+		} else if (Float.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += FLOAT_FIELD;
-		} else if(Double.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + FLOAT_FIELD + append);
+
+		} else if (Double.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += DOUBLE_FIELD;
-		} else if(Long.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + DOUBLE_FIELD + append);
+
+		} else if (Long.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += LONG_FIELD;
-		} else if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
+			usages.put(USE.DEFAULT, field.getKey() + LONG_FIELD + append);
+
+		} else if (String.class.isAssignableFrom(fieldAttribute.getField()
+				.getClazz())) {
 			prepend += TEXT_FIELD;
+			usages.put(USE.DEFAULT, field.getKey() + TEXT_FIELD + append);
 		}
-		
-		usages.put(USE.DEFAULT,field.getKey()+prepend+append);
-		if(fieldAttribute.getSortable()){
-			usages.put(USE.SORT,field.getKey()+prepend+append);
+
+		if (fieldAttribute.getSortable()) {
+			usages.put(USE.SORT, field.getKey() + prepend + append);
 		}
-		
-		if(fieldAttribute.getSearchable()){
-			if(String.class.isAssignableFrom(fieldAttribute.getField().getClazz())){
-				usages.put(USE.SEARCH, field.getKey()+SEARCHABLE_TEXT_NO_LANG_FIELD);
+
+		if (fieldAttribute.getSearchable()) {
+			if (String.class.isAssignableFrom(fieldAttribute.getField()
+					.getClazz())) {
+				if (fieldAttribute.getLang().isEmpty()) {
+					usages.put(USE.SEARCH, field.getKey()
+							+ SEARCHABLE_TEXT_NO_LANG_FIELD);
+				} else {
+					for (String lang : fieldAttribute.getLang()) {
+						usages.put(USE.SEARCH, field.getKey() + "_" + lang);
+					}
+				}
 			} else {
-				usages.put(USE.SEARCH, field.getKey()+prepend+append);
+				usages.put(USE.SEARCH, field.getKey() + prepend + append);
 			}
 		}
-		
-		if(fieldAttribute.getHighlight()){
-			usages.put(USE.TF,field.getKey()+HIGHLIGHT_FIELD);
+
+		if (fieldAttribute.getHighlight()) {
+			usages.put(USE.TF, field.getKey() + HIGHLIGHT_FIELD);
 		}
-		
-		if(fieldAttribute.getSpelling()){
-			usages.put(USE.SPELL,SPELLCHECK_FIELD);
+
+		if (fieldAttribute.getSpelling()) {
+			usages.put(USE.SPELL, SPELLCHECK_FIELD);
 		}
-		
-		if(fieldAttribute.getSuggestion()){
-			usages.put(USE.SUGGEST,SUGGESTION_FIELD);
+
+		if (fieldAttribute.getSuggestion()) {
+			usages.put(USE.SUGGEST, SUGGESTION_FIELD);
 		}
-		
+
 		return usages;
 	}
 
-	
 }
