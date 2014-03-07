@@ -135,13 +135,17 @@ public class FieldSort extends SearchElementWithConditionalValues<FieldSort.Valu
 				if(value.getFieldName().equals(sortCondition.getField()) &&
 						value.getSort().equals(sortCondition.getSort())){
 					value.selected = true;
+				} else {
+					value.selected = false;
 				}
 			}
 		}
 	}
 
 	public static FieldSort.Value getRelevancySort() {
-		return new FieldSort.Value("Relevancy", "score", Sort.DESC);
+		FieldSort.Value sortValue = new FieldSort.Value("Relevancy", "score", Sort.DESC);
+		sortValue.setSelected(true);
+		return sortValue;
 	}
 	
 	@SearchConverter	
