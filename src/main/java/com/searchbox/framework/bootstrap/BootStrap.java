@@ -145,11 +145,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
 		fieldAttr.setAttributeValue("searchable",true);
+		fieldAttr.setAttributeValue("highlight",true);
 		fieldAttr.setAttributeValue("label", "title");
 		preset.addFieldAttribute(fieldAttr);
 		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
 		fieldAttr2.setAttributeValue("searchable",true);
+		fieldAttr2.setAttributeValue("highlight",true);
 		preset.addFieldAttribute(fieldAttr2);
 		
 		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("article-completion-date"));
@@ -174,7 +176,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "article-title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
-														"<sbx:snippet value=\"${hit.fieldValues['article-abstract']}\"/>" +
+														"<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>" +
 														"<sbx:tagAttribute limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
 														);
 		preset.addSearchElement(templatedHitList);
