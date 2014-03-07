@@ -50,7 +50,7 @@ public class FieldValueConditionTest {
 		
 		FieldFacet.Value value = facet.new Value("Stephane","stephane",3);
 		
-		FieldValueCondition orig = new FieldValueCondition(Field.stringField("athor"), "stephane",facet.getSticky());		
+		FieldValueCondition orig = new FieldValueCondition("athor", "stephane",facet.getSticky());		
 
 		AbstractSearchCondition condition = value.getSearchCondition();
 		

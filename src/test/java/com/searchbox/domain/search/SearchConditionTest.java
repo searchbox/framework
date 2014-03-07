@@ -31,9 +31,9 @@ public class SearchConditionTest {
 	@Test
 	public void testConditionEquality(){
 		
-		FieldValueCondition c1 = new FieldValueCondition(Field.stringField("1"),"1");
-		FieldValueCondition c2 = new FieldValueCondition(Field.stringField("1"),"1");
-		FieldValueCondition c3 = new FieldValueCondition(Field.stringField("1"),"3");
+		FieldValueCondition c1 = new FieldValueCondition("1","1");
+		FieldValueCondition c2 = new FieldValueCondition("1","1");
+		FieldValueCondition c3 = new FieldValueCondition("1","3");
 		
 		EdismaxQuery.Condition qc1 = new EdismaxQuery("Hello world").getSearchCondition();
 		EdismaxQuery.Condition qc2 = new EdismaxQuery("Hello world").getSearchCondition();
