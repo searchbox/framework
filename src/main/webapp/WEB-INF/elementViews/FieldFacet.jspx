@@ -2,6 +2,7 @@
   xmlns:fn="http://java.sun.com/jsp/jstl/functions"
   xmlns:spring="http://www.springframework.org/tags"
   xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
   xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
   <jsp:output omit-xml-declaration="yes" />
@@ -35,7 +36,7 @@
                     name="${facetValue.getUrlParam()}"
                     value="${facetValue.geParamValue()}" checked="checked"
                     onclick="$('form').submit();" />
-                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label"><sbx:out value="${facetValue.value}"/></label>
                  </li>
               </c:when>
               <c:otherwise>
@@ -45,7 +46,7 @@
                     name="${facetValue.getUrlParam()}"
                     value="${facetValue.geParamValue()}"
                     onclick="$('form').submit();" />
-                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label"><sbx:out value="${facetValue.value}"/></label>
                  </li>
               </c:otherwise>
             </c:choose>
