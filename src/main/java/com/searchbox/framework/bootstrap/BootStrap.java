@@ -15,7 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -205,18 +207,25 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		presetTopic.setDescription("H2020 open calls");
 		presetTopic.setSlug("topic");
 		
+		List<String> lang = new ArrayList<String>();
+		lang.add("en");
+		
 		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
 		idFieldAttr.setAttributeValue("id",true);
 		presetTopic.addFieldAttribute(idFieldAttr);
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("title"));
 		fieldAttr.setAttributeValue("searchable",true);
+		fieldAttr.setAttributeValue("highlight", true);
 		fieldAttr.setAttributeValue("label", "title");
+		fieldAttr.setAttributeValue("lang", lang);
 		presetTopic.addFieldAttribute(fieldAttr);
 		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("descriptionRaw"));
 		fieldAttr2.setAttributeValue("searchable",true);
-		fieldAttr.setAttributeValue("label", "description");
+		fieldAttr2.setAttributeValue("highlight", true);
+		fieldAttr2.setAttributeValue("label", "description");
+		fieldAttr2.setAttributeValue("lang", lang);
 		presetTopic.addFieldAttribute(fieldAttr2);
 		
 		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("callDeadline"));
@@ -239,8 +248,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("idField", "id");
 		templatedHitList.setAttributeValue("urlField", "title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
-														"<sbx:snippet value=\"${hit.fieldValues['descriptionRaw']}\"/>" +
-														"<p>${hit.fieldValues['flags']}</p>" +
+														"<sbx:snippet hit=\"${hit}\" field=\"descriptionRaw\"/>" +
+														"<p><sbx:out value=\"${hit.fieldValues['flags']}\"/></p>" +
 														"<sbx:tagAttribute limit=\"1\" label=\"Deadline\" values=\"${hit.fieldValues['callDeadline']}\"/>" +
 														"<sbx:tagAttribute limit=\"1\" label=\"Call\" values=\"${hit.fieldValues['callIdentifier']}\"/>"
 														);
