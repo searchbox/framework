@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
@@ -20,10 +22,15 @@ public class FieldValueConditionSolrAdaptor {
 			.getLogger(FieldValueConditionSolrAdaptor.class);
 	
 	@SearchAdapterMethod(execute=Time.PRE)
-	public void createFilterQueries(SolrSearchEngine engine, FieldValueCondition condition, SolrQuery query) {
+	public void createFilterQueries(SolrSearchEngine engine, FieldAttribute attribute,
+			FieldValueCondition condition, SolrQuery query) {
+		
+		if(!attribute.getField().getKey().equals(condition.getFieldName())){
+			return;
+		}
 		
 		String conditionValue = ClientUtils.escapeQueryChars(condition.getValue());
-		String facetKey = engine.getKeyForField(condition.getField());
+		String facetKey = engine.getKeyForField(attribute);
 
 		boolean isnew = true;
 		List<String> fqs = new ArrayList<String>();
