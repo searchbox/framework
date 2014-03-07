@@ -219,13 +219,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr.setAttributeValue("label", "description");
 		presetTopic.addFieldAttribute(fieldAttr2);
 		
-		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("article-completion-date"));
-		fieldAttr3.setAttributeValue("sortable",true);
-		preset.addFieldAttribute(fieldAttr3);
+		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("callDeadline"));
 		
-		FieldAttributeDefinition fieldAttr4 = new FieldAttributeDefinition(collection.getFieldDefinition("article-revision-date"));
-		fieldAttr4.setAttributeValue("sortable",true);
-		preset.addFieldAttribute(fieldAttr4);
+		fieldAttr3.setAttributeValue("sortable",true);
+		presetTopic.addFieldAttribute(fieldAttr3);
+		
 		
 		/** Create & add a querydebug SearchComponent to the preset; */
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
@@ -271,8 +269,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
 		SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
 		sortFields.add(FieldSort.getRelevancySort());
-		sortFields.add(new FieldSort.Value("By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.DESC));
-		sortFields.add(new FieldSort.Value("Deadline ASC", "callDeadline", Sort.ASC));
+		sortFields.add(new FieldSort.Value("By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.ASC));
 		fieldSort.setAttributeValue("values", sortFields);
 		presetTopic.addSearchElement(fieldSort);
 				
