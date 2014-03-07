@@ -138,11 +138,6 @@ public abstract class SolrSearchEngine extends AbstractSearchEngine<SolrQuery, S
 		fields.addAll(this.mapFieldUsage(fieldAttribute).values());
 		return fields;
 	}
-	
-	@Override
-	public String getKeyForField(Field field) {
-		return this.getKeyForField(new FieldAttribute(field), USE.DEFAULT);
-	}
 
 	@Override
 	public String getKeyForField(FieldAttribute fieldAttribute) {

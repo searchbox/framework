@@ -12,7 +12,6 @@ import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter

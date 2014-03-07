@@ -11,9 +11,7 @@ public interface ManagedSearchEngine {
 	public boolean updateForField(FieldAttribute fieldAttribute);
 	
 	public String getKeyForField(FieldAttribute fieldAttribute);
-	
-	public String getKeyForField(Field field);
-	
+		
 	public String getKeyForField(FieldAttribute fieldAttribute, USE operation);
 
 	Set<String> getAllKeysForField(FieldAttribute fieldAttribute);
