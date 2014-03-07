@@ -220,7 +220,8 @@ public abstract class SolrSearchEngine extends
 		}
 
 		if (fieldAttribute.getHighlight()) {
-			usages.put(USE.TF, field.getKey() + HIGHLIGHT_FIELD);
+			//We shoudl use the USE.SEARCH attribute for now... 
+			//usages.put(USE.TF, field.getKey() + HIGHLIGHT_FIELD);
 		}
 
 		if (fieldAttribute.getSpelling()) {
