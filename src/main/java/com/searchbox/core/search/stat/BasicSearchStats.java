@@ -17,8 +17,9 @@ package com.searchbox.core.search.stat;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.core.PostSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.search.SearchElement;
@@ -79,7 +80,7 @@ public class BasicSearchStats extends SearchElement {
 @SearchAdapter
 class BasicSearchStatsAdapter {
 
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public BasicSearchStats getBasicStats(BasicSearchStats searchElement,
 			QueryResponse response) {
 		if(response.getResults() != null){

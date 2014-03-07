@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -57,7 +58,7 @@ public class SearchService {
 		Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
 		// Weave in all SearchElement in Query
-		adapterService.doPreSearchAdapt(searchEngine, null, query, fieldAttributes, searchElements);
+		adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine, query, fieldAttributes, searchElements);
 		
 		for (SearchElement element : searchElements) {
 			if (element.getClass().isAssignableFrom(
@@ -70,12 +71,12 @@ public class SearchService {
 
 		// Weave in all UI Conditions in query
 		LOGGER.debug("Adapting condition from UI: " + conditions);
-		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
+		adapterService.doAdapt(SearchAdapter.Time.PRE, AbstractSearchCondition.class, searchEngine, query, 
 				fieldAttributes, conditions, searchElements);
 
 		// Weave in all presetConditions in query
 		LOGGER.debug("Adapting condition from Preset: " + presetConditions);
-		adapterService.doPreSearchAdapt(searchEngine, AbstractSearchCondition.class, query, 
+		adapterService.doAdapt(SearchAdapter.Time.PRE, AbstractSearchCondition.class, searchEngine, query, 
 			fieldAttributes, presetConditions, searchElements);
 	
 
@@ -94,7 +95,7 @@ public class SearchService {
 
 		// Weave in SearchResponse to element
 		Class<?> resultClass =  result.getClass();
-		adapterService.doPostSearchAdapt(searchEngine, resultClass, query, 
+		adapterService.doAdapt(SearchAdapter.Time.POST, resultClass, searchEngine, query, 
 				fieldAttributes, conditions, presetConditions, result, searchElements);
 		
 		// Executing a merge on all SearchConditions

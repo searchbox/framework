@@ -3,20 +3,20 @@ package com.searchbox.core.search.paging;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 
 @SearchAdapter
 public class BasicPaginationAdaptor  {
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public void setNumberOfHitsPerPage(BasicPagination searchElement, SolrQuery query){
 		query.setRows(searchElement.getHitsPerPage());
 	}
 	
-	@PostSearchAdapter
+	@SearchAdapterMethod(execute=Time.POST)
 	public BasicPagination getPaginationSettings(BasicPagination searchElement,
 			SolrQuery query, QueryResponse response) {
 		
@@ -34,7 +34,7 @@ public class BasicPaginationAdaptor  {
 		return searchElement;
 	}
 
-	@PreSearchAdapter
+	@SearchAdapterMethod(execute=Time.PRE)
 	public SolrQuery setPagination(BasicPagination searchElement, PageCondition condition,
 			SolrQuery query) {
 		query.setStart(condition.page*searchElement.getHitsPerPage());

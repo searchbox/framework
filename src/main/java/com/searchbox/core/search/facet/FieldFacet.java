@@ -111,13 +111,12 @@ public class FieldFacet
 
 		@Override
 		public FieldValueCondition getSearchCondition() {
-			return new FieldValueCondition(field, this.value, sticky);
+			return new FieldValueCondition(field.getKey(), this.value, sticky);
 		}
 
 		@Override
 		public String geParamValue() {
-			return field.getKey() + "[" + this.value + "]"+
-					StringUtils.ClassToSlug(field.getClazz());
+			return field.getKey() + "[" + this.value + "]";
 		}
 		
 
