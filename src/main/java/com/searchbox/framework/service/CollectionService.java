@@ -81,13 +81,18 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 		for(CollectionDefinition collectionDef:collectionDefs){
 			Collection collection = collectionDef.getInstance();
 			SearchEngine<?,?> engine = collection.getSearchEngine();
+			engine.setCollection(collection);
 			if(ManagedSearchEngine.class.isAssignableFrom(engine.getClass())){
+				LOGGER.info("Register Searchengine Configuration for \"" + collection.getName()+"\"");
+				((ManagedSearchEngine)engine).register();
 				LOGGER.info("Starting DM synchronization for \"" + collection.getName()+"\"");
 				for(PresetDefinition presetDef:collectionDef.getPresets()){
 					for(FieldAttributeDefinition fieldAttr:presetDef.getFieldAttributes()){
 						((ManagedSearchEngine)engine).updateForField(fieldAttr.getInstance());
 					}
 				}	
+				LOGGER.info("Done updating fields...");
+				((ManagedSearchEngine)engine).reloadEngine();
 			}
 			
 			

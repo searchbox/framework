@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
@@ -36,9 +37,9 @@ public interface SearchEngine<Q,R> {
 	
 	public R execute(Q query);
 	
-	public boolean indexFile(File file);
+	public boolean indexFile(String collectionName, File file);
 	
-	public boolean indexMap(Map<String, Object> fields);
+	public boolean indexMap(String collectionName, Map<String, Object> fields);
 		
 	public List<SearchElement> getSupportedElements();
 
@@ -47,4 +48,6 @@ public interface SearchEngine<Q,R> {
 	public Boolean supportsCondition(AbstractSearchCondition condition);
 
 	public void init();
+	
+	public void setCollection(Collection collection);
 }

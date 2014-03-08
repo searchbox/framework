@@ -170,4 +170,16 @@ public class EmbeddedSolr extends SolrSearchEngine {
 		
 		return true;
 	}
+
+	@Override
+	public void reloadEngine() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void register() {
+		// TODO Auto-generated method stub
+		
+	}
 }

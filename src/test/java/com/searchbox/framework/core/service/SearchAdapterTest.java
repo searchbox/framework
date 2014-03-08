@@ -44,7 +44,5 @@ public class SearchAdapterTest {
 		fieldAttr2.setSearchable(true);
 		
 		service.doAdapt(Time.PRE, null, new SolrQuery(), fieldAttr, fieldAttr1, fieldAttr2, q);
-
-		
 	}
 }
