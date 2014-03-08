@@ -120,7 +120,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 			@Override
 			public void write(List<? extends File> items) {
 				for (File item : items) {
-					getSearchEngine().indexFile(item);
+					getSearchEngine().indexFile(getName(), item);
 				}
 			}
 		};

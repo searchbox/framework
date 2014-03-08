@@ -11,9 +11,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.AbstractUpdateRequest.ACTION;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.UpdateResponse;
@@ -34,7 +36,7 @@ public abstract class SolrSearchEngine extends
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SolrSearchEngine.class);
-
+	
 	private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
 	private static final String HIGHLIGHT_FIELD = "_txt";
 	private static final String NON_SORTABLE_FIELD = "s";
@@ -67,6 +69,18 @@ public abstract class SolrSearchEngine extends
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public SolrQuery newQuery() {
+		try {
+			SolrQuery query = this.getQueryClass().newInstance();
+			query.setParam("collection", collection.getName());
+			return query;
+		} catch (Exception e) {
+			LOGGER.error("Could not create new Query Object for searchEngine",e);
+			throw new RuntimeException("Could not create new Query Object for searchEngine",e);
+		}
+	}
 
 	@Override
 	public SolrResponse execute(SolrQuery query) {
@@ -78,19 +92,24 @@ public abstract class SolrSearchEngine extends
 	}
 
 	@Override
-	public boolean indexFile(File file) {
+	public boolean indexFile(String collectionName, File file) {
 		LOGGER.info("Indexing file: " + file.getAbsolutePath());
 		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
 		contentstream.setContentType("text/xml");
 		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(
 				"/update");
+		request.setCommitWithin(1000);
+		request.setParam("collection", collectionName);
 		request.addContentStream(contentstream);
 		UpdateResponse response;
 		try {
 			response = request.process(this.getSolrServer());
-			LOGGER.debug("Solr Response: " + response);
-			response = this.getSolrServer().commit();
-			LOGGER.debug("Solr commit: " + response);
+			LOGGER.info("Solr Response: " + response);
+			//TODO not there...
+			UpdateRequest commit = new UpdateRequest();
+			commit.setParam("collection", collectionName);
+			commit.setAction(ACTION.COMMIT, false, false);
+			commit.process(this.getSolrServer());
 			return true;
 		} catch (SolrServerException | IOException e) {
 			LOGGER.error("Could not index file: " + file, e);
@@ -99,7 +118,7 @@ public abstract class SolrSearchEngine extends
 	}
 
 	@Override
-	public boolean indexMap(Map<String, Object> fields) {
+	public boolean indexMap(String collectionName, Map<String, Object> fields) {
 		SolrInputDocument document = new SolrInputDocument();
 		for (Entry<String, Object> entry : fields.entrySet()) {
 			if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
@@ -111,13 +130,13 @@ public abstract class SolrSearchEngine extends
 			}
 		}
 		UpdateRequest update = new UpdateRequest();
+		update.setCommitWithin(10000);
+		update.setParam("collection", collectionName);
 		update.add(document);
 		try {
 			UpdateResponse response = update.process(this.getSolrServer());
 			LOGGER.debug("Updated FieldMap with status: "
 					+ response.getStatus());
-			response = this.getSolrServer().commit();
-			LOGGER.debug("Solr commit: " + response);
 			return true;
 		} catch (Exception e) {
 			LOGGER.error("Could not index FieldMap", e);

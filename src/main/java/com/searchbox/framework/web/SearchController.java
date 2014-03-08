@@ -262,11 +262,12 @@ public class SearchController {
 
 		SearchEngine<?, ?> searchEngine =
 				preset.getCollection().getSearchEngine().getInstance();
+		searchEngine.setCollection(preset.getCollection().getInstance());
 		
 		LOGGER.info("Current SearchEngine: " + searchEngine);
 
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
-				searchElements, fieldAttributes, conditions);
+				searchElements,	fieldAttributes, conditions);
 
 		return resultElements;
 	}
