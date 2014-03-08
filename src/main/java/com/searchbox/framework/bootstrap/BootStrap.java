@@ -43,6 +43,7 @@ import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.EmbeddedSolr;
+import com.searchbox.engine.solr.SolrCloud;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
@@ -116,12 +117,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = null;
 		try {
-			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-			engine.setAttributeValue("coreName", "oppfin");
-			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
-			engine.setAttributeValue("solrConfig",context.getResource("classpath:solr/conf/solrconfig.xml").getURL().getPath());
-			engine.setAttributeValue("solrSchema",context.getResource("classpath:solr/conf/schema.xml").getURL().getPath());
-			engine.setAttributeValue("dataDir", "target/data/oppfin/");
+			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+			engine.setAttributeValue("zkHost", "localhost:9983");
+			
+//			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
+//			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
+//			engine.setAttributeValue("dataDir", "target/data/oppfin/");
 			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			LOGGER.error("Could not set definition for SolrEmbededServer",e);
@@ -130,7 +131,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** The base collection for searchbox */
 		LOGGER.info("++ Creating oppfin Collection");
 		CollectionDefinition collection = new CollectionDefinition(TopicCollection.class,"oppfin");
-		collection.setAutoStart(true);
+		collection.setAutoStart(false);
 		collection.setSearchEngine(engine);	
 		collection = collectionRepository.save(collection);
 		

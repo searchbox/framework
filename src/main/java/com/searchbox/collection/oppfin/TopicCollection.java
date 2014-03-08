@@ -233,7 +233,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 
 			public void write(List<? extends Map<String, Object>> items) {
 				for (Map<String, Object> fields : items) {
-					getSearchEngine().indexMap(fields);
+					getSearchEngine().indexMap(getName(), fields);
 				}
 			}
 		};
