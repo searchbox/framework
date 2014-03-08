@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.searchbox.framework.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.collection.SynchronizedCollection;
-import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.framework.domain.CollectionDefinition;
@@ -66,8 +67,25 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 	}
 	
 	public Map<String, String> synchronizeDm(CollectionDefinition collectiondef) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> result = new HashMap<String, String>();
+		com.searchbox.core.dm.Collection collection = collectiondef.getInstance();
+		SearchEngine<?,?> engine = collection.getSearchEngine();
+		engine.setCollection(collection);
+		if(ManagedSearchEngine.class.isAssignableFrom(engine.getClass())){
+			LOGGER.info("Register Searchengine Configuration for \"" + collection.getName()+"\"");
+			((ManagedSearchEngine)engine).register();
+			LOGGER.info("Starting DM synchronization for \"" + collection.getName()+"\"");
+			for(PresetDefinition presetDef:collectiondef.getPresets()){
+				List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
+				for(FieldAttributeDefinition fieldAttr:presetDef.getFieldAttributes()){
+					fieldAttributes.add(fieldAttr.getInstance());
+				}
+				((ManagedSearchEngine)engine).upateAllFields(fieldAttributes);
+			}	
+			LOGGER.info("Done updating fields...");
+			((ManagedSearchEngine)engine).reloadEngine();
+		}
+		return result;
 	}
 	
 	@Override
@@ -75,34 +93,11 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 		
 		LOGGER.info("Searchbox is ready. Loading autoStart collections");
 		
-		
 		Iterable<CollectionDefinition> collectionDefs = repository.findAll();
-				
 		for(CollectionDefinition collectionDef:collectionDefs){
-			Collection collection = collectionDef.getInstance();
-			SearchEngine<?,?> engine = collection.getSearchEngine();
-			engine.setCollection(collection);
-			if(ManagedSearchEngine.class.isAssignableFrom(engine.getClass())){
-				LOGGER.info("Register Searchengine Configuration for \"" + collection.getName()+"\"");
-				((ManagedSearchEngine)engine).register();
-				LOGGER.info("Starting DM synchronization for \"" + collection.getName()+"\"");
-				for(PresetDefinition presetDef:collectionDef.getPresets()){
-					for(FieldAttributeDefinition fieldAttr:presetDef.getFieldAttributes()){
-						((ManagedSearchEngine)engine).updateForField(fieldAttr.getInstance());
-					}
-				}	
-				LOGGER.info("Done updating fields...");
-				((ManagedSearchEngine)engine).reloadEngine();
-			}
-			
-			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())
-					&& collectionDef.getAutoStart()){
-				LOGGER.info("Starting DATA synchronization for \"" + collection.getName()+"\"");
-				try {
-					((SynchronizedCollection)collection).synchronize();
-				} catch (Exception e) {
-					LOGGER.error("Could not synchronize collection: " + collection.getName(),e);
-				}
+			synchronizeDm(collectionDef);
+			if(collectionDef.getAutoStart()){
+				synchronizeData(collectionDef);
 			}
 		}		
 	}

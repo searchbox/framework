@@ -1,5 +1,6 @@
 package com.searchbox.core.engine;
 
+import java.util.List;
 import java.util.Set;
 
 import com.searchbox.core.dm.Field;
@@ -8,7 +9,7 @@ import com.searchbox.core.dm.FieldAttribute.USE;
 
 public interface ManagedSearchEngine {
 	
-	public boolean updateForField(FieldAttribute fieldAttribute);
+	public boolean upateAllFields(List<FieldAttribute> fieldAttributes);
 	
 	public String getKeyForField(FieldAttribute fieldAttribute);
 		
@@ -19,4 +20,6 @@ public interface ManagedSearchEngine {
 	public void reloadEngine();
 
 	public void register();
+
+
 }

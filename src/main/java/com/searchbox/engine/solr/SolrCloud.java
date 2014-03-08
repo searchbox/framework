@@ -2,7 +2,11 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,10 +19,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
-import org.apache.solr.client.solrj.request.CoreAdminRequest;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
 import org.apache.solr.common.cloud.Slice;
 import org.apache.solr.common.cloud.SolrZkClient;
@@ -30,10 +32,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.searchbox.core.SearchAttribute;
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 
 public class SolrCloud extends SolrSearchEngine implements InitializingBean, DisposableBean {
@@ -117,7 +117,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean, Dis
 	}
 
 	@Override
-	protected boolean addCopyFields(Field field, Set<String> copyFields) {
+	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
 		
 		HttpClient client = HttpClientBuilder.create().build();
 		ZkStateReader  zkSateReader = solrServer.getZkStateReader();
@@ -144,13 +144,18 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean, Dis
 			/** 
 			 * [{"source":"sourceField","dest":["target1",...]}, ...] 
 			 */
-			Set<String> realCopyFields = new HashSet<String>();
-			for(String copyField:copyFields){
-				realCopyFields.add("\""+copyField+"\"");
+			List<String> contents = new ArrayList<String>();
+			for(Entry<Field, Set<String>> copyField:copyFields.entrySet()){
+				Set<String> realCopyFields = new HashSet<String>();
+				for(String fields:copyField.getValue()){
+					realCopyFields.add("\""+fields+"\"");
+				}
+				contents.add("{\"source\":\""+
+						copyField.getKey().getKey()+"\",\"dest\":["+
+						StringUtils.join(realCopyFields, ',')+"]}");
 			}
-			String content = "[{\"source\":\""+
-					field.getKey()+"\",\"dest\":["+
-					StringUtils.join(realCopyFields, ',')+"]}]";
+			
+			String content = "["+StringUtils.join(contents, ',')+"]";
 			LOGGER.info("Payload is: " + content);
 			
 			HttpEntity entity = EntityBuilder.create()
@@ -232,27 +237,5 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean, Dis
 	 */
 	public void setZkHost(String zkHost) {
 		this.zkHost = zkHost;
-	}
-
-	public static void main(String... args) throws KeeperException,
-			InterruptedException, SolrServerException, IOException {
-
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-				SolrCloud.class);
-		
-		SolrCloud server = context.getBean(SolrCloud.class);
-		server.setCollection(new Collection("oppfin"));
-		
-		Set<String> copyFields = new HashSet<String>();
-		copyFields.add("title_en");
-		copyFields.add("title_ss");
-		server.addCopyFields(Field.stringField("title"), copyFields);
-		
-		CollectionAdminResponse response = CollectionAdminRequest
-				.reloadCollection("oppfin", solrServer);
-		LOGGER.info("Reloaded collection: " + response);
-		
-		//solrServer.getZkStateReader().getLeaderUrl("oppfin", shard, timeout).getZkClient();
-		context.close();
 	}
 }
