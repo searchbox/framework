@@ -76,8 +76,8 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 		LOGGER.info("Searchbox is ready. Loading autoStart collections");
 		
 		
-		List<CollectionDefinition> collectionDefs = repository.findAllByAutoStart(true);
-		
+		Iterable<CollectionDefinition> collectionDefs = repository.findAll();
+				
 		for(CollectionDefinition collectionDef:collectionDefs){
 			Collection collection = collectionDef.getInstance();
 			SearchEngine<?,?> engine = collection.getSearchEngine();
@@ -95,8 +95,8 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 				((ManagedSearchEngine)engine).reloadEngine();
 			}
 			
-			
-			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
+			if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())
+					&& collectionDef.getAutoStart()){
 				LOGGER.info("Starting DATA synchronization for \"" + collection.getName()+"\"");
 				try {
 					((SynchronizedCollection)collection).synchronize();
