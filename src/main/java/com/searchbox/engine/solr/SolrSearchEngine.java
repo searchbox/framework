@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -62,7 +62,7 @@ public abstract class SolrSearchEngine extends
 
 	protected abstract SolrServer getSolrServer();
 
-	protected abstract boolean addCopyFields(Field field, Set<String> copyFields);
+	protected abstract boolean addCopyFields(Map<Field, Set<String>> copyFields);
 
 	@Override
 	public void init() {
@@ -145,11 +145,13 @@ public abstract class SolrSearchEngine extends
 	}
 
 	@Override
-	public boolean updateForField(FieldAttribute fieldAttribute) {
+	public boolean upateAllFields(List<FieldAttribute> fieldAttributes) {
 		/** Get the translation for the field's key */
-		Set<String> fieldNames = this.getAllKeysForField(fieldAttribute);
-
-		return this.addCopyFields(fieldAttribute.getField(), fieldNames);
+		Map<Field, Set<String>> copyFields = new HashMap<Field, Set<String>>();
+		for(FieldAttribute fieldAttribute:fieldAttributes){
+			copyFields.put(fieldAttribute.getField(), this.getAllKeysForField(fieldAttribute));
+		}
+		return this.addCopyFields(copyFields);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -126,8 +127,17 @@ public class EmbeddedSolr extends SolrSearchEngine {
 		this.solrHome = solrHome;
 	}
 
+
+
 	@Override
-	protected boolean addCopyFields(Field field, Set<String> copyFields) {
+	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
+		for(Entry<Field, Set<String>> copyField:copyFields.entrySet()){
+			this.addCopyFields(copyField.getKey(), copyField.getValue());
+		}
+		return true;
+	}
+	
+	private boolean addCopyFields(Field field, Set<String> copyFields) {
 		SolrCore core = coreContainer.getCore(this.collection.getName());
 		IndexSchema schema = core.getLatestSchema();
 		
