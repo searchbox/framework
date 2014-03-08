@@ -51,6 +51,18 @@ public class SolrSearchEngineTest {
 			protected boolean addCopyFields(Field field, Set<String> copyFields) {
 				return false;
 			}
+
+			@Override
+			public void reloadEngine() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void register() {
+				// TODO Auto-generated method stub
+				
+			}
 		};
 	}
 	
