@@ -1,5 +1,6 @@
 package com.searchbox.engine.solr;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrServer;
@@ -48,11 +49,6 @@ public class SolrSearchEngineTest {
 			}
 
 			@Override
-			protected boolean addCopyFields(Field field, Set<String> copyFields) {
-				return false;
-			}
-
-			@Override
 			public void reloadEngine() {
 				// TODO Auto-generated method stub
 				
@@ -62,6 +58,12 @@ public class SolrSearchEngineTest {
 			public void register() {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
+				// TODO Auto-generated method stub
+				return false;
 			}
 		};
 	}

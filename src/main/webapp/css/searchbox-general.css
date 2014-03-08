@@ -507,6 +507,12 @@ a.clear_input:hover {
 div.resultrow {
   margin-bottom: 25px;
 }
+
+em {
+  font-weight: bolder;
+  font-style: normal;
+}
+
 /*************************************************************/
 /*                    Debug utilities                        */
 /*************************************************************/
