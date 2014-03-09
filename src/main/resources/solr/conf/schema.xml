@@ -115,6 +115,8 @@
     <field name="_version_" type="long" indexed="true" stored="true"/>
 
     <field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="suggest" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
 
     <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -394,6 +396,7 @@
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       </analyzer>
     </fieldType>
+
 
     <!-- A general text field that has reasonable, generic
          cross-language defaults: it tokenizes with StandardTokenizer,
