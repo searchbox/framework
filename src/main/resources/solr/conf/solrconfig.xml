@@ -502,96 +502,64 @@
 			<str name="indent">true</str>
 		</lst>
 	</requestHandler>
-	
-	
-	
-	<!--  
-	suggest.dictionary - name of suggester to use
-  suggest.count - number of suggestions to return
-  suggest.q - query to use for lookup
-  suggest.build - command to build the suggester
-  suggest.reload - command to reload the suggester
-	-->
 
-<requestHandler name="/suggest" class="solr.SearchHandler">
-    <lst name="defaults">
-      <str name="suggest.dictionary">FreeTextLookupFactory</str>
-    <!--  
-     <str name="suggest.dictionary">AnalyzingInfixLookupFactory</str>
-      <str name="suggest.dictionary">WFSTLookupFactory</str> 
-      <str name="suggest.dictionary">FSTLookupFactory</str>
-      <str name="suggest.dictionary">AnalyzingLookupFactory</str>
-      <str name="suggest.dictionary">FuzzyLookupFactory</str>
-      -->
-      <str name="suggest.count">10</str>
-      <str name="suggest">true</str>
-    </lst>
-    <arr name="components">
-      <str>suggest</str>
-    </arr>
-  </requestHandler>
-  
 
-     
-    <searchComponent class="solr.SuggestComponent" name="suggest">
-    <lst name="suggester">
-      <str name="name">FreeTextLookupFactory</str>
-      <str name="lookupImpl">FreeTextLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">FreeTextLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-      <str name="suggestFreeTextAnalyzerFieldType">text_general</str>
-    </lst>
-    <!--
-    <lst name="suggester">
-      <str name="name">AnalyzingInfixLookupFactory</str>
-      <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">AnalyzingInfixLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-    </lst>
-    <lst name="suggester">
-      <str name="name">AnalyzingLookupFactory</str>
-      <str name="lookupImpl">AnalyzingLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">AnalyzingLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-    </lst>
-    <lst name="suggester">
-      <str name="name">FSTLookupFactory</str>
-      <str name="lookupImpl">FSTLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">FSTLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-    </lst>
-    <lst name="suggester">
-      <str name="name">FuzzyLookupFactory</str>
-      <str name="lookupImpl">FuzzyLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">FuzzyLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-    </lst>
-    <lst name="suggester">
-      <str name="name">WFSTLookupFactory</str>
-      <str name="lookupImpl">WFSTLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">suggest</str>
-      <str name="weightField">popularity</str>
-      <str name="storeDir">WFSTLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">text_general</str>
-    </lst>
-    -->
-  </searchComponent>
+
+	<!-- suggest.dictionary - name of suggester to use suggest.count - number 
+		of suggestions to return suggest.q - query to use for lookup suggest.build 
+		- command to build the suggester suggest.reload - command to reload the suggester -->
+
+	<requestHandler name="/suggest" class="solr.SearchHandler">
+		<lst name="defaults">
+			<str name="suggest.dictionary">FreeTextLookupFactory</str>
+			<!-- <str name="suggest.dictionary">AnalyzingInfixLookupFactory</str> 
+				<str name="suggest.dictionary">WFSTLookupFactory</str> <str name="suggest.dictionary">FSTLookupFactory</str> 
+				<str name="suggest.dictionary">AnalyzingLookupFactory</str> <str name="suggest.dictionary">FuzzyLookupFactory</str> -->
+			<str name="suggest.count">10</str>
+			<str name="suggest">true</str>
+		</lst>
+		<arr name="components">
+			<str>suggest</str>
+		</arr>
+	</requestHandler>
+
+
+
+	<searchComponent class="solr.SuggestComponent" name="suggest">
+		<lst name="suggester">
+			<str name="name">FreeTextLookupFactory</str>
+			<str name="lookupImpl">FreeTextLookupFactory</str>
+			<str name="dictionaryImpl">DocumentDictionaryFactory</str>
+			<str name="field">suggest</str>
+			<str name="weightField">popularity</str>
+			<str name="storeDir">FreeTextLookupFactory</str>
+			<str name="suggestAnalyzerFieldType">text_general</str>
+			<str name="suggestFreeTextAnalyzerFieldType">text_general</str>
+			<str name="buildOnCommit">true</str>
+
+		</lst>
+		<!-- <lst name="suggester"> <str name="name">AnalyzingInfixLookupFactory</str> 
+			<str name="lookupImpl">AnalyzingInfixLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
+			<str name="field">suggest</str> <str name="weightField">popularity</str> 
+			<str name="storeDir">AnalyzingInfixLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str> 
+			</lst> <lst name="suggester"> <str name="name">AnalyzingLookupFactory</str> 
+			<str name="lookupImpl">AnalyzingLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
+			<str name="field">suggest</str> <str name="weightField">popularity</str> 
+			<str name="storeDir">AnalyzingLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str> 
+			</lst> <lst name="suggester"> <str name="name">FSTLookupFactory</str> <str 
+			name="lookupImpl">FSTLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
+			<str name="field">suggest</str> <str name="weightField">popularity</str> 
+			<str name="storeDir">FSTLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str> 
+			</lst> <lst name="suggester"> <str name="name">FuzzyLookupFactory</str> <str 
+			name="lookupImpl">FuzzyLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
+			<str name="field">suggest</str> <str name="weightField">popularity</str> 
+			<str name="storeDir">FuzzyLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str> 
+			</lst> <lst name="suggester"> <str name="name">WFSTLookupFactory</str> <str 
+			name="lookupImpl">WFSTLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
+			<str name="field">suggest</str> <str name="weightField">popularity</str> 
+			<str name="storeDir">WFSTLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str> 
+			</lst> -->
+	</searchComponent>
 
 
 
@@ -737,6 +705,7 @@
 			<float name="maxQueryFrequency">0.1</float>
 			<!-- uncomment this to require suggestions to occur in 1% of the documents -->
 			<float name="thresholdTokenFrequency">.01</float>
+			<str name="buildOnCommit">true</str>
 		</lst>
 
 		<!-- a spellchecker that can break or combine words. See "/spell" handler 
@@ -748,6 +717,8 @@
 			<str name="combineWords">true</str>
 			<str name="breakWords">true</str>
 			<int name="maxChanges">10</int>
+			<str name="buildOnCommit">true</str>
+
 		</lst>
 	</searchComponent>
 
