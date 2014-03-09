@@ -24,8 +24,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.searchbox.core.search.SearchElement.Type;
-
 public class SearchResult {
 
 	List<String> fields = new ArrayList<String>();

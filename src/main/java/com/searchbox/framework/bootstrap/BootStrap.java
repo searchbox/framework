@@ -42,7 +42,6 @@ import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.EmbeddedSolr;
-import com.searchbox.engine.solr.SolrCloud;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;

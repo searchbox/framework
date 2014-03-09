@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.searchbox.data;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 
 
 public class BootStrapTest {

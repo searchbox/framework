@@ -18,7 +18,6 @@ package com.searchbox.domain.search;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.search.filter.FieldValueCondition;
 import com.searchbox.core.search.query.EdismaxQuery;
 
