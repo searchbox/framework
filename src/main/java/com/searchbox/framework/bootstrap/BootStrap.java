@@ -146,12 +146,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
 		fieldAttr.setAttributeValue("searchable",true);
 		fieldAttr.setAttributeValue("highlight",true);
+		fieldAttr.setAttributeValue("spelling",true);
 		fieldAttr.setAttributeValue("label", "title");
 		preset.addFieldAttribute(fieldAttr);
 		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("article-abstract"));
 		fieldAttr2.setAttributeValue("searchable",true);
 		fieldAttr2.setAttributeValue("highlight",true);
+		fieldAttr2.setAttributeValue("spelling",true);
 		preset.addFieldAttribute(fieldAttr2);
 		
 		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("article-completion-date"));
