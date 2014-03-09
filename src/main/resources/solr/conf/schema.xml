@@ -114,6 +114,7 @@
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="_version_" type="long" indexed="true" stored="true"/>
 
+    <field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
     <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -170,8 +171,10 @@
         unknown fields indexed and/or stored by default 
         
         NB: use of "*" dynamic fields will disable field type guessing and adding
-        unknown fields to the schema. --> 
+        unknown fields to the schema.  --> 
     <dynamicField name="*" type="string" stored="true" indexed="false" multiValued="true" />
+    
+    
 
   </fields>
 

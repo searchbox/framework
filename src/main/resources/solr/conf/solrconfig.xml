@@ -804,78 +804,33 @@
        queries across multiple shards
     -->
   <requestHandler name="/select" class="solr.SearchHandler">
-    <!-- default values for query parameters can be specified, these
-         will be overridden by parameters in the request
-      -->
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
-      <!-- <str name="df">text</str> -->
-    </lst>
-    <!-- In addition to defaults, "appends" params can be specified
-         to identify values which should be appended to the list of
-         multi-val params from the query (or the existing "defaults").
-      -->
-    <!-- In this example, the param "fq=instock:true" would be appended to
-         any query time fq params the user may specify, as a mechanism for
-         partitioning the index, independent of any user selected filtering
-         that may also be desired (perhaps as a result of faceted searching).
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "appends" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="appends">
-         <str name="fq">inStock:true</str>
-       </lst>
-      -->
-    <!-- "invariants" are a way of letting the Solr maintainer lock down
-         the options available to Solr clients.  Any params values
-         specified here are used regardless of what values may be specified
-         in either the query, the "defaults", or the "appends" params.
-
-         In this example, the facet.field and facet.query params would
-         be fixed, limiting the facets clients can use.  Faceting is
-         not turned on by default - but if the client does specify
-         facet=true in the request, these are the only facets they
-         will be able to see counts for; regardless of what other
-         facet.field or facet.query params they may specify.
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "invariants" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="invariants">
-         <str name="facet.field">cat</str>
-         <str name="facet.field">manu_exact</str>
-         <str name="facet.query">price:[* TO 500]</str>
-         <str name="facet.query">price:[500 TO *]</str>
-       </lst>
-      -->
-    <!-- If the default list of SearchComponents is not desired, that
-         list can either be overridden completely, or components can be
-         prepended or appended to the default list.  (see below)
-      -->
-    <!--
-       <arr name="components">
-         <str>nameOfCustomComponent1</str>
-         <str>nameOfCustomComponent2</str>
-       </arr>
-      -->
-  </requestHandler>
-
-  <!-- A request handler that returns indented JSON by default -->
-  <requestHandler name="/query" class="solr.SearchHandler">
-    <lst name="defaults">
-      <str name="echoParams">explicit</str>
-      <str name="wt">json</str>
-      <str name="indent">true</str>
       <str name="df">text</str>
+      
+      <str name="df">text</str>
+      <!-- Solr will use suggestions from both the 'default' spellchecker
+           and from the 'wordbreak' spellchecker and combine them.
+           collations (re-written queries) can include a combination of
+           corrections from both spellcheckers -->
+      <str name="spellcheck.dictionary">default</str>
+      <str name="spellcheck.dictionary">wordbreak</str>
+      <str name="spellcheck">on</str>
+      <str name="spellcheck.extendedResults">false</str>
+      <str name="spellcheck.count">3</str>
+      <str name="spellcheck.alternativeTermCount">3</str>
+      <str name="spellcheck.maxResultsForSuggest">3</str>
+      <str name="spellcheck.collate">true</str>
+      <str name="spellcheck.collateExtendedResults">true</str>
+      <str name="spellcheck.maxCollationTries">10</str>
+      <str name="spellcheck.maxCollations">1</str>
+      
     </lst>
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
   </requestHandler>
-
 
   <!-- realtime get handler, guaranteed to return the latest stored fields of
        any document, without the need to commit or open a new searcher.  The
@@ -888,103 +843,6 @@
     </lst>
   </requestHandler>
 
-
-  <!-- A Robust Example 
-       
-       This example SearchHandler declaration shows off usage of the
-       SearchHandler with many defaults declared
-
-       Note that multiple instances of the same Request Handler
-       (SearchHandler) can be registered multiple times with different
-       names (and different init parameters)
-    -->
-  <requestHandler name="/browse" class="solr.SearchHandler">
-    <lst name="defaults">
-      <str name="echoParams">explicit</str>
-
-      <!-- VelocityResponseWriter settings -->
-      <str name="wt">velocity</str>
-      <str name="v.template">browse</str>
-      <str name="v.layout">layout</str>
-      <str name="title">Solritas</str>
-
-      <!-- Query settings -->
-      <str name="defType">edismax</str>
-      <str name="qf">
-        text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0 manu^1.1 cat^1.4
-        title^10.0 description^5.0 keywords^5.0 author^2.0 resourcename^1.0
-      </str>
-      <str name="df">text</str>
-      <str name="mm">100%</str>
-      <str name="q.alt">*:*</str>
-      <str name="rows">10</str>
-      <str name="fl">*,score</str>
-
-      <str name="mlt.qf">
-        text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0 manu^1.1 cat^1.4
-        title^10.0 description^5.0 keywords^5.0 author^2.0 resourcename^1.0
-      </str>
-      <str name="mlt.fl">text,features,name,sku,id,manu,cat,title,description,keywords,author,resourcename</str>
-      <int name="mlt.count">3</int>
-
-      <!-- Faceting defaults -->
-      <str name="facet">on</str>
-      <str name="facet.field">cat</str>
-      <str name="facet.field">manu_exact</str>
-      <str name="facet.field">content_type</str>
-      <str name="facet.field">author_s</str>
-      <str name="facet.query">ipod</str>
-      <str name="facet.query">GB</str>
-      <str name="facet.mincount">1</str>
-      <str name="facet.pivot">cat,inStock</str>
-      <str name="facet.range.other">after</str>
-      <str name="facet.range">price</str>
-      <int name="f.price.facet.range.start">0</int>
-      <int name="f.price.facet.range.end">600</int>
-      <int name="f.price.facet.range.gap">50</int>
-      <str name="facet.range">popularity</str>
-      <int name="f.popularity.facet.range.start">0</int>
-      <int name="f.popularity.facet.range.end">10</int>
-      <int name="f.popularity.facet.range.gap">3</int>
-      <str name="facet.range">manufacturedate_dt</str>
-      <str name="f.manufacturedate_dt.facet.range.start">NOW/YEAR-10YEARS</str>
-      <str name="f.manufacturedate_dt.facet.range.end">NOW</str>
-      <str name="f.manufacturedate_dt.facet.range.gap">+1YEAR</str>
-      <str name="f.manufacturedate_dt.facet.range.other">before</str>
-      <str name="f.manufacturedate_dt.facet.range.other">after</str>
-
-      <!-- Highlighting defaults -->
-      <str name="hl">on</str>
-      <str name="hl.fl">content features title name</str>
-      <str name="hl.encoder">html</str>
-      <str name="hl.simple.pre">&lt;b&gt;</str>
-      <str name="hl.simple.post">&lt;/b&gt;</str>
-      <str name="f.title.hl.fragsize">0</str>
-      <str name="f.title.hl.alternateField">title</str>
-      <str name="f.name.hl.fragsize">0</str>
-      <str name="f.name.hl.alternateField">name</str>
-      <str name="f.content.hl.snippets">3</str>
-      <str name="f.content.hl.fragsize">200</str>
-      <str name="f.content.hl.alternateField">content</str>
-      <str name="f.content.hl.maxAlternateFieldLength">750</str>
-
-      <!-- Spell checking defaults -->
-      <str name="spellcheck">on</str>
-      <str name="spellcheck.extendedResults">false</str>
-      <str name="spellcheck.count">5</str>
-      <str name="spellcheck.alternativeTermCount">2</str>
-      <str name="spellcheck.maxResultsForSuggest">5</str>
-      <str name="spellcheck.collate">true</str>
-      <str name="spellcheck.collateExtendedResults">true</str>
-      <str name="spellcheck.maxCollationTries">5</str>
-      <str name="spellcheck.maxCollations">3</str>
-    </lst>
-
-    <!-- append spellchecking to our list of components -->
-    <arr name="last-components">
-      <str>spellcheck</str>
-    </arr>
-  </requestHandler>
 
 
   <!-- Update Request Handler.  
@@ -1114,26 +972,6 @@
   <requestHandler name="/admin/"
                   class="solr.admin.AdminHandlers" />
   <!-- This single handler is equivalent to the following... -->
-  <!--
-     <requestHandler name="/admin/luke"       class="solr.admin.LukeRequestHandler" />
-     <requestHandler name="/admin/system"     class="solr.admin.SystemInfoHandler" />
-     <requestHandler name="/admin/plugins"    class="solr.admin.PluginInfoHandler" />
-     <requestHandler name="/admin/threads"    class="solr.admin.ThreadDumpHandler" />
-     <requestHandler name="/admin/properties" class="solr.admin.PropertiesRequestHandler" />
-     <requestHandler name="/admin/file"       class="solr.admin.ShowFileRequestHandler" >
-    -->
-  <!-- If you wish to hide files under ${solr.home}/conf, explicitly
-       register the ShowFileRequestHandler using: 
-    -->
-  <!--
-     <requestHandler name="/admin/file" 
-                     class="solr.admin.ShowFileRequestHandler" >
-       <lst name="invariants">
-         <str name="hidden">synonyms.txt</str> 
-         <str name="hidden">anotherfile.txt</str> 
-       </lst>
-     </requestHandler>
-    -->
 
   <!-- ping/healthcheck -->
   <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
@@ -1173,69 +1011,8 @@
        https://wiki.apache.org/solr/SolrCloud/
     -->
   <requestHandler name="/replication" class="solr.ReplicationHandler" >
-    <!--
-       To enable simple master/slave replication, uncomment one of the 
-       sections below, depending on whether this solr instance should be
-       the "master" or a "slave".  If this instance is a "slave" you will 
-       also need to fill in the masterUrl to point to a real machine.
-    -->
-    <!--
-       <lst name="master">
-         <str name="replicateAfter">commit</str>
-         <str name="replicateAfter">startup</str>
-         <str name="confFiles">schema.xml,stopwords.txt</str>
-       </lst>
-    -->
-    <!--
-       <lst name="slave">
-         <str name="masterUrl">http://your-master-hostname:8983/solr</str>
-         <str name="pollInterval">00:00:60</str>
-       </lst>
-    -->
+ 
   </requestHandler>
-
-  <!-- Search Components
-
-       Search components are registered to SolrCore and used by 
-       instances of SearchHandler (which can access them by name)
-       
-       By default, the following components are available:
-       
-       <searchComponent name="query"     class="solr.QueryComponent" />
-       <searchComponent name="facet"     class="solr.FacetComponent" />
-       <searchComponent name="mlt"       class="solr.MoreLikeThisComponent" />
-       <searchComponent name="highlight" class="solr.HighlightComponent" />
-       <searchComponent name="stats"     class="solr.StatsComponent" />
-       <searchComponent name="debug"     class="solr.DebugComponent" />
-   
-       Default configuration in a requestHandler would look like:
-
-       <arr name="components">
-         <str>query</str>
-         <str>facet</str>
-         <str>mlt</str>
-         <str>highlight</str>
-         <str>stats</str>
-         <str>debug</str>
-       </arr>
-
-       If you register a searchComponent to one of the standard names, 
-       that will be used instead of the default.
-
-       To insert components before or after the 'standard' components, use:
-    
-       <arr name="first-components">
-         <str>myFirstComponentName</str>
-       </arr>
-    
-       <arr name="last-components">
-         <str>myLastComponentName</str>
-       </arr>
-
-       NOTE: The component registered with the name "debug" will
-       always be executed after the "last-components" 
-       
-     -->
 
   <!-- Spell Check
 
@@ -1260,69 +1037,30 @@
       <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
       <str name="distanceMeasure">internal</str>
       <!-- minimum accuracy needed to be considered a valid spellcheck suggestion -->
-      <float name="accuracy">0.5</float>
+      <float name="accuracy">0.8</float>
       <!-- the maximum #edits we consider when enumerating terms: can be 1 or 2 -->
       <int name="maxEdits">2</int>
       <!-- the minimum shared prefix when enumerating terms -->
-      <int name="minPrefix">1</int>
+      <int name="minPrefix">2</int>
       <!-- maximum number of inspections per result. -->
-      <int name="maxInspections">5</int>
+      <int name="maxInspections">3</int>
       <!-- minimum length of a query term to be considered for correction -->
       <int name="minQueryLength">4</int>
       <!-- maximum threshold of documents a query term can appear to be considered for correction -->
-      <float name="maxQueryFrequency">0.01</float>
-      <!-- uncomment this to require suggestions to occur in 1% of the documents
+      <float name="maxQueryFrequency">0.1</float>
+      <!-- uncomment this to require suggestions to occur in 1% of the documents -->
       	<float name="thresholdTokenFrequency">.01</float>
-      -->
     </lst>
 
     <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
     <lst name="spellchecker">
       <str name="name">wordbreak</str>
       <str name="classname">solr.WordBreakSolrSpellChecker</str>
-      <str name="field">name</str>
+      <str name="field">text</str>
       <str name="combineWords">true</str>
       <str name="breakWords">true</str>
       <int name="maxChanges">10</int>
-    </lst>
-
-    <!-- a spellchecker that uses a different distance measure -->
-    <!--
-       <lst name="spellchecker">
-         <str name="name">jarowinkler</str>
-         <str name="field">spell</str>
-         <str name="classname">solr.DirectSolrSpellChecker</str>
-         <str name="distanceMeasure">
-           org.apache.lucene.search.spell.JaroWinklerDistance
-         </str>
-       </lst>
-     -->
-
-    <!-- a spellchecker that use an alternate comparator 
-
-         comparatorClass be one of:
-          1. score (default)
-          2. freq (Frequency first, then score)
-          3. A fully qualified class name
-      -->
-    <!--
-       <lst name="spellchecker">
-         <str name="name">freq</str>
-         <str name="field">lowerfilt</str>
-         <str name="classname">solr.DirectSolrSpellChecker</str>
-         <str name="comparatorClass">freq</str>
-      -->
-
-    <!-- A spellchecker that reads the list of words from a file -->
-    <!--
-       <lst name="spellchecker">
-         <str name="classname">solr.FileBasedSpellChecker</str>
-         <str name="name">file</str>
-         <str name="sourceLocation">spellings.txt</str>
-         <str name="characterEncoding">UTF-8</str>
-         <str name="spellcheckIndexDir">spellcheckerFile</str>
-       </lst>
-      -->
+    </lst> 
   </searchComponent>
 
   <!-- A request handler for demonstrating the spellcheck component.  

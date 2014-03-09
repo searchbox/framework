@@ -49,7 +49,7 @@ public abstract class SolrSearchEngine extends
 	private static final String LONG_FIELD = "_tl";
 	private static final String TEXT_FIELD = "_s";
 
-	private static final String SPELLCHECK_FIELD = "spell";
+	private static final String SPELLCHECK_FIELD = "text";
 	private static final String SUGGESTION_FIELD = "suggest";
 
 	public SolrSearchEngine() {
@@ -93,6 +93,7 @@ public abstract class SolrSearchEngine extends
 
 	@Override
 	public boolean indexFile(String collectionName, File file) {
+		LOGGER.info("Indexing for collection: " + collectionName);
 		LOGGER.info("Indexing file: " + file.getAbsolutePath());
 		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
 		contentstream.setContentType("text/xml");
