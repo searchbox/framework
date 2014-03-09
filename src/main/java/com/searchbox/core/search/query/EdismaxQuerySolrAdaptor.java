@@ -1,5 +1,7 @@
 package com.searchbox.core.search.query;
 
+import java.util.Map;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
@@ -64,5 +66,17 @@ public class EdismaxQuerySolrAdaptor {
 		} else {
 			query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
 		}
+	}
+	
+	@SearchAdapterMethod(execute=Time.ASYNCH)
+	public void getSugestions(SolrSearchEngine engine,
+			EdismaxQuery.Condition condition, Map<String,Object> result) {
+		LOGGER.info("Getting asynch request for EdismaxQuery");
+		SolrQuery query = engine.newQuery();
+		query.setRequestHandler("/suggest");
+		query.setQuery(condition.getQuery());
+		QueryResponse response = engine.execute(query);
+		LOGGER.info("Response: " + response.getResponse());
+		result.put("suggest", response.getResponse());
 	}
 }
