@@ -17,27 +17,30 @@ package com.searchbox.core.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.searchbox.core.search.SearchElement.Type;
+
 public class SearchResult {
+
+	List<String> fields = new ArrayList<String>();
+	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
 
 	public SearchResult(){
 		
 	}
-	
-	List<String> fields = new ArrayList<String>();
-	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
 
 	public void addElement(SearchElement element) {
 		this.elements.add(element);
 	}
 	
-	public SortedSet<SearchElement> getElements(SearchElement.Type type){
-		TreeSet<SearchElement> typedElements = new TreeSet<SearchElement>();
+	public Set<SearchElement> getElements(SearchElement.Type type){
+		Set<SearchElement> typedElements = new TreeSet<SearchElement>();
 		for(SearchElement element:this.elements){
 			if(element.type.equals(type)){
 				typedElements.add(element);
@@ -54,5 +57,4 @@ public class SearchResult {
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-
 }
