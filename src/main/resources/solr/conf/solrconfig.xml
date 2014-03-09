@@ -505,10 +505,11 @@
 
 
 
-	<!-- suggest.dictionary - name of suggester to use suggest.count - number 
-		of suggestions to return suggest.q - query to use for lookup suggest.build 
-		- command to build the suggester suggest.reload - command to reload the suggester -->
-
+	<!-- implemented as:
+	 - https://issues.apache.org/jira/browse/SOLR-5378
+	 - https://issues.apache.org/jira/browse/SOLR-5528
+	 - https://lucene.apache.org/solr/4_7_0/changes/Changes.html#v4.7.0.new_features
+	 -->
 	<requestHandler name="/suggest" class="solr.SearchHandler">
 		<lst name="defaults">
 			<str name="suggest.dictionary">FreeTextLookupFactory</str>
