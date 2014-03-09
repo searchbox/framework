@@ -21,5 +21,6 @@ public interface ManagedSearchEngine {
 
 	public void register();
 
+	public void reloadPlugins();
 
 }

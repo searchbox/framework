@@ -23,11 +23,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.builder.FlowJobBuilder;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -46,9 +46,6 @@ public class PubmedCollection extends AbstractBatchCollection implements
 
 	@Autowired
 	ApplicationContext context;
-
-	@Autowired
-	JobBuilderFactory jobBuilderFactory;
 
 	@Autowired
 	StepBuilderFactory stepBuilderFactory;
@@ -128,15 +125,13 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	}
 
 	@Override
-	protected Job getJob() {
+	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+		
 		Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
 				.reader(reader()).processor(itemProcessor()).writer(writer())
 				.build();
-
-		Job myJob = jobBuilderFactory.get(this.getName())
-				.incrementer(new RunIdIncrementer()).flow(step).end().build();
-
-		return myJob;
+		
+		return builder.flow(step).end();
+	
 	}
-
 }
