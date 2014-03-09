@@ -31,5 +31,5 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public @interface SearchAdapter {
 	Time execute() default Time.BEFORE;
-	public enum Time {BEFORE, PRE, POST, AFTER}
+	public enum Time {BEFORE, PRE, POST, AFTER, ASYNCH}
 }
