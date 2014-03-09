@@ -147,6 +147,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr.setAttributeValue("searchable",true);
 		fieldAttr.setAttributeValue("highlight",true);
 		fieldAttr.setAttributeValue("spelling",true);
+		fieldAttr.setAttributeValue("suggestion",true);
 		fieldAttr.setAttributeValue("label", "title");
 		preset.addFieldAttribute(fieldAttr);
 		
@@ -154,6 +155,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr2.setAttributeValue("searchable",true);
 		fieldAttr2.setAttributeValue("highlight",true);
 		fieldAttr2.setAttributeValue("spelling",true);
+		fieldAttr2.setAttributeValue("suggestion",true);
 		preset.addFieldAttribute(fieldAttr2);
 		
 		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("article-completion-date"));
@@ -237,15 +239,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		searchbox.addPresetDefinition(preset);
 		
-		PresetDefinition articles = new PresetDefinition(collection);
-		articles.setLabel("Articles");
-		articles.setSlug("articles");
-		searchbox.addPresetDefinition(articles);
-
-		PresetDefinition press = new PresetDefinition(collection);
-		press.setLabel("Press");
-		press.setSlug("press");
-		searchbox.addPresetDefinition(press);
+//		PresetDefinition articles = new PresetDefinition(collection);
+//		articles.setLabel("Articles");
+//		articles.setSlug("articles");
+//		searchbox.addPresetDefinition(articles);
+//
+//		PresetDefinition press = new PresetDefinition(collection);
+//		press.setLabel("Press");
+//		press.setSlug("press");
+//		searchbox.addPresetDefinition(press);
 		
 		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
 		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
