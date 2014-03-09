@@ -5,6 +5,7 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:output omit-xml-declaration="yes" />
 
+  <div>
 	<div class="input-group input-group">
 		<input type="text" class="form-control search-query" placeholder="Query" name="${element.getUrlParam() }"
 			value="${element.query }" /> <span class="input-group-btn">
@@ -12,5 +13,14 @@
 				<span class="glyphicon glyphicon-search"><!-- search --></span>
 			</button>
 		</span>
+	</div>
+  <div id="didyoumean">
+    <c:choose>
+    <c:when test="${element.shouldRetry() }">
+      Showing results for: ${element.collationQuery } 
+    </c:when>
+    <c:otherwise>no spell</c:otherwise>
+    </c:choose>
+  </div>
 	</div>
 </jsp:root>

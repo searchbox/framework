@@ -1,6 +1,7 @@
 package com.searchbox.core.search.query;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.DisMaxParams;
 import org.slf4j.Logger;
@@ -43,12 +44,25 @@ public class EdismaxQuerySolrAdaptor {
 	}
 
 	@SearchAdapterMethod(execute=Time.POST)
-	public void udpateElementQuery(EdismaxQuery searchElement, SolrQuery query) {
-		searchElement.setQuery(query.getQuery());			
+	public void udpateElementQuery(EdismaxQuery searchElement, SolrQuery query, 
+			QueryResponse response) {
+		searchElement.setQuery(query.getQuery());	
+		if(!searchElement.shouldRetry()  && response.getSpellCheckResponse() != null){
+			LOGGER.info("Collation query: " + response.getSpellCheckResponse().getCollatedResult());
+			searchElement.setCollationQuery(response.getSpellCheckResponse().getCollatedResult());
+			searchElement.setHitCount(response.getResults().getNumFound());
+		}
 	}
 
 	@SearchAdapterMethod(execute=Time.PRE)
-	public void getQueryCondition(EdismaxQuery.Condition condition, SolrQuery query) {
-		query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
+	public void getQueryCondition(EdismaxQuery searchElement, EdismaxQuery.Condition condition, SolrQuery query) {
+		if(searchElement.shouldRetry() 
+				&& searchElement.getCollationQuery() != null 
+				&& !searchElement.getCollationQuery().isEmpty()){
+			//query.setQuery(ClientUtils.escapeQueryChars(searchElement.getCollationQuery()));
+			query.setQuery(searchElement.getCollationQuery());
+		} else {
+			query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
+		}
 	}
 }
