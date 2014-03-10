@@ -13,24 +13,25 @@ var handleFacet = function(action, groupName, facetValue, baseUrl) {
   var newUrl = (typeof baseUrl !== "undefined") ? baseUrl : url.attr("path");
   var paramId = 0;
   var params = $.url(window.location.href).param();
-
-  /*if (action == "add") {
+  
+  if (action == "add") {
     if (typeof params["ff"] === "undefined") {
       params["ff"] = new Object();
     }
 
-    params["ff"][groupName] = groupName + "%5B" + facetValue + "%5D";
+    if($.inArray(groupName + "[" + facetValue + "]", params["ff"]) == -1){
+      params["ff"].push(groupName + "[" + facetValue + "]");
+    }
   } else {
     delete params["ff"][groupName];
-  }*/
+  }
 
   //replacing [] with '' ff=publication-type%5BCase+Reports%5D
   
-  console.log(params);
   //newUrl += ($.param(params)) ? "?" + ($.param(params)) : "";
   newUrl += "?ff="+groupName + "[" + facetValue + "]";
   console.log(newUrl);
-  window.location.href = newUrl;
+  //window.location.href = newUrl;
   //ReloadMain content doesn't work because jquery doesn't serialize the params correctly'
   //reloadMainContent(params, newUrl);
 };
