@@ -76,7 +76,7 @@ public class EdismaxQuerySolrAdaptor {
 		query.setRequestHandler("/suggest");
 		query.setQuery(condition.getQuery());
 		QueryResponse response = engine.execute(query);
-		LOGGER.info("Response: " + response.getResponse());
-		result.put("suggest", response.getResponse());
+		LOGGER.info("Response: " + response.getResponse().get("suggest"));
+		result.put("suggest", response.getResponse().get("suggest"));
 	}
 }
