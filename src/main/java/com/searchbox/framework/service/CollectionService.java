@@ -50,6 +50,9 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 		Map<String, String> result = new HashMap<String, String>();
 		com.searchbox.core.dm.Collection collection = collectiondef.getInstance();
 		if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
+			SearchEngine<?,?> engine = collection.getSearchEngine();
+			engine.setCollection(collection);
+			LOGGER.info("Starting Data synchronization for \"" + collection.getName()+"\"");
 			try {
 				((SynchronizedCollection)collection).synchronize();
 			} catch (Exception e){

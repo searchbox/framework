@@ -20,12 +20,16 @@ import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
+import com.searchbox.core.search.RetryElement;
 import com.searchbox.core.search.SearchElement;
 
 @SearchComponent
-public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition> {
+public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition>
+	implements RetryElement {
 	
 	private String query;
+	private String collationQuery;
+	private Long hitCount = 0l;
 
 	public EdismaxQuery() {
 		super("query component",SearchElement.Type.QUERY);
@@ -34,6 +38,11 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	public EdismaxQuery(String query) {
 		super("query component",SearchElement.Type.QUERY);
 		this.query = query;
+	}
+	
+	@Override
+	public boolean shouldRetry() {
+		return (hitCount == 0 && collationQuery!=null); 
 	}
 
 	public String getQuery() {
@@ -53,6 +62,28 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	public EdismaxQuery.Condition getSearchCondition() {
 		return new EdismaxQuery.Condition(query);
 	}
+	
+	/**
+	 * @return the collationQuery
+	 */
+	public String getCollationQuery() {
+		return collationQuery;
+	}
+
+	/**
+	 * @param collationQuery the collationQuery to set
+	 */
+	public void setCollationQuery(String collationQuery) {
+		this.collationQuery = collationQuery;
+	}
+
+	/**
+	 * @param l the hitCount to set
+	 */
+	public void setHitCount(Long l) {
+		this.hitCount = l;
+	}
+
 	
 	@SearchCondition(urlParam="q")
 	public static class Condition extends AbstractSearchCondition {

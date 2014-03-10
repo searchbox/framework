@@ -20,7 +20,6 @@ import com.searchbox.core.SearchComponent;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.core.ref.StringUtils;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalValueElement;
 import com.searchbox.core.search.SearchElement;

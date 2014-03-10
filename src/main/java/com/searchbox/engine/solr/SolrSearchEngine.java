@@ -12,12 +12,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.AbstractUpdateRequest.ACTION;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.client.solrj.request.UpdateRequest;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.ContentStreamBase;
@@ -31,7 +31,7 @@ import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.ManagedSearchEngine;
 
 public abstract class SolrSearchEngine extends
-		AbstractSearchEngine<SolrQuery, SolrResponse> implements
+		AbstractSearchEngine<SolrQuery, QueryResponse> implements
 		ManagedSearchEngine {
 
 	private static final Logger LOGGER = LoggerFactory
@@ -49,15 +49,15 @@ public abstract class SolrSearchEngine extends
 	private static final String LONG_FIELD = "_tl";
 	private static final String TEXT_FIELD = "_s";
 
-	private static final String SPELLCHECK_FIELD = "spell";
+	private static final String SPELLCHECK_FIELD = "text";
 	private static final String SUGGESTION_FIELD = "suggest";
 
 	public SolrSearchEngine() {
-		super(SolrQuery.class, SolrResponse.class);
+		super(SolrQuery.class, QueryResponse.class);
 	}
 
 	public SolrSearchEngine(String name) {
-		super(name, SolrQuery.class, SolrResponse.class);
+		super(name, SolrQuery.class, QueryResponse.class);
 	}
 
 	protected abstract SolrServer getSolrServer();
@@ -67,7 +67,6 @@ public abstract class SolrSearchEngine extends
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-
 	}
 	
 	@Override
@@ -83,16 +82,34 @@ public abstract class SolrSearchEngine extends
 	}
 
 	@Override
-	public SolrResponse execute(SolrQuery query) {
+	public QueryResponse execute(SolrQuery query) {
 		try {
 			return this.getSolrServer().query(query);
 		} catch (SolrServerException e) {
 			throw new RuntimeException("Could nexecute Query on  engine", e);
 		}
 	}
+	
+	@Override
+	public void reloadPlugins() {
+//		LOGGER.info("Updating Solr Suggester");
+//		SolrQuery query = this.newQuery();
+//		query.setRequestHandler("/suggest");
+//		query.setQuery("a");
+//		query.setParam("suggest.build", true);
+//		LOGGER.info("Query is: " + query);
+//		QueryResponse response = this.execute(query);
+//		
+//		LOGGER.info("Updating Solr Spellchecker");
+//		query = this.newQuery();
+//		query.setRequestHandler("/spell");
+//		query.setParam("spellcheck.build", true);
+//		response = this.execute(query);
+	}
 
 	@Override
 	public boolean indexFile(String collectionName, File file) {
+		LOGGER.info("Indexing for collection: " + collectionName);
 		LOGGER.info("Indexing file: " + file.getAbsolutePath());
 		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
 		contentstream.setContentType("text/xml");
