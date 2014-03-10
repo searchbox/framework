@@ -5,10 +5,14 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:output omit-xml-declaration="yes" />
 
+  <spring:url var="asynchElementUrl"
+    value="/${searchbox.getSlug() }/asynch/${preset.getSlug() }/${element.definitionId}" />
+    
+  
   <div>
 	<div class="input-group input-group">
-		<input type="text" class="form-control search-query" placeholder="Query" name="${element.getUrlParam() }"
-			value="${element.query }" /> <span class="input-group-btn">
+		<input type="text" class="form-control search-query typeahead" placeholder="Query" name="${element.getUrlParam() }"
+			value="${element.query }" autocomplete="off"/> <span class="input-group-btn">
 			<button type="submit" class="btn btn-black btn-search">
 				<span class="glyphicon glyphicon-search"><!-- search --></span>
 			</button>
@@ -23,4 +27,14 @@
     </c:choose>
   </div>
 	</div>
+	<script>
+  $( document ).ready(function() {
+    $('.typeahead').typeahead({
+        name: 'Some name',
+        local: ['test', 'abc', 'def']
+    })
+  });
+  
+  
+  </script>
 </jsp:root>

@@ -4,9 +4,10 @@
 	xmlns:spring="http://www.springframework.org/tags" version="2.0">
 
 	<jsp:output omit-xml-declaration="yes" />
-	
-  <c:set var="bootstrapVersion" value="3.1.1"/>
-  <c:set var="jqueryVersion" value="2.0.3"/>
+
+	<c:set var="bootstrapVersion" value="3.1.1" />
+	<c:set var="jqueryVersion" value="2.0.3" />
+	<c:set var="typeaheadVersion" value="0.10.1" />
 
 	<spring:url
 		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
@@ -17,32 +18,39 @@
 	<spring:url
 		value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
 		var="jquery_url" />
-  <spring:url
-    value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
-    var="bootstrap_js_url" />
-
-	<spring:url value="/img/favicon.ico" var="favicon" />
-  <spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
-  <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
-
-  <spring:url value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css" var="social_buttons_css" />
+	<spring:url
+		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
+		var="bootstrap_js_url" />
+	<spring:url
+		value="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/${typeaheadVersion }/typeahead.bundle.min.js"
+		var="typeahead_js_url" />
 
 
-  <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+	<spring:url value="/assets/img/favicon.ico" var="favicon" />
+	<spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
+	<spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
+	<spring:url
+		value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css"
+		var="social_buttons_css" />
+
+
+	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
-  <link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
+	<link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
 
-	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
+	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) 
 	<c:set var="userLocale">
 		<c:set var="plocale">${pageContext.response.locale}</c:set>
 		<c:out value="${fn:replace(plocale, '_', '-')}" default="en" />
 	</c:set>
+	-->
 
 	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-	<script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+  <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+  <script src="${typeahead_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 	<script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>
