@@ -1,3 +1,62 @@
+/**
+ * Handle facet actions (add/remove facet filter from url) and redirect to that url
+ * @param string action Accepted value "remove" / "add" what needs to be done with the facet
+ * @param string groupName The facet group name used as facet group name in filter query
+ * @param string facetValue The facet value that needs to be added or removed
+ * @param string baseUrl The url to redirect to, optional parameter
+ **/
+var handleFacet = function(action, groupName, facetValue, baseUrl) {
+  //Will be done later using smart tags / q boosts
+  //TODO: Fix this and make it possible to add or remove tags
+  var url = $.url(window.location.href);
+
+  var newUrl = (typeof baseUrl !== "undefined") ? baseUrl : url.attr("path");
+  var paramId = 0;
+  var params = $.url(window.location.href).param();
+
+  /*if (action == "add") {
+    if (typeof params["ff"] === "undefined") {
+      params["ff"] = new Object();
+    }
+
+    params["ff"][groupName] = groupName + "%5B" + facetValue + "%5D";
+  } else {
+    delete params["ff"][groupName];
+  }*/
+
+  //replacing [] with '' ff=publication-type%5BCase+Reports%5D
+  
+  console.log(params);
+  //newUrl += ($.param(params)) ? "?" + ($.param(params)) : "";
+  newUrl += "?ff="+groupName + "[" + facetValue + "]";
+  console.log(newUrl);
+  window.location.href = newUrl;
+  //ReloadMain content doesn't work because jquery doesn't serialize the params correctly'
+  //reloadMainContent(params, newUrl);
+};
+
+/** Handle events on clickable tags **/
+var bindClickableTagsEvents = function(){
+  $("#results .label-tag.clickable").unbind();
+  $("#results .label-tag.clickable").click(function() {
+    var filter = $(this).attr("data-filter").split(":");
+    if (filter.length == 2) {
+      var path = $.url(window.location.href).attr("path");
+      var pieces = path.split("/");
+
+      var baseUrl = path;
+      /*if (pieces[2] != "search") {
+        baseUrl = "/" + pieces[1] + "/search"
+      }*/
+
+      console.log("Adding facet "+filter[0] + ", " + filter[1] +" - "+ baseUrl);
+      handleFacet("add", filter[0], filter[1], baseUrl);
+    }
+    return false;
+  });
+  
+}
+
 /** Handle autocomplete on searchField **/
 var bindSearchAutocompleteEvent = function() {
 
@@ -124,6 +183,7 @@ var bindResultPageEvents = function() {
   // Bind facet events
   bindFacetEvents();
   bindSearchAutocompleteEvent();
+  bindClickableTagsEvents();
 };
 
 $(document).ready(function() {
