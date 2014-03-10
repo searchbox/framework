@@ -30,12 +30,16 @@
 
       <div class="row" id="main-search-content">
 
-        <div class="row" id="search-bar">
+        <div class="row" id="search-bar" style="margin-bottom:25px;">
 
           <div class="col-md-3 col-sm-5 col-left">
 
             <div class="media">
-              <a class="pull-left" href="#"> <spring:url
+              <spring:url
+                  value="/"
+                  var="home_url" />
+              <a class="pull-left" href="${home_url}">
+                <spring:url
                   value="/img/searchbox-logo-big.png"
                   var="searchbox_logo" /> <img src='${searchbox_logo}'
                 class="media-object" alt="Searchbox" id="logo-image" />
@@ -304,10 +308,6 @@ ul.data li dd {
   width: 80%;
 }
 
-#search-bar {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-}
 </style>
 </body>
   </html>

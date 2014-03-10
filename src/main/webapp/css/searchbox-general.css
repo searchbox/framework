@@ -157,22 +157,16 @@ input:focus,textarea:focus {
 }
 
 #search-bar {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   border-radius: 0;
   padding-left: 0px;
   padding-top: 40px;
   padding-right: 0px;
-  padding-bottom: 0px;
+  padding-bottom: 40px;
   border-bottom: 1px solid #BCBCBC;
   /*background: url("/img/texture-white.png") repeat scroll 0 0
 		rgba(0, 0, 0, 0);*/
   background-color: #f5f5f5;
-}
-
-#search-bar #didyoumean {
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 12px;
 }
 
 #search-bar #logo {
@@ -378,6 +372,27 @@ a.clear_input:hover {
   margin-right: 10px;
 }
 
+/** tag attributes **/
+#result-list .label-tag {
+  background-color: #e8e8e8;
+  font-weight: normal;
+}
+
+#result-list .label-tag.clickable{
+  cursor:pointer;
+  border:1px solid lightblue;
+}
+#result-list .label-tag.clickable:hover{
+  border:1px solid blue;
+}
+
+#result-list .label-tag .field-label {
+  color: #999;
+}
+
+#result-list .label-tag .field-value {
+  color: black;
+}
 /*************************************************************/
 /*                    BasicPagination                        */
 /*************************************************************/
@@ -451,20 +466,20 @@ a.clear_input:hover {
 }
 
 @media ( min-width : 768px) {
-  #basic-pagination a, #basic-pagination span {
+  #basic-pagination a,#basic-pagination span {
     padding: 5px 11px;
   }
-  #basic-pagination .gap{
-    display:inline-block;
+  #basic-pagination .gap {
+    display: inline-block;
   }
 }
 
 @media ( max-width : 768px) {
-  #basic-pagination a, #basic-pagination span {
+  #basic-pagination a,#basic-pagination span {
     padding: 5px 5px;
   }
-  #basic-pagination .gap{
-    display:none;
+  #basic-pagination .gap {
+    display: none;
   }
 }
 
@@ -527,13 +542,3 @@ em {
   width: auto;
   z-index: 2000;
 }
-
-/*************************************************************/
-/*                       Admin class                         */
-/*************************************************************/
-td.nowrap{
-  overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-}
-

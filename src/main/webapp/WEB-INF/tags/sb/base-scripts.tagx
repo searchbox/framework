@@ -18,17 +18,17 @@
 	<spring:url
 		value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
 		var="jquery_url" />
+    <spring:url
+        value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
+        var="jqueryui_js_url" />
 	<spring:url
 		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
 		var="bootstrap_js_url" />
-	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
-		var="jqueryui_js_url" />
-
-
 
 	<spring:url value="/assets/img/favicon.ico" var="favicon" />
 	<spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
+    <spring:url value="/assets/js/jquery.purl.js" var="jquery_purl" />
+  
 	<spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
   
   
@@ -58,6 +58,7 @@
 	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
     <script src="${jqueryui_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
     <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-	<script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+    <script src="${jquery_purl}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+    <script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>

@@ -45,7 +45,10 @@
 					<div class="col-md-3 col-left">
 
 						<div class="media">
-							<a class="pull-left" href="#"> <spring:url
+                         <spring:url
+                            value="/${searchbox.getSlug()}/search/"
+                            var="home_url" />
+							<a class="pull-left" href="${home_url}"> <spring:url
 									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
 								src='${searchbox_logo}' class="media-object" alt="Searchbox"
 								id="logo-image" />
@@ -116,15 +119,15 @@
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs nav-justified">
 							<li class="active"><a href="#view" data-toggle="tab">View
-									Element<span class="badge pull-right">${result.getElements('VIEW').size()}</span>
+									Element<span class="badge pull-right">${result.getElements('VIEW').size()} element(s)</span>
 							</a></li>
 							<li><a href="#filter" data-toggle="tab">Preset Filters <span
-									class="badge pull-right">${result.getElements('FILTER').size()}</span>
+									class="badge pull-right">${result.getElements('FILTER').size()} filter(s)</span>
 							</a></li>
 							<spring:url var="collectionForm"
 								value="/${searchbox.getSlug() }/admin/CollectionDefinition/${preset.collection.id}" />
 							<li><a href="#collection" data-toggle="tab">Field
-									Definition <span class="badge pull-right">${preset.fieldAttributes.size()}</span>
+									Definition <span class="badge pull-right">${preset.fieldAttributes.size()} field(s)</span>
 							</a></li>
 
 						</ul>
