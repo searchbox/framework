@@ -52,9 +52,6 @@ public class FieldAttribute {
 	@SearchAttribute
 	protected Boolean suggestion = false;
 	
-	@SearchAttribute
-	protected Boolean id = false;
-	
 	@SearchAttribute("1f")
 	protected Float boost = 1f;
 	
@@ -117,14 +114,6 @@ public class FieldAttribute {
 	public void setSuggestion(Boolean suggestion) {
         this.suggestion = suggestion;
     }
-
-	public Boolean getId() {
-		return id;
-	}
-
-	public void setId(Boolean isId) {
-		this.id = isId;
-	}
 
 	public Float getBoost() {
         return this.boost;

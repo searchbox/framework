@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -31,6 +32,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
@@ -53,7 +55,13 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<PresetDefinition> presets = new HashSet<PresetDefinition>();
 
+	@Column(unique=true)
 	protected String name;
+	
+	protected String description;
+	
+	@Column(nullable=false)
+	protected String idFieldName;
 
 	protected Boolean autoStart = false;
 
@@ -130,6 +138,34 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 		this.autoStart = autoStart;
 	}
 
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the idFieldName
+	 */
+	public String getIdFieldName() {
+		return idFieldName;
+	}
+
+	/**
+	 * @param idFieldName the idFieldName to set
+	 */
+	public void setIdFieldName(String idFieldName) {
+		this.idFieldName = idFieldName;
+	}
+
 	public FieldDefinition getFieldDefinition(String key) {
 		for (FieldDefinition def : this.fields) {
 			if (def.getKey().equals(key)) {
@@ -142,7 +178,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 	@Override
 	public Collection getInstance() {
 		Collection collection = (Collection) super.toObject();
-		collection.setName(this.getName());
+		BeanUtils.copyProperties(this, collection);
 		for (FieldDefinition fieldDef : this.fields) {
 			collection.getFields().add(
 					new Field(fieldDef.getClazz(), fieldDef.getKey()));
