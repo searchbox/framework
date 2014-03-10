@@ -100,7 +100,9 @@ public abstract class AbstractBatchCollection extends Collection
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		LOGGER.info("Batch Job is over. need to update engine");
-		if(ManagedSearchEngine.class.isAssignableFrom(this.searchEngine.getClass())){
+		if(this.searchEngine == null){
+			return;
+		} else if(ManagedSearchEngine.class.isAssignableFrom(this.searchEngine.getClass())){
 			((ManagedSearchEngine)this.searchEngine).reloadPlugins();
 		}		
 	}
