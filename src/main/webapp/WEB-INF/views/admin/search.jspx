@@ -116,15 +116,15 @@
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs nav-justified">
 							<li class="active"><a href="#view" data-toggle="tab">View
-									Element<span class="badge pull-right">${result.getElements('VIEW').size()}</span>
+									Element<span class="badge pull-right">${result.getElements('VIEW').size()} element(s)</span>
 							</a></li>
 							<li><a href="#filter" data-toggle="tab">Preset Filters <span
-									class="badge pull-right">${result.getElements('FILTER').size()}</span>
+									class="badge pull-right">${result.getElements('FILTER').size()} filter(s)</span>
 							</a></li>
 							<spring:url var="collectionForm"
 								value="/${searchbox.getSlug() }/admin/CollectionDefinition/${preset.collection.id}" />
 							<li><a href="#collection" data-toggle="tab">Field
-									Definition <span class="badge pull-right">${preset.fieldAttributes.size()}</span>
+									Definition <span class="badge pull-right">${preset.fieldAttributes.size()} field(s)</span>
 							</a></li>
 
 						</ul>

@@ -114,7 +114,7 @@
         <div class="col-md-12">
           <h4>Field Attributes</h4>
 
-          <table id="fieldAttributes"
+          <table id="field-attributes"
             class="table table-striped tablesorter-bootstrap">
             <thead>
               <tr>
@@ -161,7 +161,7 @@
           <script>
                       $.fn.editable.defaults.mode = 'inline';
                       $('.editable').editable();
-                      $("#fieldAttributes").tablesorter({
+                      $("#field-attributes").tablesorter({
                         sortList : [ [ 0, 0 ], [ 1, 0 ] ]
                       });
                     </script>
@@ -170,5 +170,4 @@
       </div>
     </div>
   </div>
-
 </jsp:root>
