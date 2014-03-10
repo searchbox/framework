@@ -30,7 +30,7 @@
 
       <div class="row" id="main-search-content">
 
-        <div class="row" id="search-bar">
+        <div class="row" id="search-bar" style="margin-bottom:25px;">
 
           <div class="col-md-3 col-sm-5 col-left">
 
@@ -304,10 +304,6 @@ ul.data li dd {
   width: 80%;
 }
 
-#search-bar {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-}
 </style>
 </body>
   </html>

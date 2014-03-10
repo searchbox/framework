@@ -20,13 +20,17 @@
 	</div>
   
   
-  <div id="didyoumean">
+  
     <c:choose>
-    <c:when test="${element.shouldRetry() }">
-      Showing results for: ${element.collationQuery } 
-    </c:when>
-    <c:otherwise>No Spell</c:otherwise>
+      <c:when test="${element.shouldRetry() }">
+        <div class="alert alert-info" id="didyoumean">Showing results for: <strong>${element.collationQuery }</strong></div>
+      </c:when>
     </c:choose>
-  </div>
+  
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#results").prepend($("#didyoumean"));
+      });
+    </script>
 	</div>  
 </jsp:root>
