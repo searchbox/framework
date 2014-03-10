@@ -29,6 +29,7 @@ public class Hit extends ValueElement  {
 	private static final long serialVersionUID = -6419221783189375788L;
 	
 	public Map<String, Object> fieldValues;
+	public Map<String, List<String>> highlights;
 	
 	private Float score;
 	
@@ -42,6 +43,7 @@ public class Hit extends ValueElement  {
 		super("");
 		this.score = score;
 		this.fieldValues = new HashMap<String, Object>();
+		this.highlights = new HashMap<String, List<String>>();
 	}
 	
 	public String getIDFieldName() {
@@ -114,9 +116,22 @@ public class Hit extends ValueElement  {
 		return this.fieldValues;
 	}
 
+	/**
+	 * @return the highlights
+	 */
+	public Map<String, List<String>> getHighlights() {
+		return highlights;
+	}
+
+	/**
+	 * @param highlights the highlights to set
+	 */
+	public void setHighlights(Map<String, List<String>> highlights) {
+		this.highlights = highlights;
+	}
+
 	@Override
 	public int compareTo(ValueElement other) {
 		return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
 	}
-	
 }

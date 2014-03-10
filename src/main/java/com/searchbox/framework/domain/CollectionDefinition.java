@@ -47,7 +47,11 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private Set<FieldDefinition> fieldDefinitions = new HashSet<FieldDefinition>();
+	private Set<FieldDefinition> fields = new HashSet<FieldDefinition>();
+	
+	@OneToMany(mappedBy="collection")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<PresetDefinition> presets = new HashSet<PresetDefinition>();
 
 	protected String name;
 
@@ -67,8 +71,8 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 				List<Field> fields = (List<Field>)method.invoke(null);
 				for(Field field:fields){
 					FieldDefinition fieldDef = new FieldDefinition(field.getClazz(), field.getKey());
-					if(!this.fieldDefinitions.contains(fieldDef)){
-						this.fieldDefinitions.add(fieldDef);
+					if(!this.fields.contains(fieldDef)){
+						this.fields.add(fieldDef);
 					}
 				}
 			}
@@ -76,6 +80,14 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 			LOGGER.warn("Could not use GET_FIELD method on collection: " + name,e);
 		}
 
+	}
+
+	public Set<PresetDefinition> getPresets() {
+		return presets;
+	}
+
+	public void setPresets(Set<PresetDefinition> presets) {
+		this.presets = presets;
 	}
 
 	public SearchEngineDefinition getSearchEngine() {
@@ -94,12 +106,12 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 		this.searchEngine = engine;
 	}
 
-	public Set<FieldDefinition> getFieldDefinitions() {
-		return fieldDefinitions;
+	public Set<FieldDefinition> getFields() {
+		return fields;
 	}
 
-	public void setFieldDefinitions(Set<FieldDefinition> fieldDefinitions) {
-		this.fieldDefinitions = fieldDefinitions;
+	public void setFields(Set<FieldDefinition> fieldDefinitions) {
+		this.fields = fieldDefinitions;
 	}
 
 	public String getName() {
@@ -119,7 +131,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 	}
 
 	public FieldDefinition getFieldDefinition(String key) {
-		for (FieldDefinition def : this.fieldDefinitions) {
+		for (FieldDefinition def : this.fields) {
 			if (def.getKey().equals(key)) {
 				return def;
 			}
@@ -131,7 +143,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements
 	public Collection getInstance() {
 		Collection collection = (Collection) super.toObject();
 		collection.setName(this.getName());
-		for (FieldDefinition fieldDef : this.fieldDefinitions) {
+		for (FieldDefinition fieldDef : this.fields) {
 			collection.getFields().add(
 					new Field(fieldDef.getClazz(), fieldDef.getKey()));
 		}

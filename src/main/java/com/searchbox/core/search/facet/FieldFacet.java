@@ -17,6 +17,7 @@ package com.searchbox.core.search.facet;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.dm.Field;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -32,7 +33,7 @@ public class FieldFacet
 		SearchElementWithConditionalValues<FieldFacet.Value, FieldValueCondition> {
 	
 	@SearchAttribute
-	private String fieldName;
+	private Field field;
 
 	@SearchAttribute
 	private Boolean sticky = true;
@@ -41,17 +42,21 @@ public class FieldFacet
 		super("", SearchElement.Type.FACET);
 	}
 
-	public FieldFacet(String label, String fieldName) {
+	public FieldFacet(String label, Field field) {
 		super(label, SearchElement.Type.FACET);
-		this.fieldName = fieldName;
+		this.field = field;
 	}
 
 	public String getFieldName() {
-		return fieldName;
+		return field.getKey();
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setField(Field field) {
+		this.field = field;
+	}
+	
+	public Field getField() {
+		return this.field;
 	}
 
 	public FieldFacet addValueElement(String label, Integer count) {
@@ -105,13 +110,14 @@ public class FieldFacet
 
 		@Override
 		public FieldValueCondition getSearchCondition() {
-			return new FieldValueCondition(fieldName, this.value, sticky);
+			return new FieldValueCondition(field.getKey(), this.value, sticky);
 		}
 
 		@Override
 		public String geParamValue() {
-			return fieldName + "[" + this.value + "]";
+			return field.getKey() + "[" + this.value + "]";
 		}
+		
 
 		@Override
 		public int compareTo(ValueElement other) {
@@ -129,7 +135,7 @@ public class FieldFacet
 			}
 			return diff * ((sort.equals(Sort.ASC)) ? 1 : -1);
 		}
-
+		
 		@Override
 		public Class<?> getConditionClass() {
 			return FieldValueCondition.class;
@@ -139,7 +145,7 @@ public class FieldFacet
 	@Override
 	public void mergeSearchCondition(AbstractSearchCondition condition) {
 		if (FieldValueCondition.class.equals(condition.getClass())) {
-			if (this.fieldName.equals(((FieldValueCondition) condition)
+			if (this.getFieldName().equals(((FieldValueCondition) condition)
 					.getFieldName())) {
 				for (FieldFacet.Value value : this.getValues()) {
 					if (value.value

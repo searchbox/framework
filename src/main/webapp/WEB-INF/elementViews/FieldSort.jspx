@@ -20,14 +20,15 @@
           <c:set var="sortVariable" value="${sort.geParamValue()}"/>
         </c:if>
          <li class="${cssSelect }"><a data-field="article-completion-date asc"
-        href="#" onclick="${element.getClass().getSimpleName()}_submit('${sort.geParamValue()}')">${sort.getLabel()}</a></li>
-        <input id="${element.getClass().getSimpleName()}_field" type="hidden" name="${sort.getUrlParam()}" value="${sortVariable }"/>
+        href="#" onclick="${element.getClass().getSimpleName()}_submit('${sort.getUrlParam()}','${sort.geParamValue()}')">${sort.getLabel()}</a></li>
       </c:forEach>
     </ul>
   </div>
+  <input id="${element.getClass().getSimpleName()}_field" type="hidden"  value="${sortVariable }"/>
   <script>
-      function ${element.getClass().getSimpleName()}_submit(param){
+      function ${element.getClass().getSimpleName()}_submit(name,param){
     	  $("#${element.getClass().getSimpleName()}_field").val(param);
+    	  $("#${element.getClass().getSimpleName()}_field").attr('name',name);
     	  $("form").submit();
       }
   </script>

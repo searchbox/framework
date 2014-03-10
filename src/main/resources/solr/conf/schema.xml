@@ -114,6 +114,9 @@
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="_version_" type="long" indexed="true" stored="true"/>
 
+    <field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="suggest" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
 
     <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -146,10 +149,15 @@
 
     <!-- some trie-coded dynamic fields for faster range queries -->
     <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+    <dynamicField name="*_tis" type="tint"    indexed="true"  stored="true" multiValued="true"/>
     <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+    <dynamicField name="*_tls" type="tlong"   indexed="true"  stored="true" multiValued="true"/>
     <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+    <dynamicField name="*_tfs" type="tfloat"  indexed="true"  stored="true" multiValued="true"/>
     <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+    <dynamicField name="*_tds" type="tdouble" indexed="true"  stored="true" multiValued="true"/>
     <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+    <dynamicField name="*_tdts" type="tdate"  indexed="true"  stored="true" multiValued="true"/>
 
     <dynamicField name="*_pi"  type="pint"    indexed="true"  stored="true"/>
     <dynamicField name="*_c"   type="currency" indexed="true"  stored="true"/>
@@ -165,9 +173,11 @@
         unknown fields indexed and/or stored by default 
         
         NB: use of "*" dynamic fields will disable field type guessing and adding
-        unknown fields to the schema. --> 
-    <!--dynamicField name="*" type="ignored" multiValued="true" /-->
-   
+        unknown fields to the schema.  --> 
+    <dynamicField name="*" type="string" stored="true" indexed="false" multiValued="true" />
+    
+    
+
   </fields>
 
 
@@ -386,6 +396,7 @@
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       </analyzer>
     </fieldType>
+
 
     <!-- A general text field that has reasonable, generic
          cross-language defaults: it tokenizes with StandardTokenizer,

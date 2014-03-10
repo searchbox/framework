@@ -17,26 +17,16 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
-import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.SolrResponseBase;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.ContentStreamBase;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
@@ -47,12 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
-import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.engine.AbstractSearchEngine;
-import com.searchbox.core.engine.ManagedSearchEngine;
 
-public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse> 
-	implements ManagedSearchEngine {
+public class EmbeddedSolr extends SolrSearchEngine {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EmbeddedSolr.class);
@@ -72,64 +58,32 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 	@SearchAttribute
 	private String coreName;
 
-	private static EmbeddedSolrServer server = null;
-	private static SolrCore core = null;
+	private static CoreContainer coreContainer =  null;
 
 	public EmbeddedSolr() {
-		super(SolrQuery.class, SolrResponse.class);
+		super();
 	}
 
 	public EmbeddedSolr(String name, String solrHome) {
-		super(name, SolrQuery.class, SolrResponse.class);
+		super(name);
 		this.solrHome = solrHome;
+	}
+	
+
+	@Override
+	protected SolrServer getSolrServer() {
+		return new EmbeddedSolrServer(coreContainer, this.collection.getName());
 	}
 
 	public void init() {
-		if (EmbeddedSolr.server == null) {
+		if (EmbeddedSolr.coreContainer == null) {
 			try {
 				LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
-				CoreContainer coreContainer = new CoreContainer(this.solrHome);
-				coreContainer.load();
-
-				String coreInstanceDir = this.solrHome;
-
-				File dataDir = new File(this.dataDir);
-				if (dataDir.exists()) {
-					FileUtils.deleteDirectory(dataDir);
-				}
-
-				Properties properties = new Properties();
-				properties.setProperty("dataDir", this.dataDir);
-
-				CoreDescriptor dcore = new CoreDescriptor(coreContainer,
-						coreName, coreInstanceDir, properties);
-
-				EmbeddedSolr.core = coreContainer.create(dcore);
-				
-				coreContainer.register(EmbeddedSolr.core, false);
-				
-				LOGGER.info("Solr Core config: " + EmbeddedSolr.core.getConfigResource());
-				LOGGER.info("Solr SchemaResource: " + EmbeddedSolr.core.getSchemaResource());
-				LOGGER.info("Solr Data dir: " + EmbeddedSolr.core.getDataDir());
-
-				
-				EmbeddedSolr.server = new EmbeddedSolrServer(coreContainer,
-						"pubmed");
-				
-				
-
+				EmbeddedSolr.coreContainer = new CoreContainer(this.solrHome);
+				EmbeddedSolr.coreContainer.load();
 			} catch (Exception e) {
 				LOGGER.error("Could not start search engine", e);
 			}
-		}
-	}
-
-	@Override
-	public SolrResponse execute(SolrQuery query) {
-		try {
-			return EmbeddedSolr.server.query(query);
-		} catch (SolrServerException e) {
-			throw new RuntimeException("Could nexecute Query on  engine", e);
 		}
 	}
 
@@ -173,69 +127,67 @@ public class EmbeddedSolr extends AbstractSearchEngine<SolrQuery, SolrResponse>
 		this.solrHome = solrHome;
 	}
 
+
+
 	@Override
-	public boolean indexFile(File file) {
-		LOGGER.info("Indexing for pubmed: " + file.getAbsolutePath());
-		ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
-		contentstream.setContentType("text/xml");
-		ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(
-				"/update");
-		request.addContentStream(contentstream);
-		UpdateResponse response;
-		try {
-			response = request.process(EmbeddedSolr.server);
-			LOGGER.info("Solr Response: " + response);
-			response = EmbeddedSolr.server.commit();
-			LOGGER.info("Solr commit: " + response);
-			return true;
-		} catch (SolrServerException | IOException e) {
-			LOGGER.error("Could not index file: " + file, e);
+	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
+		for(Entry<Field, Set<String>> copyField:copyFields.entrySet()){
+			this.addCopyFields(copyField.getKey(), copyField.getValue());
 		}
-		return false;
+		return true;
 	}
-
-	@Override
-	public boolean indexMap(Map<String, Object> fields) {
-		SolrInputDocument document = new SolrInputDocument();
-		for(Entry<String, Object> entry:fields.entrySet()){
-			document.addField(entry.getKey(), entry.getValue());
+	
+	private boolean addCopyFields(Field field, Set<String> copyFields) {
+		SolrCore core = coreContainer.getCore(this.collection.getName());
+		IndexSchema schema = core.getLatestSchema();
+		
+		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
+			copyFields.remove(copyField.getDestination().getName());
 		}
-		UpdateRequest update = new UpdateRequest();
-		update.add(document);
-		try {
-			UpdateResponse response = update.process(EmbeddedSolr.server);
-			LOGGER.info("Updated FieldMap with status: " + response.getStatus());
-			return true;
-		} catch (Exception e){
-			LOGGER.error("Could not index FieldMap",e);
-			return false;
+
+		Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+		copyFieldsMap.put(field.getKey(), copyFields);
+		schema = schema.addCopyFields(copyFieldsMap);
+		
+		core.setLatestSchema(schema);
+		
+		return true;
+	}
+
+	@Override
+	public void reloadEngine() {
+		coreContainer.reload(this.collection.getName());		
+	}
+
+	@Override
+	public void register() {
+
+		String coreInstanceDir = this.solrHome;
+
+		Properties properties = new Properties();
+
+		if(this.dataDir != null){
+			File dataDir = new File(this.dataDir);
+			if (dataDir.exists()) {
+				try {
+					FileUtils.deleteDirectory(dataDir);
+				} catch (IOException e) {
+					LOGGER.error("Could not delete DataDir: " + dataDir);
+				}
+			}
+			properties.setProperty("dataDir", this.dataDir);
 		}
-	}
+		
+		CoreDescriptor dcore = new CoreDescriptor(coreContainer,
+				this.collection.getName(), coreInstanceDir, properties);
 
-	@Override
-	public boolean updateForField(Field field, FieldAttribute fieldAttribute) {
+		SolrCore core = coreContainer.create(dcore);
 		
-		/** Get the translation for the field's key */
+		coreContainer.register(core, false);
 		
+		LOGGER.info("Solr Core config: " + core.getConfigResource());
+		LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
+		LOGGER.info("Solr Data dir: " + core.getDataDir());		
 		
-		
-		IndexSchema schema = EmbeddedSolr.core.getLatestSchema();
-		List<CopyField> copyFields = schema.getCopyFieldsList(field.getKey());
-		
-		
-		return false;
-	}
-
-	@Override
-	public List<String> getKeyForField(Field field, FieldAttribute fieldAttribute) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getKeyForField(Field field, FieldAttribute fieldAttribute,
-			String operation) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -21,10 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
@@ -43,7 +42,7 @@ import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
 @Service("mvcConversionService")
-public class ApplicationConversionService extends DefaultFormattingConversionService {
+public class ApplicationConversionService extends DefaultFormattingConversionService implements InitializingBean {
 	
 	@Autowired
 	private ApplicationContext context;
@@ -63,9 +62,9 @@ public class ApplicationConversionService extends DefaultFormattingConversionSer
 		this.searchConditions = new HashMap<String, Class<?>>();
 	}
 
-	@PostConstruct
-	public void init() {
-
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		
 		LOGGER.info("Scanning for SearchComponents");
 		Map<Class<?>, String> conditionUrl = new HashMap<Class<?>, String>();		
 		ClassPathScanningCandidateComponentProvider scanner;

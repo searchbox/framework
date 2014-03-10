@@ -41,6 +41,7 @@ import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.CachedContent;
+import com.searchbox.core.search.RetryElement;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
@@ -262,11 +263,27 @@ public class SearchController {
 
 		SearchEngine<?, ?> searchEngine =
 				preset.getCollection().getSearchEngine().getInstance();
+		searchEngine.setCollection(preset.getCollection().getInstance());
 		
 		LOGGER.info("Current SearchEngine: " + searchEngine);
 
 		Set<SearchElement> resultElements = searchService.execute(searchEngine,
-				searchElements, fieldAttributes, conditions);
+				searchElements,	fieldAttributes, conditions);
+		
+		//Check if we have a retry clause
+		boolean retry = false;
+		for(SearchElement element:resultElements){
+			if(RetryElement.class.isAssignableFrom(element.getClass())){
+				if(((RetryElement)element).shouldRetry()){
+					retry = true;
+				}
+			}
+		}
+		
+		if(retry){
+			resultElements = searchService.execute(searchEngine,
+					searchElements,	fieldAttributes, conditions);
+		}
 
 		return resultElements;
 	}

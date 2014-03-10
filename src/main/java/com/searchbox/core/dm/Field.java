@@ -15,13 +15,19 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Field {
+public class Field implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7579715557196299051L;
+	
 	protected Class<?> clazz;
 	/**
      */
@@ -55,23 +61,65 @@ public class Field {
 		this.clazz = clazz;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((clazz == null) ? 0 : clazz.getSimpleName().hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
+		if (!(obj instanceof Field)){
+			return false;
+		}
+		
+		Field other = (Field) obj;
+		if (clazz == null ) {
+			if (other.clazz != null){
+				return false;
+			}
+		} else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName())){
+			return false;
+		}
+		if (key == null) {
+			if (other.key != null){
+				return false;
+			}
+		} else if (!key.equals(other.key)){
+			return false;
+		}
+		return true;
+	}
+
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 	
-	public static Field StringField(String key){
+	public static Field stringField(String key){
 		return new Field(String.class, key);
 	}
 	
-	public static Field DateField(String key){
+	public static Field dateField(String key){
 		return new Field(Date.class, key);
 	}
 	
-	public static Field IntField(String key){
+	public static Field intField(String key){
 		return new Field(Integer.class, key);
 	}
 	
-	public static Field FloatField(String key){
+	public static Field floatField(String key){
 		return new Field(Float.class, key);
 	}
 }

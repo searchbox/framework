@@ -29,21 +29,17 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
-import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.ref.ReflectionUtils;
 
 @Service
-public class SearchAdapterService implements
-		ApplicationListener<ContextRefreshedEvent> {
+public class SearchAdapterService implements InitializingBean{
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SearchAdapterService.class);
@@ -51,59 +47,43 @@ public class SearchAdapterService implements
 	@Autowired
 	ApplicationContext context;
 
-	private Map<Method, Object> preSearchMethods;
-	private Map<Method, Object> postSearchMethods;
+	private Map<SearchAdapter.Time,  Map<Method, Object>> searchAdapterMethods;
 
 	public SearchAdapterService() {
-		this.preSearchMethods = new HashMap<Method, Object>();
-		this.postSearchMethods = new HashMap<Method, Object>();
+		this.searchAdapterMethods = new HashMap<SearchAdapter.Time,  Map<Method, Object>>();
 	}
 
 	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-
+	public void afterPropertiesSet() throws Exception {
+	
 		// Reset maps for adapters.
-		this.preSearchMethods = new HashMap<Method, Object>();
-		this.postSearchMethods = new HashMap<Method, Object>();
+		this.searchAdapterMethods = new HashMap<SearchAdapter.Time,  Map<Method, Object>>();
+
 
 		// Scan the classpath for adapters
 		for (Entry<String, Object> bean : context.getBeansWithAnnotation(
 				SearchAdapter.class).entrySet()) {
 			Object adapter = bean.getValue();
 			for (Method method : adapter.getClass().getDeclaredMethods()) {
-				if (method.isAnnotationPresent(PreSearchAdapter.class)) {
-					this.addPreSearchMethod(method,adapter);
-				} else if(method.isAnnotationPresent(PostSearchAdapter.class)) {
-					this.addPPostSearchMethod(method,adapter);
-				}
+				SearchAdapter.Time t = method.getAnnotation(SearchAdapterMethod.class).execute();
+				LOGGER.debug("Registering adapter " + t + "\t-- " + method.getName());
+				this.addSearchAdapterMethod(t, method, adapter);
 			}
 		}
 	}
+	
 
-	public void addPPostSearchMethod(Method method, Object adapter) {
-		LOGGER.debug("Registering Post adapt: "
-				+ method.getName());
-		this.postSearchMethods.put(method,adapter);		
+	public void addSearchAdapterMethod(SearchAdapter.Time time, Method method, Object adapter){
+		if(!this.searchAdapterMethods.containsKey(time)){
+			this.searchAdapterMethods.put(time, new HashMap<Method, Object>());
+		}
+		this.searchAdapterMethods.get(time).put(method, adapter);
 	}
 
-	public void addPreSearchMethod(Method method, Object adapter) {
-		LOGGER.debug("Registering Pre adapt: "
-				+ method.getName());
-		this.preSearchMethods.put(method,adapter);
-	}
-
-	public void doPreSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
-		/*This is because "Arrays.asList(objects)" does not support remove;*/
+	public void doAdapt(SearchAdapter.Time time,  Class<?> requiredArg, Object... objects){
 		ArrayList<Object> arguments = new ArrayList<Object>();
 		arguments.addAll(Arrays.asList(objects));
-		this.doAdapt(requiredArg, this.preSearchMethods, arguments);
-	}
-
-	public void doPostSearchAdapt(SearchEngine<?, ?> engine, Class<?> requiredArg, Object... objects) {
-		/*This is because "Arrays.asList(objects)" does not support remove;*/
-		ArrayList<Object> arguments = new ArrayList<Object>();
-		arguments.addAll(Arrays.asList(objects));
-		this.doAdapt(requiredArg, this.postSearchMethods, arguments);
+		this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
 	}
 
 

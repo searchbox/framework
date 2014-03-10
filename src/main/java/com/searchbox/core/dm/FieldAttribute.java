@@ -15,12 +15,19 @@
  ******************************************************************************/
 package com.searchbox.core.dm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.searchbox.core.SearchAttribute;
 
 public class FieldAttribute {
+	
+	public enum USE {
+		MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
+	}
 	
 	protected Field field;
 	
@@ -29,6 +36,9 @@ public class FieldAttribute {
 	
 	@SearchAttribute
 	protected Boolean searchable = false;
+	
+	@SearchAttribute
+	List<String> lang = new ArrayList<String>();
 
 	@SearchAttribute
 	protected Boolean highlight = false;
@@ -47,6 +57,14 @@ public class FieldAttribute {
 	
 	@SearchAttribute("1f")
 	protected Float boost = 1f;
+	
+	public FieldAttribute(){
+		
+	}
+	
+	public FieldAttribute(Field field){
+		this.field = field;
+	}
 
 	public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -122,5 +140,19 @@ public class FieldAttribute {
 	
 	public Field getField(){
 		return this.field;
+	}
+
+	/**
+	 * @return the lang
+	 */
+	public List<String> getLang() {
+		return lang;
+	}
+
+	/**
+	 * @param lang the lang to set
+	 */
+	public void setLang(List<String> lang) {
+		this.lang = lang;
 	}
 }

@@ -16,23 +16,20 @@
 package com.searchbox.collection.pubmed;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.builder.FlowJobBuilder;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -50,16 +47,13 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	ApplicationContext context;
 
 	@Autowired
-	JobBuilderFactory jobBuilderFactory;
-
-	@Autowired
 	StepBuilderFactory stepBuilderFactory;
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PubmedCollection.class);
 	
 	public static List<Field> GET_FIELDS(){
-		ArrayList<Field> fields = new ArrayList<Field>();
+		List<Field> fields = new ArrayList<Field>();
 		fields.add(new Field(String.class, "id"));
 		fields.add(new Field(Date.class, "article-creation-date"));
 		fields.add(new Field(Integer.class, "article-year"));
@@ -91,8 +85,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 			boolean hasmore = true;
 
 			@Override
-			public Resource read() throws Exception, UnexpectedInputException,
-					ParseException, NonTransientResourceException {
+			public Resource read() {
 				if (hasmore) {
 					hasmore = false;
 					Resource resource = context
@@ -111,7 +104,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	public ItemProcessor<Resource, File> itemProcessor() {
 		return new ItemProcessor<Resource, File>() {
 			@Override
-			public File process(Resource item) throws Exception {
+			public File process(Resource item) throws IOException {
 				LOGGER.info("Processing stuff here...");
 				return item.getFile();
 			}
@@ -121,9 +114,9 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	public ItemWriter<File> writer() {
 		ItemWriter<File> writer = new ItemWriter<File>() {
 			@Override
-			public void write(List<? extends File> items) throws Exception {
+			public void write(List<? extends File> items) {
 				for (File item : items) {
-					indexFile(item);
+					getSearchEngine().indexFile(getName(), item);
 				}
 			}
 		};
@@ -131,15 +124,13 @@ public class PubmedCollection extends AbstractBatchCollection implements
 	}
 
 	@Override
-	protected Job getJob() {
+	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+		
 		Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
 				.reader(reader()).processor(itemProcessor()).writer(writer())
 				.build();
-
-		Job myJob = jobBuilderFactory.get(this.getName())
-				.incrementer(new RunIdIncrementer()).flow(step).end().build();
-
-		return myJob;
+		
+		return builder.flow(step).end();
+	
 	}
-
 }

@@ -15,10 +15,8 @@
  ******************************************************************************/
 package com.searchbox.data;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration("classpath:testContext.xml")
-//@ActiveProfiles("dev")
+
 public class BootStrapTest {
 
     //private BootStrap bootStrap = new BootStrap();

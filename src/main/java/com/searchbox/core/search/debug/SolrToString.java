@@ -19,9 +19,9 @@ package com.searchbox.core.search.debug;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.searchbox.core.PostSearchAdapter;
-import com.searchbox.core.PreSearchAdapter;
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapter.Time;
+import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 
@@ -54,13 +54,13 @@ public class SolrToString extends SearchElement  {
 	@SearchAdapter
 	public static class SolrAdaptor {
 
-		@PreSearchAdapter
+		@SearchAdapterMethod(execute=Time.PRE)
 		public SolrQuery addDebug(SolrQuery query) {
 			query.set("debug","true");
 			return query;
 		}
 
-		@PostSearchAdapter
+		@SearchAdapterMethod(execute=Time.POST)
 		public SolrToString getDebugInfo(SolrToString searchElement, SolrQuery query,
 				QueryResponse response) {
 			searchElement.setQuery(query.toString());
