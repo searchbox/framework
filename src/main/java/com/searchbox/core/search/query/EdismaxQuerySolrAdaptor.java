@@ -1,11 +1,15 @@
 package com.searchbox.core.search.query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.DisMaxParams;
+import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,12 +75,29 @@ public class EdismaxQuerySolrAdaptor {
 	@SearchAdapterMethod(execute=Time.ASYNCH)
 	public void getSugestions(SolrSearchEngine engine,
 			EdismaxQuery.Condition condition, Map<String,Object> result) {
-		LOGGER.info("Getting asynch request for EdismaxQuery");
+
 		SolrQuery query = engine.newQuery();
 		query.setRequestHandler("/suggest");
 		query.setQuery(condition.getQuery());
-		QueryResponse response = engine.execute(query);
-		LOGGER.info("Response: " + response.getResponse().get("suggest"));
-		result.put("suggest", response.getResponse().get("suggest"));
+		SolrResponse response = engine.execute(query);
+		
+		List<String> suggestionTerms = new ArrayList<String>();
+		/** 
+		 * {"status":0,"QTime":1,"suggestions":["aa","aa a lambda and a kappa","aa trna and its 3",
+		 * "aaap therapy","aachen are presented under the confin of the above definition","aar"]}
+		 */
+		Map<String,NamedList<Object>> data =  (Map<String, NamedList<Object>>) response.getResponse().findRecursive("suggest");
+		for(String suggester:data.keySet()){
+			NamedList<Object> suggestions = (NamedList<Object>) data.get(suggester).get(condition.getQuery());
+			List<Object> terms = (List<Object>) suggestions.get("suggestions");
+			for(Object term:terms){
+				NamedList<Object> actualterm = (NamedList<Object>) term;
+				suggestionTerms.add((String) actualterm.get("term"));
+
+			}
+		}
+		result.put("status", 0);
+		result.put("QTime", response.getElapsedTime());
+		result.put("suggestions", suggestionTerms);
 	}
 }
