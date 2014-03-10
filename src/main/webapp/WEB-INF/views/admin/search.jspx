@@ -20,7 +20,7 @@
 <sb:base-scripts />
 <sb:admin-scripts />
 
-<title>${title}</title>
+<title>${title ? title : "Searchbox search page"}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 </head>
@@ -48,7 +48,7 @@
 							<a class="pull-left" href="#"> <spring:url
 									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
 								src='${searchbox_logo}' class="media-object" alt="Searchbox"
-								id="logo-image" width="260px" />
+								id="logo-image" />
 							</a>
 						</div>
 					</div>
@@ -131,32 +131,42 @@
 
 						<!-- Tab panes -->
 						<div class="tab-content">
+                            <!-- Search results -->
 							<div class="tab-pane active" id="view">
 								<c:forEach items="${result.getElements('VIEW')}" var="element">
 									<sb:include element="${element }" result="${result }"
 										admin="true" debug="${not empty param.debug}" />
 								</c:forEach>
 							</div>
+                            <!-- Preset filters -->
 							<div class="tab-pane" id="filter">Preset Filters go here.</div>
+              
+                            
 							<div class="tab-pane" id="collection">
+              
+                            <div class="panel panel-default">
+                            
+                            <div class="panel-heading">Field Definition - Collection ${preset.collection.name }
+                            
+                            <div role="toolbar" class="btn-group btn-group-xs pull-right">
+                                <button class="btn btn-default dm-synchronize" type="button"><span class="glyphicon glyphicon-refresh"></span></button>
+                                <button class="btn btn-default collection-synchronize" type="button"><span class="glyphicon glyphicon-random"></span></button></div>
+                            </div>
+                            <div class="panel-body">
+                                
 								<div class="row">
-									<div class="col-md-3 col-left">
-										<h2>
-											<span class="glyphicon glyphicon-list">${preset.collection.name }</span>
-										</h2>
-									</div>
-									<div class="col-md-5 col-right">
+									<div class="col-md-4 col-right">
 										<p>
-											<a id="collectionSynchronize" class="btn btn-primary btn-lg"
-												role="button"> <span class="glyphicon glyphicon-random">Synchronize</span></a>
+											<a class="btn btn-primary btn-lg collection-synchronize"
+												role="button"> <span class="glyphicon glyphicon-random"><!-- button --></span>  Synchronize</a>
 										</p>
-										<div class='notifications top-left'></div>
+										<div class="notifications top-left"><!-- notifications --></div>
 										<spring:url
 											value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
 											var="synchCollection" />
 										<script>
 									$(document).ready(function() {
-										  $('#collectionSynchronize').click(function(e) {
+										  $('.collection-synchronize').click(function(e) {
 										      e.preventDefault()
 										      var loadurl = "${synchCollection}";
 										      $.post(loadurl, function(data) {
@@ -176,8 +186,10 @@
 								</div>
 
 								<div class="row">
-									<div class="col-md-7 col-left">
-										<table class="table table-striped">
+									<div class="col-md-12">
+                                    <h4>Job Status</h4>
+                  
+										<table class="table table-striped tablesorter-bootstrap">
 											<thead>
 												<tr>
 													<th>Job</th>
@@ -207,6 +219,7 @@
 								</div>
 
 								<div class="row">
+                                <div class="col-md-12">
 									<h4>Field Attributes</h4>
 
 									<table id="fieldAttributes" class="table table-striped tablesorter-bootstrap">
@@ -230,10 +243,10 @@
 												<c:set var="trclass" value="" />
 
 												<tr>
-													<td nowrap="nowrap" class="nowrap"><p
+													<td class="nowrap"><p
 															class="form-control-static">${attr.field.getKey() }</p></td>
 													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-													<td><a href="" id="label" data-type="text"
+													<td><a href="" id="label-${attr.field.getKey() }" data-type="text"
 														data-placeholder="Label" data-pk="${attr.getId() }"
 														data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
 													<td>${attr.getAttributeByName('searchable').getValue()}</td>
@@ -256,6 +269,9 @@
 									</script>
 
 								</div>
+                              </div>
+                              </div>
+                              </div>
 
 							</div>
 						</div>

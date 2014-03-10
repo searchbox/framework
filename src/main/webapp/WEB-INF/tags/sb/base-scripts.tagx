@@ -58,7 +58,6 @@
 	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
     <script src="${jqueryui_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
     <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-    <script src="${typeahead_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 	<script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>
