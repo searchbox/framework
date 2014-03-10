@@ -67,7 +67,7 @@
 								<button type="button" class="btn btn-default"
 									data-toggle="modal" data-remote="${formUrl}"
 									data-target="#edef_${element.definitionId}">
-									<span class="glyphicon glyphicon-edit"></span>
+									<span class="glyphicon glyphicon-edit"><!-- edit --></span>
 								</button>
 							</c:if>
 							<c:if test="${debug }">
@@ -78,7 +78,7 @@
 									id="debug_${element.getClass().getSimpleName()}"
 									data-toggle="popover" title="Element data"
 									data-placement="auto" data-content="${debugContent }">
-									<span class="glyphicon glyphicon-search"></span>
+									<span class="glyphicon glyphicon-search"><!-- search --></span>
 								</button>
 								<script>$('#debug_${element.getClass().getSimpleName()}').popover()</script>
 							</c:if>
@@ -86,7 +86,7 @@
 								<button type="button" class="btn btn-default"
 									data-toggle="modal" data-remote="${formUrl}"
 									data-target="#deldef_${element.definitionId}">
-									<span class="glyphicon glyphicon-remove"></span>
+									<span class="glyphicon glyphicon-remove"><!-- remove --></span>
 								</button>
 							</c:if>
 						</div>

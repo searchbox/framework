@@ -17,13 +17,14 @@
 
 	<c:forEach items="${values}" var="value"
 		end="${not empty limit ? limit-1 : 29}">
-		<div class="label label-default attributes clickable" title="${value}"
+		<div class="label label-tag attributes clickable" title="${value}"
 			data-filter="author:${value}">
 			<c:if test="${not empty label}">
-				<span class="field_label label_Laboratory grey-bullet">${label}:
+				<span class="field-label label-${label}">${label}:
 				</span>
 			</c:if>
-			<span class="field_value value_Laboratory value_attributes full"><sbx:out value="${value}"/></span>
+			<span class="field-value value-${label} value_attributes full"><sbx:out value="${value}"/></span>
 		</div>
 	</c:forEach>
 </jsp:root>
+
