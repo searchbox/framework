@@ -537,8 +537,6 @@
 			<str name="storeDir">FreeTextLookupFactory</str>
 			<str name="suggestAnalyzerFieldType">text_general</str>
 			<str name="suggestFreeTextAnalyzerFieldType">text_general</str>
-			<str name="buildOnCommit">true</str>
-
 		</lst>
 		<!-- <lst name="suggester"> <str name="name">AnalyzingInfixLookupFactory</str> 
 			<str name="lookupImpl">AnalyzingInfixLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str> 
