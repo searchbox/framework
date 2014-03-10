@@ -5,14 +5,11 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:output omit-xml-declaration="yes" />
 
-  <spring:url var="asynchElementUrl"
-    value="/${searchbox.getSlug() }/asynch/${preset.getSlug() }/${element.definitionId}" />
-    
-  
   <div>
 	<div class="input-group input-group">
-		<input type="text" class="form-control search-query typeahead" placeholder="Query" name="${element.getUrlParam() }"
-			value="${element.query }" autocomplete="off"/> <span class="input-group-btn">
+		<input type="text" autocomplete="off" class="form-control search-query" 
+               id="edismax-query" placeholder="Query" name="${element.getUrlParam() }"
+			value="${element.query }" /> <span class="input-group-btn">
 			<button type="submit" class="btn btn-black btn-search">
 				<span class="glyphicon glyphicon-search"><!-- search --></span>
 			</button>
@@ -27,14 +24,56 @@
     </c:choose>
   </div>
 	</div>
-	<script>
-  $( document ).ready(function() {
-    $('.typeahead').typeahead({
-        name: 'Some name',
-        local: ['test', 'abc', 'def']
-    })
+  
+  <script>
+   $(function() {
+     
+     var availableTags = [
+                          "ActionScript",
+                          "AppleScript",
+                          "Asp",
+                          "BASIC",
+                          "C",
+                          "C++",
+                          "Clojure",
+                          "COBOL",
+                          "ColdFusion",
+                          "Erlang",
+                          "Fortran",
+                          "Groovy",
+                          "Haskell",
+                          "Java",
+                          "JavaScript",
+                          "Lisp",
+                          "Perl",
+                          "PHP",
+                          "Python",
+                          "Ruby",
+                          "Scala",
+                          "Scheme"
+                        ];
+                        $( "#edismax-query" ).autocomplete({
+                          source: availableTags
+                        });
+                        
+                        
+    var cache = {};
+    $( "#birds" ).autocomplete({
+      minLength: 2,
+      source: function( request, response ) {
+        var term = request.term;
+        if ( term in cache ) {
+          response( cache[ term ] );
+          return;
+        }
+ 
+        $.getJSON( "search.php", request, function( data, status, xhr ) {
+          cache[ term ] = data;
+          response( data );
+        });
+      }
+    });
   });
-  
-  
   </script>
+  
 </jsp:root>

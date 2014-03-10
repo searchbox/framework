@@ -7,7 +7,7 @@
 
 	<c:set var="bootstrapVersion" value="3.1.1" />
 	<c:set var="jqueryVersion" value="2.0.3" />
-	<c:set var="typeaheadVersion" value="0.10.1" />
+	<c:set var="jqueryUIVersion" value="1.10.4" />
 
 	<spring:url
 		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
@@ -22,13 +22,19 @@
 		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
 		var="bootstrap_js_url" />
 	<spring:url
-		value="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/${typeaheadVersion }/typeahead.bundle.min.js"
-		var="typeahead_js_url" />
+		value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
+		var="jqueryui_js_url" />
+
 
 
 	<spring:url value="/assets/img/favicon.ico" var="favicon" />
 	<spring:url value="/assets/css/searchbox-general.css" var="searchbox_css_url" />
 	<spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
+  
+  
+    <spring:url
+    value="https://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/themes/smoothness/jquery-ui.css"
+    var="jqueryui_css_url" />
 	<spring:url
 		value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css"
 		var="social_buttons_css" />
@@ -38,6 +44,7 @@
 	<link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
 	<link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
 	<link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
+    <link rel="stylesheet" type="text/css" href="${jqueryui_css_url}" />
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
 
@@ -49,8 +56,9 @@
 	-->
 
 	<script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
-  <script src="${typeahead_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+    <script src="${jqueryui_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+    <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+    <script src="${typeahead_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 	<script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>
