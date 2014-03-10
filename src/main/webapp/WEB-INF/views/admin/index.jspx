@@ -27,42 +27,106 @@
     <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
     <div id="main-content" role="main">
-    
+
       <div class="row" id="main-search-content">
 
-        <div class="row" id="column-top">
+       <div class="row" id="search-bar">
 
-          <div class="col-md-3 col-left">
+          <div class="col-md-3 col-sm-5 col-left">
 
             <div class="media">
               <a class="pull-left" href="#"> <spring:url
-                  value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
-                src='${searchbox_logo}' class="media-object" alt="Searchbox"
-                id="logo-image" width="260px" />
+                  value="/img/searchbox-logo-big.png"
+                  var="searchbox_logo" /> <img src='${searchbox_logo}'
+                class="media-object" alt="Searchbox" id="logo-image" />
               </a>
             </div>
           </div>
 
-          <div class="col-md-6">Some info here...</div>
         </div>
 
         <div class="row" id="searchboxes">
-          <div class="col-md-2">
-            <!-- some stuff here -->
-          </div>
-          <div class="col-md-8">
-            ${searchbox }
-            <hr/>
-            ${searchbox.userRoles }
-            <hr/>
-             ${users }
-            <hr/>
-             ${userRoles }
+
+          <div class="col-md-8 col-md-push-2">
+            <ul>
+              <li>Slug: ${searchbox.slug}</li>
+              <li>Name: ${searchbox.name}</li>
+              <li>Alias: ${searchbox.alias}</li>
+              <li>Description: ${searchbox.description}</li>
+              <li>Presets: 
+              
+              <ul>
+              <c:forEach var="preset" items="${searchbox.presets}">
+               <li>${preset.getCollection().getName()}</li>
+               <li><c:out value="${preset.getCollection()}"/></li>
+              </c:forEach>
+              </ul>
+              </li>
+            </ul>
+
+
+            <hr />
+
+
+            <div class="panel panel-default">
+              <div class="panel-heading">Searchbox Users
+                <div role="toolbar" class="btn-group btn-group-xs pull-right">
+                  <button data-toggle="modal" class="btn btn-default" type="button"><span class="glyphicon glyphicon-plus"><!-- icon --></span></button>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <table
+                  class="table table-striped tablesorter-bootstrap tablesorter">
+                  <thead>
+                    <th>ID</th>
+                    <th>email</th>
+                    <th>roles</th>
+                    <th>actions</th>
+                  </thead>
+                  <c:forEach var="user" items="${users}">
+                    <tr>
+                      <td>${user.id}</td>
+                      <td>${user.email}</td>
+                      <td><c:forEach var="role"
+                          items="${user.roles}">
+                          <c:out value="${role.role}" />
+                        </c:forEach></td>
+                      <td>
+                        <div class="btn-group" data-toggle="buttons">
+                          <label class="btn btn-default btn-sm"> <a
+                            href="#"> <span
+                              class="glyphicon glyphicon-pencil">
+                                <!-- icon -->
+                            </span></a>
+                          </label> <label class="btn btn-default btn-sm"> <a
+                            href="#"><span
+                              class="glyphicon glyphicon-trash">
+                                <!-- icon -->
+                            </span></a>
+                          </label>
+                        </div>
+
+
+                      </td>
+                    </tr>
+                  </c:forEach>
+
+                </table>
+
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <style>
+  #search-bar {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+}
+  </style>
 </body>
   </html>
 </jsp:root>
