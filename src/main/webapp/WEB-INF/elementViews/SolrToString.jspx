@@ -17,11 +17,13 @@
 			</div>
 			<div id="collapseOne" class="panel-collapse collapse">
 				<div class="panel-body">
+                    <ul>
 					<c:forEach items="${fn:split(element.query,'&amp;')}" var="qparam">
-						<p>
+						<li>
 							<str:decodeUrl>${qparam}</str:decodeUrl>
-						</p>
+						</li>
 					</c:forEach>
+                    </ul>
 				</div>
 			</div>
 		</div>
