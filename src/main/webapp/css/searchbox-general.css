@@ -192,16 +192,9 @@ input:focus,textarea:focus {
   margin-bottom: 10px;
 }
 
-#search-bar #search-field {
-  height: 42px;
-  min-height: 42px;
+#search-bar #edismax-query {
   font-size: 20px;
-  margin-right: 8px;
-  margin-bottom: 10px;
-  min-width: 60%;
   border-radius: 3px;
-  padding-right: 35px;
-  border: 1px solid rgb(204, 204, 204);
 }
 /* #search-bar button[type=submit].btn {
   padding: 10px 15px;

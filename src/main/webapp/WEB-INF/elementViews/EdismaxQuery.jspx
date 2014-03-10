@@ -18,12 +18,14 @@
 			</button>
 		</span>
 	</div>
+  
+  
   <div id="didyoumean">
     <c:choose>
     <c:when test="${element.shouldRetry() }">
       Showing results for: ${element.collationQuery } 
     </c:when>
-    <c:otherwise>no spell</c:otherwise>
+    <c:otherwise>No Spell</c:otherwise>
     </c:choose>
   </div>
 	</div>  
