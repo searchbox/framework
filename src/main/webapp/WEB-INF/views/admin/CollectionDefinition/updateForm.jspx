@@ -72,10 +72,10 @@
 
 					<tr>
 						<td><p class="form-control-static">${item.count }</p></td>
-						<td nowrap="nowrap" class="nowrap"><p
+						<td class="nowrap"><p
 								class="form-control-static">${attr.field.getKey() }</p></td>
 						<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-						<td><a href="" id="label" data-type="text"
+						<td><a href="" id="label-${attr.field.getKey() }" data-type="text"
 							data-placeholder="Label" data-pk="${attr.getId() }"
 							data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label')}</a></td>
 						<td><a href="#" id="firstname" data-type="text" data-pk="1"

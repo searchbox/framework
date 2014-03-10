@@ -20,7 +20,7 @@
 <sb:base-scripts />
 <sb:admin-scripts />
 
-<title>${title}</title>
+<title>${title ? title : "Searchbox search page"}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 </head>
@@ -48,7 +48,7 @@
 							<a class="pull-left" href="#"> <spring:url
 									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
 								src='${searchbox_logo}' class="media-object" alt="Searchbox"
-								id="logo-image" width="260px" />
+								id="logo-image" />
 							</a>
 						</div>
 					</div>
@@ -131,131 +131,20 @@
 
 						<!-- Tab panes -->
 						<div class="tab-content">
+                            <!-- Search results -->
 							<div class="tab-pane active" id="view">
 								<c:forEach items="${result.getElements('VIEW')}" var="element">
 									<sb:include element="${element }" result="${result }"
 										admin="true" debug="${not empty param.debug}" />
 								</c:forEach>
 							</div>
+                            <!-- Preset filters -->
 							<div class="tab-pane" id="filter">Preset Filters go here.</div>
+              
+                            
 							<div class="tab-pane" id="collection">
-								<div class="row">
-									<div class="col-md-3 col-left">
-										<h2>
-											<span class="glyphicon glyphicon-list">${preset.collection.name }</span>
-										</h2>
-									</div>
-									<div class="col-md-5 col-right">
-										<p>
-											<a id="collectionSynchronize" class="btn btn-primary btn-lg"
-												role="button"> <span class="glyphicon glyphicon-random">Synchronize</span></a>
-										</p>
-										<div class='notifications top-left'></div>
-										<spring:url
-											value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
-											var="synchCollection" />
-										<script>
-									$(document).ready(function() {
-										  $('#collectionSynchronize').click(function(e) {
-										      e.preventDefault()
-										      var loadurl = "${synchCollection}";
-										      $.post(loadurl, function(data) {
-										    	  console.log(data);
-										    	  $.bootstrapGrowl(data.message, {
-										              type: 'info',
-										              align: 'right',
-										              width: 'auto',
-										              allow_dismiss: true
-										          });
-									      });
-										  });
-										});
-									
-									</script>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-7 col-left">
-										<table class="table table-striped">
-											<thead>
-												<tr>
-													<th>Job</th>
-													<th>Start Time</th>
-													<th>End Time</th>
-													<th>Status</th>
-												</tr>
-											</thead>
-											<tbody>
-												<c:forEach
-													items="${jobExplorer.getJobInstances(preset.collection.name, 0, 1000)}"
-													var="job" varStatus="item">
-													<c:set var="JobName" value="${job.jobName}" />
-													<c:forEach items="${jobExplorer.getJobExecutions(job)}"
-														var="exec">
-														<tr>
-															<td>${JobName }</td>
-															<td>${exec.getStartTime() }</td>
-															<td>${exec.getLastUpdated() }</td>
-															<td>${exec.getStatus() }</td>
-														</tr>
-													</c:forEach>
-												</c:forEach>
-											</tbody>
-										</table>
-									</div>
-								</div>
-
-								<div class="row">
-									<h4>Field Attributes</h4>
-
-									<table id="fieldAttributes" class="table table-striped tablesorter-bootstrap">
-										<thead>
-											<tr>
-												<th>key</th>
-												<th>type</th>
-												<th>label</th>
-												<th>search</th>
-												<th>highlight</th>
-												<th>sort</th>
-												<th>spell</th>
-												<th>suggest</th>
-												<th>boost</th>
-											</tr>
-										</thead>
-										<tbody>
-											<c:forEach items="${preset.fieldAttributes }" var="attr"
-												varStatus="item">
-
-												<c:set var="trclass" value="" />
-
-												<tr>
-													<td nowrap="nowrap" class="nowrap"><p
-															class="form-control-static">${attr.field.getKey() }</p></td>
-													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-													<td><a href="" id="label" data-type="text"
-														data-placeholder="Label" data-pk="${attr.getId() }"
-														data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
-													<td>${attr.getAttributeByName('searchable').getValue()}</td>
-													<td>${attr.getAttributeByName('highlight').getValue()}</td>
-													<td>${attr.getAttributeByName('sortable').getValue()}</td>
-													<td>${attr.getAttributeByName('spelling').getValue()}</td>
-													<td>${attr.getAttributeByName('suggestion').getValue()}</td>
-													<td>${attr.getAttributeByName('boost').getValue()}</td>
-												</tr>
-
-											</c:forEach>
-
-
-										</tbody>
-									</table>
-									<script>
-										$.fn.editable.defaults.mode = 'inline';
-										$('.editable').editable();
-										$("#fieldAttributes").tablesorter({ sortList: [[0,0], [1,0]] });
-									</script>
-
-								</div>
+              
+                              <jsp:include page="/WEB-INF/views/admin/CollectionDefinition/_fieldDefinitionList.jspx"/>
 
 							</div>
 						</div>
