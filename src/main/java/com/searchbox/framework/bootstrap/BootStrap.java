@@ -31,6 +31,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -117,23 +118,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = null;
 		try {
-			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
-			engine.setAttributeValue("zkHost", "localhost:9983");
+//			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+//			engine.setAttributeValue("zkHost", "localhost:9983");
 			
-//			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-//			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
-//			engine.setAttributeValue("dataDir", "target/data/oppfin/");
+			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
+			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
 			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			LOGGER.error("Could not set definition for SolrEmbededServer",e);
 		}
-		
-		/** The base collection for searchbox */
-		LOGGER.info("++ Creating oppfin Collection");
-		CollectionDefinition collection = new CollectionDefinition(TopicCollection.class,"oppfin");
-		collection.setAutoStart(false);
-		collection.setSearchEngine(engine);	
-		collection = collectionRepository.save(collection);
 		
 		/**
 		 * - Search All
@@ -202,6 +195,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 				doc.addField("callDeadline", (Long)topicObject.get("callDeadline"));
 				doc.addField("callStatus", (String)topicObject.get("callStatus"));
 		 */
+		
+		/** The base collection for searchbox */
+		LOGGER.info("++ Creating oppfin Topic Collection");
+		CollectionDefinition collection = new CollectionDefinition(TopicCollection.class,"H2020Topics");
+		collection.setIdFieldName("topicIdentifier");
+		collection.setAutoStart(false);
+		collection.setSearchEngine(engine);	
+		collection = collectionRepository.save(collection);
+		
 		LOGGER.info("++ Creating Topic preset");
 		PresetDefinition presetTopic = new PresetDefinition(collection);
 		presetTopic.setLabel("Topic");
@@ -210,10 +212,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		List<String> lang = new ArrayList<String>();
 		lang.add("en");
-		
-		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
-		idFieldAttr.setAttributeValue("id",true);
-		presetTopic.addFieldAttribute(idFieldAttr);
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("title"));
 		fieldAttr.setAttributeValue("searchable",true);
@@ -320,11 +318,38 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		searchbox.addPresetDefinition(presetTopic);		
 		
+		
+		
+		/**
+		 *  Cooperation preset 
+		 */
+		
+		/** The base collection for searchbox */
+		LOGGER.info("++ Creating oppfin EEN Collection");
+		CollectionDefinition eenCollection = new CollectionDefinition(EENCollection.class,"eenCooperations");
+		eenCollection.setIdFieldName("eenReferenceExternal");
+		eenCollection.setAutoStart(false);
+		eenCollection.setSearchEngine(engine);	
+		eenCollection = collectionRepository.save(eenCollection);
+		
+		LOGGER.info("++ Creating Cooperation preset");
+		PresetDefinition cooperations = new PresetDefinition(collection);
+		cooperations.setLabel("Cooperations");
+		cooperations.setDescription("EEN cooperations");
+		cooperations.setSlug("coop");
+		cooperations.setCollection(eenCollection);
+		searchbox.addPresetDefinition(cooperations);	
+		
+		/**
+		 *  Users preset 
+		 */
+		
 		searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
 		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
 		searchbox.addUserRole(new UserRole(user, Role.USER));
 		repository.save(searchbox);
 				
+		
 		
 
 		LOGGER.info("Bootstraping application with oppfin data... done");
@@ -345,12 +370,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("*                  Welcome                         *");
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                                                  *");
-		LOGGER.info("*                             __ _");
-		LOGGER.info("*           ___  _ __  _ __  / _(_)_ __");
-		LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\");
-		LOGGER.info("*         | (_) | |_) | |_) |  _| | | | |");
-		LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|");
-		LOGGER.info("*               |_|   |_|");
+		LOGGER.info("*                             __ _                 *");
+		LOGGER.info("*           ___  _ __  _ __  / _(_)_ __            *");
+		LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\           *");
+		LOGGER.info("*         | (_) | |_) | |_) |  _| | | | |          *");
+		LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|          *");
+		LOGGER.info("*               |_|   |_|                          *");
 		LOGGER.info("*                                                  *");
 		LOGGER.info("****************************************************");
 		LOGGER.info("*                                                  *");

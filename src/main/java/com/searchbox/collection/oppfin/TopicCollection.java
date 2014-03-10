@@ -93,7 +93,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 
 	public static List<Field> GET_FIELDS() {
 		List<Field> fields = new ArrayList<Field>();
-		fields.add(new Field(String.class, "id"));
+		fields.add(new Field(String.class, "topicIdentifier"));
 		fields.add(new Field(String.class, "title"));
 		fields.add(new Field(String.class, "descriptionHtml"));
 		fields.add(new Field(String.class, "descriptionRaw"));
@@ -204,7 +204,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 				
 				// Creating the Field Map
 				Map<String, Object> doc = new HashMap<String, Object>();
-				doc.put("id", topicIdentifier);
+				doc.put("topicIdentifier", topicIdentifier);
 				doc.put("title", (String) item.get("title"));
 				doc.put("descriptionRaw", topicDetailRaw);
 				doc.put("descriptionHtml", topicDetailHtml);
@@ -251,5 +251,4 @@ public class TopicCollection extends AbstractBatchCollection implements
 		
 		return builder.flow(step).end();
 	}
-
 }
