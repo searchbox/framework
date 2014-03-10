@@ -53,7 +53,15 @@
               <li>Name: ${searchbox.name}</li>
               <li>Alias: ${searchbox.alias}</li>
               <li>Description: ${searchbox.description}</li>
-              <li>Presets: ${searchbox.presets}</li>
+              <li>Presets: 
+              
+              <ul>
+              <c:forEach var="preset" items="${searchbox.presets}">
+               <li>${preset.getCollection().getName()}</li>
+               <li><c:out value="${preset.getCollection()}"/></li>
+              </c:forEach>
+              </ul>
+              </li>
             </ul>
 
 
@@ -61,7 +69,11 @@
 
 
             <div class="panel panel-default">
-              <div class="panel-heading">Searchbox Users</div>
+              <div class="panel-heading">Searchbox Users
+                <div role="toolbar" class="btn-group btn-group-xs pull-right">
+                  <button data-toggle="modal" class="btn btn-default" type="button"><span class="glyphicon glyphicon-plus"><!-- icon --></span></button>
+                </div>
+              </div>
 
               <div class="panel-body">
                 <table
@@ -81,16 +93,13 @@
                           <c:out value="${role.role}" />
                         </c:forEach></td>
                       <td>
-
-
-
                         <div class="btn-group" data-toggle="buttons">
-                          <label class="btn btn-default"> <a
+                          <label class="btn btn-default btn-sm"> <a
                             href="#"> <span
                               class="glyphicon glyphicon-pencil">
                                 <!-- icon -->
                             </span></a>
-                          </label> <label class="btn btn-default"> <a
+                          </label> <label class="btn btn-default btn-sm"> <a
                             href="#"><span
                               class="glyphicon glyphicon-trash">
                                 <!-- icon -->
@@ -107,9 +116,6 @@
 
               </div>
             </div>
-
-            <hr />
-            ${userRoles }
           </div>
         </div>
       </div>
