@@ -12,10 +12,11 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:directive.page pageEncoding="UTF-8" />
 
-<div class="page-header">
-    <h1><spring:message code="label.user.login.page.title"/></h1>
-</div>
+
 <sec:authorize access="isAnonymous()">
+  <div class="page-header">
+      <h1><spring:message code="label.user.login.page.title"/></h1>
+  </div>
     <div class="panel panel-default">
         <div class="panel-body">
             <h2><spring:message code="label.login.form.title"/></h2>
