@@ -170,9 +170,9 @@ input:focus,textarea:focus {
 }
 
 #search-bar #didyoumean {
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
 }
 
 #search-bar #logo {
@@ -378,6 +378,19 @@ a.clear_input:hover {
   margin-right: 10px;
 }
 
+/** tag attributes **/
+#result-list .label-tag {
+  background-color: #e8e8e8;
+  font-weight: normal;
+}
+
+#result-list .label-tag .field-label {
+  color: #999;
+}
+
+#result-list .label-tag .field-value {
+  color: black;
+}
 /*************************************************************/
 /*                    BasicPagination                        */
 /*************************************************************/
@@ -451,20 +464,20 @@ a.clear_input:hover {
 }
 
 @media ( min-width : 768px) {
-  #basic-pagination a, #basic-pagination span {
+  #basic-pagination a,#basic-pagination span {
     padding: 5px 11px;
   }
-  #basic-pagination .gap{
-    display:inline-block;
+  #basic-pagination .gap {
+    display: inline-block;
   }
 }
 
 @media ( max-width : 768px) {
-  #basic-pagination a, #basic-pagination span {
+  #basic-pagination a,#basic-pagination span {
     padding: 5px 5px;
   }
-  #basic-pagination .gap{
-    display:none;
+  #basic-pagination .gap {
+    display: none;
   }
 }
 
@@ -531,9 +544,8 @@ em {
 /*************************************************************/
 /*                       Admin class                         */
 /*************************************************************/
-td.nowrap{
+td.nowrap {
   overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
