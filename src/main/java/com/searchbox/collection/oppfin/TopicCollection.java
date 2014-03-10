@@ -48,6 +48,8 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.FlowJobBuilder;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -240,16 +242,14 @@ public class TopicCollection extends AbstractBatchCollection implements
 		return writer;
 	}
 
+	
 	@Override
-	protected Job getJob() {
+	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
 		Step step = stepBuilderFactory.get("getFile").<JSONObject, Map<String, Object>> chunk(5)
 				.reader(reader()).processor(itemProcessor()).writer(writer())
 				.build();
-
-		Job myJob = jobBuilderFactory.get(this.getName())
-				.incrementer(new RunIdIncrementer()).flow(step).end().build();
-
-		return myJob;
+		
+		return builder.flow(step).end();
 	}
 
 }
