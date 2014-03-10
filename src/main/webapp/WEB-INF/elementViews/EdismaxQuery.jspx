@@ -12,7 +12,7 @@
 	<div class="input-group input-group">
 		<input type="text" autocomplete="off" class="form-control search-query" 
                id="edismax-query" placeholder="Query" name="${element.getUrlParam() }"
-			value="${element.query }" data-autocompleteURL="${asynchElementUrl}"/> <span class="input-group-btn">
+			value="${element.query }" data-autocomplete-url="${asynchElementUrl}"/> <span class="input-group-btn">
 			<button type="submit" class="btn btn-black btn-search">
 				<span class="glyphicon glyphicon-search"><!-- search --></span>
 			</button>
@@ -26,57 +26,5 @@
     <c:otherwise>no spell</c:otherwise>
     </c:choose>
   </div>
-	</div>
-  
-  <script>
-   $(function() {
-     
-     var availableTags = [
-                          "ActionScript",
-                          "AppleScript",
-                          "Asp",
-                          "BASIC",
-                          "C",
-                          "C++",
-                          "Clojure",
-                          "COBOL",
-                          "ColdFusion",
-                          "Erlang",
-                          "Fortran",
-                          "Groovy",
-                          "Haskell",
-                          "Java",
-                          "JavaScript",
-                          "Lisp",
-                          "Perl",
-                          "PHP",
-                          "Python",
-                          "Ruby",
-                          "Scala",
-                          "Scheme"
-                        ];
-                        $( "#edismax-query" ).autocomplete({
-                          source: availableTags
-                        });
-                        
-                        
-    var cache = {};
-    $( "#birds" ).autocomplete({
-      minLength: 2,
-      source: function( request, response ) {
-        var term = request.term;
-        if ( term in cache ) {
-          response( cache[ term ] );
-          return;
-        }
- 
-        $.getJSON( "search.php", request, function( data, status, xhr ) {
-          cache[ term ] = data;
-          response( data );
-        });
-      }
-    });
-  });
-  </script>
-  
+	</div>  
 </jsp:root>
