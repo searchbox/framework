@@ -83,7 +83,7 @@ public class TemplatedHitListAdapter  {
 	public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response,
 			FieldAttribute attribute) {
 
-		if(!attribute.getId()){
+		if(attribute.getField().getKey() != element.getIdField()){
 			return;
 		}
 		

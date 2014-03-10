@@ -92,19 +92,19 @@ public abstract class SolrSearchEngine extends
 	
 	@Override
 	public void reloadPlugins() {
-//		LOGGER.info("Updating Solr Suggester");
-//		SolrQuery query = this.newQuery();
-//		query.setRequestHandler("/suggest");
-//		query.setQuery("a");
-//		query.setParam("suggest.build", true);
-//		LOGGER.info("Query is: " + query);
-//		QueryResponse response = this.execute(query);
-//		
-//		LOGGER.info("Updating Solr Spellchecker");
-//		query = this.newQuery();
-//		query.setRequestHandler("/spell");
-//		query.setParam("spellcheck.build", true);
-//		response = this.execute(query);
+		LOGGER.info("Updating Solr Suggester");
+		SolrQuery query = this.newQuery();
+		query.setRequestHandler("/suggest");
+		query.setQuery("a");
+		query.setParam("suggest.build", true);
+		LOGGER.info("Query is: " + query);
+		QueryResponse response = this.execute(query);
+		
+		LOGGER.info("Updating Solr Spellchecker");
+		query = this.newQuery();
+		query.setRequestHandler("/spell");
+		query.setParam("spellcheck.build", true);
+		response = this.execute(query);
 	}
 
 	@Override
@@ -137,6 +137,10 @@ public abstract class SolrSearchEngine extends
 	@Override
 	public boolean indexMap(String collectionName, Map<String, Object> fields) {
 		SolrInputDocument document = new SolrInputDocument();
+		//Make sure we use the ID field...
+		if(!fields.containsKey("id")){
+			document.addField("id", fields.get(this.collection.getIdFieldName()));
+		}
 		for (Entry<String, Object> entry : fields.entrySet()) {
 			if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
 				for (Object value : ((Collection<?>) entry.getValue())) {
@@ -160,7 +164,7 @@ public abstract class SolrSearchEngine extends
 			return false;
 		}
 	}
-
+	
 	@Override
 	public boolean upateAllFields(List<FieldAttribute> fieldAttributes) {
 		/** Get the translation for the field's key */

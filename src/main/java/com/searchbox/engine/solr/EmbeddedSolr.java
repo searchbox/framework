@@ -32,6 +32,7 @@ import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.schema.CopyField;
 import org.apache.solr.schema.IndexSchema;
+import org.apache.solr.schema.SchemaField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,15 +50,6 @@ public class EmbeddedSolr extends SolrSearchEngine {
 	@SearchAttribute
 	private String dataDir;
 
-	@SearchAttribute
-	private String solrConfig;
-
-	@SearchAttribute
-	private String solrSchema;
-
-	@SearchAttribute
-	private String coreName;
-
 	private static CoreContainer coreContainer =  null;
 
 	public EmbeddedSolr() {
@@ -69,7 +61,6 @@ public class EmbeddedSolr extends SolrSearchEngine {
 		this.solrHome = solrHome;
 	}
 	
-
 	@Override
 	protected SolrServer getSolrServer() {
 		return new EmbeddedSolrServer(coreContainer, this.collection.getName());
@@ -95,30 +86,6 @@ public class EmbeddedSolr extends SolrSearchEngine {
 		this.dataDir = dataDir;
 	}
 
-	public String getSolrConfig() {
-		return solrConfig;
-	}
-
-	public void setSolrConfig(String solrConfig) {
-		this.solrConfig = solrConfig;
-	}
-
-	public String getSolrSchema() {
-		return solrSchema;
-	}
-
-	public void setSolrSchema(String solrSchema) {
-		this.solrSchema = solrSchema;
-	}
-
-	public String getCoreName() {
-		return coreName;
-	}
-
-	public void setCoreName(String coreName) {
-		this.coreName = coreName;
-	}
-
 	public String getSolrHome() {
 		return solrHome;
 	}
@@ -126,8 +93,6 @@ public class EmbeddedSolr extends SolrSearchEngine {
 	public void setSolrHome(String solrHome) {
 		this.solrHome = solrHome;
 	}
-
-
 
 	@Override
 	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
@@ -156,7 +121,11 @@ public class EmbeddedSolr extends SolrSearchEngine {
 
 	@Override
 	public void reloadEngine() {
-		coreContainer.reload(this.collection.getName());		
+		try {
+			coreContainer.reload(this.collection.getName());
+		} catch (Exception e) {
+			LOGGER.warn(e.getMessage());
+		}
 	}
 
 	@Override
@@ -176,18 +145,23 @@ public class EmbeddedSolr extends SolrSearchEngine {
 				}
 			}
 			properties.setProperty("dataDir", this.dataDir);
+		} else {
+			properties.setProperty("dataDir", coreInstanceDir+"/"+this.collection.getName()+"/data/");
 		}
 		
 		CoreDescriptor dcore = new CoreDescriptor(coreContainer,
 				this.collection.getName(), coreInstanceDir, properties);
 
-		SolrCore core = coreContainer.create(dcore);
 		
-		coreContainer.register(core, false);
-		
-		LOGGER.info("Solr Core config: " + core.getConfigResource());
-		LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
-		LOGGER.info("Solr Data dir: " + core.getDataDir());		
-		
+		try {
+			SolrCore core = coreContainer.create(dcore);
+			coreContainer.register(core, false);
+
+			LOGGER.info("Solr Core config: " + core.getConfigResource());
+			LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
+			LOGGER.info("Solr Data dir: " + core.getDataDir());
+		} catch (Exception e) {
+			LOGGER.warn(e.getMessage());
+		}
 	}
 }
