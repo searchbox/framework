@@ -20,13 +20,15 @@
 	</div>
   
   
-  <div id="didyoumean">
+  
     <c:choose>
     <c:when test="${element.shouldRetry() }">
-      Showing results for: ${element.collationQuery } 
+      <div id="didyoumean">Showing results for: ${element.collationQuery } </div>
     </c:when>
-    <c:otherwise>No Spell</c:otherwise>
+    <c:otherwise>
+      <div id="didyoumean" style="text-indent:-50px">a</div>
+    </c:otherwise>
     </c:choose>
-  </div>
+  
 	</div>  
 </jsp:root>

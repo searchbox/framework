@@ -173,6 +173,7 @@ input:focus,textarea:focus {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 12px;
+  overflow:hidden;
 }
 
 #search-bar #logo {
