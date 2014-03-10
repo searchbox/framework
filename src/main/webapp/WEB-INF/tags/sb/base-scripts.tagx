@@ -18,12 +18,13 @@
 	<spring:url
 		value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
 		var="jquery_url" />
+    <spring:url
+        value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
+        var="jqueryui_js_url" />
 	<spring:url
 		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
 		var="bootstrap_js_url" />
-	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
-		var="jqueryui_js_url" />
+
 
 
 
