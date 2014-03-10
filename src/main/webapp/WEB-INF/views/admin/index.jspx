@@ -121,12 +121,6 @@
       </div>
     </div>
   </div>
-  <style>
-  #search-bar {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-}
-  </style>
 </body>
   </html>
 </jsp:root>

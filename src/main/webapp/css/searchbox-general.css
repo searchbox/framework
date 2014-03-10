@@ -157,23 +157,16 @@ input:focus,textarea:focus {
 }
 
 #search-bar {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   border-radius: 0;
   padding-left: 0px;
   padding-top: 40px;
   padding-right: 0px;
-  padding-bottom: 0px;
+  padding-bottom: 40px;
   border-bottom: 1px solid #BCBCBC;
   /*background: url("/img/texture-white.png") repeat scroll 0 0
 		rgba(0, 0, 0, 0);*/
   background-color: #f5f5f5;
-}
-
-#search-bar #didyoumean {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 12px;
-  overflow:hidden;
 }
 
 #search-bar #logo {

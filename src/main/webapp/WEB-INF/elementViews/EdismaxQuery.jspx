@@ -22,13 +22,15 @@
   
   
     <c:choose>
-    <c:when test="${element.shouldRetry() }">
-      <div id="didyoumean">Showing results for: ${element.collationQuery } </div>
-    </c:when>
-    <c:otherwise>
-      <div id="didyoumean" style="text-indent:-50px">a</div>
-    </c:otherwise>
+      <c:when test="${element.shouldRetry() }">
+        <div class="alert alert-info" id="didyoumean">Showing results for: <strong>${element.collationQuery }</strong></div>
+      </c:when>
     </c:choose>
   
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#results").prepend($("#didyoumean"));
+      });
+    </script>
 	</div>  
 </jsp:root>
