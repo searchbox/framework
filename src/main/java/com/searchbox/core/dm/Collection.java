@@ -16,6 +16,7 @@
 package com.searchbox.core.dm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -38,6 +39,9 @@ public class Collection {
 	
 	@SearchAttribute
 	protected SearchEngine<?, ?> searchEngine;
+	
+	@SearchAttribute
+	String idFieldName;
 	
 	public Collection(){
 		
@@ -81,5 +85,32 @@ public class Collection {
 
 	public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
 		this.searchEngine = searchEngine;
+	}
+	
+	/**
+	 * @return the idFieldName
+	 */
+	public String getIdFieldName() {
+		return idFieldName;
+	}
+
+	/**
+	 * @param idFieldName the idFieldName to set
+	 */
+	public void setIdFieldName(String idFieldName) {
+		this.idFieldName = idFieldName;
+	}
+
+
+
+	public static class FieldMap extends HashMap<String, List<Object>> {
+	    public void put(String key, Object number) {
+	        List<Object> current = get(key);
+	        if (current == null) {
+	            current = new ArrayList<Object>();
+	            super.put(key, current);
+	        }
+	        current.add(number);
+	    }
 	}
 }

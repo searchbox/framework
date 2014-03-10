@@ -54,7 +54,7 @@ public class EdismaxQuerySolrAdaptor {
 			QueryResponse response) {
 		searchElement.setQuery(query.getQuery());	
 		if(!searchElement.shouldRetry()  && response.getSpellCheckResponse() != null){
-			LOGGER.info("Collation query: " + response.getSpellCheckResponse().getCollatedResult());
+			LOGGER.debug("Collation query: " + response.getSpellCheckResponse().getCollatedResult());
 			searchElement.setCollationQuery(response.getSpellCheckResponse().getCollatedResult());
 			searchElement.setHitCount(response.getResults().getNumFound());
 		}

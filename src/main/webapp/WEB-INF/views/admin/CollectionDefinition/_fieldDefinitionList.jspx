@@ -45,7 +45,7 @@
       <spring:url
         value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
         var="synchCollection" />
-      <script>
+      <script type="text/javascript">
               $(document).ready(function() {
                 $('.collection-synchronize').click(function(e) {
                   e.preventDefault()
@@ -158,14 +158,13 @@
               </c:forEach>
             </tbody>
           </table>
-          <script>
-                      $.fn.editable.defaults.mode = 'inline';
-                      $('.editable').editable();
-                      $("#field-attributes").tablesorter({
-                        sortList : [ [ 0, 0 ], [ 1, 0 ] ]
-                      });
-                    </script>
-
+          <script type="text/javascript">
+              $.fn.editable.defaults.mode = 'inline';
+              $('.editable').editable();
+              $("#field-attributes").tablesorter({
+                sortList : [ [ 0, 0 ], [ 1, 0 ] ]
+              });
+           </script>
         </div>
       </div>
     </div>

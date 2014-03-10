@@ -378,6 +378,14 @@ a.clear_input:hover {
   font-weight: normal;
 }
 
+#result-list .label-tag.clickable{
+  cursor:pointer;
+  border:1px solid lightblue;
+}
+#result-list .label-tag.clickable:hover{
+  border:1px solid blue;
+}
+
 #result-list .label-tag .field-label {
   color: #999;
 }

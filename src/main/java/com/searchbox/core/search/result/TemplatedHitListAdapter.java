@@ -83,7 +83,11 @@ public class TemplatedHitListAdapter  {
 	public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response,
 			FieldAttribute attribute) {
 
-		if(!attribute.getId()){
+		LOGGER.info("Search for ID Attribute. "
+				+ (!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())) 
+				+ " Got: " + attribute.getField().getKey() + " need: " + element.getIdField());
+		
+		if(!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())){
 			return;
 		}
 		

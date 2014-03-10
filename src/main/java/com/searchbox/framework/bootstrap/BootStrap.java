@@ -128,6 +128,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** The base collection for searchbox */
 		LOGGER.info("++ Creating pubmed Collection");
 		CollectionDefinition collection = new CollectionDefinition(PubmedCollection.class,"pubmed");
+		collection.setIdFieldName("id");
 		collection.setAutoStart(true);
 		collection.setSearchEngine(engine);	
 		collection = collectionRepository.save(collection);
@@ -138,9 +139,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		preset.setLabel("Search All");
 		preset.setSlug("all");
 		
-		FieldAttributeDefinition idFieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("id"));
-		idFieldAttr.setAttributeValue("id",true);
-		preset.addFieldAttribute(idFieldAttr);
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("article-title"));
 		fieldAttr.setAttributeValue("searchable",true);
@@ -180,7 +178,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		templatedHitList.setAttributeValue("urlField", "article-title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"+
 														"<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>" +
-														"<sbx:tagAttribute limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
+														"<sbx:tagAttribute fieldname=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
 														);
 		preset.addSearchElement(templatedHitList);
 
