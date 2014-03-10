@@ -101,20 +101,33 @@ public class EENCollection extends AbstractBatchCollection implements
 
 	public static List<Field> GET_FIELDS() {
 		List<Field> fields = new ArrayList<Field>();
-		Field idField = new Field(String.class, "eenReferenceExternal");
-		fields.add(idField);
-//		fields.add(new Field(String.class, "id"));
-//		fields.add(new Field(String.class, "title"));
-//		fields.add(new Field(String.class, "descriptionHtml"));
-//		fields.add(new Field(String.class, "descriptionRaw"));
-//		fields.add(new Field(String.class, "docType"));
-//		fields.add(new Field(String.class, "programme"));
-//		fields.add(new Field(String.class, "tags"));
-//		fields.add(new Field(String.class, "flags"));
-//		fields.add(new Field(String.class, "callTitle"));
-//		fields.add(new Field(String.class, "callIdentifier"));
-//		fields.add(new Field(Date.class, "callDeadline"));
-//		fields.add(new Field(String.class, "callStatus"));
+		fields.add(new Field(String.class, "id"));
+		fields.add(new Field(Date.class, "eenDatumSubmit"));
+		fields.add(new Field(String.class, "eenContactOrganization"));
+		fields.add(new Field(String.class, "eenPartnerships"));
+		fields.add(new Field(String.class, "eenContentSummary"));
+		fields.add(new Field(String.class, "eenReferenceExternal"));
+		fields.add(new Field(String.class, "eenContactConsortium"));
+		fields.add(new Field(String.class, "eenKeywordNacesKey"));
+		fields.add(new Field(String.class, "eenCompanyCountryLabel"));
+		fields.add(new Field(String.class, "eenCompanyCertificationsOther"));
+		fields.add(new Field(String.class, "eenEoiStatus"));
+		fields.add(new Field(String.class, "eenContactPartnerid"));
+		fields.add(new Field(String.class, "eenReferenceType"));
+		fields.add(new Field(String.class, "eenContentTitle"));
+		fields.add(new Field(String.class, "eenCompanyLanguagesLabel"));
+		fields.add(new Field(String.class, "eenDisseminationPreferredLabel"));
+		fields.add(new Field(String.class, "eenCompanyTransnational"));
+		fields.add(new Field(String.class, "eenCompanyCountryKey"));
+		fields.add(new Field(String.class, "eenContentDescription"));
+		fields.add(new Field(Date.class, "eenDatumDeadline"));
+		fields.add(new Field(Date.class, "eenDatumUpdate"));
+		fields.add(new Field(String.class, "eenCompanyKind"));
+		fields.add(new Field(String.class, "eenCompanyExperience"));
+		fields.add(new Field(String.class, "eenKeywordNacesLabel"));
+		fields.add(new Field(String.class, "eenCompanyTurnover"));
+		fields.add(new Field(String.class, "eenDisseminationPreferredKey"));
+		fields.add(new Field(Integer.class, "eenCompanySince"));
 		return fields;
 	}
 
@@ -143,10 +156,8 @@ public class EENCollection extends AbstractBatchCollection implements
 
 				// Set the password
 				request = new ProfileQueryRequest();
-				request.setUsername(env.getProperty(EEN_SERVICE_USER,
-						EEN_SERVICE_USER_DEFAULT));
-				request.setPassword(env.getProperty(EEN_SERVICE_PWD,
-						EEN_SERVICE_PWD_DEFAULT));
+				request.setUsername(EEN_SERVICE_USER_DEFAULT);
+				request.setPassword(EEN_SERVICE_PWD_DEFAULT);
 
 				// Start with an empty list of profiles
 				profiles = new ArrayList<Profile>();
@@ -168,13 +179,13 @@ public class EENCollection extends AbstractBatchCollection implements
 					Date start = date;
 					Date end = DateUtils.addDays(start, 1);
 					date = end;
-					LOGGER.info("Fetching EEN from " + dfmt.format(start)
+					EENCollection.LOGGER.info("Fetching EEN from " + dfmt.format(start)
 							+ " to " + dfmt.format(end));
 					// time to get some new profiles...
 					request.setDeadlineDateAfter(dfmt.format(start));
 					request.setDeadlineDateBefore(dfmt.format(end));
 					Profile[] newProfiles = eenService.getProfiles(request);
-					LOGGER.info("adding: " + newProfiles.length
+					EENCollection.LOGGER.info("adding: " + newProfiles.length
 							+ " new profiles");
 					profiles.addAll(Arrays.asList(newProfiles));
 					// Profile p = new Profile();

@@ -118,11 +118,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = null;
 		try {
-//			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
-//			engine.setAttributeValue("zkHost", "localhost:9983");
+			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+			engine.setAttributeValue("zkHost", "localhost:9983");
 			
-			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
+//			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
+//			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
 			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			LOGGER.error("Could not set definition for SolrEmbededServer",e);
@@ -246,7 +246,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		/** Create & add a TemplatedHitLIst SearchComponent to the preset; */
 		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
 		templatedHitList.setAttributeValue("titleField", "title");
-		templatedHitList.setAttributeValue("idField", "id");
+		templatedHitList.setAttributeValue("idField", "topicIdentifier");
 		templatedHitList.setAttributeValue("urlField", "title");
 		templatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"+
 														"<sbx:snippet hit=\"${hit}\" field=\"descriptionRaw\"/>" +
@@ -340,6 +340,36 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		cooperations.setCollection(eenCollection);
 		searchbox.addPresetDefinition(cooperations);	
 		
+		FieldAttributeDefinition eenUpdateField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumUpdate"));
+		eenUpdateField.setAttributeValue("label","update");
+		cooperations.addFieldAttribute(eenUpdateField);
+		
+		FieldAttributeDefinition eenDeadlineField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumDeadline"));
+		eenDeadlineField.setAttributeValue("label", "deadline");
+		cooperations.addFieldAttribute(eenDeadlineField);
+		
+		FieldAttributeDefinition eenTitleField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenContentTitle"));
+		eenTitleField.setAttributeValue("searchable", true);
+		eenTitleField.setAttributeValue("highlight", true);
+		eenTitleField.setAttributeValue("spelling", true);
+		eenTitleField.setAttributeValue("suggestion", true);
+		eenTitleField.setAttributeValue("label", "title");
+		eenTitleField.setAttributeValue("lang", lang);
+		cooperations.addFieldAttribute(eenTitleField);		
+		
+		/** Create & add a query SearchComponent to the preset; */
+		SearchElementDefinition eenQuery = new SearchElementDefinition(EdismaxQuery.class);
+		cooperations.addSearchElement(query);
+
+		/** Create & add a TemplatedHitLIst SearchComponent to the preset; */
+		SearchElementDefinition eenTemplatedHitList = new SearchElementDefinition(TemplatedHitList.class);
+		eenTemplatedHitList.setAttributeValue("titleField", "eenContentTitle");
+		eenTemplatedHitList.setAttributeValue("idField", "eenReferenceExternal");
+		eenTemplatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>");
+		cooperations.addSearchElement(eenTemplatedHitList);
+
+		
+		
 		/**
 		 *  Users preset 
 		 */
@@ -348,9 +378,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
 		searchbox.addUserRole(new UserRole(user, Role.USER));
 		repository.save(searchbox);
-				
-		
-		
 
 		LOGGER.info("Bootstraping application with oppfin data... done");
 		
