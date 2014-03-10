@@ -534,3 +534,13 @@ em {
   width: auto;
   z-index: 2000;
 }
+
+/*************************************************************/
+/*                       Admin class                         */
+/*************************************************************/
+td.nowrap{
+  overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+}
+

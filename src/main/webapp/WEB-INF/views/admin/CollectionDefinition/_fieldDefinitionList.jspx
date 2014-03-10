@@ -3,160 +3,166 @@
   xmlns:spring="http://www.springframework.org/tags"
   xmlns:form="http://www.springframework.org/tags/form"
   xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
-  
-<div class="panel panel-default">
 
-  <div class="panel-heading">
-    Field Definition - Collection ${preset.collection.name }
+  <div class="panel panel-default">
 
-    <div role="toolbar" class="btn-group btn-group-xs pull-right">
-      <button class="btn btn-default dm-synchronize" type="button">
-        <span class="glyphicon glyphicon-refresh"></span>
-      </button>
-      <button class="btn btn-default collection-synchronize"
-        type="button">
-        <span class="glyphicon glyphicon-random"></span>
-      </button>
+    <div class="panel-heading">
+      Field Definition - Collection ${preset.collection.name }
+
+      <div role="toolbar" class="btn-group btn-group-xs pull-right">
+        <button class="btn btn-default dm-synchronize" type="button" title="Synchronize DataModel">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <button class="btn btn-default collection-synchronize"
+          type="button" title="Synchronize Collection">
+          <span class="glyphicon glyphicon-random"></span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="panel-body">
-
-    <div class="row">
-      <div class="col-md-4 col-right">
-        <p>
-          <a class="btn btn-primary btn-lg collection-synchronize"
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <a class="btn btn-success datamodel-synchronize" role="button">
+            <span class="glyphicon glyphicon-refresh">
+              <!-- button -->
+          </span> Synchronize DataModel
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a class="btn btn-primary collection-synchronize"
             role="button"> <span class="glyphicon glyphicon-random">
               <!-- button -->
-          </span> Synchronize
+          </span> Synchronize Collection
           </a>
-        </p>
-        <div class="notifications top-left">
-          <!-- notifications -->
         </div>
-        <spring:url
-          value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
-          var="synchCollection" />
-        <script>
-                  $(document).ready(function() {
-                    $('.collection-synchronize').click(function(e) {
-                      e.preventDefault()
-                      var loadurl = "${synchCollection}";
-                      $.post(loadurl, function(data) {
-                        console.log(data);
-                        $.bootstrapGrowl(data.message, {
-                          type : 'info',
-                          align : 'right',
-                          width : 'auto',
-                          allow_dismiss : true
-                        });
-                      });
+
+      </div>
+      <div class="notifications top-left">
+        <!-- notifications -->
+      </div>
+
+
+      <spring:url
+        value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
+        var="synchCollection" />
+      <script>
+              $(document).ready(function() {
+                $('.collection-synchronize').click(function(e) {
+                  e.preventDefault()
+                  var loadurl = "${synchCollection}";
+                  $.post(loadurl, function(data) {
+                    console.log(data);
+                    $.bootstrapGrowl(data.message, {
+                      type : 'info',
+                      align : 'right',
+                      width : 'auto',
+                      allow_dismiss : true
                     });
                   });
-                </script>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <h4>Job Status</h4>
-
-        <table class="table table-striped tablesorter-bootstrap">
-          <thead>
-            <tr>
-              <th>Job</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
+                });
+              });
+            </script>
 
 
-            <c:forEach
-              items="${jobExplorer.getJobInstances(preset.collection.name, 0, 1000)}"
-              var="job" varStatus="item">
-              <c:set var="JobName" value="${job.jobName}" />
-              <c:forEach items="${jobExplorer.getJobExecutions(job)}"
-                var="exec">
-                <tr>
-                  <td>${JobName }</td>
-                  <td>${ exec.getStartTime()}</td>
-                  <td>${exec.getLastUpdated() }</td>
-                  <td><c:choose>
-                      <c:when test="${exec.getStatus() == 'FAILED'}">
-                        <span class="label label-danger">Failed</span>
-                      </c:when>
-                      <c:when test="${exec.getStatus() == 'COMPLETED'}">
-                        <span class="label label-success">Completed</span>
-                      </c:when>
-                      <c:otherwise>
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Job Status</h4>
+
+          <table class="table table-striped tablesorter-bootstrap">
+            <thead>
+              <tr>
+                <th>Job</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+              <c:forEach
+                items="${jobExplorer.getJobInstances(preset.collection.name, 0, 1000)}"
+                var="job" varStatus="item">
+                <c:set var="JobName" value="${job.jobName}" />
+                <c:forEach items="${jobExplorer.getJobExecutions(job)}"
+                  var="exec">
+                  <tr>
+                    <td>${JobName }</td>
+                    <td>${ exec.getStartTime()}</td>
+                    <td>${exec.getLastUpdated() }</td>
+                    <td><c:choose>
+                        <c:when test="${exec.getStatus() == 'FAILED'}">
+                          <span class="label label-danger">Failed</span>
+                        </c:when>
+                        <c:when
+                          test="${exec.getStatus() == 'COMPLETED'}">
+                          <span class="label label-success">Completed</span>
+                        </c:when>
+                        <c:otherwise>
                                                                   ${exec.getStatus()}
                                                                 </c:otherwise>
-                    </c:choose></td>
+                      </c:choose></td>
+                  </tr>
+                </c:forEach>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Field Attributes</h4>
+
+          <table id="fieldAttributes"
+            class="table table-striped tablesorter-bootstrap">
+            <thead>
+              <tr>
+                <th>key</th>
+                <th>type</th>
+                <th>label</th>
+                <th>search</th>
+                <th title="highlight">hl</th>
+                <th>sort</th>
+                <th>spell</th>
+                <th>suggest</th>
+                <th>boost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach items="${preset.fieldAttributes }" var="attr"
+                varStatus="item">
+
+                <c:set var="trclass" value="" />
+
+                <tr>
+                  <td class="nowrap"><p class="form-control-static">${attr.field.getKey() }</p></td>
+                  <td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
+                  <td><a href="" id="label-${attr.field.getKey() }"
+                    data-type="text" data-placeholder="Label"
+                    data-pk="${attr.getId() }" data-title="Field Label"
+                    class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('searchable').getValue()}"/></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('highlight').getValue()}"/></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('sortable').getValue()}"/></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('spelling').getValue()}"/></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('suggestion').getValue()}"/></td>
+                  <td><sb:table-boolean value="${attr.getAttributeByName('boost').getValue()}"/></td>
                 </tr>
               </c:forEach>
-            </c:forEach>
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </tbody>
+          </table>
+          <script>
+                      $.fn.editable.defaults.mode = 'inline';
+                      $('.editable').editable();
+                      $("#fieldAttributes").tablesorter({
+                        sortList : [ [ 0, 0 ], [ 1, 0 ] ]
+                      });
+                    </script>
 
-    <div class="row">
-      <div class="col-md-12">
-        <h4>Field Attributes</h4>
-
-        <table id="fieldAttributes"
-          class="table table-striped tablesorter-bootstrap">
-          <thead>
-            <tr>
-              <th>key</th>
-              <th>type</th>
-              <th>label</th>
-              <th>search</th>
-              <th>highlight</th>
-              <th>sort</th>
-              <th>spell</th>
-              <th>suggest</th>
-              <th>boost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach items="${preset.fieldAttributes }" var="attr"
-              varStatus="item">
-
-              <c:set var="trclass" value="" />
-
-              <tr>
-                <td class="nowrap"><p class="form-control-static">${attr.field.getKey() }</p></td>
-                <td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-                <td><a href="" id="label-${attr.field.getKey() }"
-                  data-type="text" data-placeholder="Label"
-                  data-pk="${attr.getId() }" data-title="Field Label"
-                  class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
-                <td>${attr.getAttributeByName('searchable').getValue()}</td>
-                <td>${attr.getAttributeByName('highlight').getValue()}</td>
-                <td>${attr.getAttributeByName('sortable').getValue()}</td>
-                <td>${attr.getAttributeByName('spelling').getValue()}</td>
-                <td>${attr.getAttributeByName('suggestion').getValue()}</td>
-                <td>${attr.getAttributeByName('boost').getValue()}</td>
-              </tr>
-
-            </c:forEach>
-
-
-          </tbody>
-        </table>
-        <script>
-                  $.fn.editable.defaults.mode = 'inline';
-                  $('.editable').editable();
-                  $("#fieldAttributes").tablesorter({
-                    sortList : [ [ 0, 0 ], [ 1, 0 ] ]
-                  });
-                </script>
-
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 </jsp:root>
