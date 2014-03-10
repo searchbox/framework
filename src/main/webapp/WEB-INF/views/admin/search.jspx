@@ -20,7 +20,7 @@
 <sb:base-scripts />
 <sb:admin-scripts />
 
-<title>${title}</title>
+<title>${title ? title : "Searchbox search page"}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 </head>
@@ -48,7 +48,7 @@
 							<a class="pull-left" href="#"> <spring:url
 									value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
 								src='${searchbox_logo}' class="media-object" alt="Searchbox"
-								id="logo-image" width="260px" />
+								id="logo-image" />
 							</a>
 						</div>
 					</div>
@@ -142,15 +142,15 @@
 								<div class="row">
 									<div class="col-md-3 col-left">
 										<h2>
-											<span class="glyphicon glyphicon-list">${preset.collection.name }</span>
+											<span class="glyphicon glyphicon-list"><!-- list --></span> ${preset.collection.name }
 										</h2>
 									</div>
 									<div class="col-md-5 col-right">
 										<p>
 											<a id="collectionSynchronize" class="btn btn-primary btn-lg"
-												role="button"> <span class="glyphicon glyphicon-random">Synchronize</span></a>
+												role="button"> <span class="glyphicon glyphicon-random"><!-- button --></span>Synchronize</a>
 										</p>
-										<div class='notifications top-left'></div>
+										<div class="notifications top-left"><!-- notifications --></div>
 										<spring:url
 											value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
 											var="synchCollection" />
@@ -230,10 +230,10 @@
 												<c:set var="trclass" value="" />
 
 												<tr>
-													<td nowrap="nowrap" class="nowrap"><p
+													<td class="nowrap"><p
 															class="form-control-static">${attr.field.getKey() }</p></td>
 													<td><p class="form-control-static">${attr.field.getClazz().getSimpleName() }</p></td>
-													<td><a href="" id="label" data-type="text"
+													<td><a href="" id="label-${attr.field.getKey() }" data-type="text"
 														data-placeholder="Label" data-pk="${attr.getId() }"
 														data-title="Field Label" class="editable editable-click">${attr.getAttributeByName('label').getValue()}</a></td>
 													<td>${attr.getAttributeByName('searchable').getValue()}</td>
