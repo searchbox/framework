@@ -43,13 +43,6 @@
             </div>
           </div>
 
-          <div class="clearfix visible-xs" style="margin-bottom: 10px">
-            <!-- clear -->
-          </div>
-
-          <div class="col-md-7 col-sm-7">
-            <h1>Welcome to your searchbox</h1>
-          </div>
         </div>
 
         <div class="row" id="info">
@@ -60,8 +53,6 @@
               <div class="panel-heading">Server Information</div>
               <div class="panel-body">
                 <div class="block" id="instance">
-
-
                   <h5>JVM-Memory (Max 6.34 GB)</h5>
                   <div class="progress">
                     <div class="progress-bar" role="progressbar"
@@ -81,9 +72,7 @@
                   <h5>Instance</h5>
 
                   <div class="content">
-
                     <ul class="data">
-
                       <li class="start_time" style="display: list-item;"><dl
                           class="clearfix">
                           <dt>
@@ -93,7 +82,6 @@
                             title="2013-12-12T14:05:37.249Z">2
                             months ago</dd>
                         </dl></li>
-
                       <li class="host odd" style="display: list-item;"><dl
                           class="clearfix">
                           <dt>
@@ -101,7 +89,6 @@
                           </dt>
                           <dd>ip-10-33-187-95.eu-west-1.compute.internal</dd>
                         </dl></li>
-
                       <li class="dir dir_cwd"
                         style="display: list-item;"><dl
                           class="clearfix">
@@ -110,7 +97,6 @@
                           </dt>
                           <dd>/home/ubuntu/searchbox-server</dd>
                         </dl></li>
-
                       <li class="dir dir_instance odd"
                         style="display: list-item;"><dl
                           class="clearfix">
@@ -119,7 +105,6 @@
                           </dt>
                           <dd>/home/ubuntu/searchbox-server/./bin/solr/communitysites_v0_shard1_replica1</dd>
                         </dl></li>
-
                       <li class="dir dir_data"
                         style="display: list-item;"><dl
                           class="clearfix">
@@ -128,7 +113,6 @@
                           </dt>
                           <dd>/mnt/solr/communitysites_v0_shard1_replica1</dd>
                         </dl></li>
-
                       <li class="dir dir_index odd"
                         style="display: list-item;"><dl
                           class="clearfix">
@@ -137,11 +121,28 @@
                           </dt>
                           <dd>/mnt/solr/communitysites_v0_shard1_replica1/index</dd>
                         </dl></li>
-
                     </ul>
-
                   </div>
+                  <h5>Searchbox</h5>
+                  <div class="content">
+                    <ul class="data">
+                      <li class="start_time" style="display: list-item;"><dl
+                          class="clearfix">
+                          <dt>
+                            <span>Version</span>
+                          </dt>
+                          <dd class="version">1.0-SNAPSHOT-SEARCHBOX</dd>
+                        </dl></li>
 
+                      <li class="host odd" style="display: list-item;"><dl
+                          class="clearfix">
+                          <dt>
+                            <span>Last Update</span>
+                          </dt>
+                          <dd>2014-03-10</dd>
+                        </dl></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,6 +279,36 @@
       </div>
     </div>
   </div>
+
+  <style>
+ul.data {
+  list-style: none;
+  padding-left: 5px;
+}
+
+ul.data dl {
+  margin-bottom: 5px;
+}
+
+ul.data li dt {
+  float: left;
+  white-space: nowrap;
+  width: 20%;
+}
+
+ul.data li dd {
+  float: right;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 80%;
+}
+
+#search-bar {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+}
+</style>
 </body>
   </html>
 </jsp:root>
