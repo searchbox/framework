@@ -131,21 +131,31 @@
 
 						<!-- Tab panes -->
 						<div class="tab-content">
+                            <!-- Search results -->
 							<div class="tab-pane active" id="view">
 								<c:forEach items="${result.getElements('VIEW')}" var="element">
 									<sb:include element="${element }" result="${result }"
 										admin="true" debug="${not empty param.debug}" />
 								</c:forEach>
 							</div>
+                            <!-- Preset filters -->
 							<div class="tab-pane" id="filter">Preset Filters go here.</div>
+              
+                            
 							<div class="tab-pane" id="collection">
+              
+                            <div class="panel panel-default">
+                            
+                            <div class="panel-heading">Field Definition</div>
+                            <div class="panel-body">
+                                
 								<div class="row">
 									<div class="col-md-3 col-left">
 										<h2>
 											<span class="glyphicon glyphicon-list"><!-- list --></span> ${preset.collection.name }
 										</h2>
 									</div>
-									<div class="col-md-5 col-right">
+									<div class="col-md-4 col-right">
 										<p>
 											<a id="collectionSynchronize" class="btn btn-primary btn-lg"
 												role="button"> <span class="glyphicon glyphicon-random"><!-- button --></span>Synchronize</a>
@@ -176,7 +186,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-md-7 col-left">
+									<div class="col-md-8 col-left">
 										<table class="table table-striped">
 											<thead>
 												<tr>
@@ -207,6 +217,7 @@
 								</div>
 
 								<div class="row">
+                                <div class="col-md-12">
 									<h4>Field Attributes</h4>
 
 									<table id="fieldAttributes" class="table table-striped tablesorter-bootstrap">
@@ -256,6 +267,9 @@
 									</script>
 
 								</div>
+                              </div>
+                              </div>
+                              </div>
 
 							</div>
 						</div>
