@@ -1,5 +1,6 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
  xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
  xmlns:spring="http://www.springframework.org/tags"
  xmlns:form="http://www.springframework.org/tags/form"
  xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
@@ -72,7 +73,7 @@
        <tr>
         <th>Job</th>
         <th>Start Time</th>
-        <th>End Time</th>
+        <th>Duration</th>
         <th>Status</th>
        </tr>
       </thead>
@@ -83,13 +84,18 @@
         items="${jobExplorer.getJobInstances(preset.collection.name, 0, 1000)}"
         var="job" varStatus="item">
         <c:set var="JobName" value="${job.jobName}" />
-        <c:forEach items="${jobExplorer.getJobExecutions(job)}"
-         var="exec">
+        <c:forEach items="${jobExplorer.getJobExecutions(job)}" var="exec">
          <tr>
           <td>${JobName }</td>
-          <td>${ exec.getStartTime()}</td>
-          <td>${exec.getLastUpdated() }</td>
+          <td><fmt:formatDate value="${exec.getStartTime()}" dateStyle="long" timeStyle="medium" type="both"/></td>
+          <td>
+            <c:set var="diffTime" value="${exec.getLastUpdated().getTime() - exec.getStartTime().getTime()}"/>
+            ${diffTime }ms
+          </td>
           <td><c:choose>
+            <c:when test="${exec.getStatus() == 'STARTED'}">
+             <span class="label label-info">Started...</span>
+            </c:when>
             <c:when test="${exec.getStatus() == 'FAILED'}">
              <span class="label label-danger">Failed</span>
             </c:when>
