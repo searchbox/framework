@@ -113,6 +113,7 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements Ca
 	public String getContent() {
 		return "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
 				"xmlns:sbx=\"urn:jsptagdir:/WEB-INF/tags/sbx\" " +
+				"xmlns:c=\"http://java.sun.com/jsp/jstl/core\" " +
 				"version=\"2.0\">"+
 				this.template+"</jsp:root>";
 	}
