@@ -18,7 +18,7 @@
  <c:if test="${not empty hit.highlights[hit.titleFieldName]}">
   <c:set var="title" value="${hit.highlights[hit.titleFieldName]}" />
  </c:if>
- <h5 class="result-title">
+ <h4 class="result-title">
   <c:choose>
    <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
    <c:when test="${not empty link}">
@@ -33,5 +33,5 @@
             ${hit.getTitle()}
           </c:otherwise>
   </c:choose>
- </h5>
+ </h4>
 </jsp:root>

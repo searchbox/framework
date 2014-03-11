@@ -24,6 +24,8 @@
   </c:when>
  </c:choose>
  <div>
+  <p>
   <sbx:out value="${content }" maxLengh="300" join=" ... " />
+  </p>
  </div>
 </jsp:root>
