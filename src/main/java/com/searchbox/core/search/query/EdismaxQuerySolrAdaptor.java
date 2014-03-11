@@ -9,6 +9,7 @@ import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.DisMaxParams;
+import org.apache.solr.common.params.SimpleParams;
 import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,10 @@ public class EdismaxQuerySolrAdaptor {
 			.getLogger(EdismaxQuerySolrAdaptor.class);
 	
 	@SearchAdapterMethod(execute=Time.PRE)
-	public void setDefaultQuery(SolrQuery query){
+	public void setDefaultQuery(EdismaxQuery searchElement, SolrQuery query){
 		query.setParam("defType", "edismax");
 		query.set(DisMaxParams.ALTQ, "*:*");
+		query.setParam("q.op", searchElement.getOperator().toString());
 	}
 	
 	
