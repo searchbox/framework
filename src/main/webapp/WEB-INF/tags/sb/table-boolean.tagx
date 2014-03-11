@@ -1,32 +1,30 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-  xmlns:spring="http://www.springframework.org/tags"
-  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-  xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+ xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
 
-  <jsp:output omit-xml-declaration="yes" />
+ <jsp:output omit-xml-declaration="yes" />
 
 
-  <jsp:directive.attribute name="value" type="String" required="true"
-    rtexprvalue="true" description="Boolean to Render" />
-  <jsp:directive.attribute name="displayFalse" type="Boolean"
-    required="false" rtexprvalue="true"
-    description="Display boolean false" />
+ <jsp:directive.attribute name="value" type="String" required="true"
+  rtexprvalue="true" description="Boolean to Render" />
+ <jsp:directive.attribute name="displayFalse" type="Boolean"
+  required="false" rtexprvalue="true"
+  description="Display boolean false" />
 
-  <c:choose>
-    <c:when test="${value || value =='true'}">
-      <span style="display:none">1</span>
-      <span class="glyphicon glyphicon-ok">
-        <!-- icon -->
-      </span>
-    </c:when>
-    <c:otherwise>
-      <span style="display:none">0</span>
-      <c:if test="${displayFalse}">
-        <span class="glyphicon glyphicon-remove">
-          <!-- icon -->
-        </span>
-      </c:if>
-    </c:otherwise>
-  </c:choose>
+ <c:choose>
+  <c:when test="${value || value =='true'}">
+   <span style="display: none">1</span>
+   <span class="glyphicon glyphicon-ok"> <!-- icon -->
+   </span>
+  </c:when>
+  <c:otherwise>
+   <span style="display: none">0</span>
+   <c:if test="${displayFalse}">
+    <span class="glyphicon glyphicon-remove"> <!-- icon -->
+    </span>
+   </c:if>
+  </c:otherwise>
+ </c:choose>
 </jsp:root>

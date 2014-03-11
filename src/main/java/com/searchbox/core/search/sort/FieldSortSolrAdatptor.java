@@ -15,27 +15,29 @@ import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class FieldSortSolrAdatptor {
-	
-	
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(FieldSortSolrAdatptor.class);
-	
-	@SearchAdapterMethod(execute=Time.PRE)
-	public void setSortCondition(SolrSearchEngine engine, FieldSort.Condition condition,
-			SolrQuery query, FieldAttribute attribute) {
-		if(condition.getField().equals("score")){
-			if(condition.getSort().equals(Sort.ASC)) {
-				query.addSort("score", ORDER.asc);
-			} else {
-				query.addSort("score", ORDER.desc);
-			}
-		} else if(attribute.getField().getKey().equals(condition.getField())){
-			attribute.setSortable(true);
-			if(condition.getSort().equals(Sort.ASC)) {
-				query.addSort(engine.getKeyForField(attribute,USE.SORT), ORDER.asc);
-			} else {
-				query.addSort(engine.getKeyForField(attribute,USE.SORT), ORDER.desc);
-			}
-		}
-	}
+
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(FieldSortSolrAdatptor.class);
+
+    @SearchAdapterMethod(execute = Time.PRE)
+    public void setSortCondition(SolrSearchEngine engine,
+            FieldSort.Condition condition, SolrQuery query,
+            FieldAttribute attribute) {
+        if (condition.getField().equals("score")) {
+            if (condition.getSort().equals(Sort.ASC)) {
+                query.addSort("score", ORDER.asc);
+            } else {
+                query.addSort("score", ORDER.desc);
+            }
+        } else if (attribute.getField().getKey().equals(condition.getField())) {
+            attribute.setSortable(true);
+            if (condition.getSort().equals(Sort.ASC)) {
+                query.addSort(engine.getKeyForField(attribute, USE.SORT),
+                        ORDER.asc);
+            } else {
+                query.addSort(engine.getKeyForField(attribute, USE.SORT),
+                        ORDER.desc);
+            }
+        }
+    }
 }

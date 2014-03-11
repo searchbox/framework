@@ -38,124 +38,124 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Entity
 public class Searchbox {
 
-	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-	
-	@Version
-	@Column(name="OPTLOCK")
-	private long version;
-	
-	/**
+
+    @Version
+    @Column(name = "OPTLOCK")
+    private long version;
+
+    /**
      */
-	@Column(unique=true)
-	private String slug;
+    @Column(unique = true)
+    private String slug;
 
-	/**
+    /**
      */
-	private String name;
-	
-	private String alias;
+    private String name;
 
-	/**
+    private String alias;
+
+    /**
      */
-	private String description;
+    private String description;
 
-	@OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
-	
-	
-	@OneToMany(mappedBy = "searchbox", cascade=CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@MapKey(name="user")
-	private Map<User, UserRole> userRoles = new HashMap<User, UserRole>();
-	
-	public Searchbox() {
-	}
+    @OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
 
-	public Searchbox(String name, String description) {
-		this.name = name;
-		this.slug = name;
-		this.description = description;
-	}
+    @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @MapKey(name = "user")
+    private Map<User, UserRole> userRoles = new HashMap<User, UserRole>();
 
-	public long getId() {
-		return id;
-	}
+    public Searchbox() {
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public Searchbox(String name, String description) {
+        this.name = name;
+        this.slug = name;
+        this.description = description;
+    }
 
-	public long getVersion() {
-		return version;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setVersion(long version) {
-		this.version = version;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    public long getVersion() {
+        return version;
+    }
 
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    public void setVersion(long version) {
+        this.version = version;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
-	public String getAlias() {
-		return alias;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getAlias() {
+        return alias;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
-	public List<PresetDefinition> getPresets() {
-		return presets;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setPresets(List<PresetDefinition> presets) {
-		this.presets = presets;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Map<User, UserRole> getUserRoles() {
-		return userRoles;
-	}
+    public List<PresetDefinition> getPresets() {
+        return presets;
+    }
 
-	public void setUserRoles(Map<User, UserRole> userRoles) {
-		this.userRoles = userRoles;
-	}
+    public void setPresets(List<PresetDefinition> presets) {
+        this.presets = presets;
+    }
 
-	public void addPresetDefinition(PresetDefinition preset) {
-		preset.setSearchbox(this);
-		this.presets.add(preset);
-	}
-	
-	public void addUserRole(UserRole userRole) {
-		userRole.setSearchbox(this);
-		this.userRoles.put(userRole.getUser(), userRole);
-	}
-	
-	@Override
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    public Map<User, UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Map<User, UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public void addPresetDefinition(PresetDefinition preset) {
+        preset.setSearchbox(this);
+        this.presets.add(preset);
+    }
+
+    public void addUserRole(UserRole userRole) {
+        userRole.setSearchbox(this);
+        this.userRoles.put(userRole.getUser(), userRole);
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

@@ -1,31 +1,34 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-  xmlns:spring="http://www.springframework.org/tags"
-  xmlns:form="http://www.springframework.org/tags/form"
-  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
-  <jsp:output omit-xml-declaration="yes" />
-  <c:set var="sortVariable" value=""/>
+ <jsp:output omit-xml-declaration="yes" />
+ <c:set var="sortVariable" value="" />
 
-  <div class="btn-group" id="sort-combo">
-    <button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-      Sort by <span class="caret"> <!-- Empty -->
-      </span>
-    </button>
-    <ul class="dropdown-menu pull-right">
-      <c:forEach items="${element.values }" var="sort">
-        <c:set var="cssSelect" value=""/>
-        <c:if test="${sort.getSelected() }">
-          <c:set var="cssSelect" value="active"/>
-          <c:set var="sortVariable" value="${sort.geParamValue()}"/>
-        </c:if>
-         <li class="${cssSelect }"><a data-field="article-completion-date asc"
-        href="#" onclick="${element.getClass().getSimpleName()}_submit('${sort.getUrlParam()}','${sort.geParamValue()}')">${sort.getLabel()}</a></li>
-      </c:forEach>
-    </ul>
-  </div>
-  <input id="${element.getClass().getSimpleName()}_field" type="hidden"  value="${sortVariable }"/>
-  <script>
+ <div class="btn-group" id="sort-combo">
+  <button class="btn btn-xs btn-default dropdown-toggle"
+   data-toggle="dropdown">
+   Sort by <span class="caret"> <!-- Empty -->
+   </span>
+  </button>
+  <ul class="dropdown-menu pull-right">
+   <c:forEach items="${element.values }" var="sort">
+    <c:set var="cssSelect" value="" />
+    <c:if test="${sort.getSelected() }">
+     <c:set var="cssSelect" value="active" />
+     <c:set var="sortVariable" value="${sort.geParamValue()}" />
+    </c:if>
+    <li class="${cssSelect }"><a
+     data-field="article-completion-date asc" href="#"
+     onclick="${element.getClass().getSimpleName()}_submit('${sort.getUrlParam()}','${sort.geParamValue()}')">${sort.getLabel()}</a></li>
+   </c:forEach>
+  </ul>
+ </div>
+ <input id="${element.getClass().getSimpleName()}_field" type="hidden"
+  value="${sortVariable }" />
+ <script>
       function ${element.getClass().getSimpleName()}_submit(name,param){
     	  $("#${element.getClass().getSimpleName()}_field").val(param);
     	  $("#${element.getClass().getSimpleName()}_field").attr('name',name);

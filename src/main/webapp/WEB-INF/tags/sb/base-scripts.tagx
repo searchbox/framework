@@ -1,84 +1,66 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:spring="http://www.springframework.org/tags" version="2.0">
 
-	<jsp:output omit-xml-declaration="yes" />
+ <jsp:output omit-xml-declaration="yes" />
 
-	<c:set var="bootstrapVersion" value="3.1.1" />
-	<c:set var="jqueryVersion" value="2.0.3" />
-	<c:set var="jqueryUIVersion" value="1.10.4" />
+ <c:set var="bootstrapVersion" value="3.1.1" />
+ <c:set var="jqueryVersion" value="2.0.3" />
+ <c:set var="jqueryUIVersion" value="1.10.4" />
 
-	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
-		var="bootstrap_css_url" />
-	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap-theme.min.css"
-		var="bootstrap_theme_css_url" />
-	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
-		var="jquery_url" />
-	<spring:url
-		value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
-		var="jqueryui_js_url" />
-	<spring:url
-		value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
-		var="bootstrap_js_url" />
+ <spring:url
+  value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
+  var="bootstrap_css_url" />
+ <spring:url
+  value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap-theme.min.css"
+  var="bootstrap_theme_css_url" />
+ <spring:url
+  value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
+  var="jquery_url" />
+ <spring:url
+  value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
+  var="jqueryui_js_url" />
+ <spring:url
+  value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
+  var="bootstrap_js_url" />
 
-	<spring:url value="/assets/img/favicon.ico" var="favicon" />
-	<spring:url value="/assets/css/searchbox-general.css"
-		var="searchbox_css_url" />
-	<spring:url value="/assets/js/jquery.purl.js" var="jquery_purl" />
+ <spring:url value="/assets/img/favicon.ico" var="favicon" />
+ <spring:url value="/assets/css/searchbox-general.css"
+  var="searchbox_css_url" />
+ <spring:url value="/assets/js/jquery.purl.js" var="jquery_purl" />
 
-	<spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
-
-
-	<spring:url
-		value="https://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/themes/smoothness/jquery-ui.css"
-		var="jqueryui_css_url" />
-	<spring:url
-		value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css"
-		var="social_buttons_css" />
-	<spring:url value="/assets/css/oppfin.css" var="oppfin_css_url" />
+ <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
 
 
+ <spring:url
+  value="https://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/themes/smoothness/jquery-ui.css"
+  var="jqueryui_css_url" />
+ <spring:url
+  value="https://raw.github.com/noizwaves/bootstrap-social-buttons/v1.0.0/social-buttons-3.css"
+  var="social_buttons_css" />
 
-	<link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
-	<link rel="stylesheet" type="text/css" href="${bootstrap_theme_css_url}" />
-	<link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
-	<link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
-	<link rel="stylesheet" type="text/css" href="${jqueryui_css_url}" />
-	<link rel="stylesheet" type="text/css" href="${oppfin_css_url}" />
 
+ <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+ <link rel="stylesheet" type="text/css"
+  href="${bootstrap_theme_css_url}" />
+ <link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
+ <link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
+ <link rel="stylesheet" type="text/css" href="${jqueryui_css_url}" />
 
-	<link rel="SHORTCUT ICON" href="${favicon}" />
+ <link rel="SHORTCUT ICON" href="${favicon}" />
 
-	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) 
+ <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) 
 	<c:set var="userLocale">
 		<c:set var="plocale">${pageContext.response.locale}</c:set>
 		<c:out value="${fn:replace(plocale, '_', '-')}" default="en" />
 	</c:set>
 	-->
 
-	<script src="${jquery_url}" type="text/javascript">
-	<!-- required for FF3 and Opera -->
-		
-	</script>
-	<script src="${jqueryui_js_url}" type="text/javascript">
-	<!-- required for FF3 and Opera -->
-		
-	</script>
-	<script src="${bootstrap_js_url}" type="text/javascript">
-	<!-- /required for FF3 and Opera -->
-		
-	</script>
-	<script src="${jquery_purl}" type="text/javascript">
-	<!-- /required for FF3 and Opera -->
-		
-	</script>
-	<script src="${searchbox_js_url }" type="text/javascript">
-	<!-- /required for FF3 and Opera -->
-		
-	</script>
+ <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+ <script src="${jqueryui_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+ <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+ <script src="${jquery_purl}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+ <script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
 
 </jsp:root>

@@ -40,97 +40,93 @@ import com.searchbox.framework.service.SearchService;
 @RequestMapping("/{searchbox}")
 public class ASynchController {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ASynchController.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(ASynchController.class);
 
-	@Autowired
-	ApplicationConversionService applicationConversionService;
+    @Autowired
+    ApplicationConversionService applicationConversionService;
 
-	@Autowired
-	ConversionService conversionService;
-	
-	@Autowired
-	private SearchAdapterService adapterService;
+    @Autowired
+    ConversionService conversionService;
 
-	@Autowired
-	SearchService searchService;
+    @Autowired
+    private SearchAdapterService adapterService;
 
-	@Autowired
-	SearchEngineService searchEngineService;
+    @Autowired
+    SearchService searchService;
 
-	@Autowired
-	DirectoryService directoryService;
+    @Autowired
+    SearchEngineService searchEngineService;
 
-	@Autowired
-	SearchElementRepository elementRepository;
-	
-	@Autowired
-	FieldAttributeRepository fieldAttributeRepository;
+    @Autowired
+    DirectoryService directoryService;
 
-	@Autowired
-	protected PresetRepository presetRepository;
+    @Autowired
+    SearchElementRepository elementRepository;
 
-	@Autowired
-	protected SearchEngineRepository searchEngineRepository;
+    @Autowired
+    FieldAttributeRepository fieldAttributeRepository;
 
-	public ASynchController() {
-	}
+    @Autowired
+    protected PresetRepository presetRepository;
 
+    @Autowired
+    protected SearchEngineRepository searchEngineRepository;
 
-	@RequestMapping(value={"/asynch/{preset}/{id}","/asynch/{preset}/{id}/"})
-	@ResponseBody
-	public Map<String, Object> getDefaultPreset(@PathVariable Searchbox searchbox,
-			@PathVariable Long id,
-			@PathVariable PresetDefinition preset,
-			HttpServletRequest request, ModelAndView model,
-			RedirectAttributes redirectAttributes) {
-		
-		
-		// Fetch all search Conditions within HTTP params
-		Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
-		for (String param : applicationConversionService
-				.getSearchConditionParams()) {
-			if (request.getParameterValues(param) != null) {
-				for (String value : request.getParameterValues(param)) {
-					if (value != null && !value.isEmpty()) {
-						try {
-							AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
-									.convert(
-											value,
-											applicationConversionService
-													.getSearchConditionClass(param));
-							conditions.add(cond);
-						} catch (Exception e) {
-							LOGGER.error("Could not convert " + value, e);
-						}
-					}
-				}
-			}
-		}
-		
-		LOGGER.info("Assynch conditions: " + conditions);
-		
-		SearchElementDefinition elementDefinition = elementRepository.findOne(id);
-		SearchElement element = elementDefinition.getInstance();
-		
+    public ASynchController() {
+    }
 
+    @RequestMapping(value = { "/asynch/{preset}/{id}", "/asynch/{preset}/{id}/" })
+    @ResponseBody
+    public Map<String, Object> getDefaultPreset(
+            @PathVariable Searchbox searchbox, @PathVariable Long id,
+            @PathVariable PresetDefinition preset, HttpServletRequest request,
+            ModelAndView model, RedirectAttributes redirectAttributes) {
 
-		Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-		for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
-			fieldAttributes.add(def.getInstance());
-		}
+        // Fetch all search Conditions within HTTP params
+        Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
+        for (String param : applicationConversionService
+                .getSearchConditionParams()) {
+            if (request.getParameterValues(param) != null) {
+                for (String value : request.getParameterValues(param)) {
+                    if (value != null && !value.isEmpty()) {
+                        try {
+                            AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
+                                    .convert(
+                                            value,
+                                            applicationConversionService
+                                                    .getSearchConditionClass(param));
+                            conditions.add(cond);
+                        } catch (Exception e) {
+                            LOGGER.error("Could not convert " + value, e);
+                        }
+                    }
+                }
+            }
+        }
 
-		SearchEngine<?, ?> searchEngine =
-				preset.getCollection().getSearchEngine().getInstance();
-		searchEngine.setCollection(preset.getCollection().getInstance());
-		
-		Map<String, Object> results = new HashMap<String, Object>();
-		
-		adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null,
-				searchEngine, searchEngine.newQuery(), results,
-				fieldAttributes, element, conditions);
-		
-		return results;
-	}
+        LOGGER.info("Assynch conditions: " + conditions);
+
+        SearchElementDefinition elementDefinition = elementRepository
+                .findOne(id);
+        SearchElement element = elementDefinition.getInstance();
+
+        Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
+        for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
+            fieldAttributes.add(def.getInstance());
+        }
+
+        SearchEngine<?, ?> searchEngine = preset.getCollection()
+                .getSearchEngine().getInstance();
+        searchEngine.setCollection(preset.getCollection().getInstance());
+
+        Map<String, Object> results = new HashMap<String, Object>();
+
+        adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine,
+                searchEngine.newQuery(), results, fieldAttributes, element,
+                conditions);
+
+        return results;
+    }
 
 }

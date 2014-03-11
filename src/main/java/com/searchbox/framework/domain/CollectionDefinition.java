@@ -40,150 +40,155 @@ import com.searchbox.core.dm.Field;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class CollectionDefinition extends UnknownClassDefinition implements
-		ElementFactory<Collection> {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionDefinition.class);
+        ElementFactory<Collection> {
 
-	@ManyToOne
-	private SearchEngineDefinition searchEngine;
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(CollectionDefinition.class);
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private Set<FieldDefinition> fields = new HashSet<FieldDefinition>();
-	
-	@OneToMany(mappedBy="collection")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private Set<PresetDefinition> presets = new HashSet<PresetDefinition>();
+    @ManyToOne
+    private SearchEngineDefinition searchEngine;
 
-	@Column(unique=true)
-	protected String name;
-	
-	protected String description;
-	
-	@Column(nullable=false)
-	protected String idFieldName;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<FieldDefinition> fields = new HashSet<FieldDefinition>();
 
-	protected Boolean autoStart = false;
+    @OneToMany(mappedBy = "collection")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<PresetDefinition> presets = new HashSet<PresetDefinition>();
 
-	public CollectionDefinition() {
-		super();
-	}
+    @Column(unique = true)
+    protected String name;
 
-	@SuppressWarnings("unchecked")
-	public CollectionDefinition(Class<?> clazz, String name) {
-		super(clazz);
-		this.name = name;
-		try {
-			Method method = clazz.getMethod("GET_FIELDS");
-			if (method != null) {
-				List<Field> fields = (List<Field>)method.invoke(null);
-				for(Field field:fields){
-					FieldDefinition fieldDef = new FieldDefinition(field.getClazz(), field.getKey());
-					if(!this.fields.contains(fieldDef)){
-						this.fields.add(fieldDef);
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.warn("Could not use GET_FIELD method on collection: " + name,e);
-		}
+    protected String description;
 
-	}
+    @Column(nullable = false)
+    protected String idFieldName;
 
-	public Set<PresetDefinition> getPresets() {
-		return presets;
-	}
+    protected Boolean autoStart = false;
 
-	public void setPresets(Set<PresetDefinition> presets) {
-		this.presets = presets;
-	}
+    public CollectionDefinition() {
+        super();
+    }
 
-	public SearchEngineDefinition getSearchEngine() {
-		return searchEngine;
-	}
+    @SuppressWarnings("unchecked")
+    public CollectionDefinition(Class<?> clazz, String name) {
+        super(clazz);
+        this.name = name;
+        try {
+            Method method = clazz.getMethod("GET_FIELDS");
+            if (method != null) {
+                List<Field> fields = (List<Field>) method.invoke(null);
+                for (Field field : fields) {
+                    FieldDefinition fieldDef = new FieldDefinition(
+                            field.getClazz(), field.getKey());
+                    if (!this.fields.contains(fieldDef)) {
+                        this.fields.add(fieldDef);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.warn(
+                    "Could not use GET_FIELD method on collection: " + name, e);
+        }
 
-	public void setSearchEngine(SearchEngineDefinition searchEngine) {
-		this.searchEngine = searchEngine;
-	}
+    }
 
-	public SearchEngineDefinition getSearchEngineDefinition() {
-		return searchEngine;
-	}
+    public Set<PresetDefinition> getPresets() {
+        return presets;
+    }
 
-	public void setSearchEngineDefinition(SearchEngineDefinition engine) {
-		this.searchEngine = engine;
-	}
+    public void setPresets(Set<PresetDefinition> presets) {
+        this.presets = presets;
+    }
 
-	public Set<FieldDefinition> getFields() {
-		return fields;
-	}
+    public SearchEngineDefinition getSearchEngine() {
+        return searchEngine;
+    }
 
-	public void setFields(Set<FieldDefinition> fieldDefinitions) {
-		this.fields = fieldDefinitions;
-	}
+    public void setSearchEngine(SearchEngineDefinition searchEngine) {
+        this.searchEngine = searchEngine;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public SearchEngineDefinition getSearchEngineDefinition() {
+        return searchEngine;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setSearchEngineDefinition(SearchEngineDefinition engine) {
+        this.searchEngine = engine;
+    }
 
-	public Boolean getAutoStart() {
-		return autoStart;
-	}
+    public Set<FieldDefinition> getFields() {
+        return fields;
+    }
 
-	public void setAutoStart(Boolean autoStart) {
-		this.autoStart = autoStart;
-	}
+    public void setFields(Set<FieldDefinition> fieldDefinitions) {
+        this.fields = fieldDefinitions;
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @return the idFieldName
-	 */
-	public String getIdFieldName() {
-		return idFieldName;
-	}
+    public Boolean getAutoStart() {
+        return autoStart;
+    }
 
-	/**
-	 * @param idFieldName the idFieldName to set
-	 */
-	public void setIdFieldName(String idFieldName) {
-		this.idFieldName = idFieldName;
-	}
+    public void setAutoStart(Boolean autoStart) {
+        this.autoStart = autoStart;
+    }
 
-	public FieldDefinition getFieldDefinition(String key) {
-		for (FieldDefinition def : this.fields) {
-			if (def.getKey().equals(key)) {
-				return def;
-			}
-		}
-		return null;
-	}
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public Collection getInstance() {
-		Collection collection = (Collection) super.toObject();
-		BeanUtils.copyProperties(this, collection);
-		for (FieldDefinition fieldDef : this.fields) {
-			collection.getFields().add(
-					new Field(fieldDef.getClazz(), fieldDef.getKey()));
-		}
-		collection.setSearchEngine(searchEngine.getInstance());
-		return collection;
-	}
+    /**
+     * @param description
+     *            the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the idFieldName
+     */
+    public String getIdFieldName() {
+        return idFieldName;
+    }
+
+    /**
+     * @param idFieldName
+     *            the idFieldName to set
+     */
+    public void setIdFieldName(String idFieldName) {
+        this.idFieldName = idFieldName;
+    }
+
+    public FieldDefinition getFieldDefinition(String key) {
+        for (FieldDefinition def : this.fields) {
+            if (def.getKey().equals(key)) {
+                return def;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Collection getInstance() {
+        Collection collection = (Collection) super.toObject();
+        BeanUtils.copyProperties(this, collection);
+        for (FieldDefinition fieldDef : this.fields) {
+            collection.getFields().add(
+                    new Field(fieldDef.getClazz(), fieldDef.getKey()));
+        }
+        collection.setSearchEngine(searchEngine.getInstance());
+        return collection;
+    }
 }

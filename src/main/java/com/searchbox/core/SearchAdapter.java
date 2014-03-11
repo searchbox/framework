@@ -24,12 +24,15 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Target({ ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
 @Scope("singleton")
 public @interface SearchAdapter {
-	Time execute() default Time.BEFORE;
-	public enum Time {BEFORE, PRE, POST, AFTER, ASYNCH}
+    Time execute() default Time.BEFORE;
+
+    public enum Time {
+        BEFORE, PRE, POST, AFTER, ASYNCH
+    }
 }

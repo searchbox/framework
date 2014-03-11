@@ -23,31 +23,31 @@ import com.searchbox.core.dm.Collection;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
-public interface SearchEngine<Q,R> {
-	
-	public String getName();
-	
-	public String getDescription();
+public interface SearchEngine<Q, R> {
 
-	public Class<Q> getQueryClass();
-	
-	public Class<R> getResponseClass();
-		
-	public Q newQuery();
-	
-	public R execute(Q query);
-	
-	public boolean indexFile(String collectionName, File file);
-	
-	public boolean indexMap(String collectionName, Map<String, Object> fields);
-		
-	public List<SearchElement> getSupportedElements();
+    String getName();
 
-	public Boolean supportsElement(SearchElement element);
-	
-	public Boolean supportsCondition(AbstractSearchCondition condition);
+    String getDescription();
 
-	public void init();
-	
-	public void setCollection(Collection collection);
+    Class<Q> getQueryClass();
+
+    Class<R> getResponseClass();
+
+    Q newQuery();
+
+    R execute(Q query);
+
+    boolean indexFile(String collectionName, File file);
+
+    boolean indexMap(String collectionName, Map<String, Object> fields);
+
+    List<SearchElement> getSupportedElements();
+
+    Boolean supportsElement(SearchElement element);
+
+    Boolean supportsCondition(AbstractSearchCondition condition);
+
+    void init();
+
+    void setCollection(Collection collection);
 }

@@ -1,36 +1,42 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:form="http://www.springframework.org/tags/form"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
-	<jsp:output omit-xml-declaration="yes" />
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+ <jsp:output omit-xml-declaration="yes" />
 
-    <spring:url var="asynchElementUrl"
-        value="/${searchbox.getSlug() }/asynch/${preset.getSlug() }/${element.definitionId}" />
-    
-  <div>
-	<div class="input-group input-group">
-		<input type="text" autocomplete="off" class="form-control search-query" 
-               id="edismax-query" placeholder="Query" name="${element.getUrlParam() }"
-			value="${element.query }" data-autocomplete-url="${asynchElementUrl}"/> <span class="input-group-btn">
-			<button type="submit" class="btn btn-black btn-search">
-				<span class="glyphicon glyphicon-search"><!-- search --></span>
-			</button>
-		</span>
-	</div>
-  
-  
-  
-    <c:choose>
-      <c:when test="${element.shouldRetry() }">
-        <div class="alert alert-info" id="didyoumean">Showing results for: <strong>${element.collationQuery }</strong></div>
-      </c:when>
-    </c:choose>
-  
-    <script type="text/javascript">
+ <spring:url var="asynchElementUrl"
+  value="/${searchbox.getSlug() }/asynch/${preset.getSlug() }/${element.definitionId}" />
+
+ <div>
+  <div class="input-group input-group">
+   <input type="text" autocomplete="off"
+    class="form-control search-query" id="edismax-query"
+    placeholder="Query" name="${element.getUrlParam() }"
+    value="${element.query }"
+    data-autocomplete-url="${asynchElementUrl}" /> <span
+    class="input-group-btn">
+    <button type="submit" class="btn btn-black btn-search">
+     <span class="glyphicon glyphicon-search"> <!-- search -->
+     </span>
+    </button>
+   </span>
+  </div>
+
+
+
+  <c:choose>
+   <c:when test="${element.shouldRetry() }">
+    <div class="alert alert-info" id="didyoumean">
+     Showing results for: <strong>${element.collationQuery }</strong>
+    </div>
+   </c:when>
+  </c:choose>
+
+  <script type="text/javascript">
       $(document).ready(function() {
         $("#results").prepend($("#didyoumean"));
       });
     </script>
-	</div>  
+ </div>
 </jsp:root>

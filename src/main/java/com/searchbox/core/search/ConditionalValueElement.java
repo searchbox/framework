@@ -18,28 +18,29 @@ package com.searchbox.core.search;
 import com.searchbox.core.SearchCondition;
 
 public abstract class ConditionalValueElement<T extends AbstractSearchCondition>
-		extends ValueElement implements GenerateSearchCondition<T> {
+        extends ValueElement implements GenerateSearchCondition<T> {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ConditionalValueElement(String label) {
-		super(label);
-	}
+    public ConditionalValueElement(String label) {
+        super(label);
+    }
 
-	@Override
-	public abstract T getSearchCondition();
+    @Override
+    public abstract T getSearchCondition();
 
-	public abstract Class<?> getConditionClass();
-	
-	public String getUrlParam() {
-		Class<?> clazz = this.getConditionClass();
-		if(clazz.isAnnotationPresent(SearchCondition.class)){
-			return clazz.getAnnotation(SearchCondition.class).urlParam();
-		} else {
-			return "missingAnnotationOnSearchConditionClass";
-		}
-	}
+    @Override
+    public abstract Class<?> getConditionClass();
+
+    public String getUrlParam() {
+        Class<?> clazz = this.getConditionClass();
+        if (clazz.isAnnotationPresent(SearchCondition.class)) {
+            return clazz.getAnnotation(SearchCondition.class).urlParam();
+        } else {
+            return "missingAnnotationOnSearchConditionClass";
+        }
+    }
 }

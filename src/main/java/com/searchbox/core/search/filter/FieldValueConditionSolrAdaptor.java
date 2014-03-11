@@ -16,40 +16,42 @@ import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class FieldValueConditionSolrAdaptor {
-	
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(FieldValueConditionSolrAdaptor.class);
-	
-	@SearchAdapterMethod(execute=Time.PRE)
-	public void createFilterQueries(SolrSearchEngine engine, FieldAttribute attribute,
-			FieldValueCondition condition, SolrQuery query) {
-		
-		if(!attribute.getField().getKey().equals(condition.getFieldName())){
-			return;
-		}
-		
-		String conditionValue = ClientUtils.escapeQueryChars(condition.getValue());
-		String facetKey = engine.getKeyForField(attribute);
 
-		boolean isnew = true;
-		List<String> fqs = new ArrayList<String>();
-		if (query.getFilterQueries() != null) {
-			for (String fq : query.getFilterQueries()) {
-				if (fq.contains(facetKey)) {
-					isnew = false;
-					fq = fq + " OR " + facetKey + ":" + conditionValue;
-				}
-				fqs.add(fq);
-			}
-		}
-		if (isnew) {
-			if (condition.getTaged()) {
-				fqs.add("{!tag=" + facetKey + "}"
-						+ facetKey + ":" + conditionValue);
-			} else {
-				fqs.add(facetKey + ":" + conditionValue);
-			}
-		}
-		query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
-	}
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(FieldValueConditionSolrAdaptor.class);
+
+    @SearchAdapterMethod(execute = Time.PRE)
+    public void createFilterQueries(SolrSearchEngine engine,
+            FieldAttribute attribute, FieldValueCondition condition,
+            SolrQuery query) {
+
+        if (!attribute.getField().getKey().equals(condition.getFieldName())) {
+            return;
+        }
+
+        String conditionValue = ClientUtils.escapeQueryChars(condition
+                .getValue());
+        String facetKey = engine.getKeyForField(attribute);
+
+        boolean isnew = true;
+        List<String> fqs = new ArrayList<String>();
+        if (query.getFilterQueries() != null) {
+            for (String fq : query.getFilterQueries()) {
+                if (fq.contains(facetKey)) {
+                    isnew = false;
+                    fq = fq + " OR " + facetKey + ":" + conditionValue;
+                }
+                fqs.add(fq);
+            }
+        }
+        if (isnew) {
+            if (condition.getTaged()) {
+                fqs.add("{!tag=" + facetKey + "}" + facetKey + ":"
+                        + conditionValue);
+            } else {
+                fqs.add(facetKey + ":" + conditionValue);
+            }
+        }
+        query.setFilterQueries(fqs.toArray(new String[fqs.size()]));
+    }
 }

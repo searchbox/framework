@@ -27,66 +27,66 @@ import com.searchbox.core.search.SearchElement;
 @SearchComponent
 public class BasicSearchStats extends SearchElement {
 
-	private Long hitCount = 0l;
-	private Long searchTime = 0l;
-	
-	@SearchAttribute
-	private Boolean viewTime = true;
-	
-	@SearchAttribute
-	private Boolean viewCount = true;
-	
-	public Boolean getViewTime() {
-		return viewTime;
-	}
+    private Long hitCount = 0l;
+    private Long searchTime = 0l;
 
-	public void setViewTime(Boolean viewTime) {
-		this.viewTime = viewTime;
-	}
+    @SearchAttribute
+    private Boolean viewTime = true;
 
-	public Boolean getViewCount() {
-		return viewCount;
-	}
+    @SearchAttribute
+    private Boolean viewCount = true;
 
-	public void setViewCount(Boolean viewCount) {
-		this.viewCount = viewCount;
-	}
+    public Boolean getViewTime() {
+        return viewTime;
+    }
 
-	public long getHitCount() {
-		return hitCount;
-	}
+    public void setViewTime(Boolean viewTime) {
+        this.viewTime = viewTime;
+    }
 
-	public void setHitCount(long hitCount) {
-		this.hitCount = hitCount;
-	}
+    public Boolean getViewCount() {
+        return viewCount;
+    }
 
-	public long getSearchTime() {
-		return searchTime;
-	}
+    public void setViewCount(Boolean viewCount) {
+        this.viewCount = viewCount;
+    }
 
-	public void setSearchTime(long searchTime) {
-		this.searchTime = searchTime;
-	}
-	
-	public BasicSearchStats(){
-		super(null,SearchElement.Type.STAT);
-	}
+    public long getHitCount() {
+        return hitCount;
+    }
 
-	public BasicSearchStats(String label) {
-		super(label,SearchElement.Type.STAT);
-	}
+    public void setHitCount(long hitCount) {
+        this.hitCount = hitCount;
+    }
+
+    public long getSearchTime() {
+        return searchTime;
+    }
+
+    public void setSearchTime(long searchTime) {
+        this.searchTime = searchTime;
+    }
+
+    public BasicSearchStats() {
+        super(null, SearchElement.Type.STAT);
+    }
+
+    public BasicSearchStats(String label) {
+        super(label, SearchElement.Type.STAT);
+    }
 }
 
 @SearchAdapter
 class BasicSearchStatsAdapter {
 
-	@SearchAdapterMethod(execute=Time.POST)
-	public BasicSearchStats getBasicStats(BasicSearchStats searchElement,
-			QueryResponse response) {
-		if(response.getResults() != null){
-			searchElement.setHitCount(response.getResults().getNumFound());
-		}
-		searchElement.setSearchTime(response.getElapsedTime());
-		return searchElement;
-	}
+    @SearchAdapterMethod(execute = Time.POST)
+    public BasicSearchStats getBasicStats(BasicSearchStats searchElement,
+            QueryResponse response) {
+        if (response.getResults() != null) {
+            searchElement.setHitCount(response.getResults().getNumFound());
+        }
+        searchElement.setSearchTime(response.getElapsedTime());
+        return searchElement;
+    }
 }

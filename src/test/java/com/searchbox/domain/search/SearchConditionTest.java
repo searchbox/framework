@@ -21,31 +21,34 @@ import org.junit.Test;
 import com.searchbox.core.search.filter.FieldValueCondition;
 import com.searchbox.core.search.query.EdismaxQuery;
 
-
-
-
 public class SearchConditionTest {
-	
-	
-	@Test
-	public void testConditionEquality(){
-		
-		FieldValueCondition c1 = new FieldValueCondition("1","1");
-		FieldValueCondition c2 = new FieldValueCondition("1","1");
-		FieldValueCondition c3 = new FieldValueCondition("1","3");
-		
-		EdismaxQuery.Condition qc1 = new EdismaxQuery("Hello world").getSearchCondition();
-		EdismaxQuery.Condition qc2 = new EdismaxQuery("Hello world").getSearchCondition();
-		EdismaxQuery.Condition qc3 = new EdismaxQuery("Hello").getSearchCondition();
 
-		Assert.assertTrue("FieldValueCondition equals itself", c1.equals(c1));
-		Assert.assertTrue("FieldValueCondition same values", c1.equals(c2));
-		Assert.assertFalse("FieldValueCondition different values", c3.equals(c1));
-		Assert.assertFalse("FieldValueCondition different values reversed", c1.equals(c3));
-		Assert.assertFalse("FieldValueCondition vs  SimpleQuery.Condition", c1.equals(qc1));
-		Assert.assertTrue("SimpleQuery.Condition equals itsef", qc1.equals(qc1));
-		Assert.assertTrue("SimpleQuery.Condition same values", qc1.equals(qc2));
-		Assert.assertFalse("SimpleQuery.Condition different values", qc1.equals(qc3));
-	}
+    @Test
+    public void testConditionEquality() {
+
+        FieldValueCondition c1 = new FieldValueCondition("1", "1");
+        FieldValueCondition c2 = new FieldValueCondition("1", "1");
+        FieldValueCondition c3 = new FieldValueCondition("1", "3");
+
+        EdismaxQuery.Condition qc1 = new EdismaxQuery("Hello world")
+                .getSearchCondition();
+        EdismaxQuery.Condition qc2 = new EdismaxQuery("Hello world")
+                .getSearchCondition();
+        EdismaxQuery.Condition qc3 = new EdismaxQuery("Hello")
+                .getSearchCondition();
+
+        Assert.assertTrue("FieldValueCondition equals itself", c1.equals(c1));
+        Assert.assertTrue("FieldValueCondition same values", c1.equals(c2));
+        Assert.assertFalse("FieldValueCondition different values",
+                c3.equals(c1));
+        Assert.assertFalse("FieldValueCondition different values reversed",
+                c1.equals(c3));
+        Assert.assertFalse("FieldValueCondition vs  SimpleQuery.Condition",
+                c1.equals(qc1));
+        Assert.assertTrue("SimpleQuery.Condition equals itsef", qc1.equals(qc1));
+        Assert.assertTrue("SimpleQuery.Condition same values", qc1.equals(qc2));
+        Assert.assertFalse("SimpleQuery.Condition different values",
+                qc1.equals(qc3));
+    }
 
 }
