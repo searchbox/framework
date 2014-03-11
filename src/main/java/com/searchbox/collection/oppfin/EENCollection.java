@@ -106,6 +106,13 @@ public class EENCollection extends AbstractBatchCollection implements
 		fields.add(new Field(String.class, "docType"));
 		fields.add(new Field(String.class, "programme"));
 		
+		fields.add(new Field(String.class, "eenContactEmail"));
+		fields.add(new Field(String.class, "eenContactFullname"));
+		fields.add(new Field(String.class, "eenContactOrganization"));
+		fields.add(new Field(String.class, "eenContactOrganizationcountry"));
+		fields.add(new Field(String.class, "eenContactPhone"));
+		
+		
 		fields.add(new Field(Date.class, "eenDatumSubmit"));
 		fields.add(new Field(String.class, "eenContactOrganization"));
 		fields.add(new Field(String.class, "eenPartnerships"));
@@ -152,6 +159,7 @@ public class EENCollection extends AbstractBatchCollection implements
 			ProfileQueryRequest request;
 			List<Profile> profiles;
 			Date date = new Date(System.currentTimeMillis());
+			Date start = new Date(System.currentTimeMillis());
 			DateFormat dfmt = new DateFormatManager("YYYYMMdd")
 					.getDateFormatInstance();
 
@@ -169,6 +177,8 @@ public class EENCollection extends AbstractBatchCollection implements
 
 				// Start with an empty list of profiles
 				profiles = new ArrayList<Profile>();
+				
+				date = start;
 			}
 
 			// IPODServiceSOAP eenService;
@@ -181,10 +191,12 @@ public class EENCollection extends AbstractBatchCollection implements
 			int i = 0;
 
 			public Profile read() throws RemoteException {
-				if ((i++) > 10000)
+				if(start.after(DateUtils.addYears(date, 3))){
+					return null;
+				}
+				if ((i++) > 200)
 					return null;
 				if (profiles.isEmpty()) {
-					Date start = date;
 					Date end = DateUtils.addDays(start, 5);
 					EENCollection.LOGGER.info("Fetching EEN from " + dfmt.format(start)
 							+ " to " + dfmt.format(end));
@@ -199,7 +211,7 @@ public class EENCollection extends AbstractBatchCollection implements
 					} catch (Exception e) {
 						LOGGER.error("Could not load profiles: " + e);
 					}
-					date = end;
+					start = end;
 				}
 				return profiles.remove(0);
 			}
@@ -212,8 +224,9 @@ public class EENCollection extends AbstractBatchCollection implements
 			IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException, IntrospectionException {
 //		LOGGER.info("Checking object: ([] -> " + target.getClass().isArray()
-//				+ ") primitive: " + target.getClass().isPrimitive()
-//				+ " of type: " + target.getClass().getSimpleName());
+//				+ ") of type: " + target.getClass().getSimpleName()
+//				+ " path: " + path 
+//				+ " value: " + target.toString());
 		if (Date.class.isAssignableFrom(target.getClass())) {
 			fields.put(path, target);
 		} else if (Calendar.class.isAssignableFrom(target.getClass())) {
@@ -276,11 +289,12 @@ public class EENCollection extends AbstractBatchCollection implements
 				try {
 					
 					getFieldValues(item, "een", doc);
-					for (Entry<String, List<Object>> field : doc.entrySet()) {
-						for (Object value : field.getValue()) {
-							LOGGER.info(field.getKey() + " -- " + value);
-						}
-					}
+//					for (Entry<String, List<Object>> field : doc.entrySet()) {
+//						for (Object value : field.getValue()) {
+//							LOGGER.info(field.getKey() + " -- " + value);
+//						}
+//					}
+					
 					doc.put("docSource", "EEN");
 					doc.put("docType", "collaboration");
 					doc.put("programme", "EEN");

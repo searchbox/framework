@@ -120,7 +120,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		try {
 //			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
 //			engine.setAttributeValue("zkHost", "localhost:9983");
-			
+	
 			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
 			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
 			engine = engineRepository.save(engine);
@@ -209,9 +209,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		
 		LOGGER.info("++ Creating Topic preset");
 		PresetDefinition presetFunding = new PresetDefinition(collection);
-		presetFunding.setLabel("R&D Funding");
+		presetFunding.setLabel("R&D Fundings");
 		presetFunding.setDescription("H2020 open calls");
-		presetFunding.setSlug("funding");
+		presetFunding.setSlug("fund");
 		
 		FieldAttributeDefinition topicIdentifier = new FieldAttributeDefinition(collection.getFieldDefinition("topicIdentifier"));
 		topicIdentifier.setAttributeValue("searchable",true);
@@ -354,10 +354,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		presetCoooperation.setCollection(eenCollection);
 		searchbox.addPresetDefinition(presetCoooperation);	
 
-//		FieldAttributeDefinition eenSubmitField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumSubmit"));
-//		eenSubmitField.setAttributeValue("label","Published");
-//		eenSubmitField.setAttributeValue("sortable",true);
-//		presetCoooperation.addFieldAttribute(eenSubmitField);
+		FieldAttributeDefinition eenSubmitField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumSubmit"));
+		eenSubmitField.setAttributeValue("label","Published");
+		eenSubmitField.setAttributeValue("sortable",true);
+		presetCoooperation.addFieldAttribute(eenSubmitField);
 		
 		FieldAttributeDefinition eenUpdateField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumUpdate"));
 		eenUpdateField.setAttributeValue("label","update");
@@ -418,11 +418,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 										+ "<sbx:snippet hit=\"${hit}\" field=\"eenContentSummary\"/>"
 										+ "<sbx:tagAttribute limit=\"1\" label=\"Source\" values=\"${hit.fieldValues['docSource']}\" cssClass=\"${hit.fieldValues['docSource']}\" />" 
 										+ "<sbx:tagAttribute limit=\"1\" label=\"Type\" values=\"${hit.fieldValues['eenReferenceType']}\"/>"
-										+ "<sbx:tagAttribute limit=\"1\" label=\"Published\" values=\"${hit.fieldValues['eenDatumSubmit']}\"/>" 
-										+ "<sbx:tagAttribute limit=\"1\" label=\"Partner Country\" values=\"${hit.fieldValues['eenCompanyCountryLabel']}\"/>" 
-										
+							 			+ "<sbx:tagAttribute limit=\"1\" datePattern=\"dd.MM.yyyy\" label=\"Published\" values=\"${hit.fieldValues['eenDatumUpdate']}\"/>"
 
-				);
+//										+ "<c:choose>"
+//										+ " <c:when test=\"${not empty hit.fieldValues['eenDatumUpdate']}\">"
+//							 			+ "<sbx:tagAttribute limit=\"1\" datePattern=\"dd.MM.yyyy\" label=\"Published\" values=\"${hit.fieldValues['eenDatumUpdate']}\"/>"
+//										+ " </c:when>"
+//										+ " <c:otherwise>"
+//										+ " 	<sbx:tagAttribute limit=\"1\" datePattern=\"dd.MM.yyyy\" label=\"Published\" values=\"${hit.fieldValues['eenDatumSubmit']}\"/>"
+//										+ " </c:otherwise>"
+//										+ "</c:choose>"
+										+ "<sbx:tagAttribute limit=\"1\" label=\"Partner Country\" values=\"${hit.fieldValues['eenCompanyCountryLabel']}\"/>"
+								);
 		presetCoooperation.addSearchElement(eenTemplatedHitList);
 
 		
@@ -430,15 +437,38 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		eenViewHit.setType(SearchElement.Type.INSPECT);
 		eenViewHit.setAttributeValue("titleField", "eenContentTitle");
 		eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
-		eenViewHit.setAttributeValue("template", "Here we should display Title "+
-					"- FullDescription (HTML si possible)"+
-					"- Left panel"+
-					"	- Topic Identifier: topicIdentifier"+
-					"	- Call Identifier: callIdentifier"+
-					"	- Call Deadline: callDeadline (MMM DD, YYYY)"+
-					"	- Further information:"+
-					"		- Call (link CallIdentifier)"+
-					"		- Topic (link topicIdentifier)");
+		eenViewHit.setAttributeValue("template", ""
+				
+				//LEFT COLOUMN
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Cooperation Identifier:\" values=\"${hit.fieldValues['eenReferenceExternal']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Opportunity Type:\" values=\"${hit.fieldValues['programme']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"EEN Type:\" values=\"${hit.fieldValues['eenReferenceType']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Contact:\" values=\"${hit.fieldValues['eenContactOrganization']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Contact:\" values=\"${hit.fieldValues['eenContactOrganizationcountry']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Contact:\" values=\"${hit.fieldValues['eenContactFullname']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Contact:\" values=\"${hit.fieldValues['eenContactPhone']}\"/>" 
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Contact:\" values=\"${hit.fieldValues['eenContactEmail']}\"/>"
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Published:\" values=\"${hit.fieldValues['eenDatumSubmit']}\"/>"
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Updated:\" values=\"${hit.fieldValues['eenDatumUpdate']}\"/>"
+				+ "<sbx:tagAttribute limit=\"1\" label=\"Deadline:\" values=\"${hit.fieldValues['eenDatumDeadline']}\"/>"
+				
+				//RIGHT COLUMN
+				+"<hr/>"
+				+"<sbx:out value=\"${hit.fieldValues['eenContentTitle']}\"/>"
+				+"<hr/>"				
+				+"<sbx:title hit=\"${hit}\"/>"
+				+"<hr/>"
+				+"<sbx:out value=\"${hit.fieldValues['eenContentSummary']}\"/>"
+				+"<hr/>"
+				+"<sbx:out value=\"${hit.fieldValues['eenContentDescription']}\"/>"
+				+"<hr/>"
+				+"<h1>Related R&amp;D Fundings</h1>"
+				+"<hr/>"
+				+"<h1>Related Cooperations</h1>"
+				
+				
+				
+				);
 		presetCoooperation.addSearchElement(eenViewHit); 
 		
 		/** Create & add a basicSearchStat SearchComponent to the preset;*/
@@ -448,6 +478,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		SearchElementDefinition eenPagination = new SearchElementDefinition(BasicPagination.class);
 		presetCoooperation.addSearchElement(eenPagination);
 		
+		/** Create & add a FieldSort SearchComponent to the preset; */
+		SearchElementDefinition eenFieldSort = new SearchElementDefinition(FieldSort.class);
+		SortedSet<FieldSort.Value> eenSortFields = new TreeSet<FieldSort.Value>();
+		eenSortFields.add(FieldSort.getRelevancySort());
+		eenSortFields.add(new FieldSort.Value("Newest first", "eenDatumUpdate", Sort.DESC));
+		eenFieldSort.setAttributeValue("values", eenSortFields);
+		presetCoooperation.addSearchElement(eenFieldSort);
 		
 		
 		/** Create & add a facet to the presetTopic. */
