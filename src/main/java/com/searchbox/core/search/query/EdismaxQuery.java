@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.searchbox.core.search.query;
 
+import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
@@ -27,9 +28,14 @@ import com.searchbox.core.search.SearchElement;
 public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition>
 	implements RetryElement {
 	
+	public enum Operator { OR, AND}
+	
 	private String query;
 	private String collationQuery;
 	private Long hitCount = 0l;
+	
+	@SearchAttribute
+	private Operator operator = Operator.AND;
 
 	public EdismaxQuery() {
 		super("query component",SearchElement.Type.QUERY);
@@ -75,6 +81,20 @@ public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Conditio
 	 */
 	public void setCollationQuery(String collationQuery) {
 		this.collationQuery = collationQuery;
+	}
+
+	/**
+	 * @return the operator
+	 */
+	public Operator getOperator() {
+		return operator;
+	}
+
+	/**
+	 * @param operator the operator to set
+	 */
+	public void setOperator(Operator operator) {
+		this.operator = operator;
 	}
 
 	/**
