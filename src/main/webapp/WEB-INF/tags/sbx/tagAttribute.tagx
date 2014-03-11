@@ -19,7 +19,9 @@
   <jsp:directive.attribute name="fieldname" type="String"
     required="false" rtexprvalue="true"
     description="name of the field to base the filter" />
-
+  <jsp:directive.attribute name="datePattern" type="String"
+    required="false" rtexprvalue="true"
+    description="pattern for dateField" />
 
   <c:set var="addedCSSClasses"><sbx:out value="${cssClass }"/></c:set>
   <c:forEach items="${values}" var="value"
@@ -33,7 +35,7 @@
             <span class="field-label label-${label}">${label}: </span>
           </c:if>
           <span class="field-value value-${label} value_attributes full"><sbx:out
-              value="${value}" /></span>
+              value="${value}" datePattern="${datePattern }"/></span>
         </div>
       </c:when>
       <c:otherwise>
@@ -42,7 +44,7 @@
             <span class="field-label label-${label} ">${label}: </span>
           </c:if>
           <span class="field-value value-${label} value_attributes full"><sbx:out
-              value="${value}" /></span>
+              value="${value}" datePattern="${datePattern }"/></span>
         </div>
       </c:otherwise>
     </c:choose>
