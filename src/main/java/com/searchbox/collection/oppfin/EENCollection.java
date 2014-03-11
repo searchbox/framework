@@ -102,6 +102,10 @@ public class EENCollection extends AbstractBatchCollection implements
 	public static List<Field> GET_FIELDS() {
 		List<Field> fields = new ArrayList<Field>();
 		fields.add(new Field(String.class, "id"));
+		fields.add(new Field(String.class, "docSource"));
+		fields.add(new Field(String.class, "docType"));
+		fields.add(new Field(String.class, "programme"));
+		
 		fields.add(new Field(Date.class, "eenDatumSubmit"));
 		fields.add(new Field(String.class, "eenContactOrganization"));
 		fields.add(new Field(String.class, "eenPartnerships"));
@@ -120,6 +124,8 @@ public class EENCollection extends AbstractBatchCollection implements
 		fields.add(new Field(String.class, "eenCompanyTransnational"));
 		fields.add(new Field(String.class, "eenCompanyCountryKey"));
 		fields.add(new Field(String.class, "eenContentDescription"));
+		fields.add(new Field(String.class, "eenKeywordTechnologiesLabel"));
+		
 		fields.add(new Field(Date.class, "eenDatumDeadline"));
 		fields.add(new Field(Date.class, "eenDatumUpdate"));
 		fields.add(new Field(String.class, "eenCompanyKind"));
@@ -158,6 +164,8 @@ public class EENCollection extends AbstractBatchCollection implements
 				request = new ProfileQueryRequest();
 				request.setUsername(EEN_SERVICE_USER_DEFAULT);
 				request.setPassword(EEN_SERVICE_PWD_DEFAULT);
+//				String[] profileTypes = {"TO"};
+//				request.setProfileTypes(profileTypes);
 
 				// Start with an empty list of profiles
 				profiles = new ArrayList<Profile>();
@@ -173,29 +181,25 @@ public class EENCollection extends AbstractBatchCollection implements
 			int i = 0;
 
 			public Profile read() throws RemoteException {
-				if ((i++) > 10)
+				if ((i++) > 10000)
 					return null;
 				if (profiles.isEmpty()) {
 					Date start = date;
-					Date end = DateUtils.addDays(start, 1);
-					date = end;
+					Date end = DateUtils.addDays(start, 5);
 					EENCollection.LOGGER.info("Fetching EEN from " + dfmt.format(start)
 							+ " to " + dfmt.format(end));
 					// time to get some new profiles...
 					request.setDeadlineDateAfter(dfmt.format(start));
 					request.setDeadlineDateBefore(dfmt.format(end));
-					Profile[] newProfiles = eenService.getProfiles(request);
-					EENCollection.LOGGER.info("adding: " + newProfiles.length
-							+ " new profiles");
-					profiles.addAll(Arrays.asList(newProfiles));
-					// Profile p = new Profile();
-					// p.setKeyword(new ProfileKeyword());
-					// String[] tr = {"SUPER","NEXT","ANOTHER"};
-					// p.setPartnerships(tr);
-					// ProfileCompany pc = new ProfileCompany();
-					// pc.setExperience("lots of experience!!!");
-					// p.setCompany(pc);
-					// profiles.add(p);
+					try {
+						Profile[] newProfiles = eenService.getProfiles(request);
+						EENCollection.LOGGER.info("adding: " + newProfiles.length
+								+ " new profiles");
+						profiles.addAll(Arrays.asList(newProfiles));
+					} catch (Exception e) {
+						LOGGER.error("Could not load profiles: " + e);
+					}
+					date = end;
 				}
 				return profiles.remove(0);
 			}
@@ -277,6 +281,9 @@ public class EENCollection extends AbstractBatchCollection implements
 							LOGGER.info(field.getKey() + " -- " + value);
 						}
 					}
+					doc.put("docSource", "EEN");
+					doc.put("docType", "collaboration");
+					doc.put("programme", "EEN");
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -43,7 +43,7 @@
                   value="/${searchbox.getSlug()}/search/"
                   var="home_url" />
                 <a class="pull-left" href="${home_url}"> <spring:url
-                    value="/img/searchbox-logo-big.png"
+                    value="/img/oppfin-logo.png"
                     var="searchbox_logo" /> <img
                   src='${searchbox_logo}' class="media-object"
                   alt="Searchbox" id="logo-image"/>

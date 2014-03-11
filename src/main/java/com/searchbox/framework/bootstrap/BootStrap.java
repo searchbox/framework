@@ -118,11 +118,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		LOGGER.info("++ Creating Embedded Solr Engine");
 		SearchEngineDefinition engine = null;
 		try {
-			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
-			engine.setAttributeValue("zkHost", "localhost:9983");
+//			engine = new SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+//			engine.setAttributeValue("zkHost", "localhost:9983");
 			
-//			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-//			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
+			engine = new SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
+			engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
 			engine = engineRepository.save(engine);
 		} catch (Exception e){
 			LOGGER.error("Could not set definition for SolrEmbededServer",e);
@@ -196,6 +196,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 				doc.addField("callStatus", (String)topicObject.get("callStatus"));
 		 */
 		
+		List<String> lang = new ArrayList<String>();
+		lang.add("en");
+		
 		/** The base collection for searchbox */
 		LOGGER.info("++ Creating oppfin Topic Collection");
 		CollectionDefinition collection = new CollectionDefinition(TopicCollection.class,"H2020Topics");
@@ -205,13 +208,25 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		collection = collectionRepository.save(collection);
 		
 		LOGGER.info("++ Creating Topic preset");
-		PresetDefinition presetTopic = new PresetDefinition(collection);
-		presetTopic.setLabel("Topic");
-		presetTopic.setDescription("H2020 open calls");
-		presetTopic.setSlug("topic");
+		PresetDefinition presetFunding = new PresetDefinition(collection);
+		presetFunding.setLabel("R&D Funding");
+		presetFunding.setDescription("H2020 open calls");
+		presetFunding.setSlug("funding");
 		
-		List<String> lang = new ArrayList<String>();
-		lang.add("en");
+		FieldAttributeDefinition topicIdentifier = new FieldAttributeDefinition(collection.getFieldDefinition("topicIdentifier"));
+		topicIdentifier.setAttributeValue("searchable",true);
+		topicIdentifier.setAttributeValue("spelling", true);
+		topicIdentifier.setAttributeValue("suggestion", true);
+		topicIdentifier.setAttributeValue("label", "Topic ID");
+		presetFunding.addFieldAttribute(topicIdentifier);
+		
+		FieldAttributeDefinition callIdentifier = new FieldAttributeDefinition(collection.getFieldDefinition("callIdentifier"));
+		callIdentifier.setAttributeValue("searchable",true);
+		callIdentifier.setAttributeValue("spelling", true);
+		callIdentifier.setAttributeValue("suggestion", true);
+		callIdentifier.setAttributeValue("label", "Call ID");
+		presetFunding.addFieldAttribute(callIdentifier);
+		
 		
 		FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(collection.getFieldDefinition("title"));
 		fieldAttr.setAttributeValue("searchable",true);
@@ -219,7 +234,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr.setAttributeValue("spelling", true);
 		fieldAttr.setAttributeValue("label", "title");
 		fieldAttr.setAttributeValue("lang", lang);
-		presetTopic.addFieldAttribute(fieldAttr);
+		presetFunding.addFieldAttribute(fieldAttr);
 		
 		FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(collection.getFieldDefinition("descriptionRaw"));
 		fieldAttr2.setAttributeValue("searchable",true);
@@ -227,21 +242,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		fieldAttr2.setAttributeValue("spelling", true);
 		fieldAttr2.setAttributeValue("label", "description");
 		fieldAttr2.setAttributeValue("lang", lang);
-		presetTopic.addFieldAttribute(fieldAttr2);
+		presetFunding.addFieldAttribute(fieldAttr2);
 		
 		FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(collection.getFieldDefinition("callDeadline"));
-		
 		fieldAttr3.setAttributeValue("sortable",true);
-		presetTopic.addFieldAttribute(fieldAttr3);
+		presetFunding.addFieldAttribute(fieldAttr3);
 		
 		
 		/** Create & add a querydebug SearchComponent to the preset; */
 		SearchElementDefinition querydebug = new SearchElementDefinition(SolrToString.class);
-		presetTopic.addSearchElement(querydebug);
+		presetFunding.addSearchElement(querydebug);
 		
 		/** Create & add a query SearchComponent to the preset; */
 		SearchElementDefinition query = new SearchElementDefinition(EdismaxQuery.class);
-		presetTopic.addSearchElement(query);
+		presetFunding.addSearchElement(query);
 
 		/** Create & add a TemplatedHitLIst SearchComponent to the preset; */
 		SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
@@ -254,7 +268,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 														"<sbx:tagAttribute limit=\"1\" label=\"Deadline\" values=\"${hit.fieldValues['callDeadline']}\"/>" +
 														"<sbx:tagAttribute limit=\"1\" label=\"Call\" values=\"${hit.fieldValues['callIdentifier']}\"/>"
 														);
-		presetTopic.addSearchElement(templatedHitList);
+		presetFunding.addSearchElement(templatedHitList);
 
 		/** Create & add another TemplatedHitLIst SearchComponent to the preset; 
 		 * 	SearchElementType can be overriden
@@ -273,7 +287,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 					"	- Further information:"+
 					"		- Call (link CallIdentifier)"+
 					"		- Topic (link topicIdentifier)");
-		presetTopic.addSearchElement(viewHit);
+		presetFunding.addSearchElement(viewHit);
 		
 		/** Create & add a FieldSort SearchComponent to the preset; */
 		SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
@@ -281,12 +295,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		sortFields.add(FieldSort.getRelevancySort());
 		sortFields.add(new FieldSort.Value("By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.ASC));
 		fieldSort.setAttributeValue("values", sortFields);
-		presetTopic.addSearchElement(fieldSort);
+		presetFunding.addSearchElement(fieldSort);
 				
 		
 		/** Create & add a basicSearchStat SearchComponent to the preset;*/
 		SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-		presetTopic.addSearchElement(basicStatus);
+		presetFunding.addSearchElement(basicStatus);
 		
 		/** Create & add a facet to the presetTopic. */
 		SearchElementDefinition callFacet = new SearchElementDefinition(FieldFacet.class);
@@ -294,7 +308,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		callFacet.setLabel("Call");
 		callFacet.setAttributeValue("order", Order.BY_VALUE);
 		callFacet.setAttributeValue("sort", Sort.DESC);
-		presetTopic.addSearchElement(callFacet);
+		presetFunding.addSearchElement(callFacet);
 		
 		/** Ideally this is a range facet. We agreed that for now it will be a list of months 
 		 *  For instance(March 14, April 14, May 14, June 14, ...) */
@@ -303,20 +317,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		deadlineFacet.setLabel("Deadline");
 		deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
 		deadlineFacet.setAttributeValue("sort", Sort.DESC);
-		presetTopic.addSearchElement(deadlineFacet);
+		presetFunding.addSearchElement(deadlineFacet);
 		
 		SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
 		flagFacet.setAttributeValue("field", collection.getFieldDefinition("flags").getInstance());
 		flagFacet.setLabel("Flags");
 		flagFacet.setAttributeValue("order", Order.BY_VALUE);
 		flagFacet.setAttributeValue("sort", Sort.DESC);
-		presetTopic.addSearchElement(flagFacet);
+		presetFunding.addSearchElement(flagFacet);
 		
 		
 		SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
-		presetTopic.addSearchElement(pagination);
+		presetFunding.addSearchElement(pagination);
 		
-		searchbox.addPresetDefinition(presetTopic);		
+		searchbox.addPresetDefinition(presetFunding);		
 		
 		
 		
@@ -333,20 +347,27 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		eenCollection = collectionRepository.save(eenCollection);
 		
 		LOGGER.info("++ Creating Cooperation preset");
-		PresetDefinition cooperations = new PresetDefinition(collection);
-		cooperations.setLabel("Cooperations");
-		cooperations.setDescription("EEN cooperations");
-		cooperations.setSlug("coop");
-		cooperations.setCollection(eenCollection);
-		searchbox.addPresetDefinition(cooperations);	
+		PresetDefinition presetCoooperation = new PresetDefinition(eenCollection);
+		presetCoooperation.setLabel("Cooperations");
+		presetCoooperation.setDescription("EEN cooperations");
+		presetCoooperation.setSlug("coop");
+		presetCoooperation.setCollection(eenCollection);
+		searchbox.addPresetDefinition(presetCoooperation);	
+
+//		FieldAttributeDefinition eenSubmitField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumSubmit"));
+//		eenSubmitField.setAttributeValue("label","Published");
+//		eenSubmitField.setAttributeValue("sortable",true);
+//		presetCoooperation.addFieldAttribute(eenSubmitField);
 		
 		FieldAttributeDefinition eenUpdateField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumUpdate"));
 		eenUpdateField.setAttributeValue("label","update");
-		cooperations.addFieldAttribute(eenUpdateField);
+		eenUpdateField.setAttributeValue("sortable",true);
+		presetCoooperation.addFieldAttribute(eenUpdateField);
 		
 		FieldAttributeDefinition eenDeadlineField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenDatumDeadline"));
 		eenDeadlineField.setAttributeValue("label", "deadline");
-		cooperations.addFieldAttribute(eenDeadlineField);
+		eenDeadlineField.setAttributeValue("sortable",true);
+		presetCoooperation.addFieldAttribute(eenDeadlineField);
 		
 		FieldAttributeDefinition eenTitleField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenContentTitle"));
 		eenTitleField.setAttributeValue("searchable", true);
@@ -355,19 +376,112 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 		eenTitleField.setAttributeValue("suggestion", true);
 		eenTitleField.setAttributeValue("label", "title");
 		eenTitleField.setAttributeValue("lang", lang);
-		cooperations.addFieldAttribute(eenTitleField);		
+		presetCoooperation.addFieldAttribute(eenTitleField);		
+		
+		FieldAttributeDefinition eenSummaryField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenContentSummary"));
+		eenSummaryField.setAttributeValue("searchable", true);
+		eenSummaryField.setAttributeValue("highlight", true);
+		eenSummaryField.setAttributeValue("spelling", true);
+		eenSummaryField.setAttributeValue("suggestion", true);
+		eenSummaryField.setAttributeValue("label", "Summary");
+		eenSummaryField.setAttributeValue("lang", lang);
+		presetCoooperation.addFieldAttribute(eenSummaryField);	
+		
+		FieldAttributeDefinition eenKeywordField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel"));
+		eenKeywordField.setAttributeValue("searchable", true);
+		eenKeywordField.setAttributeValue("spelling", true);
+		eenKeywordField.setAttributeValue("suggestion", true);
+		eenKeywordField.setAttributeValue("label", "Keyword");
+		eenKeywordField.setAttributeValue("lang", lang);
+		presetCoooperation.addFieldAttribute(eenKeywordField);	
+		
+		
+		
+		FieldAttributeDefinition eenDescriptionField = new FieldAttributeDefinition(eenCollection.getFieldDefinition("eenContentDescription"));
+		eenDescriptionField.setAttributeValue("searchable", true);
+		eenDescriptionField.setAttributeValue("highlight", true);
+		eenDescriptionField.setAttributeValue("spelling", true);
+		eenDescriptionField.setAttributeValue("suggestion", true);
+		eenDescriptionField.setAttributeValue("label", "Description");
+		eenDescriptionField.setAttributeValue("lang", lang);
+		presetCoooperation.addFieldAttribute(eenDescriptionField);	
 		
 		/** Create & add a query SearchComponent to the preset; */
 		SearchElementDefinition eenQuery = new SearchElementDefinition(EdismaxQuery.class);
-		cooperations.addSearchElement(query);
+		presetCoooperation.addSearchElement(eenQuery);
 
 		/** Create & add a TemplatedHitLIst SearchComponent to the preset; */
 		SearchElementDefinition eenTemplatedHitList = new SearchElementDefinition(TemplatedHitList.class);
 		eenTemplatedHitList.setAttributeValue("titleField", "eenContentTitle");
 		eenTemplatedHitList.setAttributeValue("idField", "eenReferenceExternal");
-		eenTemplatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>");
-		cooperations.addSearchElement(eenTemplatedHitList);
+		eenTemplatedHitList.setAttributeValue("template", "<sbx:title hit=\"${hit}\"/>"
+										+ "<sbx:snippet hit=\"${hit}\" field=\"eenContentSummary\"/>"
+										+ "<sbx:tagAttribute limit=\"1\" label=\"Source\" values=\"${hit.fieldValues['docSource']}\" cssClass=\"${hit.fieldValues['docSource']}\" />" 
+										+ "<sbx:tagAttribute limit=\"1\" label=\"Type\" values=\"${hit.fieldValues['eenReferenceType']}\"/>"
+										+ "<sbx:tagAttribute limit=\"1\" label=\"Published\" values=\"${hit.fieldValues['eenDatumSubmit']}\"/>" 
+										+ "<sbx:tagAttribute limit=\"1\" label=\"Partner Country\" values=\"${hit.fieldValues['eenCompanyCountryLabel']}\"/>" 
+										
 
+				);
+		presetCoooperation.addSearchElement(eenTemplatedHitList);
+
+		
+		SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplatedHitList.class);
+		eenViewHit.setType(SearchElement.Type.INSPECT);
+		eenViewHit.setAttributeValue("titleField", "eenContentTitle");
+		eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
+		eenViewHit.setAttributeValue("template", "Here we should display Title "+
+					"- FullDescription (HTML si possible)"+
+					"- Left panel"+
+					"	- Topic Identifier: topicIdentifier"+
+					"	- Call Identifier: callIdentifier"+
+					"	- Call Deadline: callDeadline (MMM DD, YYYY)"+
+					"	- Further information:"+
+					"		- Call (link CallIdentifier)"+
+					"		- Topic (link topicIdentifier)");
+		presetCoooperation.addSearchElement(eenViewHit); 
+		
+		/** Create & add a basicSearchStat SearchComponent to the preset;*/
+		SearchElementDefinition eenBasicStatus = new SearchElementDefinition(BasicSearchStats.class);
+		presetCoooperation.addSearchElement(eenBasicStatus);
+		
+		SearchElementDefinition eenPagination = new SearchElementDefinition(BasicPagination.class);
+		presetCoooperation.addSearchElement(eenPagination);
+		
+		
+		
+		/** Create & add a facet to the presetTopic. */
+		SearchElementDefinition eenDocSource = new SearchElementDefinition(FieldFacet.class);
+		eenDocSource.setAttributeValue("field", eenCollection.getFieldDefinition("docSource").getInstance());
+		eenDocSource.setLabel("Cooperation Source");
+		eenDocSource.setAttributeValue("order", Order.BY_VALUE);
+		eenDocSource.setAttributeValue("sort", Sort.DESC);
+		presetCoooperation.addSearchElement(eenDocSource);
+		
+		/** Create & add a facet to the presetTopic. */
+		SearchElementDefinition eenReferenceTypeFacet = new SearchElementDefinition(FieldFacet.class);
+		eenReferenceTypeFacet.setAttributeValue("field", eenCollection.getFieldDefinition("eenReferenceType").getInstance());
+		eenReferenceTypeFacet.setLabel("EEN Type");
+		eenReferenceTypeFacet.setAttributeValue("order", Order.BY_VALUE);
+		eenReferenceTypeFacet.setAttributeValue("sort", Sort.DESC);
+		presetCoooperation.addSearchElement(eenReferenceTypeFacet);
+		
+		/** Create & add a facet to the presetTopic. */
+		SearchElementDefinition eenKeyword = new SearchElementDefinition(FieldFacet.class);
+		eenKeyword.setAttributeValue("field", eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel").getInstance());
+		eenKeyword.setLabel("Keyword");
+		eenKeyword.setAttributeValue("order", Order.BY_VALUE);
+		eenKeyword.setAttributeValue("sort", Sort.DESC);
+		presetCoooperation.addSearchElement(eenKeyword);
+		
+		/** Create & add a facet to the presetTopic. */
+		SearchElementDefinition eenCompanyCountry = new SearchElementDefinition(FieldFacet.class);
+		eenCompanyCountry.setAttributeValue("field", eenCollection.getFieldDefinition("eenCompanyCountryLabel").getInstance());
+		eenCompanyCountry.setLabel("Partner Country");
+		eenCompanyCountry.setAttributeValue("order", Order.BY_VALUE);
+		eenCompanyCountry.setAttributeValue("sort", Sort.DESC);
+		presetCoooperation.addSearchElement(eenCompanyCountry);
+		
 		
 		
 		/**
