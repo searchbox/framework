@@ -21,11 +21,15 @@
 		required="false" rtexprvalue="true" description="element to display" />
 
 	<jsp:directive.attribute name="maxLengh" type="java.lang.Integer"
-		required="false" rtexprvalue="true" description="element to display" />
-
+    required="false" rtexprvalue="true" description="element to display" />
+    
+  <jsp:directive.attribute name="datePattern" type="java.lang.String"
+    required="false" rtexprvalue="true" description="element to display" />
+    
 	<c:if test="${empty join}">
 		<c:set value=" " var="join" />
 	</c:if>
+
 
 	<c:forEach items="${value }" var="item" varStatus="loop">
 		<c:set var="output" value="" />
@@ -37,12 +41,19 @@
 			</c:when>
 			
 			<!--  match a time:  2014-04-24T15:00:00.000Z -->
-			<c:when test="${item.matches('[0-9-]+T[0-9:\\.]+Z')}">
+			<c:when test="${item.matches('[0-9-]+T[0-9:\\.]+.*')}">
 			<jsp:useBean id="dateValue" class="java.util.Date">
 			</jsp:useBean>
 			<fmt:parseDate value="${item}" var="parsedEmpDate" pattern="yyyy-MM-dd'T'HH:mm:ss"/>
 				<c:set var="output">
-					<fmt:formatDate type="date" dateStyle="long" value="${parsedEmpDate}" />
+				  <c:choose>
+				    <c:when test="${not empty datePattern}">
+              <fmt:formatDate type="date" pattern="${datePattern }" value="${parsedEmpDate}" />
+				    </c:when>
+				    <c:otherwise>
+							<fmt:formatDate type="date" dateStyle="long" value="${parsedEmpDate}" />
+				    </c:otherwise>
+				  </c:choose>
 				</c:set>
 			</c:when>
 			
