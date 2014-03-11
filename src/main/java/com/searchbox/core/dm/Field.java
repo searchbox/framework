@@ -23,103 +23,110 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Field implements Serializable {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -7579715557196299051L;
-	
-	protected Class<?> clazz;
-	/**
+    private static final long serialVersionUID = -7579715557196299051L;
+
+    protected Class<?> clazz;
+    /**
      */
-	protected String key;
+    protected String key;
 
-	/**
+    /**
      */
 
-	public Field() {
-		
-	}
-	
-	public Field(Class<?> clazz, String key) {
-		this.clazz = clazz;
-		this.key = key;
-	}
+    public Field() {
 
-	public String getKey() {
-        return this.key;
     }
 
-	public void setKey(String key) {
+    public Field(Class<?> clazz, String key) {
+        this.clazz = clazz;
         this.key = key;
     }
 
-	public Class<?> getClazz() {
-		return clazz;
-	}
-
-	public void setClazz(Class<?> clazz) {
-		this.clazz = clazz;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((clazz == null) ? 0 : clazz.getSimpleName().hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj){
-			return true;
-		}
-		if (!(obj instanceof Field)){
-			return false;
-		}
-		
-		Field other = (Field) obj;
-		if (clazz == null ) {
-			if (other.clazz != null){
-				return false;
-			}
-		} else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName())){
-			return false;
-		}
-		if (key == null) {
-			if (other.key != null){
-				return false;
-			}
-		} else if (!key.equals(other.key)){
-			return false;
-		}
-		return true;
-	}
-
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    public String getKey() {
+        return this.key;
     }
-	
-	public static Field stringField(String key){
-		return new Field(String.class, key);
-	}
-	
-	public static Field dateField(String key){
-		return new Field(Date.class, key);
-	}
-	
-	public static Field intField(String key){
-		return new Field(Integer.class, key);
-	}
-	
-	public static Field floatField(String key){
-		return new Field(Float.class, key);
-	}
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Class<?> getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((clazz == null) ? 0 : clazz.getSimpleName().hashCode());
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Field)) {
+            return false;
+        }
+
+        Field other = (Field) obj;
+        if (clazz == null) {
+            if (other.clazz != null) {
+                return false;
+            }
+        } else if (!clazz.getSimpleName().equals(other.clazz.getSimpleName())) {
+            return false;
+        }
+        if (key == null) {
+            if (other.key != null) {
+                return false;
+            }
+        } else if (!key.equals(other.key)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    public static Field stringField(String key) {
+        return new Field(String.class, key);
+    }
+
+    public static Field dateField(String key) {
+        return new Field(Date.class, key);
+    }
+
+    public static Field intField(String key) {
+        return new Field(Integer.class, key);
+    }
+
+    public static Field floatField(String key) {
+        return new Field(Float.class, key);
+    }
 }

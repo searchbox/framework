@@ -17,32 +17,34 @@ package com.searchbox.core.search;
 
 import com.searchbox.core.SearchCondition;
 
+public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends AbstractSearchCondition>
+        extends SearchElementWithValues<K> implements
+        GenerateSearchCondition<T>, SearchConditionToElementMerger {
 
-public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends AbstractSearchCondition> 
-		extends SearchElementWithValues<K>
-		implements GenerateSearchCondition<T>, SearchConditionToElementMerger {
+    public ConditionalSearchElementWithValues() {
+        super(null, SearchElement.Type.UNKNOWN);
+    }
 
-	public ConditionalSearchElementWithValues(){ 
-		super (null, SearchElement.Type.UNKNOWN);
-	}
+    public ConditionalSearchElementWithValues(String label,
+            SearchElement.Type type) {
+        super(label, type);
+    }
 
-	public ConditionalSearchElementWithValues(String label,SearchElement.Type type) {
-		super(label, type);
-	}
+    @Override
+    public abstract T getSearchCondition();
 
-	@Override
-	public abstract T getSearchCondition();
+    @Override
+    public abstract void mergeSearchCondition(AbstractSearchCondition condition);
 
-	public abstract void mergeSearchCondition(AbstractSearchCondition condition);
-	
-	public abstract Class<?> getConditionClass();
-	
-	public String getUrlParam() {
-		Class<?> clazz = this.getConditionClass();
-		if(clazz.isAnnotationPresent(SearchCondition.class)){
-			return clazz.getAnnotation(SearchCondition.class).urlParam();
-		} else {
-			return "missingAnnotationOnSearchConditionClass";
-		}
-	}
+    @Override
+    public abstract Class<?> getConditionClass();
+
+    public String getUrlParam() {
+        Class<?> clazz = this.getConditionClass();
+        if (clazz.isAnnotationPresent(SearchCondition.class)) {
+            return clazz.getAnnotation(SearchCondition.class).urlParam();
+        } else {
+            return "missingAnnotationOnSearchConditionClass";
+        }
+    }
 }

@@ -23,66 +23,68 @@ import com.searchbox.core.SearchComponent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 
-
 @SearchComponent
 public class HitList extends SearchElementWithValues<Hit> {
-	
-	@SearchAttribute
-	protected List<String> fields;
-	
-	@SearchAttribute String titleField;
-	
-	@SearchAttribute String urlField;
-	
-	@SearchAttribute String idField;
-	
-	public HitList(){
-		super("Result Set",SearchElement.Type.VIEW);
-		this.fields = new ArrayList<String>();
-	}
-	
-	public String getTitleField() {
-		return titleField;
-	}
 
-	public void setTitleField(String titleField) {
-		this.titleField = titleField;
-	}
+    @SearchAttribute
+    protected List<String> fields;
 
-	public String getUrlField() {
-		return urlField;
-	}
+    @SearchAttribute
+    String titleField;
 
-	public void setUrlField(String urlField) {
-		this.urlField = urlField;
-	}
+    @SearchAttribute
+    String urlField;
 
-	public String getIdField() {
-		return idField;
-	}
+    @SearchAttribute
+    String idField;
 
-	public void setIdField(String idField) {
-		this.idField = idField;
-	}
+    public HitList() {
+        super("Result Set", SearchElement.Type.VIEW);
+        this.fields = new ArrayList<String>();
+    }
 
-	public void setFields(List<String> fields) {
-		this.fields = fields;
-	}
+    public String getTitleField() {
+        return titleField;
+    }
 
-	public List<String> getFields() {
-		return this.fields;
-	}
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
+    }
 
-	public void addHit(Hit hit) {
-		this.values.add(hit);
-	}
+    public String getUrlField() {
+        return urlField;
+    }
 
-	public Hit newHit(Float score) {
-		Hit hit = new Hit(score);
-		hit.setIDFieldName(this.idField);
-		hit.setTitleFieldName(this.titleField);
-		hit.setURLFieldName(this.urlField);
-		this.addHit(hit);
-		return hit;
-	}
+    public void setUrlField(String urlField) {
+        this.urlField = urlField;
+    }
+
+    public String getIdField() {
+        return idField;
+    }
+
+    public void setIdField(String idField) {
+        this.idField = idField;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<String> getFields() {
+        return this.fields;
+    }
+
+    public void addHit(Hit hit) {
+        this.values.add(hit);
+    }
+
+    public Hit newHit(Float score) {
+        Hit hit = new Hit(score);
+        hit.setIDFieldName(this.idField);
+        hit.setTitleFieldName(this.titleField);
+        hit.setURLFieldName(this.urlField);
+        this.addHit(hit);
+        return hit;
+    }
 }

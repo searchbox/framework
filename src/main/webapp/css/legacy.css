@@ -6,361 +6,359 @@
 
 /** Push the dockbar at the bottom **/
 
-
-
 /** Search header **/
 
 /** Tags **/
 #tag-bar {
-  float: left;
-  margin-top: -2px;
-  padding-top: 5px;
+ float: left;
+ margin-top: -2px;
+ padding-top: 5px;
 }
 
 #tag-bar i.icon-remove {
-  margin-top: 0px;
-  margin-left: 2px;
+ margin-top: 0px;
+ margin-left: 2px;
 }
 
 /** Arrow buttons **/
 .btn.arrow-left,.btn.arrow-right {
-  position: relative;
-  background: #e2e2e2;
-  border: none;
+ position: relative;
+ background: #e2e2e2;
+ border: none;
 }
 
 .btn.arrow-right:after,.btn.arrow-left:after {
-  content: " ";
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 13px solid rgba(0, 0, 0, 0);
-  border-bottom: 13px solid rgba(0, 0, 0, 0);
-  position: absolute;
-  top: 50%;
-  margin-top: -13px;
-  z-index: 2;
+ content: " ";
+ display: block;
+ width: 0;
+ height: 0;
+ border-top: 13px solid rgba(0, 0, 0, 0);
+ border-bottom: 13px solid rgba(0, 0, 0, 0);
+ position: absolute;
+ top: 50%;
+ margin-top: -13px;
+ z-index: 2;
 }
 
 .btn.arrow-left {
-  margin-left: 15px;
-  border-radius: 0 4px 4px 0;
+ margin-left: 15px;
+ border-radius: 0 4px 4px 0;
 }
 
 .btn.arrow-right {
-  margin-right: 15px;
-  border-radius: 4px 0 0 4px;
+ margin-right: 15px;
+ border-radius: 4px 0 0 4px;
 }
 
 .btn.arrow-left:after {
-  border-right: 14px solid #e2e2e2;
-  right: 98%;
+ border-right: 14px solid #e2e2e2;
+ right: 98%;
 }
 
 .btn.arrow-right:after {
-  border-left: 14px solid #e2e2e2;
-  left: 98%;
+ border-left: 14px solid #e2e2e2;
+ left: 98%;
 }
 
 .btn.arrow-left.btn-inverse,.btn.arrow-right.btn-inverse {
-  background: #1B1B1B;
+ background: #1B1B1B;
 }
 
 .btn.arrow-right.btn-inverse:after {
-  border-left: 14px solid #1B1B1B;
+ border-left: 14px solid #1B1B1B;
 }
 
 .btn.arrow-left.btn-inverse:after {
-  border-right: 14px solid #1B1B1B;
+ border-right: 14px solid #1B1B1B;
 }
 
 /** Loading mask **/
 .loading-indicator {
-  height: 128px;
-  width: 128px;
-  background: url('../images/big-spinner.gif');
-  background-repeat: no-repeat;
-  background-position: center center;
+ height: 128px;
+ width: 128px;
+ background: url('../images/big-spinner.gif');
+ background-repeat: no-repeat;
+ background-position: center center;
 }
 
 .loading-indicator-overlay {
-  background-color: #FFFFFF;
-  opacity: 0.6;
-  filter: alpha(opacity = 60);
+ background-color: #FFFFFF;
+ opacity: 0.6;
+ filter: alpha(opacity = 60);
 }
 
 /** Results **/
 div.result-view h4 {
-  margin-top: 0;
+ margin-top: 0;
 }
 
 div .result-view {
-  margin-bottom: 20px;
+ margin-bottom: 20px;
 }
 
 .resultrow h5.result-title {
-  font-size: 14px;
-  font-weight: normal;
-  margin: auto;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 580px;
-  float: left;
-  margin-bottom: 0em;
-  text-decoration: underline;
+ font-size: 14px;
+ font-weight: normal;
+ margin: auto;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ width: 580px;
+ float: left;
+ margin-bottom: 0em;
+ text-decoration: underline;
 }
 
 .resultrow img.thumbnail {
-  float: left;
-  margin-right: 5px;
-  width: 122px;
+ float: left;
+ margin-right: 5px;
+ width: 122px;
 }
 
 .carousel-inner h5.result-title {
-  width: 100%;
+ width: 100%;
 }
 
 .resultrow h5.result-title:after {
-  clear: left;
+ clear: left;
 }
 
 .resultrow p {
-  float: left;
-  line-height: 16px;
-  width: 100%;
-  font-size: 13px;
-  margin-bottom: 4px;
+ float: left;
+ line-height: 16px;
+ width: 100%;
+ font-size: 13px;
+ margin-bottom: 4px;
 }
 
 .resultrow p:after {
-  clear: left;
+ clear: left;
 }
 
 .resultrow table.debug-fields {
-  clear: left;
+ clear: left;
 }
 
 .resultrow span.hl {
-  font-weight: bolder;
+ font-weight: bolder;
 }
 
 td.resultrow {
-  padding-bottom: 20px;
+ padding-bottom: 20px;
 }
 /** Results - tags **/
 #sort-combo li.selected a,ul.dropdown-menu li.selected a {
-  font-weight: bold;
+ font-weight: bold;
 }
 
 .resultrow div.attributes,div.result-view div.attributes {
-  font-size: 11px !important;
-  float: left;
-  line-height: 20px;
-  padding-left: 5px;
-  padding-right: 5px;
-  background-color: #eeeeee;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  background-color: #f5f5f5;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 10px;
-  cursor: default;
-  max-width: 580px; /* TODO: put 100% back */
+ font-size: 11px !important;
+ float: left;
+ line-height: 20px;
+ padding-left: 5px;
+ padding-right: 5px;
+ background-color: #eeeeee;
+ margin-right: 5px;
+ margin-bottom: 5px;
+ background-color: #f5f5f5;
+ border: 1px solid rgba(0, 0, 0, 0.05);
+ -webkit-border-radius: 4px;
+ -moz-border-radius: 4px;
+ border-radius: 10px;
+ cursor: default;
+ max-width: 580px; /* TODO: put 100% back */
 }
 
 #main-col-center div.clickable {
-  cursor: pointer;
-  border-color: lightblue;
+ cursor: pointer;
+ border-color: lightblue;
 }
 
 #main-col-center div.clickable:hover {
-  border-color: lightskyblue;
+ border-color: lightskyblue;
 }
 
 .resultrow div.attributes span.field_label,div.result-view div.attributes span.field_label
-  {
-  color: #999;
-  padding-right: 3px;
-  float: left;
+ {
+ color: #999;
+ padding-right: 3px;
+ float: left;
 }
 
 .resultrow div.attributes span.field_value.full,div.result-view div.attributes span.field_value.full
-  {
-  max-width: 100%;
+ {
+ max-width: 100%;
 }
 
 .resultrow div.attributes span.field_value,div.result-view div.attributes span.field_value
-  {
-  font-size: 11px !important;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  float: left;
+ {
+ font-size: 11px !important;
+ white-space: nowrap;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ float: left;
 }
 
 .resultrow .field.full,div.result-view .field.full {
-  float: left;
-  clear: left;
+ float: left;
+ clear: left;
 }
 
 .resultrow .external-link a,div.result-view .external-link a,body.view .external-link a
-  {
-  background: url("../images/external-link.gif");
-  color: #999999;
-  background-repeat: no-repeat;
-  padding-left: 12px;
-  background-position: left center;
+ {
+ background: url("../images/external-link.gif");
+ color: #999999;
+ background-repeat: no-repeat;
+ padding-left: 12px;
+ background-position: left center;
 }
 
 .resultrow .email-link a,div.result-view .email-link a {
-  background: url("../images/email-link.png");
-  color: #999999;
-  background-repeat: no-repeat;
-  padding-left: 12px;
-  background-position: left center;
+ background: url("../images/email-link.png");
+ color: #999999;
+ background-repeat: no-repeat;
+ padding-left: 12px;
+ background-position: left center;
 }
 
 body.view .list .resultrow {
-  margin-bottom: 40px;
+ margin-bottom: 40px;
 }
 
 .ui-autocomplete {
-  z-index: 1030 !important;
+ z-index: 1030 !important;
 }
 /** Footer related CSS **/
 #push {
-  height: 80px;
+ height: 80px;
 }
 
 #wrap {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin: 0 auto -80px;
+ min-height: 100%;
+ height: auto !important;
+ height: 100%;
+ margin: 0 auto -80px;
 }
 
 /** pagination **/
 #Pagination {
-  text-align: center;
-  margin-bottom: 20px;
-  float: none;
-  margin-top: 20px;
+ text-align: center;
+ margin-bottom: 20px;
+ float: none;
+ margin-top: 20px;
 }
 
 #Pagination a,#Pagination span {
-  margin: 0px 4px 0 4px;
-  border: none;
-  color: #333;
-  display: inline-block;
-  line-height: 18px;
-  position: relative;
-  float: none;
-  padding: 5px 10px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px
+ margin: 0px 4px 0 4px;
+ border: none;
+ color: #333;
+ display: inline-block;
+ line-height: 18px;
+ position: relative;
+ float: none;
+ padding: 5px 10px;
+ -webkit-border-radius: 4px;
+ -moz-border-radius: 4px;
+ border-radius: 4px
 }
 
 #Pagination a:hover {
-  text-decoration: none
+ text-decoration: none
 }
 
 #Pagination .prevLink,#Pagination .nextLink,#Pagination a:hover {
-  background: #1B1B1B;
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+ background: #1B1B1B;
+ color: #ffffff;
+ text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 #Pagination .currentStep {
-  border: none;
-  background-color: #1B1B1B;
-  color: rgba(255, 255, 255, 0.75);
+ border: none;
+ background-color: #1B1B1B;
+ color: rgba(255, 255, 255, 0.75);
 }
 
 #Pagination .prevLink {
-  margin: 0 4px 4px 0;
+ margin: 0 4px 4px 0;
 }
 
 #Pagination .nextLink {
-  margin: 4px 0 0 4px;
+ margin: 4px 0 0 4px;
 }
 
 #Pagination .prevLink::after {
-  border-right: 14px solid #1B1B1B;
-  right: 98%;
+ border-right: 14px solid #1B1B1B;
+ right: 98%;
 }
 
 #Pagination .nextLink::after {
-  border-left: 14px solid #1B1B1B;
-  left: 98%;
+ border-left: 14px solid #1B1B1B;
+ left: 98%;
 }
 
 #Pagination .prevLink::after,#Pagination .nextLink::after {
-  content: " ";
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 13px solid transparent;
-  border-bottom: 13px solid transparent;
-  position: absolute;
-  top: 50%;
-  margin-top: -13px;
-  z-index: 2;
+ content: " ";
+ display: block;
+ width: 0;
+ height: 0;
+ border-top: 13px solid transparent;
+ border-bottom: 13px solid transparent;
+ position: absolute;
+ top: 50%;
+ margin-top: -13px;
+ z-index: 2;
 }
 
 .carousel-control {
-  left: 0
+ left: 0
 }
 
 .carousel-control.right {
-  right: 0
+ right: 0
 }
 
 .carousel-inner {
-  margin-left: 55px;
-  margin-right: 55px;
-  width: auto;
-  min-height: 150px
+ margin-left: 55px;
+ margin-right: 55px;
+ width: auto;
+ min-height: 150px
 }
 
 body.errors #search-bar {
-  display: none
+ display: none
 }
 
 .error-container {
-  margin-top: 4em;
-  margin-bottom: 4em;
-  text-align: center;
+ margin-top: 4em;
+ margin-bottom: 4em;
+ text-align: center;
 }
 
 .error-container h1 {
-  margin-bottom: .5em;
-  font-size: 120px;
-  line-height: 1em;
+ margin-bottom: .5em;
+ font-size: 120px;
+ line-height: 1em;
 }
 
 .error-container h2 {
-  margin-bottom: .75em;
-  font-size: 28px;
+ margin-bottom: .75em;
+ font-size: 28px;
 }
 
 .error-container .error-details {
-  margin-bottom: 1.5em;
-  font-size: 16px;
+ margin-bottom: 1.5em;
+ font-size: 16px;
 }
 
 .error-container .error-actions a {
-  margin: 0 .5em;
+ margin: 0 .5em;
 }
 
 button.btn.btn-large,input[type="submit"].btn.btn-large {
-  height: 40px;
-  padding: 9px 15px;
+ height: 40px;
+ padding: 9px 15px;
 }
 
-#debug{
-	display: none;
+#debug {
+ display: none;
 }

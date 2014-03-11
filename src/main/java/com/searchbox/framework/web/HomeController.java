@@ -41,72 +41,76 @@ import com.searchbox.framework.repository.SearchboxRepository;
 
 @Controller
 @RequestMapping("/")
-//@SessionAttributes("user")
+// @SessionAttributes("user")
 public class HomeController {
-	
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-	
-	@Autowired
-	SearchboxRepository searchboxRepository;
-	
-	@Autowired
-	CollectionRepository collectionRepository;
-	
-	@Autowired
-	SearchEngineRepository searchEngineRepository;
-	
-	@ModelAttribute("collections")
-	public List<CollectionDefinition> getAllCollections() {
-		ArrayList<CollectionDefinition> list = new ArrayList<CollectionDefinition>();
-		Iterator<CollectionDefinition> it = collectionRepository.findAll().iterator();
-		while (it.hasNext()) {
-			list.add(it.next());
-		}
-		return list;
-	}	
-	
-	@ModelAttribute("searchengines")
-	public List<SearchEngineDefinition> getAllSearchEngines() {
-		ArrayList<SearchEngineDefinition> list = new ArrayList<SearchEngineDefinition>();
-		Iterator<SearchEngineDefinition> it = searchEngineRepository.findAll().iterator();
-		while (it.hasNext()) {
-			list.add(it.next());
-		}
-		return list;
-	}	
-	
-	@ModelAttribute("searchboxes")
-	public List<Searchbox> getAllSearchboxes() {
-		ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
-		Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
-		while (sbx.hasNext()) {
-			searchboxes.add(sbx.next());
-		}
-		return searchboxes;
-	}	
-	
-//	@ModelAttribute("user")
-//	public User getCurrentUser(){
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		LOGGER.info("Got auth {}", auth);
-//		if(auth.getClass().isAssignableFrom(User.class)){
-//			LOGGER.info("Got user with roles {}", auth.getAuthorities());
-//			return (User) auth;
-//		} else {
-//			LOGGER.info("Anonymous User...");
-//			return new User();
-//		}
-//	}
-	
-	@RequestMapping()
-	public ModelAndView home(@AuthenticationPrincipal User user,
-			HttpServletRequest request, ModelAndView model,
-			RedirectAttributes redirectAttributes) {
 
-		ModelAndView mav = new ModelAndView("index");
-		mav.addObject("user", user);
-		return mav;
-	}
+    @SuppressWarnings("unused")
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(HomeController.class);
+
+    @Autowired
+    SearchboxRepository searchboxRepository;
+
+    @Autowired
+    CollectionRepository collectionRepository;
+
+    @Autowired
+    SearchEngineRepository searchEngineRepository;
+
+    @ModelAttribute("collections")
+    public List<CollectionDefinition> getAllCollections() {
+        ArrayList<CollectionDefinition> list = new ArrayList<CollectionDefinition>();
+        Iterator<CollectionDefinition> it = collectionRepository.findAll()
+                .iterator();
+        while (it.hasNext()) {
+            list.add(it.next());
+        }
+        return list;
+    }
+
+    @ModelAttribute("searchengines")
+    public List<SearchEngineDefinition> getAllSearchEngines() {
+        ArrayList<SearchEngineDefinition> list = new ArrayList<SearchEngineDefinition>();
+        Iterator<SearchEngineDefinition> it = searchEngineRepository.findAll()
+                .iterator();
+        while (it.hasNext()) {
+            list.add(it.next());
+        }
+        return list;
+    }
+
+    @ModelAttribute("searchboxes")
+    public List<Searchbox> getAllSearchboxes() {
+        ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
+        Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
+        while (sbx.hasNext()) {
+            searchboxes.add(sbx.next());
+        }
+        return searchboxes;
+    }
+
+    // @ModelAttribute("user")
+    // public User getCurrentUser(){
+    // Authentication auth =
+    // SecurityContextHolder.getContext().getAuthentication();
+    // LOGGER.info("Got auth {}", auth);
+    // if(auth.getClass().isAssignableFrom(User.class)){
+    // LOGGER.info("Got user with roles {}", auth.getAuthorities());
+    // return (User) auth;
+    // } else {
+    // LOGGER.info("Anonymous User...");
+    // return new User();
+    // }
+    // }
+
+    @RequestMapping()
+    public ModelAndView home(@AuthenticationPrincipal User user,
+            HttpServletRequest request, ModelAndView model,
+            RedirectAttributes redirectAttributes) {
+
+        ModelAndView mav = new ModelAndView("index");
+        mav.addObject("user", user);
+        return mav;
+    }
 
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  ******************************************************************************/
 package com.searchbox.data;
-import org.junit.Test;
 
+import org.junit.Test;
 
 public class BootStrapTest {
 
-    //private BootStrap bootStrap = new BootStrap();
+    // private BootStrap bootStrap = new BootStrap();
 
     @Test
     public void onApplicationEvent() {
@@ -28,7 +28,7 @@ public class BootStrapTest {
 
     @Test
     public void main() {
-    	System.out.println("Wasssssup");
+        System.out.println("Wasssssup");
         org.junit.Assert.assertTrue(true);
     }
 }

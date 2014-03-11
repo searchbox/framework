@@ -32,43 +32,43 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages={"com.searchbox.framework.web","com.searchbox.framework.bootstrap"})
+@ComponentScan(basePackages = { "com.searchbox.framework.web",
+        "com.searchbox.framework.bootstrap" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-	
-	@Override
+    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 
-	
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/assets/css/**")
-				.addResourceLocations("/css/").setCachePeriod(31556926);
-		registry.addResourceHandler("/assets/images/**")
-				.addResourceLocations("/img/").setCachePeriod(31556926);
-		registry.addResourceHandler("/assets/js/**")
-				.addResourceLocations("/js/").setCachePeriod(31556926);
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/assets/css/**")
+                .addResourceLocations("/css/").setCachePeriod(31556926);
+        registry.addResourceHandler("/assets/images/**")
+                .addResourceLocations("/img/").setCachePeriod(31556926);
+        registry.addResourceHandler("/assets/js/**")
+                .addResourceLocations("/js/").setCachePeriod(31556926);
         registry.setOrder(Ordered.LOWEST_PRECEDENCE);
-	}
+    }
 
-	@Override
-	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-		configurer.enable();
-	}
-	
-	@Bean
-	public InternalResourceViewResolver getInternalResourceViewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".jspx");
-		resolver.setViewClass(JstlView.class);
-		return resolver;
-	}
-	
-	@Bean
+    @Override
+    public void configureDefaultServletHandling(
+            DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Bean
+    public InternalResourceViewResolver getInternalResourceViewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jspx");
+        resolver.setViewClass(JstlView.class);
+        return resolver;
+    }
+
+    @Bean
     public SimpleMappingExceptionResolver exceptionResolver() {
         SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
 

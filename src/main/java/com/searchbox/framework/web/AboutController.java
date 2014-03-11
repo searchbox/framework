@@ -31,23 +31,23 @@ import com.searchbox.framework.repository.SearchboxRepository;
 //@Controller
 //@RequestMapping("/about")
 public class AboutController {
-	
-	@Autowired
-	SearchboxRepository searchboxRepository;
 
-	@RequestMapping
-	public ModelAndView about(HttpServletRequest request) {
-		// That should come from the searchbox param/filter
-		Searchbox searchbox = searchboxRepository.findAll().iterator().next();
+    @Autowired
+    SearchboxRepository searchboxRepository;
 
-		List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
-		for(PresetDefinition pdef:searchbox.getPresets()){
-			presets.add(pdef);
-		}
-		
-		ModelAndView model = new ModelAndView("about/index");
-		model.addObject("presets", presets);
-		model.addObject("searchbox", searchbox);
-		return model;
-	}
+    @RequestMapping
+    public ModelAndView about(HttpServletRequest request) {
+        // That should come from the searchbox param/filter
+        Searchbox searchbox = searchboxRepository.findAll().iterator().next();
+
+        List<PresetDefinition> presets = new ArrayList<PresetDefinition>();
+        for (PresetDefinition pdef : searchbox.getPresets()) {
+            presets.add(pdef);
+        }
+
+        ModelAndView model = new ModelAndView("about/index");
+        model.addObject("presets", presets);
+        model.addObject("searchbox", searchbox);
+        return model;
+    }
 }

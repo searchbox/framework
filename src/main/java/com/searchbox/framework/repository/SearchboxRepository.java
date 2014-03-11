@@ -21,5 +21,5 @@ import com.searchbox.framework.domain.Searchbox;
 
 public interface SearchboxRepository extends CrudRepository<Searchbox, Long> {
 
-	public Searchbox findBySlug(String slug);
+    public Searchbox findBySlug(String slug);
 }

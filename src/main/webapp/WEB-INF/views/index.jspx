@@ -1,17 +1,17 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:spring="http://www.springframework.org/tags"
-  xmlns:form="http://www.springframework.org/tags/form"
-  xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
+ xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
 
-  <jsp:output omit-xml-declaration="yes" />
-  <jsp:output doctype-root-element="HTML"
-    doctype-system="about:legacy-compat" />
+ <jsp:output omit-xml-declaration="yes" />
+ <jsp:output doctype-root-element="HTML"
+  doctype-system="about:legacy-compat" />
 
-  <jsp:directive.page contentType="text/html;charset=UTF-8" />
-  <jsp:directive.page pageEncoding="UTF-8" />
+ <jsp:directive.page contentType="text/html;charset=UTF-8" />
+ <jsp:directive.page pageEncoding="UTF-8" />
 
-  <html>
+ <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
@@ -22,293 +22,279 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <div id="wrap">
+ <div id="wrap">
 
-    <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
+  <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
-    <div id="main-content" role="main">
+  <div id="main-content" role="main">
 
-      <div class="row" id="main-search-content">
+   <div class="row" id="main-search-content">
 
-        <div class="row" id="search-bar" style="margin-bottom:25px;">
+    <div class="row" id="search-bar" style="margin-bottom: 25px;">
 
-          <div class="col-md-3 col-sm-5 col-left">
+     <div class="col-md-3 col-sm-5 col-left">
 
-            <div class="media">
-              <spring:url
-                  value="/"
-                  var="home_url" />
-              <a class="pull-left" href="${home_url}">
-                <spring:url
-                  value="/img/searchbox-logo-big.png"
-                  var="searchbox_logo" /> <img src='${searchbox_logo}'
-                class="media-object" alt="Searchbox" id="logo-image" />
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="row" id="info">
-
-          <div class="col-md-5">
-            <div class="panel panel-default"
-              id="admin_${element.getClass().getSimpleName()}">
-              <div class="panel-heading">Server Information</div>
-              <div class="panel-body">
-                <div class="block" id="instance">
-                  <h5>JVM-Memory (Max 6.34 GB)</h5>
-                  <div class="progress">
-                    <div class="progress-bar" role="progressbar"
-                      aria-valuenow="60" aria-valuemin="0"
-                      aria-valuemax="100" style="width: 60%;">
-                      3.25 GB</div>
-                  </div>
-
-                  <h5>Physical Memory (Max 7.28 GB)</h5>
-                  <div class="progress">
-                    <div class="progress-bar" role="progressbar"
-                      aria-valuenow="99.5" aria-valuemin="0"
-                      aria-valuemax="100" style="width: 99%;">
-                      7.24 GB</div>
-                  </div>
-
-                  <h5>Instance</h5>
-
-                  <div class="content">
-                    <ul class="data">
-                      <li class="start_time" style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Start</span>
-                          </dt>
-                          <dd class="timeago"
-                            title="2013-12-12T14:05:37.249Z">2
-                            months ago</dd>
-                        </dl></li>
-                      <li class="host odd" style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Host</span>
-                          </dt>
-                          <dd>ip-10-33-187-95.eu-west-1.compute.internal</dd>
-                        </dl></li>
-                      <li class="dir dir_cwd"
-                        style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>CWD</span>
-                          </dt>
-                          <dd>/home/ubuntu/searchbox-server</dd>
-                        </dl></li>
-                      <li class="dir dir_instance odd"
-                        style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Instance</span>
-                          </dt>
-                          <dd>/home/ubuntu/searchbox-server/./bin/solr/communitysites_v0_shard1_replica1</dd>
-                        </dl></li>
-                      <li class="dir dir_data"
-                        style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Data</span>
-                          </dt>
-                          <dd>/mnt/solr/communitysites_v0_shard1_replica1</dd>
-                        </dl></li>
-                      <li class="dir dir_index odd"
-                        style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Index</span>
-                          </dt>
-                          <dd>/mnt/solr/communitysites_v0_shard1_replica1/index</dd>
-                        </dl></li>
-                    </ul>
-                  </div>
-                  <h5>Searchbox</h5>
-                  <div class="content">
-                    <ul class="data">
-                      <li class="start_time" style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Version</span>
-                          </dt>
-                          <dd class="version">1.0-SNAPSHOT-SEARCHBOX</dd>
-                        </dl></li>
-
-                      <li class="host odd" style="display: list-item;"><dl
-                          class="clearfix">
-                          <dt>
-                            <span>Last Update</span>
-                          </dt>
-                          <dd>2014-03-10</dd>
-                        </dl></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row col-md-7">
-            <div class="col-md-12">
-              <jsp:include page="/WEB-INF/views/login.jspx" />
-            </div>
-          </div>
-
-          <div class="row col-md-7">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">Available Searchbox on
-                  server</div>
-                <div class="panel-body">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>name</th>
-                        <th>alias</th>
-                        <th>slug</th>
-                        <th>users</th>
-                        <th>options</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <c:forEach items="${searchboxes }" var="searchbox"
-                        varStatus="item">
-                        <tr>
-                          <td>${item.count }</td>
-                          <td>${searchbox.name }</td>
-                          <td>${searchbox.alias }</td>
-                          <spring:url value="/${searchbox.slug }/search"
-                            var="searchboxUrl" />
-                          <td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
-                          <td></td>
-                          <td>
-                            <div class="btn-group btn-group-sm">
-                              <spring:url var="adminUrl"
-                                value="/${searchbox.slug }/admin" />
-                              <a href="${adminUrl }"
-                                class="btn btn-default"> <span
-                                class="glyphicon glyphicon-cog"></span>
-                              </a>
-                            </div>
-                          </td>
-                        </tr>
-                      </c:forEach>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row col-md-7" id="collections">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">Available Collections
-                  on server</div>
-                <div class="panel-body">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>name</th>
-                        <th>alias</th>
-                        <th>slug</th>
-                        <th>users</th>
-                        <th>options</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <c:forEach items="${collections }"
-                        var="collection" varStatus="item">
-                        <tr>
-                          <td>${item.count }</td>
-                          <td>${collection.getAttributeByName('name') }</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td>options here</td>
-                        </tr>
-                      </c:forEach>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row col-md-7" id="searchengines">
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">Available SearchEngines
-                  on server</div>
-                <div class="panel-body">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>name</th>
-                        <th>alias</th>
-                        <th>slug</th>
-                        <th>users</th>
-                        <th>options</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <c:forEach items="${searchengines }"
-                        var="searchengine" varStatus="item">
-                        <tr>
-                          <td>${item.count }</td>
-                          <td>${searchengine.name }</td>
-                          <td>${searchengine.clazz.getSimpleName() }</td>
-                          <td></td>
-                          <td></td>
-                          <td>options here</td>
-                        </tr>
-                      </c:forEach>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
+      <div class="media">
+       <spring:url value="/" var="home_url" />
+       <a class="pull-left" href="${home_url}"> <spring:url
+         value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
+        src='${searchbox_logo}' class="media-object" alt="Searchbox"
+        id="logo-image" />
+       </a>
       </div>
-    </div>
-  </div>
+     </div>
 
-  <style>
+    </div>
+
+    <div class="row" id="info">
+
+     <div class="col-md-5">
+      <div class="panel panel-default"
+       id="admin_${element.getClass().getSimpleName()}">
+       <div class="panel-heading">Server Information</div>
+       <div class="panel-body">
+        <div class="block" id="instance">
+         <h5>JVM-Memory (Max 6.34 GB)</h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+           style="width: 60%;">3.25 GB</div>
+         </div>
+
+         <h5>Physical Memory (Max 7.28 GB)</h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="99.5" aria-valuemin="0" aria-valuemax="100"
+           style="width: 99%;">7.24 GB</div>
+         </div>
+
+         <h5>Instance</h5>
+
+         <div class="content">
+          <ul class="data">
+           <li class="start_time" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Start</span>
+             </dt>
+             <dd class="timeago" title="2013-12-12T14:05:37.249Z">2
+              months ago</dd>
+            </dl></li>
+           <li class="host odd" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Host</span>
+             </dt>
+             <dd>ip-10-33-187-95.eu-west-1.compute.internal</dd>
+            </dl></li>
+           <li class="dir dir_cwd" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>CWD</span>
+             </dt>
+             <dd>/home/ubuntu/searchbox-server</dd>
+            </dl></li>
+           <li class="dir dir_instance odd" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Instance</span>
+             </dt>
+             <dd>/home/ubuntu/searchbox-server/./bin/solr/communitysites_v0_shard1_replica1</dd>
+            </dl></li>
+           <li class="dir dir_data" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Data</span>
+             </dt>
+             <dd>/mnt/solr/communitysites_v0_shard1_replica1</dd>
+            </dl></li>
+           <li class="dir dir_index odd" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Index</span>
+             </dt>
+             <dd>/mnt/solr/communitysites_v0_shard1_replica1/index</dd>
+            </dl></li>
+          </ul>
+         </div>
+         <h5>Searchbox</h5>
+         <div class="content">
+          <ul class="data">
+           <li class="start_time" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Version</span>
+             </dt>
+             <dd class="version">1.0-SNAPSHOT-SEARCHBOX</dd>
+            </dl></li>
+
+           <li class="host odd" style="display: list-item;"><dl
+             class="clearfix">
+             <dt>
+              <span>Last Update</span>
+             </dt>
+             <dd>2014-03-10</dd>
+            </dl></li>
+          </ul>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7">
+      <div class="col-md-12">
+       <jsp:include page="/WEB-INF/views/login.jspx" />
+      </div>
+     </div>
+
+     <div class="row col-md-7">
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available Searchbox on server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>alias</th>
+            <th>slug</th>
+            <th>users</th>
+            <th>options</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${searchboxes }" var="searchbox"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${searchbox.name }</td>
+             <td>${searchbox.alias }</td>
+             <spring:url value="/${searchbox.slug }/search"
+              var="searchboxUrl" />
+             <td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
+             <td></td>
+             <td>
+              <div class="btn-group btn-group-sm">
+               <spring:url var="adminUrl"
+                value="/${searchbox.slug }/admin" />
+               <a href="${adminUrl }" class="btn btn-default"> <span
+                class="glyphicon glyphicon-cog"></span>
+               </a>
+              </div>
+             </td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7" id="collections">
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available Collections on server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>alias</th>
+            <th>slug</th>
+            <th>users</th>
+            <th>options</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${collections }" var="collection"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${collection.getAttributeByName('name') }</td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td>options here</td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7" id="searchengines">
+
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available SearchEngines on
+         server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>alias</th>
+            <th>slug</th>
+            <th>users</th>
+            <th>options</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${searchengines }" var="searchengine"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${searchengine.name }</td>
+             <td>${searchengine.clazz.getSimpleName() }</td>
+             <td></td>
+             <td></td>
+             <td>options here</td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+    </div>
+
+   </div>
+  </div>
+ </div>
+
+ <style>
 ul.data {
-  list-style: none;
-  padding-left: 5px;
+ list-style: none;
+ padding-left: 5px;
 }
 
 ul.data dl {
-  margin-bottom: 5px;
+ margin-bottom: 5px;
 }
 
 ul.data li dt {
-  float: left;
-  white-space: nowrap;
-  width: 20%;
+ float: left;
+ white-space: nowrap;
+ width: 20%;
 }
 
 ul.data li dd {
-  float: right;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 80%;
+ float: right;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
+ width: 80%;
 }
-
 </style>
 </body>
-  </html>
+ </html>
 </jsp:root>

@@ -22,48 +22,49 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
-public class SearchElementWithValues<K extends ValueElement> extends SearchElement {
-	
-	@SearchAttribute
-	protected Order order;
-	
-	@SearchAttribute
-	protected Sort sort;
-	
-	protected SortedSet<K> values;
+public class SearchElementWithValues<K extends ValueElement> extends
+        SearchElement {
 
-	public SearchElementWithValues() {
-		super(null, SearchElement.Type.UNKNOWN);
-		values = new TreeSet<K>();
-	}
-	
-	public SearchElementWithValues(String label, SearchElement.Type type) {
-		super(label, type);
-		values = new TreeSet<K>();
-	}
+    @SearchAttribute
+    protected Order order;
 
-	public SearchElementWithValues<K> addValueElement(K valueElement){
-		this.values.add(valueElement);
-		return this;
-	}
-	
-	public SortedSet<K> getValues(){
-		return this.values;
-	}
-	
-	public Order getOrder() {
-		return order;
-	}
+    @SearchAttribute
+    protected Sort sort;
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    protected SortedSet<K> values;
 
-	public Sort getSort() {
-		return sort;
-	}
+    public SearchElementWithValues() {
+        super(null, SearchElement.Type.UNKNOWN);
+        values = new TreeSet<K>();
+    }
 
-	public void setSort(Sort sort) {
-		this.sort = sort;
-	}
+    public SearchElementWithValues(String label, SearchElement.Type type) {
+        super(label, type);
+        values = new TreeSet<K>();
+    }
+
+    public SearchElementWithValues<K> addValueElement(K valueElement) {
+        this.values.add(valueElement);
+        return this;
+    }
+
+    public SortedSet<K> getValues() {
+        return this.values;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
 }

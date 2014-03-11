@@ -22,55 +22,58 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
-public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends AbstractSearchCondition> 
-	extends SearchElement implements SearchConditionToElementMerger {
-	
-	@SearchAttribute
-	protected Order order = Order.BY_VALUE;
-	
-	@SearchAttribute
-	protected Sort sort = Sort.DESC;
-	
-	SortedSet<K> values;
-	
-	public abstract void mergeSearchCondition(AbstractSearchCondition condition);
+public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends AbstractSearchCondition>
+        extends SearchElement implements SearchConditionToElementMerger {
 
-	public SearchElementWithConditionalValues() {
-		super(null,SearchElement.Type.UNKNOWN);
-		values = new TreeSet<K>();
-	}
-	
-	public SearchElementWithConditionalValues(String label, SearchElement.Type type) {
-		super(label,type);
-		values = new TreeSet<K>();
-	}
+    @SearchAttribute
+    protected Order order = Order.BY_VALUE;
 
-	public SearchElementWithConditionalValues<K,T> addValueElement(K valueElement){
-		this.values.add(valueElement);
-		return this;
-	}
-	
-	public SortedSet<K> getValues(){
-		return this.values;
-	}
-	
-	public void setValues(SortedSet<K> values){
-		this.values = values;
-	}
-	
-	public Order getOrder() {
-		return order;
-	}
+    @SearchAttribute
+    protected Sort sort = Sort.DESC;
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    SortedSet<K> values;
 
-	public Sort getSort() {
-		return sort;
-	}
+    @Override
+    public abstract void mergeSearchCondition(AbstractSearchCondition condition);
 
-	public void setSort(Sort sort) {
-		this.sort = sort;
-	}
+    public SearchElementWithConditionalValues() {
+        super(null, SearchElement.Type.UNKNOWN);
+        values = new TreeSet<K>();
+    }
+
+    public SearchElementWithConditionalValues(String label,
+            SearchElement.Type type) {
+        super(label, type);
+        values = new TreeSet<K>();
+    }
+
+    public SearchElementWithConditionalValues<K, T> addValueElement(
+            K valueElement) {
+        this.values.add(valueElement);
+        return this;
+    }
+
+    public SortedSet<K> getValues() {
+        return this.values;
+    }
+
+    public void setValues(SortedSet<K> values) {
+        this.values = values;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
 }
