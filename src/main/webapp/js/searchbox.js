@@ -40,11 +40,20 @@ var handleFacet = function(action, groupName, facetValue, baseUrl) {
 var bindClickableTagsEvents = function(){
   $("#results .label-tag.clickable").unbind();
   $("#results .label-tag.clickable").click(function() {
-    console.log("Adding condition "+$(this).attr("data-filter"));
-    var input = $("<input type='hidden'/>");
-    input.attr("name", $(this).attr("data-condition"));
-    input.attr("value", $(this).attr("data-condition-value"));
-    $('form').append(input);
+    var tag = $(this);
+    if($(this).hasClass("selected")){
+        $('input[name=ff]').each(function(){
+            if(tag.attr("data-condition-value").indexOf($(this).attr("value"))>-1){
+                $(this).parent().remove();
+            }
+        });
+    } else {
+        console.log("Adding condition "+$(this).attr("data-filter"));
+        var input = $("<input type='hidden'/>");
+        input.attr("name", $(this).attr("data-condition"));
+        input.attr("value", $(this).attr("data-condition-value"));
+        $('form').append(input);
+    }
     $('form').submit();
     return false;
   });
