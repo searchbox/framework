@@ -348,7 +348,7 @@ public class EENCollection extends AbstractBatchCollection implements
     protected FlowJobBuilder getJobFlow(JobBuilder builder) {
         try {
             Step step = stepBuilderFactory.get("getFile")
-                    .<Profile, FieldMap> chunk(5).reader(reader())
+                    .<Profile, FieldMap> chunk(50).reader(reader())
                     .processor(itemProcessor()).writer(writer()).build();
 
             return builder.flow(step).end();

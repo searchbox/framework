@@ -245,7 +245,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 	
 	@Override
 	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
-		Step step = stepBuilderFactory.get("getFile").<JSONObject, Map<String, Object>> chunk(5)
+		Step step = stepBuilderFactory.get("getFile").<JSONObject, Map<String, Object>> chunk(50)
 				.reader(reader()).processor(itemProcessor()).writer(writer())
 				.build();
 		
