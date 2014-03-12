@@ -142,7 +142,7 @@ public class SearchController {
             @PathVariable PresetDefinition preset, HttpServletRequest request,
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
-        LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+        LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
         model.setViewName(getViewViewName());
 
         SearchResult result = new SearchResult();
