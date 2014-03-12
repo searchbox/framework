@@ -40,19 +40,12 @@ var handleFacet = function(action, groupName, facetValue, baseUrl) {
 var bindClickableTagsEvents = function(){
   $("#results .label-tag.clickable").unbind();
   $("#results .label-tag.clickable").click(function() {
-    var filter = $(this).attr("data-filter").split(":");
-    if (filter.length == 2) {
-      var path = $.url(window.location.href).attr("path");
-      var pieces = path.split("/");
-
-      var baseUrl = path;
-      /*if (pieces[2] != "search") {
-        baseUrl = "/" + pieces[1] + "/search"
-      }*/
-
-      console.log("Adding facet "+filter[0] + ", " + filter[1] +" - "+ baseUrl);
-      handleFacet("add", filter[0], filter[1], baseUrl);
-    }
+    console.log("Adding condition "+$(this).attr("data-filter"));
+    var input = $("<input type='hidden'/>");
+    input.attr("name", $(this).attr("data-condition"));
+    input.attr("value", $(this).attr("data-condition-value"));
+    $('form').append(input);
+    $('form').submit();
     return false;
   });
   
@@ -181,7 +174,7 @@ var bindFacetEvents = function() {
 
 var bindResultPageEvents = function() {
 
-  // Bind facet events
+  // Bind all page events
   bindFacetEvents();
   bindSearchAutocompleteEvent();
   bindClickableTagsEvents();
