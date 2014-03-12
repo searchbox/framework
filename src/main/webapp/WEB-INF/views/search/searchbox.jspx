@@ -1,52 +1,50 @@
 <div xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:jsp="http://java.sun.com/JSP/Page">
-	<jsp:directive.page contentType="text/html;charset=UTF-8" />
-	<jsp:output omit-xml-declaration="yes" />
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:jsp="http://java.sun.com/JSP/Page">
+ <jsp:directive.page contentType="text/html;charset=UTF-8" />
+ <jsp:output omit-xml-declaration="yes" />
 
-	<form>
-		<div class="panel panel-default">
-			<div class="panel-heading">Select a Searchbox</div>
-			<div class="panel-body">
-				<p>Here are the searchbox available on yoru configuration.
-					Please select an environement either via alias or by url-params to
-					use your searchbox</p>
-				<p>If you would like to create a new searchbox please follow log
-					into your administrive panel.</p>
-			</div>
+ <form>
+  <div class="panel panel-default">
+   <div class="panel-heading">Select a Searchbox</div>
+   <div class="panel-body">
+    <p>Here are the searchbox available on yoru configuration.
+     Please select an environement either via alias or by url-params to
+     use your searchbox</p>
+    <p>If you would like to create a new searchbox please follow log
+     into your administrive panel.</p>
+   </div>
 
-			<table class="table">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>Link</th>
-						<th>Alias/VHost</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${searchboxes}" var="searchbox" varStatus="item">
-						<tr>
-							<td>${item.count }</td>
-							<td>${searchbox.getName() }</td>
-							<td><a href="?searchbox=${searchbox.getSlug()}">avilable
-									on localhost</a></td>
-							<td>
-							 <c:choose>
-							   <c:when test="${not searchbox.getAlias() eq null}">
-      							<a href="${searchbox.getAlias()}">${searchbox.getAlias()}</a>			   
-							   </c:when>
-							   <c:otherwise>
+   <table class="table">
+    <thead>
+     <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Link</th>
+      <th>Alias/VHost</th>
+     </tr>
+    </thead>
+    <tbody>
+     <c:forEach items="${searchboxes}" var="searchbox" varStatus="item">
+      <tr>
+       <td>${item.count }</td>
+       <td>${searchbox.getName() }</td>
+       <td><a href="?searchbox=${searchbox.getSlug()}">avilable
+         on localhost</a></td>
+       <td><c:choose>
+         <c:when test="${not searchbox.getAlias() eq null}">
+          <a href="${searchbox.getAlias()}">${searchbox.getAlias()}</a>
+         </c:when>
+         <c:otherwise>
 							     no alias availble
 							   </c:otherwise>
-							 </c:choose>
-							 </td> 
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+        </c:choose></td>
+      </tr>
+     </c:forEach>
+    </tbody>
+   </table>
 
-		</div>
-	</form>
+  </div>
+ </form>
 </div>

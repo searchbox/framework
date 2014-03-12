@@ -30,25 +30,25 @@ import org.springframework.stereotype.Controller;
 @EnableSpringConfigured
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = { "com.searchbox" }, excludeFilters = {
-		@ComponentScan.Filter(value = Controller.class, type = FilterType.ANNOTATION),
-		@ComponentScan.Filter(pattern = { "com\\.searchbox\\.framework\\.web\\..*" }, type = FilterType.REGEX),
-		@ComponentScan.Filter(pattern = { "com\\.searchbox\\.framework\\.bootstrap\\..*" }, type = FilterType.REGEX) })
+        @ComponentScan.Filter(value = Controller.class, type = FilterType.ANNOTATION),
+        @ComponentScan.Filter(pattern = { "com\\.searchbox\\.framework\\.web\\..*" }, type = FilterType.REGEX),
+        @ComponentScan.Filter(pattern = { "com\\.searchbox\\.framework\\.bootstrap\\..*" }, type = FilterType.REGEX) })
 public class RootConfiguration {
 
-	private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
+    private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
 
-	@Bean
-	public MessageSource messageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-		messageSource.setBasename(MESSAGE_SOURCE_BASE_NAME);
-		messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setBasename(MESSAGE_SOURCE_BASE_NAME);
+        messageSource.setUseCodeAsDefaultMessage(true);
 
-		return messageSource;
-	}
+        return messageSource;
+    }
 
-	@Bean
-	public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
+    @Bean
+    public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }

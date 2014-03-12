@@ -38,141 +38,142 @@ import org.springframework.social.security.SocialUserDetails;
 
 import com.searchbox.framework.web.user.SocialMediaService;
 
-
 @Entity
 public class User implements SocialUserDetails, UserDetails {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -2384552120318639487L;
+    private static final long serialVersionUID = -2384552120318639487L;
 
-	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-	
-	@Version
-	@Column(name="OPTLOCK")
-	private long version;
-	
-	@Column(nullable=false, unique=true)
-	private String email;
-	
-	private String password;
 
-	private boolean accountNonExpired = true;
+    @Version
+    @Column(name = "OPTLOCK")
+    private long version;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    private String password;
+
+    private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled = true;
-	    
-	private SocialMediaService SignInProvider;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="user")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	List<UserRole> roles = new ArrayList<UserRole>();
-	//private Map<Searchbox, UserRole> roles = new HashMap<Searchbox,UserRole>();
 
+    private SocialMediaService SignInProvider;
 
-	public User(){
-	}	
-	
-	public User(String email, String password){
-		this.email = email;
-		this.password = password;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    List<UserRole> roles = new ArrayList<UserRole>();
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    // private Map<Searchbox, UserRole> roles = new
+    // HashMap<Searchbox,UserRole>();
 
-	public String getPassword() {
-		return password;
-	}
+    public User() {
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-	public long getId() {
-		return id;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public long getVersion() {
-		return version;
-	}
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-	public void setVersion(long version) {
-		this.version = version;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public List<UserRole> getRoles() {
-		return roles;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setRoles(List<UserRole> roles) {
-		this.roles = roles;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public SocialMediaService getSignInProvider() {
-		return SignInProvider;
-	}
+    public long getVersion() {
+        return version;
+    }
 
-	public void setSignInProvider(SocialMediaService signInProvider) {
-		SignInProvider = signInProvider;
-	}
+    public void setVersion(long version) {
+        this.version = version;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles;
-	}
+    public List<UserRole> getRoles() {
+        return roles;
+    }
 
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-	
-	public String setUsername() {
-		return this.email;
-	}
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return this.accountNonExpired;
-	}
+    public SocialMediaService getSignInProvider() {
+        return SignInProvider;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return this.accountNonLocked;
-	}
+    public void setSignInProvider(SocialMediaService signInProvider) {
+        SignInProvider = signInProvider;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return this.credentialsNonExpired;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
-	}
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 
-	@Override
-	public String getUserId() {
-		return getUsername();
-	}
-	
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this,
-				ToStringStyle.SHORT_PREFIX_STYLE);
-	}
+    public String setUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // TODO Auto-generated method stub
+        return this.accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // TODO Auto-generated method stub
+        return this.credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public String getUserId() {
+        return getUsername();
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

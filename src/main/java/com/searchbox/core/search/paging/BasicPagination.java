@@ -24,98 +24,99 @@ import com.searchbox.core.search.ConditionalSearchElement;
 import com.searchbox.core.search.SearchElement;
 
 @SearchComponent
-public class BasicPagination extends ConditionalSearchElement<BasicPagination.PageCondition>{
-		
-	@SearchAttribute
-	private Integer hitsPerPage = 10;
-	
-	private Integer currentPage = 0;
-	private Integer maxPage;
-	
-	private Long numberOfHits;
-	
-	public BasicPagination(){
-		super();
-		this.type = SearchElement.Type.VIEW;
-	}
+public class BasicPagination extends
+        ConditionalSearchElement<BasicPagination.PageCondition> {
 
-	
-	public Integer getMaxPage() {
-		return maxPage;
-	}
+    @SearchAttribute
+    private Integer hitsPerPage = 10;
 
-	public void setMaxPage(Integer maxPage) {
-		this.maxPage = maxPage;
-	}
+    private Integer currentPage = 0;
+    private Integer maxPage;
 
-	public Integer getHitsPerPage() {
-		return hitsPerPage;
-	}
+    private Long numberOfHits;
 
-	public void setHitsPerPage(Integer hitsPerPage) {
-		this.hitsPerPage = hitsPerPage;
-	}
+    public BasicPagination() {
+        super();
+        this.type = SearchElement.Type.VIEW;
+    }
 
-	public Long getNumberOfHits() {
-		return numberOfHits;
-	}
+    public Integer getMaxPage() {
+        return maxPage;
+    }
 
-	public void setNumberOfHits(long l) {
-		this.numberOfHits = l;
-	}
+    public void setMaxPage(Integer maxPage) {
+        this.maxPage = maxPage;
+    }
 
-	public Integer getCurrentPage() {
-		return currentPage;
-	}
+    public Integer getHitsPerPage() {
+        return hitsPerPage;
+    }
 
-	public void setCurrentPage(Integer currentPage) {
-		this.currentPage = currentPage;
-	}
+    public void setHitsPerPage(Integer hitsPerPage) {
+        this.hitsPerPage = hitsPerPage;
+    }
 
-	@Override
-	public void mergeSearchCondition(AbstractSearchCondition condition) {
-		if(PageCondition.class.equals(condition.getClass())){
-			PageCondition pcondition = (PageCondition)condition;
-				this.currentPage = pcondition.getPage();
-		}
-	}
+    public Long getNumberOfHits() {
+        return numberOfHits;
+    }
 
-	
-	@SearchCondition(urlParam="p")
-	public static class PageCondition extends AbstractSearchCondition {
-		Integer page;
-		public PageCondition(Integer page) {
-			this.page = page;
-		}
-		
-		public Integer getPage(){
-			return this.page;
-		}
-	}
+    public void setNumberOfHits(long l) {
+        this.numberOfHits = l;
+    }
 
-	@SearchConverter	
-	public static class Converter implements 
-		org.springframework.core.convert.converter.Converter<String, BasicPagination.PageCondition> {
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
 
-		@Override
-		public PageCondition convert(String source) {
-			return new PageCondition(Integer.parseInt(source));
-		}
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
 
-	}
+    @Override
+    public void mergeSearchCondition(AbstractSearchCondition condition) {
+        if (PageCondition.class.equals(condition.getClass())) {
+            PageCondition pcondition = (PageCondition) condition;
+            this.currentPage = pcondition.getPage();
+        }
+    }
 
-	@Override
-	public String geParamValue() {
-		return this.currentPage+"";
-	}
+    @SearchCondition(urlParam = "p")
+    public static class PageCondition extends AbstractSearchCondition {
+        Integer page;
 
-	@Override
-	public PageCondition getSearchCondition() {
-		return new PageCondition(this.currentPage);
-	}
+        public PageCondition(Integer page) {
+            this.page = page;
+        }
 
-	@Override
-	public Class<?> getConditionClass() {
-		return PageCondition.class;
-	}
+        public Integer getPage() {
+            return this.page;
+        }
+    }
+
+    @SearchConverter
+    public static class Converter
+            implements
+            org.springframework.core.convert.converter.Converter<String, BasicPagination.PageCondition> {
+
+        @Override
+        public PageCondition convert(String source) {
+            return new PageCondition(Integer.parseInt(source));
+        }
+
+    }
+
+    @Override
+    public String geParamValue() {
+        return this.currentPage + "";
+    }
+
+    @Override
+    public PageCondition getSearchCondition() {
+        return new PageCondition(this.currentPage);
+    }
+
+    @Override
+    public Class<?> getConditionClass() {
+        return PageCondition.class;
+    }
 }

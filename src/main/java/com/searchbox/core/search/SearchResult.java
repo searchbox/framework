@@ -26,33 +26,34 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SearchResult {
 
-	List<String> fields = new ArrayList<String>();
-	SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
+    List<String> fields = new ArrayList<String>();
+    SortedSet<SearchElement> elements = new TreeSet<SearchElement>();
 
-	public SearchResult(){
-		
-	}
+    public SearchResult() {
 
-	public void addElement(SearchElement element) {
-		this.elements.add(element);
-	}
-	
-	public Set<SearchElement> getElements(SearchElement.Type type){
-		Set<SearchElement> typedElements = new TreeSet<SearchElement>();
-		for(SearchElement element:this.elements){
-			if(element.type.equals(type)){
-				typedElements.add(element);
-			}
-		}
-		return typedElements;
-	}
+    }
 
-	public SortedSet<SearchElement> getElements() {
-		return this.elements;
-	}
-	
-	@Override
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    public void addElement(SearchElement element) {
+        this.elements.add(element);
+    }
+
+    public Set<SearchElement> getElements(SearchElement.Type type) {
+        Set<SearchElement> typedElements = new TreeSet<SearchElement>();
+        for (SearchElement element : this.elements) {
+            if (element.type.equals(type)) {
+                typedElements.add(element);
+            }
+        }
+        return typedElements;
+    }
+
+    public SortedSet<SearchElement> getElements() {
+        return this.elements;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

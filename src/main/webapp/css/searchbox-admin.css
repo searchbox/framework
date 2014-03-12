@@ -1,15 +1,16 @@
 @CHARSET "UTF-8";
 
 td.nowrap {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
 }
 
-#field-attributes.table td, #field-attributes.table th {
-    text-align: center;
+#field-attributes.table td,#field-attributes.table th {
+ text-align: center;
 }
 
-#field-attributes.table td:first-child, #field-attributes.table th:first-child  {
-    text-align: left;
+#field-attributes.table td:first-child,#field-attributes.table th:first-child
+ {
+ text-align: left;
 }

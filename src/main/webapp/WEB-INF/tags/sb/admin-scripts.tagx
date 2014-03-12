@@ -1,34 +1,33 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:spring="http://www.springframework.org/tags" version="2.0">
 
-	<jsp:output omit-xml-declaration="yes" />
-	
-	<!-- http://vitalets.github.io/x-editable/ -->
-  <c:set var="xeditableVersion" value="1.5.0"/>
-	<spring:url
-		value="/assets/css/bootstrap-editable.css" var="xeditable_css_url" />
-	<spring:url value="/assets/js/bootstrap-editable.min.js"
-		var="xeditable_js_url" />
-  <spring:url
-    value="/assets/js/jquery.bootstrap-growl.min.js"
-    var="bootstrap_growl_js_url" />
-  <spring:url
-    value="/assets/js/jquery.tablesorter.min.js"
-    var="tablesorter_js_url" />
-   <spring:url
-    value="/assets/css/tablesorter.theme.bootstrap.css" var="tablesorter_css_url" />
-    
-    
-	
-   <link rel="stylesheet" type="text/css" href="${xeditable_css_url}" />  
-   <link rel="stylesheet" type="text/css" href="${tablesorter_css_url}" />
-     
-   <link rel="stylesheet" type="text/css" href="/assets/css/searchbox-admin.css" />
-  <script src="${xeditable_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script src="${bootstrap_growl_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script src="${tablesorter_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+ <jsp:output omit-xml-declaration="yes" />
+
+ <!-- http://vitalets.github.io/x-editable/ -->
+ <c:set var="xeditableVersion" value="1.5.0" />
+ <spring:url value="/assets/css/bootstrap-editable.css"
+  var="xeditable_css_url" />
+ <spring:url value="/assets/js/bootstrap-editable.min.js"
+  var="xeditable_js_url" />
+ <spring:url value="/assets/js/jquery.bootstrap-growl.min.js"
+  var="bootstrap_growl_js_url" />
+ <spring:url value="/assets/js/jquery.tablesorter.min.js"
+  var="tablesorter_js_url" />
+ <spring:url value="/assets/css/tablesorter.theme.bootstrap.css"
+  var="tablesorter_css_url" />
+
+
+
+ <link rel="stylesheet" type="text/css" href="${xeditable_css_url}" />
+ <link rel="stylesheet" type="text/css" href="${tablesorter_css_url}" />
+
+ <link rel="stylesheet" type="text/css"
+  href="/assets/css/searchbox-admin.css" />
+ <script src="${xeditable_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+ <script src="${bootstrap_growl_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+ <script src="${tablesorter_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
 
 
 </jsp:root>

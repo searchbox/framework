@@ -1,81 +1,95 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
-	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+ xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+ xmlns:str="http://jakarta.apache.org/taglibs/string-1.1">
 
-	<jsp:output omit-xml-declaration="yes" />
+ <jsp:output omit-xml-declaration="yes" />
 
-	<jsp:directive.attribute name="value" type="java.lang.Object"
-		required="true" rtexprvalue="true" description="element to display" />
+ <jsp:directive.attribute name="value" type="java.lang.Object"
+  required="true" rtexprvalue="true" description="element to display" />
 
-	<jsp:directive.attribute name="join" type="java.lang.String"
-		required="false" rtexprvalue="true" description="element to display" />
+ <jsp:directive.attribute name="join" type="java.lang.String"
+  required="false" rtexprvalue="true" description="element to display" />
 
-	<jsp:directive.attribute name="pre" type="java.lang.String"
-		required="false" rtexprvalue="true" description="element to display" />
+ <jsp:directive.attribute name="pre" type="java.lang.String"
+  required="false" rtexprvalue="true" description="element to display" />
 
-	<jsp:directive.attribute name="post" type="java.lang.String"
-		required="false" rtexprvalue="true" description="element to display" />
+ <jsp:directive.attribute name="post" type="java.lang.String"
+  required="false" rtexprvalue="true" description="element to display" />
 
-	<jsp:directive.attribute name="maxLengh" type="java.lang.Integer"
-		required="false" rtexprvalue="true" description="element to display" />
+ <jsp:directive.attribute name="maxLengh" type="java.lang.Integer"
+  required="false" rtexprvalue="true" description="element to display" />
 
-	<c:if test="${empty join}">
-		<c:set value=" " var="join" />
-	</c:if>
+ <jsp:directive.attribute name="datePattern" type="java.lang.String"
+  required="false" rtexprvalue="true" description="element to display" />
 
-	<c:forEach items="${value }" var="item" varStatus="loop">
-		<c:set var="output" value="" />
-		<c:choose>
-		
-		  <!--  match a INTEGER/LONG -->
-			<c:when test="${item.matches('[0-9]+')}">
-				<c:set var="output" value="${item }" />
-			</c:when>
-			
-			<!--  match a time:  2014-04-24T15:00:00.000Z -->
-			<c:when test="${item.matches('[0-9-]+T[0-9:\\.]+Z')}">
-			<jsp:useBean id="dateValue" class="java.util.Date">
-			</jsp:useBean>
-			<fmt:parseDate value="${item}" var="parsedEmpDate" pattern="yyyy-MM-dd'T'HH:mm:ss"/>
-				<c:set var="output">
-					<fmt:formatDate type="date" dateStyle="long" value="${parsedEmpDate}" />
-				</c:set>
-			</c:when>
-			
-			<!--  match anything else (String among others) -->
-			<c:otherwise>
-				<c:if test="${not empty maxLengh}">
-					<c:set var="words" value="${fn:split(item, ' ')}" />
-					<c:set var="trimmedContent" value="" />
-					<c:forEach items="${words }" var="word" varStatus="wordLoop">
-						<c:if test='${fn:length(trimmedContent) lt maxLengh}'>
-							<c:set var="trimmedContent" value="${trimmedContent } ${word}" />
-						</c:if>
-					</c:forEach>
-					<c:if test="${fn:length(trimmedContent) lt fn:length(item)}">
-						<c:set var="trimmedContent" value="${trimmedContent } ..." />
-					</c:if>
-					<c:set value="${fn:trim(trimmedContent)}" var="item" />
-				</c:if>
-				<c:set value="${item}" var="output" />
-			</c:otherwise>
-		</c:choose>
+ <c:if test="${empty join}">
+  <c:set value=" " var="join" />
+ </c:if>
 
-    <!--  Output the content with decoration or not -->
-		<c:if test="${not empty pre}">
-			<c:out value="${pre }" escapeXml="false" />
-		</c:if>
-		<c:out value="${output }" escapeXml="false"/>
-		<c:if test="${not empty post}">
-			<c:out value="${post }" escapeXml="false" />
-		</c:if>
-		<c:if test="${!loop.last and not empty join}">
-			<c:out value="${join }" escapeXml="false" />
-		</c:if>
 
-	</c:forEach>
+ <c:forEach items="${value }" var="item" varStatus="loop">
+  <c:set var="output" value="" />
+  <c:choose>
+
+   <!--  match a INTEGER/LONG -->
+   <c:when test="${item.matches('[0-9]+')}">
+    <c:set var="output" value="${item }" />
+   </c:when>
+
+   <!--  match a time:  2014-04-24T15:00:00.000Z -->
+   <c:when test="${item.matches('[0-9-]+T[0-9:\\.]+.*')}">
+    <jsp:useBean id="dateValue" class="java.util.Date">
+    </jsp:useBean>
+    <fmt:parseDate value="${item}" var="parsedEmpDate"
+     pattern="yyyy-MM-dd'T'HH:mm:ss" />
+    <c:set var="output">
+     <c:choose>
+      <c:when test="${not empty datePattern}">
+       <fmt:formatDate type="date" pattern="${datePattern }"
+        value="${parsedEmpDate}" />
+      </c:when>
+      <c:otherwise>
+       <fmt:formatDate type="date" dateStyle="long"
+        value="${parsedEmpDate}" />
+      </c:otherwise>
+     </c:choose>
+    </c:set>
+   </c:when>
+
+   <!--  match anything else (String among others) -->
+   <c:otherwise>
+    <c:if test="${not empty maxLengh}">
+     <c:set var="words" value="${fn:split(item, ' ')}" />
+     <c:set var="trimmedContent" value="" />
+     <c:forEach items="${words }" var="word" varStatus="wordLoop">
+      <c:if test='${fn:length(trimmedContent) lt maxLengh}'>
+       <c:set var="trimmedContent" value="${trimmedContent } ${word}" />
+      </c:if>
+     </c:forEach>
+     <c:if test="${fn:length(trimmedContent) lt fn:length(item)}">
+      <c:set var="trimmedContent" value="${trimmedContent } ..." />
+     </c:if>
+     <c:set value="${fn:trim(trimmedContent)}" var="item" />
+    </c:if>
+    <c:set value="${item}" var="output" />
+   </c:otherwise>
+  </c:choose>
+
+  <!--  Output the content with decoration or not -->
+  <c:if test="${not empty pre}">
+   <c:out value="${pre }" escapeXml="false" />
+  </c:if>
+  <c:out value="${output }" escapeXml="false" />
+  <c:if test="${not empty post}">
+   <c:out value="${post }" escapeXml="false" />
+  </c:if>
+  <c:if test="${!loop.last and not empty join}">
+   <c:out value="${join }" escapeXml="false" />
+  </c:if>
+
+ </c:forEach>
 </jsp:root>

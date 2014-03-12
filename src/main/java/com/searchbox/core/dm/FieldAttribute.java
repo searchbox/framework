@@ -24,124 +24,127 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.searchbox.core.SearchAttribute;
 
 public class FieldAttribute {
-	
-	public enum USE {
-		MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
-	}
-	
-	protected Field field;
-	
-	@SearchAttribute
-	protected String label = "";
-	
-	@SearchAttribute
-	protected Boolean searchable = false;
-	
-	@SearchAttribute
-	List<String> lang = new ArrayList<String>();
 
-	@SearchAttribute
-	protected Boolean highlight = false;
-	
-	@SearchAttribute
-	protected Boolean sortable = false;
-	
-	@SearchAttribute
-	protected Boolean spelling = false;
-	
-	@SearchAttribute
-	protected Boolean suggestion = false;
-	
-	@SearchAttribute("1f")
-	protected Float boost = 1f;
-	
-	public FieldAttribute(){
-		
-	}
-	
-	public FieldAttribute(Field field){
-		this.field = field;
-	}
-
-	public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    public enum USE {
+        MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
     }
 
-	public String getLabel() {
-		return label;
-	}
+    protected Field field;
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    @SearchAttribute
+    protected String label = "";
 
-	public Boolean getSearchable() {
+    @SearchAttribute
+    protected Boolean searchable = false;
+
+    @SearchAttribute
+    List<String> lang = new ArrayList<String>();
+
+    @SearchAttribute
+    protected Boolean highlight = false;
+
+    @SearchAttribute
+    protected Boolean sortable = false;
+
+    @SearchAttribute
+    protected Boolean spelling = false;
+
+    @SearchAttribute
+    protected Boolean suggestion = false;
+
+    @SearchAttribute("1f")
+    protected Float boost = 1f;
+
+    public FieldAttribute() {
+
+    }
+
+    public FieldAttribute(Field field) {
+        this.field = field;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Boolean getSearchable() {
         return this.searchable;
     }
 
-	public void setSearchable(Boolean searchable) {
+    public void setSearchable(Boolean searchable) {
         this.searchable = searchable;
     }
 
-	public Boolean getHighlight() {
+    public Boolean getHighlight() {
         return this.highlight;
     }
 
-	public void setHighlight(Boolean highlight) {
+    public void setHighlight(Boolean highlight) {
         this.highlight = highlight;
     }
 
-	public Boolean getSortable() {
+    public Boolean getSortable() {
         return this.sortable;
     }
 
-	public void setSortable(Boolean sortable) {
+    public void setSortable(Boolean sortable) {
         this.sortable = sortable;
     }
 
-	public Boolean getSpelling() {
+    public Boolean getSpelling() {
         return this.spelling;
     }
 
-	public void setSpelling(Boolean spelling) {
+    public void setSpelling(Boolean spelling) {
         this.spelling = spelling;
     }
 
-	public Boolean getSuggestion() {
+    public Boolean getSuggestion() {
         return this.suggestion;
     }
 
-	public void setSuggestion(Boolean suggestion) {
+    public void setSuggestion(Boolean suggestion) {
         this.suggestion = suggestion;
     }
 
-	public Float getBoost() {
+    public Float getBoost() {
         return this.boost;
     }
 
-	public void setBoost(Float boost) {
+    public void setBoost(Float boost) {
         this.boost = boost;
     }
 
-	public void setField(Field field) {
-		this.field = field;
-	}
-	
-	public Field getField(){
-		return this.field;
-	}
+    public void setField(Field field) {
+        this.field = field;
+    }
 
-	/**
-	 * @return the lang
-	 */
-	public List<String> getLang() {
-		return lang;
-	}
+    public Field getField() {
+        return this.field;
+    }
 
-	/**
-	 * @param lang the lang to set
-	 */
-	public void setLang(List<String> lang) {
-		this.lang = lang;
-	}
+    /**
+     * @return the lang
+     */
+    public List<String> getLang() {
+        return lang;
+    }
+
+    /**
+     * @param lang
+     *            the lang to set
+     */
+    public void setLang(List<String> lang) {
+        this.lang = lang;
+    }
 }

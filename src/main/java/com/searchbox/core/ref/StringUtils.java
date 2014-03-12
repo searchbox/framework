@@ -29,54 +29,53 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 
-	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
-	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+    private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
+    private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
-	public static String toSlug(String input) {
-		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
-		String slug = NONLATIN.matcher(normalized).replaceAll("");
-		return slug.toLowerCase(Locale.ENGLISH);
-	}
+    public static String toSlug(String input) {
+        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
+        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
+        String slug = NONLATIN.matcher(normalized).replaceAll("");
+        return slug.toLowerCase(Locale.ENGLISH);
+    }
 
-	public static List<String> extractHitFields(String template) {
-		List<String> fields = new ArrayList<String>();
-		Pattern pattern = Pattern
-				.compile("\\{hit.fieldValues\\['([^\\s^\\^\\'}]+)'\\]\\}");
-		Matcher matcher = pattern.matcher(template);
-		while (matcher.find()) {
-			fields.add(matcher.group(1));
-		}
-		return fields;
-	}
+    public static List<String> extractHitFields(String template) {
+        List<String> fields = new ArrayList<String>();
+        Pattern pattern = Pattern
+                .compile("\\{hit.fieldValues\\['([^\\s^\\^\\'}]+)'\\]\\}");
+        Matcher matcher = pattern.matcher(template);
+        while (matcher.find()) {
+            fields.add(matcher.group(1));
+        }
+        return fields;
+    }
 
-	public static void main(String... args) {
-		extractHitFields("<a href=\"${hit.getUrl()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"
-				+ "<div>${hit.fieldValues['article-abstract']}</div>"
-				+ "<div>${hit.fieldValues['article-year']}</div>");
-		System.out.println("done");
-	}
-	
+    public static void main(String... args) {
+        extractHitFields("<a href=\"${hit.getUrl()}\"><h5 class=\"result-title\">${hit.getTitle()}</h5></a>"
+                + "<div>${hit.fieldValues['article-abstract']}</div>"
+                + "<div>${hit.fieldValues['article-year']}</div>");
+        System.out.println("done");
+    }
 
-	private static Map<Class<?>, String> classToSlug = new HashMap<Class<?>, String>();
-	private static Map<String, Class<?>> slugToClass = new HashMap<String, Class<?>>();
-	static {
-		classToSlug.put(String.class, "s");
-		classToSlug.put(Integer.class, "i");
-		classToSlug.put(Double.class, "d");
-		classToSlug.put(Date.class, "dt");
-		classToSlug.put(Float.class, "f");
-		classToSlug.put(Boolean.class, "b");
-		for(Entry<Class<?>,String> entry:classToSlug.entrySet()){
-			slugToClass.put(entry.getValue(), entry.getKey());
-		}
-	}
+    private static Map<Class<?>, String> classToSlug = new HashMap<Class<?>, String>();
+    private static Map<String, Class<?>> slugToClass = new HashMap<String, Class<?>>();
+    static {
+        classToSlug.put(String.class, "s");
+        classToSlug.put(Integer.class, "i");
+        classToSlug.put(Double.class, "d");
+        classToSlug.put(Date.class, "dt");
+        classToSlug.put(Float.class, "f");
+        classToSlug.put(Boolean.class, "b");
+        for (Entry<Class<?>, String> entry : classToSlug.entrySet()) {
+            slugToClass.put(entry.getValue(), entry.getKey());
+        }
+    }
 
-	public static String ClassToSlug(Class<?> clazz) {
-		return classToSlug.get(clazz);
-	}
+    public static String ClassToSlug(Class<?> clazz) {
+        return classToSlug.get(clazz);
+    }
 
-	public static Class<?> SlugToClass(String slug) {
-		return slugToClass.get(slug);
-	}
+    public static Class<?> SlugToClass(String slug) {
+        return slugToClass.get(slug);
+    }
 }

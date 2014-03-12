@@ -1,57 +1,63 @@
 <jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-  xmlns:spring="http://www.springframework.org/tags"
-  xmlns:form="http://www.springframework.org/tags/form"
-  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
-  <jsp:output omit-xml-declaration="yes" />
+ <jsp:output omit-xml-declaration="yes" />
 
 
-  <!-- Mobile version -->
-  <div class="btn-group facet-mobile">
-    <button type="button" class="btn btn-default dropdown-toggle"
-      data-toggle="dropdown"> ${element.label} <span class="caret"><!-- empty --></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <c:forEach items="${element.values}" var="facetValue">
-          <li><a href="#">${facetValue.value} (${facetValue.count}) <c:if test="${facetValue.getSelected()}"><span class="glyphicon glyphicon-ok"><!-- empty --></span></c:if></a></li>
-      </c:forEach>
-    </ul>
+ <!-- Mobile version -->
+ <div class="btn-group facet-mobile">
+  <button type="button" class="btn btn-default dropdown-toggle"
+   data-toggle="dropdown">
+   ${element.label} <span class="caret"> <!-- empty -->
+   </span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+   <c:forEach items="${element.values}" var="facetValue">
+    <li><a href="#">${facetValue.value} (${facetValue.count}) <c:if
+       test="${facetValue.getSelected()}">
+       <span class="glyphicon glyphicon-ok"> <!-- empty -->
+       </span>
+      </c:if></a></li>
+   </c:forEach>
+  </ul>
+ </div>
+
+ <!-- Standard version -->
+ <div class="panel panel-default">
+  <div class="panel-heading">
+   <h3 class="panel-title">${element.label}</h3>
   </div>
-
-  <!-- Standard version -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">${element.label}</h3>
-    </div>
-    <div class="panel-body">
-      <ul class="list-group facet-list">
-        <c:forEach items="${element.values}" var="facetValue" varStatus="i">
-            <c:choose>
-              <c:when test="${facetValue.getSelected()}">
-                <li class="list-group-item selected"><span class="badge">${facetValue.count}</span>
-                  <input id="${element.fieldName}_${i.index}"
-                    class="css-checkbox" type="checkbox"
-                    name="${facetValue.getUrlParam()}"
-                    value="${facetValue.geParamValue()}" checked="checked"
-                    onclick="$('form').submit();" />
-                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
-                 </li>
-              </c:when>
-              <c:otherwise>
-                <li class="list-group-item"><span class="badge">${facetValue.count}</span>
-                  <input id="${element.fieldName}_${i.index}"
-                    class="css-checkbox" type="checkbox"
-                    name="${facetValue.getUrlParam()}"
-                    value="${facetValue.geParamValue()}"
-                    onclick="$('form').submit();" />
-                    <label title="${facetValue.value}" for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
-                 </li>
-              </c:otherwise>
-            </c:choose>
-        </c:forEach>
-      </ul>
-    </div>
+  <div class="panel-body">
+   <ul class="list-group facet-list">
+    <c:forEach items="${element.values}" var="facetValue" varStatus="i">
+     <c:choose>
+      <c:when test="${facetValue.getSelected()}">
+       <li class="list-group-item selected"><span class="badge">${facetValue.count}</span>
+        <input id="${element.fieldName}_${i.index}" class="css-checkbox"
+        type="checkbox" name="${facetValue.getUrlParam()}"
+        value="${facetValue.geParamValue()}" checked="checked"
+        onclick="$('form').submit();" /> <label
+        title="${facetValue.value}"
+        for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+       </li>
+      </c:when>
+      <c:otherwise>
+       <li class="list-group-item"><span class="badge">${facetValue.count}</span>
+        <input id="${element.fieldName}_${i.index}" class="css-checkbox"
+        type="checkbox" name="${facetValue.getUrlParam()}"
+        value="${facetValue.geParamValue()}"
+        onclick="$('form').submit();" /> <label
+        title="${facetValue.value}"
+        for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+       </li>
+      </c:otherwise>
+     </c:choose>
+    </c:forEach>
+   </ul>
   </div>
+ </div>
 
 </jsp:root>
