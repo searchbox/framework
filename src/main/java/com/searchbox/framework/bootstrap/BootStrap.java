@@ -41,7 +41,7 @@ import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
-import com.searchbox.engine.solr.EmbeddedSolr;
+import com.searchbox.engine.solr.SolrCloud;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
@@ -115,15 +115,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             LOGGER.info("++ Creating Embedded Solr Engine");
             SearchEngineDefinition engine = null;
             try {
-                // engine = new
-                // SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
-                // engine.setAttributeValue("zkHost", "localhost:9983");
+                 engine = new
+                 SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+                 engine.setAttributeValue("zkHost", "localhost:9983");
 
-                engine = new SearchEngineDefinition(EmbeddedSolr.class,
-                        "embedded Solr");
-                engine.setAttributeValue("solrHome",
-                        context.getResource("classpath:solr/").getURL()
-                                .getPath());
+//                engine = new SearchEngineDefinition(EmbeddedSolr.class,
+//                        "embedded Solr");
+//                engine.setAttributeValue("solrHome",
+//                        context.getResource("classpath:solr/").getURL()
+//                                .getPath());
                 engine = engineRepository.save(engine);
             } catch (Exception e) {
                 LOGGER.error("Could not set definition for SolrEmbededServer",
@@ -193,7 +193,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
                             "template",
                             "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"
                                     + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
-                                    + "<sbx:tagAttribute fieldname=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>");
+                                    + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>");
             preset.addSearchElement(templatedHitList);
 
             /**
