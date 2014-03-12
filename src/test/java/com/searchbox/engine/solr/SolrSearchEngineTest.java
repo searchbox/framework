@@ -61,7 +61,7 @@ public class SolrSearchEngineTest {
             }
 
             @Override
-            protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
+            protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
                 // TODO Auto-generated method stub
                 return false;
             }
