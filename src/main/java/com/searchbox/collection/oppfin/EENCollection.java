@@ -186,8 +186,8 @@ public class EENCollection extends AbstractBatchCollection implements
                 if (start.after(DateUtils.addYears(date, 3))) {
                     return null;
                 }
-                if ((i++) > 200)
-                    return null;
+//                if ((i++) > 200)
+//                    return null;
                 if (profiles.isEmpty()) {
                     Date end = DateUtils.addDays(start, 5);
                     EENCollection.LOGGER.info("Fetching EEN from "

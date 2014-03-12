@@ -90,7 +90,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
                         .getFieldAttributes()) {
                     fieldAttributes.add(fieldAttr.getInstance());
                 }
-                ((ManagedSearchEngine) engine).upateAllFields(fieldAttributes);
+                ((ManagedSearchEngine) engine).updateDataModel(fieldAttributes);
             }
             LOGGER.info("Done updating fields...");
             ((ManagedSearchEngine) engine).reloadEngine();
