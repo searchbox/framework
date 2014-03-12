@@ -1,8 +1,11 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
  xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
  xmlns:spring="http://www.springframework.org/tags"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
  xmlns:form="http://www.springframework.org/tags/form"
- xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
+ xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
+ xmlns:helper="http://www.searchbox.com/helper">
 
  <jsp:output omit-xml-declaration="yes" />
  <jsp:output doctype-root-element="HTML"
@@ -47,29 +50,78 @@
     </div>
 
     <div class="row" id="info">
-
      <div class="col-md-5">
-      <div class="panel panel-default"
-       id="admin_${element.getClass().getSimpleName()}">
-       <div class="panel-heading">Server Information</div>
-       <div class="panel-body">
-        <div class="block" id="instance">
-         <h5>JVM-Memory (Max 6.34 GB)</h5>
+
+
+      <div class="block" id="instance">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         System<span class="pull-right">load avg: <fmt:formatNumber
+           type="number" maxFractionDigits="2"
+           value="${systemInfo.systemLoadAverage}" /></span>
+        </div>
+        <div class="panel-body">
+         <c:set var="usedMemory"
+          value="${systemInfo.totalPhysicalMemorySize-systemInfo.freePhysicalMemorySize}" />
+         <h5>
+          Physical Memory <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(usedMemory/systemInfo.totalPhysicalMemorySize)*100}" />%
+           of
+           ${helper:readableSize(systemInfo["totalPhysicalMemorySize"])
+           }</span>
+         </h5>
          <div class="progress">
           <div class="progress-bar" role="progressbar"
-           aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-           style="width: 60%;">3.25 GB</div>
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.totalPhysicalMemorySize}"
+           style="width: ${(usedMemory/systemInfo.totalPhysicalMemorySize)*100}%;">${helper:readableSize(usedMemory) }</div>
          </div>
 
-         <h5>Physical Memory (Max 7.28 GB)</h5>
+         <c:set var="usedMemory"
+          value="${systemInfo.totalSwapSpaceSize-systemInfo.freeSwapSpaceSize}" />
+         <h5>
+          Swap Space <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(usedMemory/systemInfo.totalSwapSpaceSize)*100}" />%
+           of ${helper:readableSize(systemInfo.totalSwapSpaceSize) }</span>
+         </h5>
          <div class="progress">
           <div class="progress-bar" role="progressbar"
-           aria-valuenow="99.5" aria-valuemin="0" aria-valuemax="100"
-           style="width: 99%;">7.24 GB</div>
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.totalSwapSpaceSize}"
+           style="width: ${(usedMemory/systemInfo.totalSwapSpaceSize)*100}%;">${helper:readableSize(usedMemory) }</div>
          </div>
 
+         <h5>
+          File Descriptors <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(systemInfo.openFileDescriptorCount/systemInfo.maxFileDescriptorCount)*100}" />%
+           of ${helper:readableSize(systemInfo.maxFileDescriptorCount) }</span>
+         </h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.maxFileDescriptorCount}"
+           style="width: ${(systemInfo.openFileDescriptorCount/systemInfo.maxFileDescriptorCount)*100}%;">${systemInfo.openFileDescriptorCount}</div>
+         </div>
+
+         <div class="content">${systemInfo }</div>
+        </div>
+       </div>
+
+       <div class="panel panel-default">
+        <div class="panel-heading">JVM</div>
+        <div class="panel-body">${jvmInfo}</div>
+       </div>
+
+
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         Instance<span>${systemInfo["systemLoadAverage"]}</span>
+        </div>
+        <div class="panel-body">
          <h5>Instance</h5>
-
          <div class="content">
           <ul class="data">
            <li class="start_time" style="display: list-item;"><dl
@@ -139,7 +191,16 @@
          </div>
         </div>
        </div>
+
+
+
+
+
+
+
       </div>
+
+
      </div>
 
      <div class="row col-md-7">
