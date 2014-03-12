@@ -111,23 +111,11 @@ public class PubmedCollection extends AbstractBatchCollection implements
         };
     }
 
-    public ItemWriter<File> writer() {
-        ItemWriter<File> writer = new ItemWriter<File>() {
-            @Override
-            public void write(List<? extends File> items) {
-                for (File item : items) {
-                    getSearchEngine().indexFile(getName(), item);
-                }
-            }
-        };
-        return writer;
-    }
-
     @Override
     protected FlowJobBuilder getJobFlow(JobBuilder builder) {
 
         Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
-                .reader(reader()).processor(itemProcessor()).writer(writer())
+                .reader(reader()).processor(itemProcessor()).writer(fileWriter())
                 .build();
 
         return builder.flow(step).end();
