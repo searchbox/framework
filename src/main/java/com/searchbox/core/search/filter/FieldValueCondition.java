@@ -13,6 +13,10 @@ public class FieldValueCondition extends AbstractSearchCondition {
     String value;
     Boolean taged;
 
+    public FieldValueCondition(){
+        
+    }
+            
     public FieldValueCondition(String field, String value) {
         this.fieldName = field;
         this.value = value;
@@ -45,7 +49,18 @@ public class FieldValueCondition extends AbstractSearchCondition {
         this.taged = taged;
     }
 
-    /** Format of FieldValueFacet is key[value]d * where d is a class shortcut */
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+    
+    @Deprecated
+    //FIXME use converter...
+    public String getValueParam(){
+        return getFieldName()+"["+getValue()+"]"+((getTaged())?"x":"");
+    }
+
+
+    /** Format of FieldValueFacet is key[value]s where s makes it stick */
     @SearchConverter
     public static class FieldValueConditionConverter implements
             Converter<String, FieldValueCondition> {
@@ -53,7 +68,7 @@ public class FieldValueCondition extends AbstractSearchCondition {
         public FieldValueCondition convert(String source) {
             String cfield = source.split("\\[")[0];
             String cvalue = source.split("\\[")[1].split("]")[0];
-            // TODO Problem here, the facet will not be sticky if not forced...
+            //FIXME Problem here, the facet will not be sticky if not forced...
             // :/
             return new FieldValueCondition(cfield, cvalue, true);
         }
