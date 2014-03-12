@@ -1,6 +1,13 @@
 package com.searchbox.collection;
 
+import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +19,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.job.builder.FlowJobBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -21,10 +29,13 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.env.Environment;
 
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Collection.FieldMap;
 import com.searchbox.core.engine.ManagedSearchEngine;
 
 @Configurable
@@ -34,6 +45,12 @@ public abstract class AbstractBatchCollection extends Collection implements
     private static final Logger LOGGER = LoggerFactory
             .getLogger(AbstractBatchCollection.class);
 
+    @Resource
+    protected Environment env;
+
+    @Autowired
+    protected StepBuilderFactory stepBuilderFactory;
+    
     @Autowired
     protected JobLauncher launcher;
 
@@ -41,7 +58,7 @@ public abstract class AbstractBatchCollection extends Collection implements
     protected JobRepository repository;
 
     @Autowired
-    JobBuilderFactory jobBuilderFactory;
+    protected JobBuilderFactory jobBuilderFactory;
 
     @Autowired
     protected JobExplorer explorer;
@@ -103,5 +120,39 @@ public abstract class AbstractBatchCollection extends Collection implements
                 .getClass())) {
             ((ManagedSearchEngine) this.searchEngine).reloadPlugins();
         }
+    }
+    
+    /** The abstractBatchColleciton has a few writters available */
+    protected ItemWriter<FieldMap> fieldMapWriter() {
+        ItemWriter<FieldMap> writer = new ItemWriter<FieldMap>() {
+            public void write(List<? extends FieldMap> items) {
+                for (FieldMap fields : items) {
+                    Map<String, Object> actualFields = new HashMap<String, Object>();
+                    for (Entry<String, List<Object>> field : fields.entrySet()) {
+                        actualFields.put(field.getKey(), (field.getValue()
+                                .size() > 1) ? field.getValue() : field
+                                .getValue().get(0));
+                    }
+                    try {
+                        getSearchEngine().indexMap(getName(), actualFields);
+                    } catch (Exception e) {
+                        LOGGER.error("Could not index document", e);
+                    }
+                }
+            }
+        };
+        return writer;
+    }
+    
+    protected ItemWriter<File> fileWriter() {
+        ItemWriter<File> writer = new ItemWriter<File>() {
+            @Override
+            public void write(List<? extends File> items) {
+                for (File item : items) {
+                    getSearchEngine().indexFile(getName(), item);
+                }
+            }
+        };
+        return writer;
     }
 }
