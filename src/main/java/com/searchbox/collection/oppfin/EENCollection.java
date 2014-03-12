@@ -72,9 +72,8 @@ import eu.europa.ec.een.tools.services.soap.IPODServiceSOAPProxy;
 public class EENCollection extends AbstractBatchCollection implements
         SynchronizedCollection {
 
-    /**
-	 * 
-	 */
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(EENCollection.class);
 
     /** Properties */
     private final static String CRAWLER_USER_AGENT = "crawler.userAgent";
@@ -86,18 +85,6 @@ public class EENCollection extends AbstractBatchCollection implements
     private final static String EEN_SERVICE_URL_DEFAULT = "http://een.ec.europa.eu/tools/services/podv6/QueryService.svc/GetProfiles?da=START&db=END&u=USER&p=PASSWORD";
     private final static String EEN_SERVICE_USER_DEFAULT = "CH00261";
     private final static String EEN_SERVICE_PWD_DEFAULT = "5b6f81dc4e04246da13cd9e4d93fad66";
-
-    @Resource
-    private Environment env;
-
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(EENCollection.class);
 
     public static List<Field> GET_FIELDS() {
         List<Field> fields = new ArrayList<Field>();
@@ -186,8 +173,8 @@ public class EENCollection extends AbstractBatchCollection implements
                 if (start.after(DateUtils.addYears(date, 3))) {
                     return null;
                 }
-//                if ((i++) > 200)
-//                    return null;
+                // if ((i++) > 200)
+                // return null;
                 if (profiles.isEmpty()) {
                     Date end = DateUtils.addDays(start, 5);
                     EENCollection.LOGGER.info("Fetching EEN from "
@@ -322,34 +309,12 @@ public class EENCollection extends AbstractBatchCollection implements
         };
     }
 
-    public ItemWriter<FieldMap> writer() {
-        ItemWriter<FieldMap> writer = new ItemWriter<FieldMap>() {
-
-            public void write(List<? extends FieldMap> items) {
-                for (FieldMap fields : items) {
-                    Map<String, Object> actualFields = new HashMap<String, Object>();
-                    for (Entry<String, List<Object>> field : fields.entrySet()) {
-                        actualFields.put(field.getKey(), (field.getValue()
-                                .size() > 1) ? field.getValue() : field
-                                .getValue().get(0));
-                    }
-                    try {
-                        getSearchEngine().indexMap(getName(), actualFields);
-                    } catch (Exception e) {
-                        LOGGER.error("Could not index document",e);
-                    }
-                }
-            }
-        };
-        return writer;
-    }
-
     @Override
     protected FlowJobBuilder getJobFlow(JobBuilder builder) {
         try {
             Step step = stepBuilderFactory.get("getFile")
                     .<Profile, FieldMap> chunk(50).reader(reader())
-                    .processor(itemProcessor()).writer(writer()).build();
+                    .processor(itemProcessor()).writer(fieldMapWriter()).build();
 
             return builder.flow(step).end();
         } catch (Exception e) {
