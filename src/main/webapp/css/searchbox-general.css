@@ -336,6 +336,16 @@ a.clear_input:hover {
  padding: 0;
 }
 
+
+
+#main-col-left .list-group .list-group-item:last-child {
+ border-bottom: none;
+}
+
+#main-col-left .list-group .list-group-item:first-child {
+ border-top: none;
+}
+
 #main-col-left .list-group .list-group-item {
  border-left: none;
  border-right: none;
