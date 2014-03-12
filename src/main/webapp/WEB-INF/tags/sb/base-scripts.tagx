@@ -31,6 +31,7 @@
  <spring:url value="/assets/js/jquery.purl.js" var="jquery_purl" />
 
  <spring:url value="/assets/js/searchbox.js" var="searchbox_js_url" />
+ <spring:url value="/assets/css/oppfin.css" var="oppfin_css_url" />
 
 
  <spring:url
@@ -47,6 +48,7 @@
  <link rel="stylesheet" type="text/css" href="${searchbox_css_url }" />
  <link rel="stylesheet" type="text/css" href="${social_buttons_css}" />
  <link rel="stylesheet" type="text/css" href="${jqueryui_css_url}" />
+ <link rel="stylesheet" type="text/css" href="${oppfin_css_url}" />
 
  <link rel="SHORTCUT ICON" href="${favicon}" />
 
