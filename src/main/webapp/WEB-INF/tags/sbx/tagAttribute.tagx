@@ -10,50 +10,50 @@
 
  <jsp:directive.attribute name="values" type="java.lang.Object"
   required="true" rtexprvalue="true" description="values to display" />
-
+  
  <jsp:directive.attribute name="label" type="String" required="false"
   rtexprvalue="true" description="label to display" />
-
+  
  <jsp:directive.attribute name="cssClass" type="java.lang.Object"
   required="false" rtexprvalue="true" description="label to display" />
-
+  
  <jsp:directive.attribute name="limit" type="Integer" required="false"
   rtexprvalue="true" description="number of tags to display" />
-
- <jsp:directive.attribute name="filter" type="String" required="false"
-  rtexprvalue="true" description="name of the field to filter" />
-
- <jsp:directive.attribute name="boost" type="String" required="false"
-  rtexprvalue="true" description="name of the field to boost" />
-
-
-
+  
+ <jsp:directive.attribute name="filter" type="String"
+  required="false" rtexprvalue="true"
+  description="name of the field to filter" />
+  
+ <jsp:directive.attribute name="boost" type="String"
+  required="false" rtexprvalue="true"
+  description="name of the field to boost" />
+  
+  
+  
  <jsp:directive.attribute name="datePattern" type="String"
   required="false" rtexprvalue="true"
   description="pattern for dateField" />
 
+ <c:set var="addedCSSClasses">
+  <sbx:out value="${cssClass }" />
+ </c:set>
+ 
 
  <c:forEach items="${values}" var="value"
   end="${not empty limit ? limit-1 : 29}">
-
-  <c:if test="${not empty filter }">
-   <jsp:useBean id="condition"
-    class="com.searchbox.core.search.filter.FieldValueCondition" />
-   <jsp:setProperty property="fieldName" name="condition"
-    value="${filter}" />
-   <jsp:setProperty property="taged" name="condition" value="true" />
-   <jsp:setProperty property="value" name="condition" value="${value}" />
-  </c:if>
-
-  <c:set var="addedCSSClasses">
-   <sbx:out value="${cssClass }" />
-   <c:if test="${conditions.contains(condition)}"><c:out value=" selected"/></c:if>
-  </c:set>
+  
+   <c:if test="${not empty filter }">
+<jsp:useBean id="condition" class="com.searchbox.core.search.filter.FieldValueCondition"/>
+<jsp:setProperty property="fieldName" name="condition" value="${filter}"/>
+<jsp:setProperty property="taged" name="condition" value="true"/>
+<jsp:setProperty property="value" name="condition" value="${value}"/>
+    
+ </c:if>
 
   <c:choose>
    <c:when test="${not empty filter}">
     <div class="label label-tag attributes clickable ${addedCSSClasses}"
-     title="${value}" data-condition="${condition.getUrlParam()}"
+     title="${value}" data-condition="${condition.getUrlParam()}" 
      data-condition-value="${condition.getValueParam() }">
      <c:if test="${not empty label}">
       <span class="field-label label-${label}">${label}: </span>
