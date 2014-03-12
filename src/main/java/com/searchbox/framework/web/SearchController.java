@@ -121,81 +121,10 @@ public class SearchController {
         return presetRepository.findAllBySearchbox(searchbox);
     }
 
-    @RequestMapping(value = { "/search", "/search/" })
-    public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
-            HttpServletRequest request, ModelAndView model,
-            RedirectAttributes redirectAttributes) {
-
-        LOGGER.info("Missing preset. Redirecting to first preset of searchbox: "
-                + searchbox.getName());
-        PresetDefinition preset = searchbox.getPresets().get(0);
-        ModelAndView redirect = new ModelAndView(new RedirectView(getSearchUrl(
-                searchbox, preset), true));
-        return redirect;
-
-    }
-
-    @RequestMapping("/view/{preset}")
-    public ModelAndView executeView(
-            @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
-            @PathVariable Searchbox searchbox,
-            @PathVariable PresetDefinition preset, HttpServletRequest request,
-            ModelAndView model, RedirectAttributes redirectAttributes) {
-
-        LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
-        model.setViewName(getViewViewName());
-
-        SearchResult result = new SearchResult();
-        Set<SearchElement> resultElements = executeRequest(searchbox, preset,
-                request, SearchElement.Type.QUERY, SearchElement.Type.FILTER,
-                SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
-                SearchElement.Type.STAT);
-        for (SearchElement element : resultElements) {
-            LOGGER.debug("Adding to result view element["
-                    + element.getPosition() + "] = " + element.getLabel());
-            result.addElement(element);
-        }
-
-        model.addObject("result", result);
-        model.addObject("preset", preset);
-
-        return model;
-    }
-
-    @RequestMapping("/search/{preset}")
-    public ModelAndView executeSearch(
-            @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
-            @PathVariable Searchbox searchbox,
-            @PathVariable PresetDefinition preset, HttpServletRequest request,
-            ModelAndView model, RedirectAttributes redirectAttributes) {
-
-        LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
-        model.setViewName(getSearchViewName());
-
-        SearchResult result = new SearchResult();
-        Set<SearchElement> resultElements = executeRequest(searchbox, preset,
-                request, SearchElement.Type.QUERY, SearchElement.Type.FACET,
-                SearchElement.Type.FILTER, SearchElement.Type.SORT,
-                SearchElement.Type.DEBUG, SearchElement.Type.VIEW,
-                SearchElement.Type.STAT);
-
-        for (SearchElement element : resultElements) {
-            LOGGER.debug("Adding to result view element["
-                    + element.getPosition() + "] = " + element.getLabel());
-            result.addElement(element);
-        }
-
-        model.addObject("result", result);
-        model.addObject("preset", preset);
-
-        return model;
-    }
-
-    protected Set<SearchElement> executeRequest(Searchbox searchbox,
-            PresetDefinition preset, HttpServletRequest request,
-            SearchElement.Type... types) {
-
-        // Fetch all search Conditions within HTTP params
+    @ModelAttribute("conditions")
+    public Set<AbstractSearchCondition> getSearchConditions(
+            HttpServletRequest request){
+     // Fetch all search Conditions within HTTP params
         Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
         for (String param : applicationConversionService
                 .getSearchConditionParams()) {
@@ -216,6 +145,87 @@ public class SearchController {
                 }
             }
         }
+        return conditions;
+    }
+    
+    
+    @RequestMapping(value = { "/search", "/search/" })
+    public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
+            HttpServletRequest request, ModelAndView model,
+            RedirectAttributes redirectAttributes) {
+
+        LOGGER.info("Missing preset. Redirecting to first preset of searchbox: "
+                + searchbox.getName());
+        PresetDefinition preset = searchbox.getPresets().get(0);
+        ModelAndView redirect = new ModelAndView(new RedirectView(getSearchUrl(
+                searchbox, preset), true));
+        return redirect;
+
+    }
+
+    @RequestMapping("/view/{preset}")
+    public ModelAndView executeView(
+            @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+            @PathVariable Searchbox searchbox,
+            @PathVariable PresetDefinition preset,
+            @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
+            ModelAndView model, RedirectAttributes redirectAttributes) {
+
+        LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
+        model.setViewName(getViewViewName());
+
+        SearchResult result = new SearchResult();
+        Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+                conditions, SearchElement.Type.QUERY, SearchElement.Type.FILTER,
+                SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
+                SearchElement.Type.STAT);
+        for (SearchElement element : resultElements) {
+            LOGGER.debug("Adding to result view element["
+                    + element.getPosition() + "] = " + element.getLabel());
+            result.addElement(element);
+        }
+
+        model.addObject("result", result);
+        model.addObject("preset", preset);
+
+        return model;
+    }
+
+    @RequestMapping("/search/{preset}")
+    public ModelAndView executeSearch(
+            @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+            @PathVariable Searchbox searchbox,
+            @PathVariable PresetDefinition preset,
+            @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions, 
+            ModelAndView model, RedirectAttributes redirectAttributes) {
+
+        LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+        model.setViewName(getSearchViewName());
+
+        SearchResult result = new SearchResult();
+        Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+                conditions, SearchElement.Type.QUERY, SearchElement.Type.FACET,
+                SearchElement.Type.FILTER, SearchElement.Type.SORT,
+                SearchElement.Type.DEBUG, SearchElement.Type.VIEW,
+                SearchElement.Type.STAT);
+
+        for (SearchElement element : resultElements) {
+            LOGGER.debug("Adding to result view element["
+                    + element.getPosition() + "] = " + element.getLabel());
+            result.addElement(element);
+        }
+
+        model.addObject("result", result);
+        model.addObject("preset", preset);
+
+        return model;
+    }
+
+    protected Set<SearchElement> executeRequest(Searchbox searchbox,
+            PresetDefinition preset, Set<AbstractSearchCondition> conditions,
+            SearchElement.Type... types) {
+
+        
 
         // Build the Preset DTO with dependancies
         Set<SearchElement> searchElements = new TreeSet<SearchElement>();
