@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.SearchElement;
@@ -41,7 +42,7 @@ import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
-import com.searchbox.engine.solr.SolrCloud;
+import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
@@ -115,15 +116,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             LOGGER.info("++ Creating Embedded Solr Engine");
             SearchEngineDefinition engine = null;
             try {
-                 engine = new
-                 SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
-                 engine.setAttributeValue("zkHost", "localhost:9983");
+//                 engine = new
+//                 SearchEngineDefinition(SolrCloud.class,"Local SolrCloud");
+//                 engine.setAttributeValue("zkHost", "localhost:9983");
 
-//                engine = new SearchEngineDefinition(EmbeddedSolr.class,
-//                        "embedded Solr");
-//                engine.setAttributeValue("solrHome",
-//                        context.getResource("classpath:solr/").getURL()
-//                                .getPath());
+                engine = new SearchEngineDefinition(EmbeddedSolr.class,
+                        "embedded Solr");
+                engine.setAttributeValue("solrHome",
+                        context.getResource("classpath:solr/").getURL()
+                                .getPath());
                 engine = engineRepository.save(engine);
             } catch (Exception e) {
                 LOGGER.error("Could not set definition for SolrEmbededServer",
@@ -290,7 +291,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             SearchEngineDefinition engineDefinition = engineDefinitions.next();
             LOGGER.info("++ Starting SearchEngine: "
                     + engineDefinition.getName());
-            engineDefinition.getInstance().init();
+            SearchEngine<?,?> engine = engineDefinition.getInstance();
         }
 
         LOGGER.info("****************************************************");
