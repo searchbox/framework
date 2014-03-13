@@ -15,74 +15,96 @@
  ******************************************************************************/
 package com.searchbox.framework.config;
 
+import java.util.Properties;
+
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.jolbox.bonecp.BoneCPDataSource;
 
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("com.searchbox.framework.repository")
 public class DataConfiguration {
 
-    @Bean
-    @DependsOn("entityManagerFactory")
-    public ResourceDatabasePopulator initDatabase(DataSource dataSource)
-            throws Exception {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("data/searchbox.sql"));
-        populator.populate(dataSource.getConnection());
-        return populator;
-    }
+  private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
+  private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
+  private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
+  private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
 
-    @Bean
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .addScript(
-                        "classpath:org/springframework/batch/core/schema-drop-h2.sql")
-                .addScript(
-                        "classpath:org/springframework/batch/core/schema-h2.sql")
-                .setType(EmbeddedDatabaseType.H2).build();
-    }
+  private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
+  private static final String PROPERTY_NAME_HIBERNATE_FORMAT_SQL = "hibernate.format_sql";
+  private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+  private static final String PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY = "hibernate.ejb.naming_strategy";
+  private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 
-    @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
-        LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-        lef.setDataSource(dataSource);
-        lef.setJpaVendorAdapter(jpaVendorAdapter);
-        lef.setPackagesToScan("com.searchbox.framework");
-        return lef;
-    }
+  @Resource
+  private Environment environment;
 
-    @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setShowSql(false);
-        hibernateJpaVendorAdapter.setGenerateDdl(true);
-        hibernateJpaVendorAdapter.setDatabase(Database.H2);
-        return hibernateJpaVendorAdapter;
-    }
+  @Bean
+  @DependsOn("entityManagerFactory")
+  public ResourceDatabasePopulator initDatabase(DataSource dataSource) throws Exception {
+    ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+    populator.addScript(new ClassPathResource("data/searchbox.sql"));
+    populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-h2.sql"));
 
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager txManager = new JpaTransactionManager();
-        // txManager.setDefaultTimeout(1000);
-        // txManager.setNestedTransactionAllowed(true);
-        // txManager.setTransactionSynchronization(TransactionSynchronization.STATUS_COMMITTED);
-        return txManager;
-    }
+    populator.populate(dataSource.getConnection());
+    return populator;
+  }
+
+  @Bean
+  public DataSource dataSource() {
+    BoneCPDataSource dataSource = new BoneCPDataSource();
+
+    dataSource.setDriverClass(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
+    dataSource.setJdbcUrl(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
+    dataSource.setUsername(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
+    dataSource.setPassword(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
+
+    return dataSource;
+  }
+
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+
+    entityManagerFactoryBean.setDataSource(dataSource());
+    entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+    entityManagerFactoryBean.setPackagesToScan("com.searchbox.framework");
+
+    Properties jpaProperties = new Properties();
+    jpaProperties.put(PROPERTY_NAME_HIBERNATE_DIALECT, 
+            environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
+    jpaProperties.put(PROPERTY_NAME_HIBERNATE_FORMAT_SQL,
+        environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_FORMAT_SQL));
+    jpaProperties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO,
+        environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
+    jpaProperties.put(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY,
+        environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY));
+    jpaProperties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL,
+        environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
+
+    entityManagerFactoryBean.setJpaProperties(jpaProperties);
+
+    return entityManagerFactoryBean;
+  }
+
+  @Bean
+  public JpaTransactionManager transactionManager() {
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+    return transactionManager;
+  }
 }

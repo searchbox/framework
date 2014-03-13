@@ -17,9 +17,14 @@ package com.searchbox.framework.config;
 
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -32,60 +37,72 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = { "com.searchbox.framework.web",
-        "com.searchbox.framework.bootstrap" })
+@ComponentScan(basePackages = { "com.searchbox.framework.web", "com.searchbox.framework.bootstrap" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+  private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
+  private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/assets/css/**")
-                .addResourceLocations("/css/").setCachePeriod(31556926);
-        registry.addResourceHandler("/assets/images/**")
-                .addResourceLocations("/img/").setCachePeriod(31556926);
-        registry.addResourceHandler("/assets/js/**")
-                .addResourceLocations("/js/").setCachePeriod(31556926);
-        registry.setOrder(Ordered.LOWEST_PRECEDENCE);
-    }
+  @Resource
+  Environment environment;
 
-    @Override
-    public void configureDefaultServletHandling(
-            DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    registry.addViewController("/login").setViewName("login");
+    registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+  }
 
-    @Bean
-    public InternalResourceViewResolver getInternalResourceViewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/views/");
-        resolver.setSuffix(".jspx");
-        resolver.setViewClass(JstlView.class);
-        return resolver;
-    }
+  @Bean
+  public MessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-    @Bean
-    public SimpleMappingExceptionResolver exceptionResolver() {
-        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+    messageSource.setBasename(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_BASENAME));
+    messageSource.setUseCodeAsDefaultMessage(Boolean.parseBoolean(environment
+        .getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE)));
 
-        Properties exceptionMappings = new Properties();
+    return messageSource;
+  }
 
-        exceptionMappings.put("java.lang.Exception", "error/error");
-        exceptionMappings.put("java.lang.RuntimeException", "error/error");
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/assets/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
+    registry.addResourceHandler("/assets/images/**").addResourceLocations("/img/").setCachePeriod(31556926);
+    registry.addResourceHandler("/assets/js/**").addResourceLocations("/js/").setCachePeriod(31556926);
+    registry.setOrder(Ordered.LOWEST_PRECEDENCE);
+  }
 
-        exceptionResolver.setExceptionMappings(exceptionMappings);
+  @Override
+  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    configurer.enable();
+  }
 
-        Properties statusCodes = new Properties();
+  @Bean
+  public InternalResourceViewResolver getInternalResourceViewResolver() {
+    InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+    resolver.setPrefix("/WEB-INF/views/");
+    resolver.setSuffix(".jspx");
+    resolver.setViewClass(JstlView.class);
+    return resolver;
+  }
 
-        statusCodes.put("error/404", "404");
-        statusCodes.put("error/error", "500");
+  @Bean
+  public SimpleMappingExceptionResolver exceptionResolver() {
+    SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
 
-        exceptionResolver.setStatusCodes(statusCodes);
+    Properties exceptionMappings = new Properties();
 
-        return exceptionResolver;
-    }
+    exceptionMappings.put("java.lang.Exception", "error/error");
+    exceptionMappings.put("java.lang.RuntimeException", "error/error");
+
+    exceptionResolver.setExceptionMappings(exceptionMappings);
+
+    Properties statusCodes = new Properties();
+
+    statusCodes.put("error/404", "404");
+    statusCodes.put("error/error", "500");
+
+    exceptionResolver.setStatusCodes(statusCodes);
+
+    return exceptionResolver;
+  }
 }
