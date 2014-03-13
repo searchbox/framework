@@ -301,7 +301,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
     @Override
     protected FlowJobBuilder getJobFlow(JobBuilder builder) {
         Step step = stepBuilderFactory.get("getFile")
-                .<String, FieldMap> chunk(2).reader(reader())
+                .<String, FieldMap> chunk(50).reader(reader())
                 .processor(itemProcessor()).writer(fieldMapWriter()).build();
 
         return builder.flow(step).end();
