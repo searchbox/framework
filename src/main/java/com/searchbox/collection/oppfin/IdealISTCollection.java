@@ -25,6 +25,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.lf5.util.DateFormatManager;
+import org.elasticsearch.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -77,9 +78,31 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
     public static List<Field> GET_FIELDS() {
         List<Field> fields = new ArrayList<Field>();
+        fields.add(new Field(String.class, "id"));
         fields.add(new Field(String.class, "docSource"));
         fields.add(new Field(String.class, "docType"));
         fields.add(new Field(String.class, "programme"));
+        
+        fields.add(new Field(String.class, "idealistTitle"));
+        fields.add(new Field(String.class, "idealistPsId"));
+        fields.add(new Field(String.class, "idealistStatus"));
+        fields.add(new Field(String.class, "idealistDeadline"));
+        fields.add(new Field(String.class, "idealistUpdated"));
+        fields.add(new Field(String.class, "idealistPublished"));
+        fields.add(new Field(String.class, "idealistObjective"));
+        fields.add(new Field(String.class, "idealistFundingScheme"));
+        fields.add(new Field(String.class, "idealistEvaluationScheme"));
+        fields.add(new Field(String.class, "idealistTypeOfPartnerSought"));
+        fields.add(new Field(String.class, "idealistCoordinationPossible"));
+        fields.add(new Field(String.class, "idealistOrganisation"));
+        fields.add(new Field(String.class, "idealistDepartement"));
+        fields.add(new Field(String.class, "idealistTypeOfOrganisation"));
+        fields.add(new Field(String.class, "idealistCountry"));
+        fields.add(new Field(String.class, "idealistBody"));
+        fields.add(new Field(String.class, "idealistOutline"));
+        fields.add(new Field(String.class, "idealistDescriptionOfWork"));
+
+        fields.add(new Field(String.class, "callIdentifier"));
         
         return fields;
     }
@@ -148,9 +171,6 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
             @Override
             public String read() {
-
-                if (page > 0)
-                    return null;
 
                 if (documents.isEmpty()) {
                     Document xmlDocuments = httpGet(RequestBuilder
@@ -233,13 +253,15 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                 LOGGER.debug("Got Document: {}", document);
                 FieldMap fields = new FieldMap();
 
+                fields.put("id", uid);
+                
                 addStringField(document, fields, "title", "idealistTitle");
                 addStringField(document, fields, "PS_ID", "idealistPsId");
                 addStringField(document, fields, "Status", "idealistStatus");
                 addDateField(document, fields, "Date_of_last_Modification",
-                        "updated");
+                        "idealistUpdated");
                 addDateField(document, fields, "Date_of_Publication",
-                        "published");
+                        "idealistPublished");
                 addStringField(document, fields, "Call_Identifier",
                         "callIdentifier");
                 addStringField(document, fields, "Objective",
@@ -248,7 +270,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                         "idealistFundingScheme");
                 addStringField(document, fields, "Evaluation_Scheme",
                         "idealistEvaluationScheme");
-                addDateField(document, fields, "Closure_Date", "deadline");
+                addDateField(document, fields, "Closure_Date", "idealistDeadline");
                 addStringField(document, fields, "Type_of_partner_sought",
                         "idealistTypeOfPartnerSought");
                 addStringField(document, fields, "Coordinator_possible",
@@ -290,12 +312,13 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             JobInstanceAlreadyCompleteException, JobParametersInvalidException,
             SAXException, IOException {
 
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-                RootConfiguration.class);
-
-        IdealISTCollection collection = context
-                .getBean(IdealISTCollection.class);
-
-        collection.synchronize();
+//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+//                RootConfiguration.class);
+//
+//        IdealISTCollection collection = context
+//                .getBean(IdealISTCollection.class);
+//
+//        collection.synchronize();
+    
     }
 }
