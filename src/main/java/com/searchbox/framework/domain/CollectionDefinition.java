@@ -189,6 +189,7 @@ public class CollectionDefinition extends UnknownClassDefinition implements
                     new Field(fieldDef.getClazz(), fieldDef.getKey()));
         }
         collection.setSearchEngine(searchEngine.getInstance());
+        collection.getSearchEngine().setCollection(collection);
         return collection;
     }
 }
