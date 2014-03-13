@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/searchbox/framework.png?branch=oppfin)](https://travis-ci.org/searchbox/framework)
 Searchbox/Search Framework
 =========
 Searchbox is a Search Framework developed under java/spring which enables you as a developer or CIO to easily leverage backend search engines such as Apache Solr, ElasticSearch and Google Site Search in an easy way.
