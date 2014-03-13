@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +45,8 @@ import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
-import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.engine.solr.SolrCloud;
+import com.searchbox.framework.config.RootConfiguration;
 import com.searchbox.framework.domain.CollectionDefinition;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
@@ -61,6 +63,7 @@ import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.UserService;
 
 @Component
+@Configuration
 @org.springframework.core.annotation.Order(value = 10000)
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -92,6 +95,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     @Transactional
     synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
+        doBootStrap();
+    }
+    
+    public void doBootStrap(){
 
         if (BOOTSTRAPED) {
             return;
@@ -164,26 +171,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
              * Topic preset
              */
 
-            /**
-             * From the crawler doc.addField("id", topicIdentifier );
-             * doc.addField("title", (String)topicObject.get("title"));
-             * doc.addField("descriptionRaw", topicDetailRaw );
-             * doc.addField("descriptionHtml", topicDetailHtml );
-             * doc.addField("docType", "Topic H2020"); doc.addField("programme",
-             * "H2020");
-             * 
-             * doc.addField("tags", topicObject.get("tags").toString());
-             * doc.addField("flags", topicObject.get("flags").toString());
-             * 
-             * doc.addField("callTitle", (String)topicObject.get("callTitle"));
-             * doc.addField("callIdentifier",
-             * (String)topicObject.get("callIdentifier"));
-             * doc.addField("callDeadline",
-             * (Long)topicObject.get("callDeadline"));
-             * doc.addField("callStatus",
-             * (String)topicObject.get("callStatus"));
-             */
-
             List<String> lang = new ArrayList<String>();
             lang.add("en");
 
@@ -219,7 +206,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             presetFunding.addFieldAttribute(callIdentifier);
 
             FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(
-                    collection.getFieldDefinition("title"));
+                    collection.getFieldDefinition("topicTitle"));
             fieldAttr.setAttributeValue("searchable", true);
             fieldAttr.setAttributeValue("highlight", true);
             fieldAttr.setAttributeValue("spelling", true);
@@ -228,7 +215,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             presetFunding.addFieldAttribute(fieldAttr);
 
             FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(
-                    collection.getFieldDefinition("descriptionRaw"));
+                    collection.getFieldDefinition("topicDescriptionRaw"));
             fieldAttr2.setAttributeValue("searchable", true);
             fieldAttr2.setAttributeValue("highlight", true);
             fieldAttr2.setAttributeValue("spelling", true);
@@ -254,15 +241,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             /** Create & add a TemplatedHitLIst SearchComponent to the preset; */
             SearchElementDefinition templatedHitList = new SearchElementDefinition(
                     TemplatedHitList.class);
-            templatedHitList.setAttributeValue("titleField", "title");
+            templatedHitList.setAttributeValue("titleField", "topicTitle");
             templatedHitList.setAttributeValue("idField", "topicIdentifier");
-            templatedHitList.setAttributeValue("urlField", "title");
             templatedHitList
                     .setAttributeValue(
                             "template",
                             "<sbx:title hit=\"${hit}\"/>"
-                                    + "<sbx:snippet hit=\"${hit}\" field=\"descriptionRaw\"/>"
-                                    + "<p><sbx:out value=\"${hit.fieldValues['flags']}\"/></p>"
+                                    + "<sbx:snippet hit=\"${hit}\" field=\"topicDescriptionRaw\"/>"
+                                    + "<p><sbx:out value=\"${hit.fieldValues['topicFlags']}\"/></p>"
                                     + "<sbx:tagAttribute limit=\"1\" label=\"Deadline\" values=\"${hit.fieldValues['callDeadline']}\"/>"
                                     + "<sbx:tagAttribute limit=\"1\" label=\"Call\" filter=\"callIdentifier\" values=\"${hit.fieldValues['callIdentifier']}\"/>");
 
@@ -275,9 +261,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             SearchElementDefinition viewHit = new SearchElementDefinition(
                     TemplatedHitList.class);
             viewHit.setType(SearchElement.Type.INSPECT);
-            viewHit.setAttributeValue("titleField", "title");
+            viewHit.setAttributeValue("titleField", "topicTitle");
             viewHit.setAttributeValue("idField", "id");
-            viewHit.setAttributeValue("urlField", "title");
             viewHit.setAttributeValue("template",
                     "Here we should display Title "
                             + "- FullDescription (HTML si possible)"
@@ -335,7 +320,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             SearchElementDefinition flagFacet = new SearchElementDefinition(
                     FieldFacet.class);
             flagFacet.setAttributeValue("field",
-                    collection.getFieldDefinition("flags").getInstance());
+                    collection.getFieldDefinition("topicFlags").getInstance());
             flagFacet.setLabel("Flags");
             flagFacet.setAttributeValue("order", Order.BY_VALUE);
             flagFacet.setAttributeValue("sort", Sort.DESC);
@@ -383,7 +368,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
             FieldAttributeDefinition eenDeadlineField = new FieldAttributeDefinition(
                     eenCollection.getFieldDefinition("eenDatumDeadline"));
-            eenDeadlineField.setAttributeValue("label", "deadline");
+            eenDeadlineField.setAttributeValue("label", "Deadline");
             eenDeadlineField.setAttributeValue("sortable", true);
             presetCoooperation.addFieldAttribute(eenDeadlineField);
 
@@ -393,7 +378,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             eenTitleField.setAttributeValue("highlight", true);
             eenTitleField.setAttributeValue("spelling", true);
             eenTitleField.setAttributeValue("suggestion", true);
-            eenTitleField.setAttributeValue("label", "title");
+            eenTitleField.setAttributeValue("label", "Title");
             eenTitleField.setAttributeValue("lang", lang);
             presetCoooperation.addFieldAttribute(eenTitleField);
 
@@ -605,5 +590,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         publisher.publishEvent(new SearchboxReady(this));
 
+    }
+    
+    public static void main(String... args){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+                RootConfiguration.class, BootStrap.class);
+        
+        //context.getBeanFactory().createBean(BootStrap.class).doBootStrap();
     }
 }
