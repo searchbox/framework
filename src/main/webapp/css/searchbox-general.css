@@ -336,6 +336,16 @@ a.clear_input:hover {
  padding: 0;
 }
 
+
+
+#main-col-left .list-group .list-group-item:last-child {
+ border-bottom: none;
+}
+
+#main-col-left .list-group .list-group-item:first-child {
+ border-top: none;
+}
+
 #main-col-left .list-group .list-group-item {
  border-left: none;
  border-right: none;
@@ -391,6 +401,11 @@ a.clear_input:hover {
 #result-list .label-tag.clickable {
  cursor: pointer;
  border: 1px solid lightblue;
+}
+
+#result-list .label-tag.selected {
+ border: 1px solid blue;
+ background-color: rgba(42, 100, 150, 0.25);
 }
 
 #result-list .label-tag.clickable:hover {

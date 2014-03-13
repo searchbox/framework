@@ -7,13 +7,21 @@
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:output omit-xml-declaration="yes" />
 
+ <c:set var="externalQueryUrl" value="${element.getExternalQueryURL() }" />
  <div class="panel-group" id="accordion">
   <div class="panel panel-default">
    <div class="panel-heading">
     <h4 class="panel-title">
      <a data-toggle="collapse" data-parent="#accordion"
       href="#collapseOne"> Solr Params </a>
+      <c:if test="${not empty externalQueryUrl}">
+       <span class="pull-right"><a
+        href="${externalQueryUrl }" target="_new">Execute Query on external Server
+        <i class="glyphicon glyphicon-share-alt"><!--  --></i></a>
+        </span>
+      </c:if>
     </h4>
+
    </div>
    <div id="collapseOne" class="panel-collapse collapse">
     <div class="panel-body">

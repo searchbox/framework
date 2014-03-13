@@ -62,7 +62,7 @@ public abstract class SolrSearchEngine extends
 
     protected abstract SolrServer getSolrServer();
 
-    protected abstract boolean addCopyFields(Map<Field, Set<String>> copyFields);
+    protected abstract boolean updateDataModel(Map<Field, Set<String>> copyFields);
 
     @Override
     public void init() {
@@ -138,6 +138,7 @@ public abstract class SolrSearchEngine extends
 
     @Override
     public boolean indexMap(String collectionName, Map<String, Object> fields) {
+        
         SolrInputDocument document = new SolrInputDocument();
         // Make sure we use the ID field...
         if (!fields.containsKey("id")) {
@@ -153,6 +154,8 @@ public abstract class SolrSearchEngine extends
                 document.addField(entry.getKey(), entry.getValue());
             }
         }
+        LOGGER.debug("Indexing Document: {}",document);
+        
         UpdateRequest update = new UpdateRequest();
         update.setCommitWithin(10000);
         update.setParam("collection", collectionName);
@@ -169,14 +172,19 @@ public abstract class SolrSearchEngine extends
     }
 
     @Override
-    public boolean upateAllFields(List<FieldAttribute> fieldAttributes) {
+    public boolean updateDataModel(List<FieldAttribute> fieldAttributes) {
         /** Get the translation for the field's key */
         Map<Field, Set<String>> copyFields = new HashMap<Field, Set<String>>();
         for (FieldAttribute fieldAttribute : fieldAttributes) {
             copyFields.put(fieldAttribute.getField(),
                     this.getAllKeysForField(fieldAttribute));
         }
-        return this.addCopyFields(copyFields);
+        LOGGER.info("Updating all fields");
+        this.updateDataModel(copyFields);
+        LOGGER.info("Reloading engine");
+        this.reloadEngine();
+        return true;
+        
     }
 
     @Override

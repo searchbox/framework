@@ -105,7 +105,7 @@ public class ASynchController {
             }
         }
 
-        LOGGER.info("Assynch conditions: " + conditions);
+        LOGGER.debug("Assynch conditions: {}", conditions);
 
         SearchElementDefinition elementDefinition = elementRepository
                 .findOne(id);

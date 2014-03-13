@@ -95,7 +95,7 @@ public class EmbeddedSolr extends SolrSearchEngine {
     }
 
     @Override
-    protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
+    protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
         for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
             this.addCopyFields(copyField.getKey(), copyField.getValue());
         }
