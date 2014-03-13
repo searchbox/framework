@@ -16,7 +16,7 @@
       href="#collapseOne"> Solr Params </a>
       <c:if test="${not empty externalQueryUrl}">
        <span class="pull-right"><a
-        href="${externalQueryUrl }" target="_new">Execute Query on external Server
+        href="${externalQueryUrl }" target="_new">Execute on external Server
         <i class="glyphicon glyphicon-share-alt"><!--  --></i></a>
         </span>
       </c:if>
