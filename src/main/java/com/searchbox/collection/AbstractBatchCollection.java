@@ -116,12 +116,16 @@ public abstract class AbstractBatchCollection extends Collection implements
     @Override
     public void afterJob(JobExecution jobExecution) {
         //FIXME should wait for engine's commit here...
+        try {
         LOGGER.info("Batch Job is over. need to update engine");
         if (this.searchEngine == null) {
             return;
         } else if (ManagedSearchEngine.class.isAssignableFrom(this.searchEngine
                 .getClass())) {
             ((ManagedSearchEngine) this.searchEngine).reloadPlugins();
+        }
+        } catch (Exception e) {
+            LOGGER.warn("Error while reloading plugins.",e);
         }
     }
     
@@ -159,9 +163,11 @@ public abstract class AbstractBatchCollection extends Collection implements
                     }
                     
                     for (Entry<String, List<Object>> field : fields.entrySet()) {
+                        if(!field.getValue().isEmpty()){
                         actualFields.put(field.getKey(), (field.getValue()
                                 .size() > 1) ? field.getValue() : field
                                 .getValue().get(0));
+                        }
                     }
                     try {
                         getSearchEngine().indexMap(getName(), actualFields);

@@ -19,9 +19,12 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
+import org.apache.solr.client.solrj.request.SolrPing;
 import org.apache.solr.client.solrj.response.CollectionAdminResponse;
+import org.apache.solr.client.solrj.response.SolrPingResponse;
 import org.apache.solr.common.cloud.Slice;
 import org.apache.solr.common.cloud.SolrZkClient;
 import org.apache.solr.common.cloud.ZkStateReader;
@@ -49,7 +52,8 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     ApplicationContext context;
 
     @SearchAttribute
-    private String zkHost;
+    // FIXME this is null when not set like this when using afterProperties
+    private String zkHost = "localhost:9983";
 
     private static final String ZK_CORE_CONFIG_PATH = "/configs";
     private static final String ZK_COLLECTION_PATH = "/collections";
@@ -63,28 +67,29 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     public void destroy() throws Exception {
         getSolrServer().shutdown();
     }
-    
+
     private static CloudSolrServer solrServer;
 
-    private void initServer(){
+    private void initServer() {
         if (solrServer == null && zkHost != null) {
-            LOGGER.info("Initializing SolrCloud server with zkHost: {}",zkHost);
+            LOGGER.info("Initializing SolrCloud server with zkHost: {}", zkHost);
             try {
-                solrServer = new CloudSolrServer(zkHost, true);
-                solrServer.setParallelUpdates(true);
-                solrServer.connect();
-            } catch (MalformedURLException e) {
-               LOGGER.error("Could not connect to server!!!",e);
-               throw new RuntimeException("Could not connect to server "+
-                       "with zkHost: "+zkHost);
+                CloudSolrServer server = new CloudSolrServer(zkHost, true);
+                server.setParallelUpdates(true);
+                server.connect();
+
+                solrServer = server;
+            } catch (IOException e) {
+                LOGGER.error("Could not connect to server!!!", e);
+                throw new RuntimeException("Could not connect to server "
+                        + "with zkHost: " + zkHost);
             }
         }
     }
-    
 
     @Override
     protected SolrServer getSolrServer() {
-        if(solrServer == null){
+        if (solrServer == null) {
             initServer();
         }
         return solrServer;
@@ -92,15 +97,16 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
     @Override
     public void register() {
-        
+
         try {
             SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
-            
+
             LOGGER.info("Creating configuration for: " + collection.getName());
             LOGGER.debug("Path: {}", context.getResource("classpath:solr/conf")
                     .getFile());
             uploadToZK(zkServer, context.getResource("classpath:solr/conf")
-                    .getFile(), ZK_CORE_CONFIG_PATH + "/" + collection.getName());
+                    .getFile(),
+                    ZK_CORE_CONFIG_PATH + "/" + collection.getName());
 
             if (coreExists(zkServer, collection.getName())) {
                 CollectionAdminResponse response = CollectionAdminRequest
@@ -129,11 +135,9 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
         }
 
     }
-    
 
-    
-    private ZkStateReader getZkStateReader(){
-        return ((CloudSolrServer)getSolrServer()).getZkStateReader();
+    private ZkStateReader getZkStateReader() {
+        return ((CloudSolrServer) getSolrServer()).getZkStateReader();
     }
 
     @Override
@@ -378,7 +382,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     public String getUrlBase() {
         String urlBase = null;
         try {
-            ZkStateReader zkSateReader = ((CloudSolrServer)getSolrServer())
+            ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer())
                     .getZkStateReader();
             java.util.Collection<Slice> slices = zkSateReader.getClusterState()
                     .getActiveSlices(collection.getName());
@@ -386,7 +390,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
             String baseUrl = "";
             for (Slice slice : slices) {
                 String nodeName = slice.getLeader().getNodeName();
-                urlBase =zkSateReader.getBaseUrlForNodeName(nodeName);
+                urlBase = zkSateReader.getBaseUrlForNodeName(nodeName);
                 LOGGER.debug("Slice state: {}", slice.getState());
                 LOGGER.debug("Leader's node name: {}", nodeName);
                 LOGGER.debug("Base URL for node: {}", baseUrl);
