@@ -57,8 +57,7 @@ var bindClickableTagsEvents = function(){
     $('form').submit();
     return false;
   });
-  
-}
+};
 
 /** Handle autocomplete on searchField **/
 var bindSearchAutocompleteEvent = function() {
@@ -76,7 +75,7 @@ var bindSearchAutocompleteEvent = function() {
       var term = request.term;
       if (term in cache_autocomplete) {
 
-        var data = cache_autocomplete[term]
+        var data = cache_autocomplete[term];
         response($.map(data.suggestions, function(item) {
           return {
             label : item,
@@ -119,45 +118,42 @@ var bindSearchAutocompleteEvent = function() {
 var bindFacetEvents = function() {
 
   // Show more show / show less action on the UL
-  $('ul.facet-list')
-      .each(
-          function() {
-            // Hide all facets greater than 3 and then display selected facets
-            $(this).children('li:gt(3)').hide();
-            $(this).children('li.selected').show();
-            $(this).children('li.button').show();
+  $('ul.facet-list').each(
+  	function() {
+         // Hide all facets greater than 3 and then display selected facets
+         $(this).children('li:gt(3)').hide();
+         $(this).children('li.selected').show();
+         $(this).children('li.button').show();
 
-            // If some facets are hidden, we add a show more button
-            if ($(this).children('li:hidden').length > 0) {
-              // When facets aren't refresh, we need to ensure we
-              // don't add show more button one more time'
-              if (!$(this).hasClass("show-more-enabled")) {
-                $(this).addClass("show-more-enabled");
-                $(this)
-                    .append(
+         // If some facets are hidden, we add a show more button
+         if ($(this).children('li:hidden').length > 0) {
+           // When facets aren't refresh, we need to ensure we
+           // don't add show more button one more time'
+           if (!$(this).hasClass("show-more-enabled")) {
+             $(this).addClass("show-more-enabled");
+             $(this).append(
                         '<li class="list-group-item button"><a href="#" class="show-more">Show more...</a></li>');
-              }
-            }
-          });
+             }
+          }
+       });
 
   // Click event on show more button
   $('.show-more').unbind();
-  $('.show-more')
-      .click(
-          function(e) {
-            e.preventDefault();
+  $('.show-more').click(
+       function(e) {
+         e.preventDefault();
 
-            if ($(this).hasClass("less")) {
-              var list = $(this).parents('ul.facet-list').children('li')
-                  .filter('li:gt(3)').filter("li:not(.selected)").filter(
-                      "li:not(.button)");
+         if ($(this).hasClass("less")) {
+           var list = $(this).parents('ul.facet-list').children('li')
+               .filter('li:gt(3)')
+               .filter("li:not(.selected)")
+               .filter("li:not(.button)");
 
               // $.cookie($(this).prev('ul').attr("id"), 0);
               $(this).html("Show more...");
               $(this).removeClass("less");
               list.slideUp();
-            } else {
-
+         } else {
               var list = $(this).parents('ul.facet-list').children('li:hidden');
               $(this).html("Show less...");
               $(this).addClass("less");
@@ -167,10 +163,9 @@ var bindFacetEvents = function() {
               } else {
                 list.show(); // Display the list faster
               }
-
               // $.cookie($(this).prev('ul').attr("id"), 1);
-            }
-          });
+         }
+      });
 
   $('ul.facet-list').each(function() {
     // Triggers click if required
