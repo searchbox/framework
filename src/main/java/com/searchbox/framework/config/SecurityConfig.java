@@ -41,6 +41,7 @@ import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected static final String USE_SECURITY = "use.security";
+    
     @Autowired
     private UserRepository userRepository;
 

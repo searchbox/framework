@@ -119,6 +119,20 @@
    <artifactId>h2</artifactId>
    <version>1.3.172</version>
   </dependency>
+    <!-- MySQL JDBC connector -->
+  <!-- If you want to use MySQL, uncomment this dependency declation. -->
+  <!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+   <version>${mysql.connector.version}</version> </dependency> -->
+  <!-- PostgreSQL JDBC 4 -->
+  <!-- If you don't want to use PostgreSQL, uncomment this dependency declaration. -->
+  <!-- <dependency> <groupId>postgresql</groupId> <artifactId>postgresql</artifactId> 
+   <version>9.0-801.jdbc4</version> </dependency> -->
+  <!-- BoneCP -->
+  <dependency>
+   <groupId>com.jolbox</groupId>
+   <artifactId>bonecp</artifactId>
+   <version>0.8.0.RELEASE</version>
+  </dependency>
   <!-- ************************************************* -->
   <!-- -->
   <!-- Hibernate -->
