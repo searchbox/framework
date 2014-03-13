@@ -6,7 +6,6 @@
 
  <jsp:output omit-xml-declaration="yes" />
 
-
  <!-- Mobile version -->
  <div class="btn-group facet-mobile">
   <button type="button" class="btn btn-default dropdown-toggle"
@@ -16,7 +15,15 @@
   </button>
   <ul class="dropdown-menu" role="menu">
    <c:forEach items="${element.values}" var="facetValue">
-    <li><a href="#">${facetValue.value} (${facetValue.count}) <c:if
+    <c:set var="facetValueLabel" value=""/>
+    <c:catch>
+     <spring:message var="facetValueLabel"
+      code="${searchbox.getSlug() }.facet.${facetValue.value}.label" />
+    </c:catch>
+    <c:if test="${empty facetValueLabel}">
+     <c:set var="facetValueLabel" value="${facetValue.value}" />
+    </c:if>
+    <li><a href="#">${facetValueLabel} (${facetValue.count}) <c:if
        test="${facetValue.getSelected()}">
        <span class="glyphicon glyphicon-ok"> <!-- empty -->
        </span>
@@ -33,6 +40,15 @@
   <div class="panel-body">
    <ul class="list-group facet-list">
     <c:forEach items="${element.values}" var="facetValue" varStatus="i">
+    <c:set var="facetValueLabel" value=""/>
+     <c:catch>
+      <spring:message var="facetValueLabel"
+       code="${searchbox.getSlug() }.facet.${facetValue.value}.label" />
+     </c:catch>
+
+     <c:if test="${empty facetValueLabel}">
+      <c:set var="facetValueLabel" value="${facetValue.value}" />
+     </c:if>
      <c:choose>
       <c:when test="${facetValue.getSelected()}">
        <li class="list-group-item selected"><span class="badge">${facetValue.count}</span>
@@ -41,7 +57,7 @@
         value="${facetValue.geParamValue()}" checked="checked"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
-        for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+        for="${element.fieldName}_${i.index}" class="css-label">${facetValueLabel }</label>
        </li>
       </c:when>
       <c:otherwise>
@@ -51,7 +67,7 @@
         value="${facetValue.geParamValue()}"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
-        for="${element.fieldName}_${i.index}" class="css-label">${facetValue.value}</label>
+        for="${element.fieldName}_${i.index}" class="css-label">${facetValueLabel}</label>
        </li>
       </c:otherwise>
      </c:choose>
