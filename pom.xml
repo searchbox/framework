@@ -69,6 +69,7 @@
   <jetty.version>8.1.5.v20120716</jetty.version>
   <lucene.version>4.7.0</lucene.version>
   <solr.version>4.7.0</solr.version>
+  <es.version>1.0.1</es.version>
   <m2eclipse.wtp.contextRoot>/searchbox</m2eclipse.wtp.contextRoot>
  </properties>
  <dependencies>
@@ -386,6 +387,11 @@
    <artifactId>solr-core</artifactId>
    <version>${solr.version}</version>
   </dependency>
+  <dependency>
+    <groupId>org.elasticsearch</groupId>
+    <artifactId>elasticsearch</artifactId>
+    <version>${es.version}</version>
+</dependency>
   <!-- ************************************************* -->
   <!-- -->
   <!-- J2EE dependencies -->
