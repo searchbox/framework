@@ -171,7 +171,7 @@ public class SearchController {
             @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
-        LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+        LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
         model.setViewName(getViewViewName());
 
         SearchResult result = new SearchResult();
@@ -199,7 +199,7 @@ public class SearchController {
             @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions, 
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
-        LOGGER.info("search page for: " + searchbox + " with preset:" + preset);
+        LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
         model.setViewName(getSearchViewName());
 
         SearchResult result = new SearchResult();
@@ -275,7 +275,7 @@ public class SearchController {
                 .getSearchEngine().getInstance();
         searchEngine.setCollection(preset.getCollection().getInstance());
 
-        LOGGER.info("Current SearchEngine: " + searchEngine);
+        LOGGER.debug("Current SearchEngine: {}", searchEngine);
 
         Set<SearchElement> resultElements = searchService.execute(searchEngine,
                 searchElements, fieldAttributes, conditions);
