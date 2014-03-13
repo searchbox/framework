@@ -62,7 +62,8 @@ public abstract class SolrSearchEngine extends
 
     protected abstract SolrServer getSolrServer();
 
-    protected abstract boolean updateDataModel(Map<Field, Set<String>> copyFields);
+    protected abstract boolean updateDataModel(
+            Map<Field, Set<String>> copyFields);
 
     @Override
     public SolrQuery newQuery() {
@@ -133,7 +134,7 @@ public abstract class SolrSearchEngine extends
 
     @Override
     public boolean indexMap(String collectionName, Map<String, Object> fields) {
-        
+
         SolrInputDocument document = new SolrInputDocument();
         // Make sure we use the ID field...
         if (!fields.containsKey("id")) {
@@ -149,8 +150,7 @@ public abstract class SolrSearchEngine extends
                 document.addField(entry.getKey(), entry.getValue());
             }
         }
-        LOGGER.debug("Indexing Document: {}",document);
-        
+
         UpdateRequest update = new UpdateRequest();
         update.setCommitWithin(10000);
         update.setParam("collection", collectionName);
@@ -179,7 +179,7 @@ public abstract class SolrSearchEngine extends
         LOGGER.info("Reloading engine");
         this.reloadEngine();
         return true;
-        
+
     }
 
     @Override
