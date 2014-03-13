@@ -25,121 +25,125 @@ import com.searchbox.core.search.RetryElement;
 import com.searchbox.core.search.SearchElement;
 
 @SearchComponent
-public class EdismaxQuery extends ConditionalSearchElement<EdismaxQuery.Condition>
-	implements RetryElement {
-	
-	public enum Operator { OR, AND}
-	
-	private String query;
-	private String collationQuery;
-	private Long hitCount = 0l;
-	
-	@SearchAttribute
-	private Operator operator = Operator.AND;
+public class EdismaxQuery extends
+        ConditionalSearchElement<EdismaxQuery.Condition> implements
+        RetryElement {
 
-	public EdismaxQuery() {
-		super("query component",SearchElement.Type.QUERY);
-	}
-	
-	public EdismaxQuery(String query) {
-		super("query component",SearchElement.Type.QUERY);
-		this.query = query;
-	}
-	
-	@Override
-	public boolean shouldRetry() {
-		return (hitCount == 0 && collationQuery!=null); 
-	}
+    public enum Operator {
+        OR, AND
+    }
 
-	public String getQuery() {
-		return query;
-	}
+    private String query;
+    private String collationQuery;
+    private Long hitCount = 0l;
 
-	public void setQuery(String query) {
-		this.query = query;
-	}
+    @SearchAttribute
+    private Operator operator = Operator.AND;
 
-	@Override
-	public String geParamValue() {
-		return query;
-	}
+    public EdismaxQuery() {
+        super("query component", SearchElement.Type.QUERY);
+    }
 
-	@Override
-	public EdismaxQuery.Condition getSearchCondition() {
-		return new EdismaxQuery.Condition(query);
-	}
-	
-	/**
-	 * @return the collationQuery
-	 */
-	public String getCollationQuery() {
-		return collationQuery;
-	}
+    public EdismaxQuery(String query) {
+        super("query component", SearchElement.Type.QUERY);
+        this.query = query;
+    }
 
-	/**
-	 * @param collationQuery the collationQuery to set
-	 */
-	public void setCollationQuery(String collationQuery) {
-		this.collationQuery = collationQuery;
-	}
+    @Override
+    public boolean shouldRetry() {
+        return (hitCount == 0 && collationQuery != null);
+    }
 
-	/**
-	 * @return the operator
-	 */
-	public Operator getOperator() {
-		return operator;
-	}
+    public String getQuery() {
+        return query;
+    }
 
-	/**
-	 * @param operator the operator to set
-	 */
-	public void setOperator(Operator operator) {
-		this.operator = operator;
-	}
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
-	/**
-	 * @param l the hitCount to set
-	 */
-	public void setHitCount(Long l) {
-		this.hitCount = l;
-	}
+    @Override
+    public String geParamValue() {
+        return query;
+    }
 
-	
-	@SearchCondition(urlParam="q")
-	public static class Condition extends AbstractSearchCondition {
+    @Override
+    public EdismaxQuery.Condition getSearchCondition() {
+        return new EdismaxQuery.Condition(query);
+    }
 
-		String query;
+    /**
+     * @return the collationQuery
+     */
+    public String getCollationQuery() {
+        return collationQuery;
+    }
 
-		Condition(String query) {
-			this.query = query;
-		}
+    /**
+     * @param collationQuery
+     *            the collationQuery to set
+     */
+    public void setCollationQuery(String collationQuery) {
+        this.collationQuery = collationQuery;
+    }
 
-		public String getQuery() {
-			return query;
-		}
-	}
-	
-	@SearchConverter
-	public static class Converter implements 
-	org.springframework.core.convert.converter.Converter<String, EdismaxQuery.Condition> {
-	
-		@Override
-		public EdismaxQuery.Condition convert(String source) {
-			return new EdismaxQuery.Condition(source);
-		}
-	}
+    /**
+     * @return the operator
+     */
+    public Operator getOperator() {
+        return operator;
+    }
 
+    /**
+     * @param operator
+     *            the operator to set
+     */
+    public void setOperator(Operator operator) {
+        this.operator = operator;
+    }
 
-	@Override
-	public void mergeSearchCondition(AbstractSearchCondition condition) {
-		if(EdismaxQuery.Condition.class.equals(condition.getClass())){
-			this.query = ((EdismaxQuery.Condition)condition).getQuery();
-		}
-	}
+    /**
+     * @param l
+     *            the hitCount to set
+     */
+    public void setHitCount(Long l) {
+        this.hitCount = l;
+    }
 
-	@Override
-	public Class<?> getConditionClass() {
-		return EdismaxQuery.Condition.class;
-	}
+    @SearchCondition(urlParam = "q")
+    public static class Condition extends AbstractSearchCondition {
+
+        String query;
+
+        Condition(String query) {
+            this.query = query;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+    }
+
+    @SearchConverter
+    public static class Converter
+            implements
+            org.springframework.core.convert.converter.Converter<String, EdismaxQuery.Condition> {
+
+        @Override
+        public EdismaxQuery.Condition convert(String source) {
+            return new EdismaxQuery.Condition(source);
+        }
+    }
+
+    @Override
+    public void mergeSearchCondition(AbstractSearchCondition condition) {
+        if (EdismaxQuery.Condition.class.equals(condition.getClass())) {
+            this.query = ((EdismaxQuery.Condition) condition).getQuery();
+        }
+    }
+
+    @Override
+    public Class<?> getConditionClass() {
+        return EdismaxQuery.Condition.class;
+    }
 }
-

@@ -12,7 +12,8 @@ import com.searchbox.framework.repository.UserRepository;
 
 public class AuthUserService implements UserDetailsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthUserService.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(AuthUserService.class);
 
     private UserRepository repository;
 
@@ -23,19 +24,24 @@ public class AuthUserService implements UserDetailsService {
 
     /**
      * Loads the user information.
-     * @param username  The username of the requested user.
-     * @return  The information of the user.
-     * @throws UsernameNotFoundException    Thrown if no user is found with the given username.
+     * 
+     * @param username
+     *            The username of the requested user.
+     * @return The information of the user.
+     * @throws UsernameNotFoundException
+     *             Thrown if no user is found with the given username.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
         LOGGER.info("Loading user by username: {}", username);
 
         User user = repository.findByEmail(username);
         LOGGER.info("Found user: {}", user);
 
         if (user == null) {
-            throw new UsernameNotFoundException("No user found with username: " + username);
+            throw new UsernameNotFoundException("No user found with username: "
+                    + username);
         }
 
         return user;

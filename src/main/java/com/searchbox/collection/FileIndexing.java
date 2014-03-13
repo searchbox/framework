@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface FileIndexing {
 
-	public boolean indexFile(File file);
+    public boolean indexFile(File file);
 }

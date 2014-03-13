@@ -34,36 +34,36 @@ import com.searchbox.framework.web.SearchController;
 @RequestMapping("/{searchbox}/admin")
 public class AdminSearchController extends SearchController {
 
-	@Autowired
-	JobExplorer jobExplorer;
-	
-	@ModelAttribute("OrderEnum")
-	public List<Order> getReferenceOrder() {
-		return Arrays.asList(Order.values());
-	}
+    @Autowired
+    JobExplorer jobExplorer;
 
-	@ModelAttribute("SortEnum")
-	public List<Sort> getReferenceSort() {
-		return Arrays.asList(Sort.values());
-	}
-	
-	@ModelAttribute("jobExplorer")
-	public JobExplorer getJobExplorer() {
-		return this.jobExplorer;
-	}
+    @ModelAttribute("OrderEnum")
+    public List<Order> getReferenceOrder() {
+        return Arrays.asList(Order.values());
+    }
 
-	@Override
-	protected String getViewViewName() {
-		return "admin/view";
-	}
-	
-	@Override
-	protected String getSearchViewName() {
-		return "admin/search";
-	}
-	
-	@Override
-	protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-		return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
-	}
+    @ModelAttribute("SortEnum")
+    public List<Sort> getReferenceSort() {
+        return Arrays.asList(Sort.values());
+    }
+
+    @ModelAttribute("jobExplorer")
+    public JobExplorer getJobExplorer() {
+        return this.jobExplorer;
+    }
+
+    @Override
+    protected String getViewViewName() {
+        return "admin/view";
+    }
+
+    @Override
+    protected String getSearchViewName() {
+        return "admin/search";
+    }
+
+    @Override
+    protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+        return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
+    }
 }

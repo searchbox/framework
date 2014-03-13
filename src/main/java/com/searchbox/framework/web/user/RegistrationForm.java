@@ -91,11 +91,8 @@ public class RegistrationForm {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("email", email)
-                .append("firstName", firstName)
-                .append("lastName", lastName)
-                .append("signInProvider", signInProvider)
-                .toString();
+        return new ToStringBuilder(this).append("email", email)
+                .append("firstName", firstName).append("lastName", lastName)
+                .append("signInProvider", signInProvider).toString();
     }
 }

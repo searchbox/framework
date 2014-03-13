@@ -1,7 +1,10 @@
 package com.searchbox.engine.solr;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,9 +16,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.solr.client.solrj.SolrServer;
@@ -25,7 +33,10 @@ import org.apache.solr.client.solrj.response.CollectionAdminResponse;
 import org.apache.solr.common.cloud.Slice;
 import org.apache.solr.common.cloud.SolrZkClient;
 import org.apache.solr.common.cloud.ZkStateReader;
+import org.apache.solr.rest.schema.SchemaResource;
 import org.apache.zookeeper.KeeperException;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -36,206 +47,325 @@ import org.springframework.context.ApplicationContext;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
 
-public class SolrCloud extends SolrSearchEngine implements InitializingBean, DisposableBean {
+public class SolrCloud extends SolrSearchEngine implements InitializingBean,
+        DisposableBean {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SolrCloud.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(SolrCloud.class);
 
-	@Autowired
-	ApplicationContext context;
+    @Autowired
+    ApplicationContext context;
 
-	@SearchAttribute
-	String zkHost = "localhost:9983";
+    @SearchAttribute
+    String zkHost = "localhost:9983";
 
-	static CloudSolrServer solrServer;
+    static CloudSolrServer solrServer;
 
-	private static final String CORE_CONFIG_PATH = "/configs";
-	private static final String COLLECTION_PATH = "/collections";
+    private static final String CORE_CONFIG_PATH = "/configs";
+    private static final String COLLECTION_PATH = "/collections";
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (solrServer == null && zkHost != null) {
-			solrServer = new CloudSolrServer(zkHost, true);
-			solrServer.setParallelUpdates(true);
-			solrServer.connect();
-		}
-	}
-	
-	@Override
-	public void destroy() throws Exception {
-		solrServer.shutdown();
-	}
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (solrServer == null && zkHost != null) {
+            solrServer = new CloudSolrServer(zkHost, true);
+            solrServer.setParallelUpdates(true);
+            solrServer.connect();
+        }
+    }
 
-	@Override
-	protected SolrServer getSolrServer() {
-		return solrServer;
-	}
-	
-	@Override
-	public void register() {
-		try {
-			SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
+    @Override
+    public void destroy() throws Exception {
+        solrServer.shutdown();
+    }
 
-			LOGGER.info("Creating configuration for: " + collection.getName());
-			LOGGER.info("Path: "
-					+ context.getResource("classpath:solr/conf").getFile());
-			uploadToZK(zkServer, context.getResource("classpath:solr/conf")
-					.getFile(), CORE_CONFIG_PATH + "/" + collection.getName());
-	
-			this.reloadEngine();
-			
-		} catch (Exception e) {
-			LOGGER.error("Could not register colleciton: "
-					+ collection.getName());
-		}
-		
-	}
-	
-	@Override
-	public void reloadEngine() {
-		try {
-			SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
+    @Override
+    protected SolrServer getSolrServer() {
+        return solrServer;
+    }
 
-			if (coreExists(zkServer, collection.getName())) {
-				CollectionAdminResponse response = CollectionAdminRequest
-						.reloadCollection(collection.getName(), solrServer);
-				LOGGER.info("Reloaded collection: " + response);
-			} else {
-				CollectionAdminResponse response = CollectionAdminRequest
-						.createCollection(collection.getName(), 1,
-								collection.getName(), solrServer);
-				LOGGER.info("Created collection: " + response);
-			}
-			
-			while(!coreExists(zkServer,collection.getName())){
-				LOGGER.info("Waiting for core to come online...");
-				Thread.sleep(500);
-			}
-		} catch (Exception e) {
-			LOGGER.error("Could not reload engine for: " + collection.getName(),e);
-		}
-	}
+    @Override
+    public void register() {
+        try {
+            SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
 
-	@Override
-	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
-		
-		HttpClient client = HttpClientBuilder.create().build();
-		ZkStateReader  zkSateReader = solrServer.getZkStateReader();
-		
-		try {
-			
-			java.util.Collection<Slice> slices = zkSateReader
-					.getClusterState().getActiveSlices(collection.getName());
-			
-			String baseUrl = "";
-			for(Slice slice:slices){
-				String nodeName = slice.getLeader().getNodeName();
-				baseUrl = solrServer.getZkStateReader().getBaseUrlForNodeName(nodeName);
-				LOGGER.info("Slice state: " + slice.getState());
-				LOGGER.info("Leader's node name: " + nodeName);
-				LOGGER.info("Base URL for node: " + baseUrl);
-			}
-			
-			String url = baseUrl+"/"+collection.getName()+"/schema/copyfields";
-			LOGGER.info("Schema copyField url: " + url);
-			
-			HttpPost post = new HttpPost(url);
-			
-			/** 
-			 * [{"source":"sourceField","dest":["target1",...]}, ...] 
-			 */
-			List<String> contents = new ArrayList<String>();
-			for(Entry<Field, Set<String>> copyField:copyFields.entrySet()){
-				Set<String> realCopyFields = new HashSet<String>();
-				for(String fields:copyField.getValue()){
-					realCopyFields.add("\""+fields+"\"");
-				}
-				contents.add("{\"source\":\""+
-						copyField.getKey().getKey()+"\",\"dest\":["+
-						StringUtils.join(realCopyFields, ',')+"]}");
-			}
-			
-			String content = "["+StringUtils.join(contents, ',')+"]";
-			LOGGER.info("Payload is: " + content);
-			
-			HttpEntity entity = EntityBuilder.create()
-					.setContentType(ContentType.APPLICATION_JSON)
-					.setText(content).build();
-			post.setEntity(entity);
-			
-			HttpResponse response = client.execute(post);
-			entity = response.getEntity();
-			post.completed();
-			
-			//FIXME this is ugly... Should NOT have to reload
-			// core for a simple copyField...
-			CollectionAdminResponse synch = CollectionAdminRequest
-					.reloadCollection(collection.getName(), solrServer);
-//			this.reloadEngine();
-			
-									
-			LOGGER.info("response is: " + response.getStatusLine());				
-			if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-				return true;
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			
-		}
-		return false;
-	}
+            LOGGER.info("Creating configuration for: " + collection.getName());
+            LOGGER.debug("Path: {}", context.getResource("classpath:solr/conf")
+                    .getFile());
+            uploadToZK(zkServer, context.getResource("classpath:solr/conf")
+                    .getFile(), CORE_CONFIG_PATH + "/" + collection.getName());
 
-	private static final boolean coreExists(SolrZkClient server, String coreName) {
-		try {
-			return server.exists(COLLECTION_PATH + "/" + coreName, true);
-		} catch (Exception e) {
-			LOGGER.error("Could not check if core:" + coreName + " exists", e);
-		}
+            if (coreExists(zkServer, collection.getName())) {
+                CollectionAdminResponse response = CollectionAdminRequest
+                        .reloadCollection(collection.getName(), solrServer);
+                LOGGER.info("Reloaded Existing collection: " + response);
+            } else {
+                CollectionAdminResponse response = CollectionAdminRequest
+                        .createCollection(collection.getName(), 1,
+                                collection.getName(), solrServer);
+                LOGGER.info("Created New collection: " + response);
+            }
 
-		return false;
-	}
+            int wait = 0;
+            while (!coreExists(zkServer, collection.getName())) {
+                if ((wait++) > 5) {
+                    LOGGER.error("Giving up waiting for engine...");
+                }
+                LOGGER.info("Waiting for core to come online...");
+                Thread.sleep(500);
+            }
 
-	private static final boolean configExists(SolrZkClient server,
-			String coreName) {
-		try {
-			return server.exists(CORE_CONFIG_PATH + "/" + coreName, true);
-		} catch (Exception e) {
-			LOGGER.error("Could not check if congif:" + coreName + " exists", e);
-		}
-		return false;
-	}
+        } catch (Exception e) {
+            LOGGER.error("Could not register colleciton: "
+                    + collection.getName());
+        }
 
-	public static void uploadToZK(SolrZkClient zkClient, File dir, String zkPath)
-			throws IOException, KeeperException, InterruptedException {
-		File[] files = dir.listFiles();
-		if (files == null) {
-			throw new IllegalArgumentException("Illegal directory: " + dir);
-		}
-		for (File file : files) {
-			if (!file.getName().startsWith(".")) {
-				if (!file.isDirectory()) {
-					zkClient.makePath(zkPath + "/" + file.getName(), file,
-							false, true);
-				} else {
-					uploadToZK(zkClient, file, zkPath + "/" + file.getName());
-				}
-			}
-		}
-	}
+    }
 
-	/**
-	 * @return the zkHost
-	 */
-	public String getZkHost() {
-		return zkHost;
-	}
+    @Override
+    public void reloadEngine() {
+        try {
 
-	/**
-	 * @param zkHost the zkHost to set
-	 */
-	public void setZkHost(String zkHost) {
-		this.zkHost = zkHost;
-	}
+            SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
+
+            int wait = 0;
+            while (!coreExists(zkServer, collection.getName())) {
+                if ((wait++) > 5) {
+                    LOGGER.error("Giving up waiting for engine...");
+                }
+                Thread.sleep(500);
+                LOGGER.info("Waiting for core to come online...");
+            }
+
+            CollectionAdminResponse response = CollectionAdminRequest
+                    .reloadCollection(collection.getName(), solrServer);
+            LOGGER.info("Reloaded collection: " + response);
+
+            wait = 0;
+            while (!coreExists(zkServer, collection.getName())) {
+                if ((wait++) > 5) {
+                    LOGGER.error("Giving up waiting for engine...");
+                }
+                Thread.sleep(500);
+                LOGGER.info("Waiting for core to come online...");
+            }
+        } catch (Exception e) {
+            LOGGER.error(
+                    "Could not reload engine for: " + collection.getName(), e);
+        }
+    }
+
+    @Override
+    protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+
+        ZkStateReader zkSateReader = solrServer.getZkStateReader();
+
+        try {
+
+            java.util.Collection<Slice> slices = zkSateReader.getClusterState()
+                    .getActiveSlices(collection.getName());
+
+            String baseUrl = "";
+            for (Slice slice : slices) {
+                String nodeName = slice.getLeader().getNodeName();
+                baseUrl = solrServer.getZkStateReader().getBaseUrlForNodeName(
+                        nodeName);
+                LOGGER.debug("Slice state: {}", slice.getState());
+                LOGGER.debug("Leader's node name: {}", nodeName);
+                LOGGER.debug("Base URL for node: {}", baseUrl);
+            }
+
+            String schemaFieldURL = baseUrl + "/" + collection.getName()
+                    + "/schema/fields";
+            LOGGER.debug("Schema field url: {}", schemaFieldURL);
+            
+            String copyFieldUrl = baseUrl + "/" + collection.getName()
+                    + "/schema/copyfields";
+            LOGGER.debug("Schema copyField url: {}", copyFieldUrl);
+
+            //Load current CopyFields not to double add them
+            JSONObject solrCurrentCopyFields = httpGET(copyFieldUrl);
+            LOGGER.debug("Current Copy fields in Solr are: {}", solrCurrentCopyFields);
+
+            JSONArray solrFieldUpdates = new JSONArray();
+            JSONArray solrCopyFields = new JSONArray();
+            for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
+                String collectionField = copyField.getKey().getKey();
+                JSONObject fieldInfo = this.httpGET(schemaFieldURL + "/"
+                        + collectionField);
+                JSONObject currentFieldCopys = new JSONObject();
+
+                if (fieldInfo.getJSONObject("field").has("dynamicBase")) {
+                    LOGGER.debug("Materializing dynamic field: {}",
+                            fieldInfo.getJSONObject("field"));
+                    solrFieldUpdates.put(fieldInfo.getJSONObject("field"));
+                }
+                currentFieldCopys.put("source",collectionField);
+                currentFieldCopys.put("dest", new JSONArray());
+                solrCopyFields.put(currentFieldCopys);
+
+                for (String solrField : copyField.getValue()) {
+                    JSONObject solrFieldInfo = this.httpGET(schemaFieldURL
+                            + "/" + solrField);
+                    
+                    //Check if the field exists or not
+                    if (solrFieldInfo.getJSONObject("field").has("dynamicBase")) {
+                        LOGGER.debug("Materializing dynamic field: {}",
+                                solrFieldInfo.getJSONObject("field"));
+                        solrFieldUpdates.put(solrFieldInfo
+                                .getJSONObject("field"));
+                    }
+                    
+                    boolean hasCopyPair = false;
+                    JSONArray copyFieldPairs = solrCurrentCopyFields.getJSONArray("copyFields");
+                    for(int i = 0; i<copyFieldPairs.length(); i++){
+                        JSONObject copyFieldPair = copyFieldPairs.getJSONObject(i);
+                        if(copyFieldPair.getString("source").replace("\"", "").equals(collectionField) && 
+                                copyFieldPair.getString("dest").replace("\"", "").equals(solrField)){
+                            hasCopyPair = true;
+                        }
+                    }
+                    //Check if its the copy pair exists
+                    if(!hasCopyPair){
+                        currentFieldCopys.getJSONArray("dest").put(solrField);
+                    }
+                }
+            }
+
+            /**
+             * No need, we have dynamic Schema
+             * 
+             * JSONObject fieldResponse = this.httpPOST(schemaFieldURL,
+             * solrFieldUpdates); LOGGER.info("Update Field Response: {}",
+             * fieldResponse);
+             */
+
+            // Now we update the copyFields...
+            JSONObject copyResponse = this.httpPOST(copyFieldUrl,
+                    solrCopyFields);
+            LOGGER.info("Update CopyField Response: {}", copyResponse);
+
+        } catch (Exception e) {
+            LOGGER.error("Could not update DataModel", e);
+        } finally {
+
+        }
+        return false;
+    }
+
+    private static final boolean coreExists(SolrZkClient server, String coreName) {
+        try {
+            return server.exists(COLLECTION_PATH + "/" + coreName, true);
+        } catch (Exception e) {
+            LOGGER.error("Could not check if core:" + coreName + " exists", e);
+        }
+
+        return false;
+    }
+
+    private static final boolean configExists(SolrZkClient server,
+            String coreName) {
+        try {
+            return server.exists(CORE_CONFIG_PATH + "/" + coreName, true);
+        } catch (Exception e) {
+            LOGGER.error("Could not check if congif:" + coreName + " exists", e);
+        }
+        return false;
+    }
+
+    public static void uploadToZK(SolrZkClient zkClient, File dir, String zkPath)
+            throws IOException, KeeperException, InterruptedException {
+        File[] files = dir.listFiles();
+        if (files == null) {
+            throw new IllegalArgumentException("Illegal directory: " + dir);
+        }
+        for (File file : files) {
+            if (!file.getName().startsWith(".")) {
+                if (!file.isDirectory()) {
+                    zkClient.makePath(zkPath + "/" + file.getName(), file,
+                            false, true);
+                } else {
+                    uploadToZK(zkClient, file, zkPath + "/" + file.getName());
+                }
+            }
+        }
+    }
+
+    /**
+     * @return the zkHost
+     */
+    public String getZkHost() {
+        return zkHost;
+    }
+
+    /**
+     * @param zkHost
+     *            the zkHost to set
+     */
+    public void setZkHost(String zkHost) {
+        this.zkHost = zkHost;
+    }
+
+    private JSONObject httpGET(String url) {
+        return this.doHttpRequest(RequestBuilder.get(), url, null);
+    }
+
+    private JSONObject httpPUT(String url, Object jsonObject) {
+        return this.doHttpRequest(RequestBuilder.put(), url, jsonObject);
+    }
+
+    private JSONObject httpPOST(String url, Object jsonObject) {
+        return this.doHttpRequest(RequestBuilder.post(), url, jsonObject);
+    }
+
+    /**
+     * Adds new fields in the Collection's Schema with the Schema Rest API
+     * (http://localhost:8983/solr/schema/fields)
+     * 
+     * [{"name":"newfield1","type":"text","copyFields":["target1",...]},
+     * {"name":"newfield2","type":"text","stored":"false"}]
+     * 
+     * @param jsonObject
+     */
+    private JSONObject doHttpRequest(RequestBuilder builder, String url,
+            Object jsonObject) {
+        HttpClient client = HttpClientBuilder.create().build();
+        RequestBuilder thisBuilder = builder.setUri(url)
+                .addParameter("includeDynamic", "true")
+                .addParameter("wt", "json");
+        if (jsonObject != null) {
+            thisBuilder = thisBuilder.setEntity(EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_JSON)
+                    .setText(jsonObject.toString()).build());
+        }
+
+        HttpUriRequest request = thisBuilder.build();
+
+        JSONObject response = new JSONObject();
+
+        try {
+            HttpResponse httpResponse = client.execute(request);
+            InputStream ips = httpResponse.getEntity().getContent();
+            BufferedReader buf = new BufferedReader(new InputStreamReader(ips,
+                    "UTF-8"));
+            if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                LOGGER.error("could read response ({}) for url: {}",
+                        httpResponse.getStatusLine().getReasonPhrase(), url);
+            }
+            StringBuilder sb = new StringBuilder();
+            String s;
+            while (true) {
+                s = buf.readLine();
+                if (s == null || s.length() == 0)
+                    break;
+                sb.append(s);
+
+            }
+            buf.close();
+            ips.close();
+            return new JSONObject(sb.toString());
+        } catch (Exception e) {
+            LOGGER.error("Could not post JSON to {}", url, e);
+        }
+        return response;
+    }
 }

@@ -41,96 +41,84 @@ import com.searchbox.core.dm.Field;
 
 @Configurable
 public class PubmedCollection extends AbstractBatchCollection implements
-		SynchronizedCollection {
+        SynchronizedCollection {
 
-	@Autowired
-	ApplicationContext context;
+    @Autowired
+    ApplicationContext context;
 
-	@Autowired
-	StepBuilderFactory stepBuilderFactory;
+    @Autowired
+    StepBuilderFactory stepBuilderFactory;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PubmedCollection.class);
-	
-	public static List<Field> GET_FIELDS(){
-		List<Field> fields = new ArrayList<Field>();
-		fields.add(new Field(String.class, "id"));
-		fields.add(new Field(Date.class, "article-creation-date"));
-		fields.add(new Field(Integer.class, "article-year"));
-		fields.add(new Field(Date.class, "article-completion-date"));
-		fields.add(new Field(Date.class, "article-revision-date"));
-		fields.add(new Field(String.class, "article-pubmodel"));
-		fields.add(new Field(String.class, "journal-title"));
-		fields.add(new Field(String.class, "journal-title-abrv"));
-		fields.add(new Field(String.class, "article-title"));
-		fields.add(new Field(String.class, "article-abstract"));
-		fields.add(new Field(String.class, "author"));
-		fields.add(new Field(String.class, "article-lang"));
-		fields.add(new Field(String.class, "publication-type"));
-		fields.add(new Field(String.class, "substance-name"));
-		fields.add(new Field(String.class, "article-descriptor"));
-		fields.add(new Field(String.class, "article-qualifier"));
-		return fields;
-	}
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(PubmedCollection.class);
 
-	public PubmedCollection() {
-	}
+    public static List<Field> GET_FIELDS() {
+        List<Field> fields = new ArrayList<Field>();
+        fields.add(new Field(String.class, "id"));
+        fields.add(new Field(Date.class, "article-creation-date"));
+        fields.add(new Field(Integer.class, "article-year"));
+        fields.add(new Field(Date.class, "article-completion-date"));
+        fields.add(new Field(Date.class, "article-revision-date"));
+        fields.add(new Field(String.class, "article-pubmodel"));
+        fields.add(new Field(String.class, "journal-title"));
+        fields.add(new Field(String.class, "journal-title-abrv"));
+        fields.add(new Field(String.class, "article-title"));
+        fields.add(new Field(String.class, "article-abstract"));
+        fields.add(new Field(String.class, "author"));
+        fields.add(new Field(String.class, "article-lang"));
+        fields.add(new Field(String.class, "publication-type"));
+        fields.add(new Field(String.class, "substance-name"));
+        fields.add(new Field(String.class, "article-descriptor"));
+        fields.add(new Field(String.class, "article-qualifier"));
+        return fields;
+    }
 
-	public PubmedCollection(String name) {
-		super(name);
-	}
+    public PubmedCollection() {
+    }
 
-	public ItemReader<Resource> reader() {
-		return new ItemReader<Resource>() {
-			boolean hasmore = true;
+    public PubmedCollection(String name) {
+        super(name);
+    }
 
-			@Override
-			public Resource read() {
-				if (hasmore) {
-					hasmore = false;
-					Resource resource = context
-							.getResource("classpath:data/pubmedIndex.xml");
-					if (resource.exists()) {
-						LOGGER.info("Read has created this resource: "
-								+ resource.getFilename());
-						return resource;
-					}
-				}
-				return null;
-			}
-		};
-	}
+    public ItemReader<Resource> reader() {
+        return new ItemReader<Resource>() {
+            boolean hasmore = true;
 
-	public ItemProcessor<Resource, File> itemProcessor() {
-		return new ItemProcessor<Resource, File>() {
-			@Override
-			public File process(Resource item) throws IOException {
-				LOGGER.info("Processing stuff here...");
-				return item.getFile();
-			}
-		};
-	}
+            @Override
+            public Resource read() {
+                if (hasmore) {
+                    hasmore = false;
+                    Resource resource = context
+                            .getResource("classpath:data/pubmedIndex.xml");
+                    if (resource.exists()) {
+                        LOGGER.info("Read has created this resource: "
+                                + resource.getFilename());
+                        return resource;
+                    }
+                }
+                return null;
+            }
+        };
+    }
 
-	public ItemWriter<File> writer() {
-		ItemWriter<File> writer = new ItemWriter<File>() {
-			@Override
-			public void write(List<? extends File> items) {
-				for (File item : items) {
-					getSearchEngine().indexFile(getName(), item);
-				}
-			}
-		};
-		return writer;
-	}
+    public ItemProcessor<Resource, File> itemProcessor() {
+        return new ItemProcessor<Resource, File>() {
+            @Override
+            public File process(Resource item) throws IOException {
+                LOGGER.info("Processing stuff here...");
+                return item.getFile();
+            }
+        };
+    }
 
-	@Override
-	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
-		
-		Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
-				.reader(reader()).processor(itemProcessor()).writer(writer())
-				.build();
-		
-		return builder.flow(step).end();
-	
-	}
+    @Override
+    protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+
+        Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
+                .reader(reader()).processor(itemProcessor()).writer(fileWriter())
+                .build();
+
+        return builder.flow(step).end();
+
+    }
 }

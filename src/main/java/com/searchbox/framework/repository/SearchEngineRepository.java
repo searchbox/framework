@@ -19,7 +19,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.framework.domain.SearchEngineDefinition;
 
-
-public interface SearchEngineRepository extends CrudRepository<SearchEngineDefinition, Long> {
+public interface SearchEngineRepository extends
+        CrudRepository<SearchEngineDefinition, Long> {
 
 }

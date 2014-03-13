@@ -23,9 +23,9 @@ import java.lang.annotation.Target;
 
 import com.searchbox.core.SearchAdapter.Time;
 
-@Target({ElementType.METHOD })
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SearchAdapterMethod{
-	Time execute() default Time.BEFORE;	
+public @interface SearchAdapterMethod {
+    Time execute() default Time.BEFORE;
 }

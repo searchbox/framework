@@ -19,7 +19,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.framework.domain.User;
 
-public interface UserRepository extends CrudRepository<User, Long>{
-	
-	public User findByEmail(String email);
+public interface UserRepository extends CrudRepository<User, Long> {
+
+    public User findByEmail(String email);
 }

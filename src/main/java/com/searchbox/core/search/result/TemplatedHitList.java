@@ -26,99 +26,103 @@ import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 
 @SearchComponent
-public class TemplatedHitList extends SearchElementWithValues<Hit> implements CachedContent {
-		
-	protected List<String> fields;
-	
-	@SearchAttribute
-	private String template;
-	
-	private String templateFile;
-	
-	@SearchAttribute String titleField;
-	
-	@SearchAttribute String urlField;
-	
-	@SearchAttribute String idField;
-	
-	public TemplatedHitList(){
-		super("Result Set with Template",SearchElement.Type.VIEW);
-		this.fields = new ArrayList<String>();
-	}
-	
-	public String getTemplate(){
-		return this.template;
-	}
-	
-	public void setTemplate(String template){
-		this.template = template;
-		this.getFields().addAll(StringUtils.extractHitFields(template));
-	}
-	
-	public String getTemplateFile(){
-		return this.templateFile;
-	}
+public class TemplatedHitList extends SearchElementWithValues<Hit> implements
+        CachedContent {
 
-	public String getTitleField() {
-		return titleField;
-	}
+    protected List<String> fields;
 
-	public void setTitleField(String titleField) {
-		this.titleField = titleField;
-	}
+    @SearchAttribute
+    private String template;
 
-	public String getUrlField() {
-		return urlField;
-	}
+    private String templateFile;
 
-	public void setUrlField(String urlField) {
-		this.urlField = urlField;
-	}
+    @SearchAttribute
+    String titleField;
 
-	public String getIdField() {
-		return idField;
-	}
+    @SearchAttribute
+    String urlField;
 
-	public void setIdField(String idField) {
-		this.idField = idField;
-	}
+    @SearchAttribute
+    String idField;
 
-	public void setFields(List<String> fields) {
-		this.fields = fields;
-	}
+    public TemplatedHitList() {
+        super("Result Set with Template", SearchElement.Type.VIEW);
+        this.fields = new ArrayList<String>();
+    }
 
-	public List<String> getFields() {
-		return this.fields;
-	}
+    public String getTemplate() {
+        return this.template;
+    }
 
-	public void addHit(Hit hit) {
-		this.values.add(hit);
-	}
+    public void setTemplate(String template) {
+        this.template = template;
+        this.getFields().addAll(StringUtils.extractHitFields(template));
+    }
 
-	public Hit newHit(Float score) {
-		Hit hit = new Hit(score);
-		hit.setIDFieldName(this.idField);
-		hit.setTitleFieldName(this.titleField);
-		hit.setURLFieldName(this.urlField);
-		this.addHit(hit);
-		return hit;
-	}
+    public String getTemplateFile() {
+        return this.templateFile;
+    }
 
-	@Override
-	public int getContentHash() {
-		return this.template.hashCode();
-	}
+    public String getTitleField() {
+        return titleField;
+    }
 
-	@Override
-	public String getContent() {
-		return "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "+
-				"xmlns:sbx=\"urn:jsptagdir:/WEB-INF/tags/sbx\" " +
-				"version=\"2.0\">"+
-				this.template+"</jsp:root>";
-	}
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
+    }
 
-	@Override
-	public void setPath(String path) {
-		this.templateFile = path;
-	}
+    public String getUrlField() {
+        return urlField;
+    }
+
+    public void setUrlField(String urlField) {
+        this.urlField = urlField;
+    }
+
+    public String getIdField() {
+        return idField;
+    }
+
+    public void setIdField(String idField) {
+        this.idField = idField;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<String> getFields() {
+        return this.fields;
+    }
+
+    public void addHit(Hit hit) {
+        this.values.add(hit);
+    }
+
+    public Hit newHit(Float score) {
+        Hit hit = new Hit(score);
+        hit.setIDFieldName(this.idField);
+        hit.setTitleFieldName(this.titleField);
+        hit.setURLFieldName(this.urlField);
+        this.addHit(hit);
+        return hit;
+    }
+
+    @Override
+    public int getContentHash() {
+        return this.template.hashCode();
+    }
+
+    @Override
+    public String getContent() {
+        return "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" "
+                + "xmlns:sbx=\"urn:jsptagdir:/WEB-INF/tags/sbx\" "
+                + "xmlns:c=\"http://java.sun.com/jsp/jstl/core\" "
+                + "version=\"2.0\">" + this.template + "</jsp:root>";
+    }
+
+    @Override
+    public void setPath(String path) {
+        this.templateFile = path;
+    }
 }

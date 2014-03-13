@@ -21,117 +21,118 @@ import java.util.Map;
 
 import com.searchbox.core.search.ValueElement;
 
-public class Hit extends ValueElement  {
+public class Hit extends ValueElement {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -6419221783189375788L;
-	
-	public Map<String, Object> fieldValues;
-	public Map<String, List<String>> highlights;
-	
-	private Float score;
-	
-	private String IDFieldName;
-	
-	private String TitleFieldName;
-	
-	private String URLFieldName;
-	
-	public Hit(Float score){
-		super("");
-		this.score = score;
-		this.fieldValues = new HashMap<String, Object>();
-		this.highlights = new HashMap<String, List<String>>();
-	}
-	
-	public String getIDFieldName() {
-		return IDFieldName;
-	}
+    private static final long serialVersionUID = -6419221783189375788L;
 
-	public void setIDFieldName(String iDFieldName) {
-		IDFieldName = iDFieldName;
-	}
+    public Map<String, Object> fieldValues;
+    public Map<String, List<String>> highlights;
 
-	public String getTitleFieldName() {
-		return TitleFieldName;
-	}
+    private Float score;
 
-	public void setTitleFieldName(String titleFieldName) {
-		TitleFieldName = titleFieldName;
-	}
+    private String IDFieldName;
 
-	public String getURLFieldName() {
-		return URLFieldName;
-	}
+    private String TitleFieldName;
 
-	public void setURLFieldName(String uRLFieldName) {
-		URLFieldName = uRLFieldName;
-	}
+    private String URLFieldName;
 
-	public Float getScore(){
-		return this.score;
-	}
+    public Hit(Float score) {
+        super("");
+        this.score = score;
+        this.fieldValues = new HashMap<String, Object>();
+        this.highlights = new HashMap<String, List<String>>();
+    }
 
-	public void setScore(Float score) {
-		this.score = score;
-	}
-	
-	public void addFieldValue(String name, Object value){
-		this.fieldValues.put(name, value);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String getId(){
-		Object id = this.fieldValues.get(this.IDFieldName);
-		if(List.class.isAssignableFrom(id.getClass())){
-			return ((List<String>)id).get(0);
-		} else {
-			return (String)id;
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String getTitle(){
-		Object title = this.fieldValues.get(this.TitleFieldName);
-		if(List.class.isAssignableFrom(title.getClass())){
-			return ((List<String>)title).get(0);
-		} else {
-			return (String)title;
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String getUrl(){
-		Object url = this.fieldValues.get(this.URLFieldName);
-		if(List.class.isAssignableFrom(url.getClass())){
-			return ((List<String>)url).get(0);
-		} else {
-			return (String)url;
-		}
-	}
-	
-	public Map<String, Object> getFieldValues(){
-		return this.fieldValues;
-	}
+    public String getIDFieldName() {
+        return IDFieldName;
+    }
 
-	/**
-	 * @return the highlights
-	 */
-	public Map<String, List<String>> getHighlights() {
-		return highlights;
-	}
+    public void setIDFieldName(String iDFieldName) {
+        IDFieldName = iDFieldName;
+    }
 
-	/**
-	 * @param highlights the highlights to set
-	 */
-	public void setHighlights(Map<String, List<String>> highlights) {
-		this.highlights = highlights;
-	}
+    public String getTitleFieldName() {
+        return TitleFieldName;
+    }
 
-	@Override
-	public int compareTo(ValueElement other) {
-		return score.compareTo(((Hit)other).getScore()+0.001f) * -1;
-	}
+    public void setTitleFieldName(String titleFieldName) {
+        TitleFieldName = titleFieldName;
+    }
+
+    public String getURLFieldName() {
+        return URLFieldName;
+    }
+
+    public void setURLFieldName(String uRLFieldName) {
+        URLFieldName = uRLFieldName;
+    }
+
+    public Float getScore() {
+        return this.score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
+
+    public void addFieldValue(String name, Object value) {
+        this.fieldValues.put(name, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getId() {
+        Object id = this.fieldValues.get(this.IDFieldName);
+        if (List.class.isAssignableFrom(id.getClass())) {
+            return ((List<String>) id).get(0);
+        } else {
+            return (String) id;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getTitle() {
+        Object title = this.fieldValues.get(this.TitleFieldName);
+        if (List.class.isAssignableFrom(title.getClass())) {
+            return ((List<String>) title).get(0);
+        } else {
+            return (String) title;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getUrl() {
+        Object url = this.fieldValues.get(this.URLFieldName);
+        if (List.class.isAssignableFrom(url.getClass())) {
+            return ((List<String>) url).get(0);
+        } else {
+            return (String) url;
+        }
+    }
+
+    public Map<String, Object> getFieldValues() {
+        return this.fieldValues;
+    }
+
+    /**
+     * @return the highlights
+     */
+    public Map<String, List<String>> getHighlights() {
+        return highlights;
+    }
+
+    /**
+     * @param highlights
+     *            the highlights to set
+     */
+    public void setHighlights(Map<String, List<String>> highlights) {
+        this.highlights = highlights;
+    }
+
+    @Override
+    public int compareTo(ValueElement other) {
+        return score.compareTo(((Hit) other).getScore() + 0.001f) * -1;
+    }
 }

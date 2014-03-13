@@ -26,99 +26,104 @@ import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.SearchElement;
 
 @Configurable
-public abstract class AbstractSearchEngine<Q,R> implements SearchEngine<Q,R>  {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchEngine.class);
-	
-	protected Collection collection;
-	
-	protected String name;
-	
-	protected String description;
-	
-	protected Class<Q> queryClass;
-	protected Class<R> responseClass;
-		
-	protected AbstractSearchEngine(Class<Q> queryClass, Class<R> responseClass){
-		this.queryClass = queryClass;
-		this.responseClass = responseClass;
-	}
-	
-	protected AbstractSearchEngine(String name, Class<Q> queryClass, Class<R> responseClass){
-		this.name = name;
-		this.queryClass = queryClass;
-		this.responseClass = responseClass;
-	}
-	
-	public abstract void init();
-	
-	@Override
-	public Class<Q> getQueryClass() {
-		return this.queryClass;
-	}
-	
-	@Override
-	public Class<R> getResponseClass() {
-		return this.responseClass;
-	}
-	
-	@Override
-	public abstract Q newQuery();
-	
-	@Override
-	public List<SearchElement> getSupportedElements() {
-		return null;
-	}
-	
-	@Override
-	public Boolean supportsElement(SearchElement element){
-		//FIXME check if searchegine can actually use Element
-		return true;
-	}
-	
-	@Override
-	public Boolean supportsCondition(AbstractSearchCondition condition) {
-		// TODO Auto-generated method stub
-		return true;
-	}
+public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(AbstractSearchEngine.class);
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    protected Collection collection;
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
+    protected String name;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    protected String description;
 
-	public void setQueryClass(Class<Q> queryClass) {
-		this.queryClass = queryClass;
-	}
+    protected Class<Q> queryClass;
+    protected Class<R> responseClass;
 
-	protected void setResponseClass(Class<R> responseClass) {
-		this.responseClass = responseClass;
-	}
+    protected AbstractSearchEngine(Class<Q> queryClass, Class<R> responseClass) {
+        this.queryClass = queryClass;
+        this.responseClass = responseClass;
+    }
 
-	/**
-	 * @return the collection
-	 */
-	public Collection getCollection() {
-		return collection;
-	}
+    protected AbstractSearchEngine(String name, Class<Q> queryClass,
+            Class<R> responseClass) {
+        this.name = name;
+        this.queryClass = queryClass;
+        this.responseClass = responseClass;
+    }
 
-	/**
-	 * @param collection the collection to set
-	 */
-	public void setCollection(Collection collection) {
-		this.collection = collection;
-	}
+    @Override
+    public abstract void init();
+
+    @Override
+    public Class<Q> getQueryClass() {
+        return this.queryClass;
+    }
+
+    @Override
+    public Class<R> getResponseClass() {
+        return this.responseClass;
+    }
+
+    @Override
+    public abstract Q newQuery();
+
+    @Override
+    public List<SearchElement> getSupportedElements() {
+        return null;
+    }
+
+    @Override
+    public Boolean supportsElement(SearchElement element) {
+        // FIXME check if searchegine can actually use Element
+        return true;
+    }
+
+    @Override
+    public Boolean supportsCondition(AbstractSearchCondition condition) {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setQueryClass(Class<Q> queryClass) {
+        this.queryClass = queryClass;
+    }
+
+    protected void setResponseClass(Class<R> responseClass) {
+        this.responseClass = responseClass;
+    }
+
+    /**
+     * @return the collection
+     */
+    public Collection getCollection() {
+        return collection;
+    }
+
+    /**
+     * @param collection
+     *            the collection to set
+     */
+    @Override
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
 }

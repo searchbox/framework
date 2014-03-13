@@ -37,30 +37,30 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories("com.searchbox.framework.repository")
 public class DataConfiguration {
-	
-	
-	@Bean
+
+    @Bean
     @DependsOn("entityManagerFactory")
-    public ResourceDatabasePopulator initDatabase(DataSource dataSource) throws Exception {
+    public ResourceDatabasePopulator initDatabase(DataSource dataSource)
+            throws Exception {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("data/searchbox.sql"));
         populator.populate(dataSource.getConnection());
         return populator;
     }
-	
-	
-	
+
     @Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
-        		.addScript("classpath:org/springframework/batch/core/schema-drop-h2.sql")
-				.addScript("classpath:org/springframework/batch/core/schema-h2.sql")
-				.setType(EmbeddedDatabaseType.H2)
-				.build();
+                .addScript(
+                        "classpath:org/springframework/batch/core/schema-drop-h2.sql")
+                .addScript(
+                        "classpath:org/springframework/batch/core/schema-h2.sql")
+                .setType(EmbeddedDatabaseType.H2).build();
     }
-   
-    @Bean(name="entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
+
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
         lef.setDataSource(dataSource);
         lef.setJpaVendorAdapter(jpaVendorAdapter);
@@ -77,12 +77,12 @@ public class DataConfiguration {
         return hibernateJpaVendorAdapter;
     }
 
-    @Bean(name="transactionManager")
+    @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager() {
-    	JpaTransactionManager txManager = new JpaTransactionManager();
-//    	txManager.setDefaultTimeout(1000);
-//    	txManager.setNestedTransactionAllowed(true);
-//    	txManager.setTransactionSynchronization(TransactionSynchronization.STATUS_COMMITTED);
+        JpaTransactionManager txManager = new JpaTransactionManager();
+        // txManager.setDefaultTimeout(1000);
+        // txManager.setNestedTransactionAllowed(true);
+        // txManager.setTransactionSynchronization(TransactionSynchronization.STATUS_COMMITTED);
         return txManager;
     }
 }

@@ -41,127 +41,128 @@ import com.searchbox.core.dm.Field;
 
 public class EmbeddedSolr extends SolrSearchEngine {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EmbeddedSolr.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(EmbeddedSolr.class);
 
-	@SearchAttribute
-	private String solrHome;
+    @SearchAttribute
+    private String solrHome;
 
-	@SearchAttribute
-	private String dataDir;
+    @SearchAttribute
+    private String dataDir;
 
-	private static CoreContainer coreContainer =  null;
+    private static CoreContainer coreContainer = null;
 
-	public EmbeddedSolr() {
-		super();
-	}
+    public EmbeddedSolr() {
+        super();
+    }
 
-	public EmbeddedSolr(String name, String solrHome) {
-		super(name);
-		this.solrHome = solrHome;
-	}
-	
-	@Override
-	protected SolrServer getSolrServer() {
-		return new EmbeddedSolrServer(coreContainer, this.collection.getName());
-	}
+    public EmbeddedSolr(String name, String solrHome) {
+        super(name);
+        this.solrHome = solrHome;
+    }
 
-	public void init() {
-		if (EmbeddedSolr.coreContainer == null) {
-			try {
-				LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
-				EmbeddedSolr.coreContainer = new CoreContainer(this.solrHome);
-				EmbeddedSolr.coreContainer.load();
-			} catch (Exception e) {
-				LOGGER.error("Could not start search engine", e);
-			}
-		}
-	}
+    @Override
+    protected SolrServer getSolrServer() {
+        return new EmbeddedSolrServer(coreContainer, this.collection.getName());
+    }
 
-	public String getDataDir() {
-		return dataDir;
-	}
+    @Override
+    public void init() {
+        if (EmbeddedSolr.coreContainer == null) {
+            try {
+                LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
+                EmbeddedSolr.coreContainer = new CoreContainer(this.solrHome);
+                EmbeddedSolr.coreContainer.load();
+            } catch (Exception e) {
+                LOGGER.error("Could not start search engine", e);
+            }
+        }
+    }
 
-	public void setDataDir(String dataDir) {
-		this.dataDir = dataDir;
-	}
+    public String getDataDir() {
+        return dataDir;
+    }
 
-	public String getSolrHome() {
-		return solrHome;
-	}
+    public void setDataDir(String dataDir) {
+        this.dataDir = dataDir;
+    }
 
-	public void setSolrHome(String solrHome) {
-		this.solrHome = solrHome;
-	}
+    public String getSolrHome() {
+        return solrHome;
+    }
 
-	@Override
-	protected boolean addCopyFields(Map<Field, Set<String>> copyFields) {
-		for(Entry<Field, Set<String>> copyField:copyFields.entrySet()){
-			this.addCopyFields(copyField.getKey(), copyField.getValue());
-		}
-		return true;
-	}
-	
-	private boolean addCopyFields(Field field, Set<String> copyFields) {
-		SolrCore core = coreContainer.getCore(this.collection.getName());
-		IndexSchema schema = core.getLatestSchema();
-		
-		for(CopyField copyField:schema.getCopyFieldsList(field.getKey())){
-			copyFields.remove(copyField.getDestination().getName());
-		}
+    public void setSolrHome(String solrHome) {
+        this.solrHome = solrHome;
+    }
 
-		Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
-		copyFieldsMap.put(field.getKey(), copyFields);
-		schema = schema.addCopyFields(copyFieldsMap);
-		
-		core.setLatestSchema(schema);
-		
-		return true;
-	}
+    @Override
+    protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+        for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
+            this.addCopyFields(copyField.getKey(), copyField.getValue());
+        }
+        return true;
+    }
 
-	@Override
-	public void reloadEngine() {
-		try {
-			coreContainer.reload(this.collection.getName());
-		} catch (Exception e) {
-			LOGGER.warn(e.getMessage());
-		}
-	}
+    private boolean addCopyFields(Field field, Set<String> copyFields) {
+        SolrCore core = coreContainer.getCore(this.collection.getName());
+        IndexSchema schema = core.getLatestSchema();
 
-	@Override
-	public void register() {
+        for (CopyField copyField : schema.getCopyFieldsList(field.getKey())) {
+            copyFields.remove(copyField.getDestination().getName());
+        }
 
-		String coreInstanceDir = this.solrHome;
+        Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+        copyFieldsMap.put(field.getKey(), copyFields);
+        schema = schema.addCopyFields(copyFieldsMap);
 
-		Properties properties = new Properties();
+        core.setLatestSchema(schema);
 
-		if(this.dataDir != null){
-			File dataDir = new File(this.dataDir);
-			if (dataDir.exists()) {
-				try {
-					FileUtils.deleteDirectory(dataDir);
-				} catch (IOException e) {
-					LOGGER.error("Could not delete DataDir: " + dataDir);
-				}
-			}
-			properties.setProperty("dataDir", this.dataDir);
-		} else {
-			properties.setProperty("dataDir", coreInstanceDir+"/"+this.collection.getName()+"/data/");
-		}
-		
-		CoreDescriptor dcore = new CoreDescriptor(coreContainer,
-				this.collection.getName(), coreInstanceDir, properties);
+        return true;
+    }
 
-		
-		try {
-			SolrCore core = coreContainer.create(dcore);
-			coreContainer.register(core, false);
+    @Override
+    public void reloadEngine() {
+        try {
+            coreContainer.reload(this.collection.getName());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
+        }
+    }
 
-			LOGGER.info("Solr Core config: " + core.getConfigResource());
-			LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
-			LOGGER.info("Solr Data dir: " + core.getDataDir());
-		} catch (Exception e) {
-			LOGGER.warn(e.getMessage());
-		}
-	}
+    @Override
+    public void register() {
+
+        String coreInstanceDir = this.solrHome;
+
+        Properties properties = new Properties();
+
+        if (this.dataDir != null) {
+            File dataDir = new File(this.dataDir);
+            if (dataDir.exists()) {
+                try {
+                    FileUtils.deleteDirectory(dataDir);
+                } catch (IOException e) {
+                    LOGGER.error("Could not delete DataDir: " + dataDir);
+                }
+            }
+            properties.setProperty("dataDir", this.dataDir);
+        } else {
+            properties.setProperty("dataDir", coreInstanceDir + "/"
+                    + this.collection.getName() + "/data/");
+        }
+
+        CoreDescriptor dcore = new CoreDescriptor(coreContainer,
+                this.collection.getName(), coreInstanceDir, properties);
+
+        try {
+            SolrCore core = coreContainer.create(dcore);
+            coreContainer.register(core, false);
+
+            LOGGER.info("Solr Core config: " + core.getConfigResource());
+            LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
+            LOGGER.info("Solr Data dir: " + core.getDataDir());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
+        }
+    }
 }

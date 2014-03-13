@@ -21,8 +21,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.framework.domain.CollectionDefinition;
 
-public interface CollectionRepository extends CrudRepository<CollectionDefinition, Long> {
-	
-	public List<CollectionDefinition> findAllByAutoStart(Boolean autoStart); 
+public interface CollectionRepository extends
+        CrudRepository<CollectionDefinition, Long> {
+
+    public List<CollectionDefinition> findAllByAutoStart(Boolean autoStart);
 
 }
