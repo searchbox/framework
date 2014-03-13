@@ -84,25 +84,30 @@ public abstract class SolrSearchEngine extends
         try {
             return this.getSolrServer().query(query);
         } catch (SolrServerException e) {
+            LOGGER.warn("Could nto execute query {}", e.getMessage());
             throw new RuntimeException("Could nexecute Query on  engine", e);
         }
     }
 
     @Override
     public void reloadPlugins() {
-        LOGGER.info("Updating Solr Suggester");
-        SolrQuery query = this.newQuery();
-        query.setRequestHandler("/suggest");
-        query.setQuery("a");
-        query.setParam("suggest.build", true);
-        LOGGER.info("Query is: " + query);
-        QueryResponse response = this.execute(query);
+        try {
+            LOGGER.info("Updating Solr Suggester");
+            SolrQuery query = this.newQuery();
+            query.setRequestHandler("/suggest");
+            query.setQuery("a");
+            query.setParam("suggest.build", true);
+            LOGGER.info("Query is: " + query);
+            QueryResponse response = this.execute(query);
 
-        LOGGER.info("Updating Solr Spellchecker");
-        query = this.newQuery();
-        query.setRequestHandler("/spell");
-        query.setParam("spellcheck.build", true);
-        response = this.execute(query);
+            LOGGER.info("Updating Solr Spellchecker");
+            query = this.newQuery();
+            query.setRequestHandler("/spell");
+            query.setParam("spellcheck.build", true);
+            response = this.execute(query);
+        } catch (Exception e) {
+            LOGGER.warn("Error while reloading plugins (Nothing commited yet?)");
+        }
     }
 
     @Override
@@ -156,9 +161,9 @@ public abstract class SolrSearchEngine extends
         update.setParam("collection", collectionName);
         update.add(document);
         try {
+            LOGGER.debug("Indexing document {}", document);
             UpdateResponse response = update.process(this.getSolrServer());
-            LOGGER.debug("Updated FieldMap with status: "
-                    + response.getStatus());
+            LOGGER.debug("Updated Solr with status: " + response.getStatus());
             return true;
         } catch (Exception e) {
             LOGGER.error("Could not index FieldMap", e);
