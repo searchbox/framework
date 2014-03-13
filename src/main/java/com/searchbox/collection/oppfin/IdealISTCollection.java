@@ -5,11 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,6 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.log4j.lf5.util.DateFormatManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -33,13 +41,13 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.collection.SynchronizedCollection;
+import com.searchbox.core.dm.Field;
 import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
@@ -55,16 +63,27 @@ public class IdealISTCollection extends AbstractBatchCollection implements
     private final static String IDEALIST_DOCUMENT_SERVICE = "idealist.service.document.url";
 
     private final static String CRAWLER_USER_AGENT_DEFAULT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11";
-    private final static String IDEALIST_LIST_SERVICE_DEFAULT = "http://www.ideal-ist.eu/idealist_oppfinder/documents?pageNum=PAGE_NUM&pageSize=PAGE_SIZE";
-    // ?uid=XXX
+    private final static String IDEALIST_LIST_SERVICE_DEFAULT = "http://www.ideal-ist.eu/idealist_oppfinder/documents";
     private final static String IDEALIST_DOCUMENT_SERVICE_DEFAULT = "http://www.ideal-ist.eu/idealist_oppfinder/document";
 
     DocumentBuilder db;
+    
+    DateFormat dfmt = new DateFormatManager("MM/dd/YYYY")
+    .getDateFormatInstance();
 
     public IdealISTCollection() {
         super("Idealist");
     }
 
+    public static List<Field> GET_FIELDS() {
+        List<Field> fields = new ArrayList<Field>();
+        fields.add(new Field(String.class, "docSource"));
+        fields.add(new Field(String.class, "docType"));
+        fields.add(new Field(String.class, "programme"));
+        
+        return fields;
+    }
+    
     @Override
     public void afterPropertiesSet() throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -83,7 +102,8 @@ public class IdealISTCollection extends AbstractBatchCollection implements
         HttpClient client = HttpClientBuilder.create().build();
 
         HttpUriRequest request = builder
-                .addHeader("User-Agent",
+                .addHeader(
+                        "User-Agent",
                         env.getProperty(CRAWLER_USER_AGENT,
                                 CRAWLER_USER_AGENT_DEFAULT)).build();
 
@@ -108,7 +128,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             }
             buf.close();
             ips.close();
-            LOGGER.info("Received: {}",sb.toString());
+            LOGGER.info("Received: {}", sb.toString());
             return buildXMLDocument(sb.toString());
         } catch (Exception e) {
             LOGGER.error("Could not get XML from {}", builder.getUri(), e);
@@ -133,7 +153,6 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                     return null;
 
                 if (documents.isEmpty()) {
-                    // pageNum=PAGE_NUM&pageSize=PAGE_SIZE
                     Document xmlDocuments = httpGet(RequestBuilder
                             .get()
                             .setUri(env.getProperty(IDEALIST_LIST_SERVICE,
@@ -147,7 +166,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                                 .getNamedItem("uid").getNodeValue();
                         documents.add(uid);
                     }
-                    ;
+
                     page++;
                 }
 
@@ -159,18 +178,100 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             }
         };
     }
+    
+    private void addDateField(Document document, FieldMap fields, String key,
+            String fieldName) {
+        this.addField(document, fields, Date.class, key, fieldName);
+    }
+
+    private void addStringField(Document document, FieldMap fields, String key,
+            String fieldName) {
+        this.addField(document, fields, String.class, key, fieldName);
+    }
+
+    private void addField(Document document, FieldMap fields, Class<?> clazz,
+            String key, String fieldName) {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String metaDataExpression = "//metadata[@key='" + key + "']|"
+                + "//content[@cid='" + key + "']";
+
+        // read a nodelist using xpath
+        NodeList nodeList;
+        try {
+            nodeList = (NodeList) xPath.compile(metaDataExpression).evaluate(
+                    document, XPathConstants.NODESET);
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                String value = nodeList.item(i).getTextContent();
+                if (String.class.isAssignableFrom(clazz)) {
+                    fields.put(fieldName, value);
+                } else if (Date.class.isAssignableFrom(clazz)) {
+                    Date date;
+                    try {
+                        date = dfmt.parse(value);
+                        fields.put(fieldName, date);
+                    } catch (ParseException e) {
+                        LOGGER.warn("Could not parse date",e);
+                    }
+                }
+            }
+        } catch (XPathExpressionException e) {
+           LOGGER.warn("Could not execute XPATH. Might miss data");
+        }
+    }
 
     public ItemProcessor<String, FieldMap> itemProcessor() {
         return new ItemProcessor<String, FieldMap>() {
             @Override
             public FieldMap process(String uid) throws Exception {
                 LOGGER.info("Fetching document uid={}", uid);
-                Document document = httpGet(RequestBuilder.get()
-                            .setUri(env.getProperty(IDEALIST_DOCUMENT_SERVICE,
-                                    IDEALIST_DOCUMENT_SERVICE_DEFAULT))
-                            .addParameter("uid", uid));
-                LOGGER.info("Got Document: {}",document);
-                return new FieldMap();
+                Document document = httpGet(RequestBuilder
+                        .get()
+                        .setUri(env.getProperty(IDEALIST_DOCUMENT_SERVICE,
+                                IDEALIST_DOCUMENT_SERVICE_DEFAULT))
+                        .addParameter("uid", uid));
+                LOGGER.debug("Got Document: {}", document);
+                FieldMap fields = new FieldMap();
+
+                addStringField(document, fields, "title", "idealistTitle");
+                addStringField(document, fields, "PS_ID", "idealistPsId");
+                addStringField(document, fields, "Status", "idealistStatus");
+                addDateField(document, fields, "Date_of_last_Modification",
+                        "updated");
+                addDateField(document, fields, "Date_of_Publication",
+                        "published");
+                addStringField(document, fields, "Call_Identifier",
+                        "callIdentifier");
+                addStringField(document, fields, "Objective",
+                        "idealistObjective");
+                addStringField(document, fields, "Funding_Schemes",
+                        "idealistFundingScheme");
+                addStringField(document, fields, "Evaluation_Scheme",
+                        "idealistEvaluationScheme");
+                addDateField(document, fields, "Closure_Date", "deadline");
+                addStringField(document, fields, "Type_of_partner_sought",
+                        "idealistTypeOfPartnerSought");
+                addStringField(document, fields, "Coordinator_possible",
+                        "idealistCoordinationPossible");
+                addStringField(document, fields, "Organisation",
+                        "idealistOrganisation");
+                addStringField(document, fields, "Department",
+                        "idealistDepartement");
+                addStringField(document, fields, "Type_of_Organisation",
+                        "idealistTypeOfOrganisation");
+                addStringField(document, fields, "Country", "idealistCountry");
+                addStringField(document, fields, "Body", "idealistBody");
+                addStringField(document, fields, "outline", "idealistOutline");
+                addStringField(document, fields, "description_of_work",
+                        "idealistDescriptionOfWork");
+
+                if(LOGGER.isDebugEnabled()){
+                    for (String key : fields.keySet()) {
+                        LOGGER.debug("field: {}\t{}", key, fields.get(key));
+                    }
+                }
+
+                return fields;
             }
         };
     }

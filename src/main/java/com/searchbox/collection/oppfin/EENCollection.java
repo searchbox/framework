@@ -28,13 +28,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.annotation.Resource;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.lf5.util.DateFormatManager;
@@ -44,8 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.FlowJobBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -53,14 +47,13 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.searchbox.collection.AbstractBatchCollection;
+import com.searchbox.collection.ExpiringDocuments;
+import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.framework.config.RootConfiguration;
@@ -70,7 +63,7 @@ import eu.europa.ec.een.tools.services.soap.IPODServiceSOAPProxy;
 @Configurable
 @Component
 public class EENCollection extends AbstractBatchCollection implements
-        SynchronizedCollection {
+        SynchronizedCollection, StandardCollection, ExpiringDocuments{
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(EENCollection.class);
@@ -88,7 +81,6 @@ public class EENCollection extends AbstractBatchCollection implements
 
     public static List<Field> GET_FIELDS() {
         List<Field> fields = new ArrayList<Field>();
-        fields.add(new Field(String.class, "id"));
         fields.add(new Field(String.class, "docSource"));
         fields.add(new Field(String.class, "docType"));
         fields.add(new Field(String.class, "programme"));
@@ -129,6 +121,40 @@ public class EENCollection extends AbstractBatchCollection implements
         fields.add(new Field(Integer.class, "eenCompanySince"));
         return fields;
     }
+    
+
+    @Override
+    public String getIdValue(FieldMap fields) {
+        return (String) fields.get("eenReferenceExternal").get(0);
+    }
+
+    @Override
+    public String getTitleValue(FieldMap fields) {
+        return (String) fields.get("eenContentTitle").get(0);
+    }
+
+    @Override
+    public String getBodyValue(FieldMap fields) {
+        List<Object> contents = new ArrayList<Object>();
+        contents.addAll(fields.get("eenContentSummary"));
+        contents.addAll(fields.get("eenContentDescription"));
+        return StringUtils.join(contents," ");
+    }
+
+    @Override
+    public Date getPublishedValue(FieldMap fields) {
+        return (Date) fields.get("eenDatumSubmit").get(0);
+    }
+
+    @Override
+    public Date getUpdateValue(FieldMap fields) {
+        return (Date) fields.get("eenDatumUpdate").get(0);
+    }
+    
+    @Override
+    public Date getDeadlineValue(FieldMap fields) {
+        return (Date) fields.get("eenDatumDeadline").get(0);
+    }
 
     public EENCollection() {
         super("EENCollection");
@@ -152,15 +178,14 @@ public class EENCollection extends AbstractBatchCollection implements
             {
                 // Get the service
                 eenService = new IPODServiceSOAPProxy();
-                // env.getProperty(EEN_SERVICE_URL, EEN_SERVICE_URL_DEFAULT));
-
+                
                 // Set the password
                 request = new ProfileQueryRequest();
-                request.setUsername(EEN_SERVICE_USER_DEFAULT);
-                request.setPassword(EEN_SERVICE_PWD_DEFAULT);
-                // String[] profileTypes = {"TO"};
-                // request.setProfileTypes(profileTypes);
-
+                request.setUsername(env.getProperty(EEN_SERVICE_USER,
+                        EEN_SERVICE_USER_DEFAULT));
+                request.setPassword(env.getProperty(EEN_SERVICE_PWD,
+                        EEN_SERVICE_PWD_DEFAULT));
+              
                 // Start with an empty list of profiles
                 profiles = new ArrayList<Profile>();
 
@@ -256,13 +281,12 @@ public class EENCollection extends AbstractBatchCollection implements
                                     path
                                             + WordUtils.capitalize(field
                                                     .getName().toLowerCase()),
-                                    fields);
+                                   fields);
                         }
                     }
                 } catch (Exception e) {
                     ;
                 }
-
             }
         }
     }
@@ -275,35 +299,20 @@ public class EENCollection extends AbstractBatchCollection implements
                 FieldMap doc = new FieldMap();
 
                 try {
-
-                    getFieldValues(item, "een", doc);
-                    // for (Entry<String, List<Object>> field : doc.entrySet())
-                    // {
-                    // for (Object value : field.getValue()) {
-                    // LOGGER.info(field.getKey() + " -- " + value);
-                    // }
-                    // }
                     doc.put("docSource", "EEN");
-                    doc.put("docSource", "EEN");
+                    doc.put("programme", "EEN");
                     doc.put("docType", "collaboration");
-                    doc.put("id", item.getReference().getExternal());
-                } catch (IllegalArgumentException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IntrospectionException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    
+                    getFieldValues(item, "een", doc);
+                    
+                } catch (Exception e) {
+                    LOGGER.error("Could not get fieldValue for doc", e);
                 }
-
+                if(LOGGER.isDebugEnabled()){
+                    for (String key : doc.keySet()) {
+                        LOGGER.debug("field: {}\t{}", key, doc.get(key));
+                    }
+                }
                 return doc;
             }
         };
@@ -314,7 +323,8 @@ public class EENCollection extends AbstractBatchCollection implements
         try {
             Step step = stepBuilderFactory.get("getFile")
                     .<Profile, FieldMap> chunk(50).reader(reader())
-                    .processor(itemProcessor()).writer(fieldMapWriter()).build();
+                    .processor(itemProcessor()).writer(fieldMapWriter())
+                    .build();
 
             return builder.flow(step).end();
         } catch (Exception e) {

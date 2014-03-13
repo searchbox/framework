@@ -93,18 +93,24 @@ public class TopicCollection extends AbstractBatchCollection implements
 
     public static List<Field> GET_FIELDS() {
         List<Field> fields = new ArrayList<Field>();
+
+        // Topic Fields
         fields.add(new Field(String.class, "topicIdentifier"));
-        fields.add(new Field(String.class, "title"));
-        fields.add(new Field(String.class, "descriptionHtml"));
-        fields.add(new Field(String.class, "descriptionRaw"));
-        fields.add(new Field(String.class, "docType"));
-        fields.add(new Field(String.class, "programme"));
-        fields.add(new Field(String.class, "tags"));
-        fields.add(new Field(String.class, "flags"));
+        fields.add(new Field(String.class, "topicTitle"));
+        fields.add(new Field(String.class, "topicDescriptionHtml"));
+        fields.add(new Field(String.class, "topicDescriptionRaw"));
+        fields.add(new Field(String.class, "topicTags"));
+        fields.add(new Field(String.class, "topicFlags"));
+
+        // Call related Fields
         fields.add(new Field(String.class, "callTitle"));
         fields.add(new Field(String.class, "callIdentifier"));
-        fields.add(new Field(Date.class, "callDeadline"));
         fields.add(new Field(String.class, "callStatus"));
+
+        // Generic fields
+        fields.add(new Field(String.class, "docType"));
+        fields.add(new Field(String.class, "programme"));
+        fields.add(new Field(String.class, "source"));
         return fields;
     }
 
@@ -186,10 +192,10 @@ public class TopicCollection extends AbstractBatchCollection implements
         };
     }
 
-    public ItemProcessor<JSONObject, Map<String, Object>> itemProcessor() {
-        return new ItemProcessor<JSONObject, Map<String, Object>>() {
+    public ItemProcessor<JSONObject, FieldMap> itemProcessor() {
+        return new ItemProcessor<JSONObject, FieldMap>() {
 
-            public Map<String, Object> process(JSONObject item)
+            public FieldMap process(JSONObject item)
                     throws IOException {
                 // Populating useful variables
                 String topicIdentifier = (String) item.get("identifier");
@@ -204,16 +210,19 @@ public class TopicCollection extends AbstractBatchCollection implements
                         .getPlainText(Jsoup.parse(topicDetailHtml));
 
                 // Creating the Field Map
-                Map<String, Object> doc = new HashMap<String, Object>();
-                doc.put("topicIdentifier", topicIdentifier);
-                doc.put("title", (String) item.get("title"));
-                doc.put("descriptionRaw", topicDetailRaw);
-                doc.put("descriptionHtml", topicDetailHtml);
+                FieldMap doc = new FieldMap();
+                
+                doc.put("docSource", "H2020");
                 doc.put("docType", "Topic H2020");
                 doc.put("programme", "H2020");
+                
+                doc.put("topicIdentifier", topicIdentifier);
+                doc.put("topicTitle", (String) item.get("title"));
+                doc.put("topicDescriptionRaw", topicDetailRaw);
+                doc.put("topicDescriptionHtml", topicDetailHtml);
 
-                doc.put("tags", (JSONArray) item.get("tags"));
-                doc.put("flags", (JSONArray) item.get("flags"));
+                doc.put("topicTags", (JSONArray) item.get("tags"));
+                doc.put("topicFlags", (JSONArray) item.get("flags"));
 
                 doc.put("callTitle", (String) item.get("callTitle"));
                 doc.put("callIdentifier", (String) item.get("callIdentifier"));
@@ -227,28 +236,23 @@ public class TopicCollection extends AbstractBatchCollection implements
                 doc.put("callDeadline", utcDate);
                 doc.put("callStatus", (String) item.get("callStatus"));
 
+                if (LOGGER.isDebugEnabled()){
+                    for (String key : doc.keySet()) {
+                        LOGGER.debug("field: {}\t{}", key, doc.get(key));
+                    }
+                }
+
+                
                 return doc;
             }
         };
     }
 
-    public ItemWriter<Map<String, Object>> writer() {
-        ItemWriter<Map<String, Object>> writer = new ItemWriter<Map<String, Object>>() {
-
-            public void write(List<? extends Map<String, Object>> items) {
-                for (Map<String, Object> fields : items) {
-                    getSearchEngine().indexMap(getName(), fields);
-                }
-            }
-        };
-        return writer;
-    }
-
     @Override
     protected FlowJobBuilder getJobFlow(JobBuilder builder) {
         Step step = stepBuilderFactory.get("getFile")
-                .<JSONObject, Map<String, Object>> chunk(50).reader(reader())
-                .processor(itemProcessor()).writer(writer()).build();
+                .<JSONObject, FieldMap> chunk(50).reader(reader())
+                .processor(itemProcessor()).writer(fieldMapWriter()).build();
 
         return builder.flow(step).end();
     }
