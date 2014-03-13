@@ -53,9 +53,6 @@ public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {
     }
 
     @Override
-    public abstract void init();
-
-    @Override
     public Class<Q> getQueryClass() {
         return this.queryClass;
     }

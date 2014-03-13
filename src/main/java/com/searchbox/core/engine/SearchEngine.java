@@ -47,7 +47,5 @@ public interface SearchEngine<Q, R> {
 
     Boolean supportsCondition(AbstractSearchCondition condition);
 
-    void init();
-
     void setCollection(Collection collection);
 }

@@ -5,23 +5,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
@@ -33,7 +25,6 @@ import org.apache.solr.client.solrj.response.CollectionAdminResponse;
 import org.apache.solr.common.cloud.Slice;
 import org.apache.solr.common.cloud.SolrZkClient;
 import org.apache.solr.common.cloud.ZkStateReader;
-import org.apache.solr.rest.schema.SchemaResource;
 import org.apache.zookeeper.KeeperException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -58,51 +49,67 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     ApplicationContext context;
 
     @SearchAttribute
-    String zkHost = "localhost:9983";
+    private String zkHost;
 
-    static CloudSolrServer solrServer;
-
-    private static final String CORE_CONFIG_PATH = "/configs";
-    private static final String COLLECTION_PATH = "/collections";
+    private static final String ZK_CORE_CONFIG_PATH = "/configs";
+    private static final String ZK_COLLECTION_PATH = "/collections";
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (solrServer == null && zkHost != null) {
-            solrServer = new CloudSolrServer(zkHost, true);
-            solrServer.setParallelUpdates(true);
-            solrServer.connect();
-        }
+        initServer();
     }
 
     @Override
     public void destroy() throws Exception {
-        solrServer.shutdown();
+        getSolrServer().shutdown();
     }
+    
+    private static CloudSolrServer solrServer;
+
+    private void initServer(){
+        if (solrServer == null && zkHost != null) {
+            LOGGER.info("Initializing SolrCloud server with zkHost: {}",zkHost);
+            try {
+                solrServer = new CloudSolrServer(zkHost, true);
+                solrServer.setParallelUpdates(true);
+                solrServer.connect();
+            } catch (MalformedURLException e) {
+               LOGGER.error("Could not connect to server!!!",e);
+               throw new RuntimeException("Could not connect to server "+
+                       "with zkHost: "+zkHost);
+            }
+        }
+    }
+    
 
     @Override
     protected SolrServer getSolrServer() {
+        if(solrServer == null){
+            initServer();
+        }
         return solrServer;
     }
 
     @Override
     public void register() {
+        
         try {
             SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
-
+            
             LOGGER.info("Creating configuration for: " + collection.getName());
             LOGGER.debug("Path: {}", context.getResource("classpath:solr/conf")
                     .getFile());
             uploadToZK(zkServer, context.getResource("classpath:solr/conf")
-                    .getFile(), CORE_CONFIG_PATH + "/" + collection.getName());
+                    .getFile(), ZK_CORE_CONFIG_PATH + "/" + collection.getName());
 
             if (coreExists(zkServer, collection.getName())) {
                 CollectionAdminResponse response = CollectionAdminRequest
-                        .reloadCollection(collection.getName(), solrServer);
+                        .reloadCollection(collection.getName(), getSolrServer());
                 LOGGER.info("Reloaded Existing collection: " + response);
             } else {
                 CollectionAdminResponse response = CollectionAdminRequest
                         .createCollection(collection.getName(), 1,
-                                collection.getName(), solrServer);
+                                collection.getName(), getSolrServer());
                 LOGGER.info("Created New collection: " + response);
             }
 
@@ -110,6 +117,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
             while (!coreExists(zkServer, collection.getName())) {
                 if ((wait++) > 5) {
                     LOGGER.error("Giving up waiting for engine...");
+                    break;
                 }
                 LOGGER.info("Waiting for core to come online...");
                 Thread.sleep(500);
@@ -121,12 +129,18 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
         }
 
     }
+    
+
+    
+    private ZkStateReader getZkStateReader(){
+        return ((CloudSolrServer)getSolrServer()).getZkStateReader();
+    }
 
     @Override
     public void reloadEngine() {
         try {
 
-            SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
+            SolrZkClient zkServer = getZkStateReader().getZkClient();
 
             int wait = 0;
             while (!coreExists(zkServer, collection.getName())) {
@@ -138,7 +152,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
             }
 
             CollectionAdminResponse response = CollectionAdminRequest
-                    .reloadCollection(collection.getName(), solrServer);
+                    .reloadCollection(collection.getName(), getSolrServer());
             LOGGER.info("Reloaded collection: " + response);
 
             wait = 0;
@@ -245,7 +259,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
     private static final boolean coreExists(SolrZkClient server, String coreName) {
         try {
-            return server.exists(COLLECTION_PATH + "/" + coreName, true);
+            return server.exists(ZK_COLLECTION_PATH + "/" + coreName, true);
         } catch (Exception e) {
             LOGGER.error("Could not check if core:" + coreName + " exists", e);
         }
@@ -256,7 +270,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     private static final boolean configExists(SolrZkClient server,
             String coreName) {
         try {
-            return server.exists(CORE_CONFIG_PATH + "/" + coreName, true);
+            return server.exists(ZK_CORE_CONFIG_PATH + "/" + coreName, true);
         } catch (Exception e) {
             LOGGER.error("Could not check if congif:" + coreName + " exists", e);
         }
@@ -364,15 +378,15 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     public String getUrlBase() {
         String urlBase = null;
         try {
-            ZkStateReader zkSateReader = solrServer.getZkStateReader();
+            ZkStateReader zkSateReader = ((CloudSolrServer)getSolrServer())
+                    .getZkStateReader();
             java.util.Collection<Slice> slices = zkSateReader.getClusterState()
                     .getActiveSlices(collection.getName());
 
             String baseUrl = "";
             for (Slice slice : slices) {
                 String nodeName = slice.getLeader().getNodeName();
-                urlBase = solrServer.getZkStateReader().getBaseUrlForNodeName(
-                        nodeName);
+                urlBase =zkSateReader.getBaseUrlForNodeName(nodeName);
                 LOGGER.debug("Slice state: {}", slice.getState());
                 LOGGER.debug("Leader's node name: {}", nodeName);
                 LOGGER.debug("Base URL for node: {}", baseUrl);

@@ -12,12 +12,6 @@ public interface ManagedSearchEngine {
 
     public boolean updateDataModel(List<FieldAttribute> fieldAttributes);
 
-    public String getKeyForField(FieldAttribute fieldAttribute);
-
-    public String getKeyForField(FieldAttribute fieldAttribute, USE operation);
-
-    Set<String> getAllKeysForField(FieldAttribute fieldAttribute);
-
     public void reloadEngine();
 
     public void register();
