@@ -62,12 +62,15 @@ public abstract class AbstractBatchCollection extends Collection implements
 
     @Autowired
     protected JobExplorer explorer;
+    
+    private final Collection collection;
 
     public AbstractBatchCollection() {
-
+        collection = this;
     }
 
     public AbstractBatchCollection(String name) {
+        collection = this;
         this.name = name;
     }
 
@@ -126,8 +129,35 @@ public abstract class AbstractBatchCollection extends Collection implements
     protected ItemWriter<FieldMap> fieldMapWriter() {
         ItemWriter<FieldMap> writer = new ItemWriter<FieldMap>() {
             public void write(List<? extends FieldMap> items) {
+                
                 for (FieldMap fields : items) {
+                    
                     Map<String, Object> actualFields = new HashMap<String, Object>();
+
+                    //Manage STD fields for collection
+                    if(StandardCollection.class.isAssignableFrom(this.getClass())){
+                        actualFields.put(StandardCollection.STD_ID_FIELD, 
+                                ((StandardCollection)collection).getIdValue(fields));
+                        
+                        actualFields.put(StandardCollection.STD_TITLE_FIELD, 
+                                ((StandardCollection)collection).getTitleValue(fields));
+                        
+                        actualFields.put(StandardCollection.STD_PUBLISHED_FIELD, 
+                                ((StandardCollection)collection).getPublishedValue(fields));
+                        
+                        actualFields.put(StandardCollection.STD_UPDATED_FIELD, 
+                                ((StandardCollection)collection).getUpdateValue(fields));
+                        
+                        actualFields.put(StandardCollection.STD_BODY_FIELD, 
+                                ((StandardCollection)collection).getBodyValue(fields));
+                    }
+                    
+                    //Manage STD_EXPIRE fields for collection
+                    if(ExpiringDocuments.class.isAssignableFrom(this.getClass())){
+                        actualFields.put(ExpiringDocuments.STD_DEADLINE_FIELD, 
+                                ((ExpiringDocuments)collection).getDeadlineValue(fields));
+                    }
+                    
                     for (Entry<String, List<Object>> field : fields.entrySet()) {
                         actualFields.put(field.getKey(), (field.getValue()
                                 .size() > 1) ? field.getValue() : field
