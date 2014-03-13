@@ -19,6 +19,8 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+import org.springframework.beans.BeanUtils;
+
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
 
@@ -50,7 +52,7 @@ public class SearchEngineDefinition extends UnknownClassDefinition implements
     public SearchEngine<?, ?> getInstance() {
         AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super
                 .toObject();
-        engine.setName(this.getName());
+        BeanUtils.copyProperties(this, engine);
         return engine;
     }
 }

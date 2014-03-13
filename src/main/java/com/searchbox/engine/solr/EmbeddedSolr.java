@@ -35,11 +35,14 @@ import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.schema.SchemaField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
 
-public class EmbeddedSolr extends SolrSearchEngine {
+public class EmbeddedSolr extends SolrSearchEngine
+    implements InitializingBean, DisposableBean{
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(EmbeddedSolr.class);
@@ -60,14 +63,9 @@ public class EmbeddedSolr extends SolrSearchEngine {
         super(name);
         this.solrHome = solrHome;
     }
-
+    
     @Override
-    protected SolrServer getSolrServer() {
-        return new EmbeddedSolrServer(coreContainer, this.collection.getName());
-    }
-
-    @Override
-    public void init() {
+    public void afterPropertiesSet() throws Exception {
         if (EmbeddedSolr.coreContainer == null) {
             try {
                 LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
@@ -77,6 +75,16 @@ public class EmbeddedSolr extends SolrSearchEngine {
                 LOGGER.error("Could not start search engine", e);
             }
         }
+    }
+    
+    @Override
+    public void destroy() throws Exception {
+        coreContainer.shutdown();        
+    }
+
+    @Override
+    protected SolrServer getSolrServer() {
+        return new EmbeddedSolrServer(coreContainer, this.collection.getName());
     }
 
     public String getDataDir() {

@@ -54,7 +54,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
         if (SynchronizedCollection.class
                 .isAssignableFrom(collection.getClass())) {
             SearchEngine<?, ?> engine = collection.getSearchEngine();
-            engine.setCollection(collection);
             LOGGER.info("Starting Data synchronization for \""
                     + collection.getName() + "\"");
             try {
@@ -78,7 +77,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
         com.searchbox.core.dm.Collection collection = collectiondef
                 .getInstance();
         SearchEngine<?, ?> engine = collection.getSearchEngine();
-        engine.setCollection(collection);
         if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
             LOGGER.info("Register Searchengine Configuration for \""
                     + collection.getName() + "\"");

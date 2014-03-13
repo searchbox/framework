@@ -576,7 +576,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             SearchEngineDefinition engineDefinition = engineDefinitions.next();
             LOGGER.info("++ Starting SearchEngine: "
                     + engineDefinition.getName());
-            engineDefinition.getInstance().init();
+            engineDefinition.getInstance();
         }
 
         LOGGER.info("****************************************************");

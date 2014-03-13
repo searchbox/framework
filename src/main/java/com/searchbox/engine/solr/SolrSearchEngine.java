@@ -29,16 +29,16 @@ import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.core.engine.AbstractSearchEngine;
 import com.searchbox.core.engine.ManagedSearchEngine;
+import com.searchbox.engine.FieldMappingSearchEngine;
 
 public abstract class SolrSearchEngine extends
         AbstractSearchEngine<SolrQuery, QueryResponse> implements
-        ManagedSearchEngine {
+        ManagedSearchEngine, FieldMappingSearchEngine {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SolrSearchEngine.class);
 
     private static final String SEARCHABLE_TEXT_NO_LANG_FIELD = "_txt";
-    private static final String HIGHLIGHT_FIELD = "_txt";
     private static final String NON_SORTABLE_FIELD = "s";
 
     private static final String DATE_FIELD = "_tdt";
@@ -63,11 +63,6 @@ public abstract class SolrSearchEngine extends
     protected abstract SolrServer getSolrServer();
 
     protected abstract boolean updateDataModel(Map<Field, Set<String>> copyFields);
-
-    @Override
-    public void init() {
-        // TODO Auto-generated method stub
-    }
 
     @Override
     public SolrQuery newQuery() {
