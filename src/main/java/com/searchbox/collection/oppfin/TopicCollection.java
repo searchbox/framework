@@ -105,6 +105,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         // Call related Fields
         fields.add(new Field(String.class, "callTitle"));
         fields.add(new Field(String.class, "callIdentifier"));
+        fields.add(new Field(Date.class, "callDeadline"));
         fields.add(new Field(String.class, "callStatus"));
 
         // Generic fields
