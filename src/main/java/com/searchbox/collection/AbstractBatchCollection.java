@@ -112,6 +112,7 @@ public abstract class AbstractBatchCollection extends Collection implements
 
     @Override
     public void afterJob(JobExecution jobExecution) {
+        //FIXME should wait for engine's commit here...
         LOGGER.info("Batch Job is over. need to update engine");
         if (this.searchEngine == null) {
             return;

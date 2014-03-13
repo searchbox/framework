@@ -47,6 +47,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 
     public Map<String, String> synchronizeData(
             CollectionDefinition collectiondef) {
+
         Map<String, String> result = new HashMap<String, String>();
         com.searchbox.core.dm.Collection collection = collectiondef
                 .getInstance();
@@ -92,8 +93,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
                 }
                 ((ManagedSearchEngine) engine).updateDataModel(fieldAttributes);
             }
-            LOGGER.info("Done updating fields...");
-            ((ManagedSearchEngine) engine).reloadEngine();
         }
         return result;
     }

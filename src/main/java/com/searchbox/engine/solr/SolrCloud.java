@@ -46,9 +46,10 @@ import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.engine.AccessibleSearchEngine;
 
 public class SolrCloud extends SolrSearchEngine implements InitializingBean,
-        DisposableBean {
+        AccessibleSearchEngine, DisposableBean {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SolrCloud.class);
@@ -157,34 +158,20 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     @Override
     protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
 
-        ZkStateReader zkSateReader = solrServer.getZkStateReader();
-
         try {
 
-            java.util.Collection<Slice> slices = zkSateReader.getClusterState()
-                    .getActiveSlices(collection.getName());
+            String baseUrl = this.getUrlBase();
 
-            String baseUrl = "";
-            for (Slice slice : slices) {
-                String nodeName = slice.getLeader().getNodeName();
-                baseUrl = solrServer.getZkStateReader().getBaseUrlForNodeName(
-                        nodeName);
-                LOGGER.debug("Slice state: {}", slice.getState());
-                LOGGER.debug("Leader's node name: {}", nodeName);
-                LOGGER.debug("Base URL for node: {}", baseUrl);
-            }
-
-            String schemaFieldURL = baseUrl + "/" + collection.getName()
-                    + "/schema/fields";
+            String schemaFieldURL = baseUrl + "/schema/fields";
             LOGGER.debug("Schema field url: {}", schemaFieldURL);
-            
-            String copyFieldUrl = baseUrl + "/" + collection.getName()
-                    + "/schema/copyfields";
+
+            String copyFieldUrl = baseUrl + "/schema/copyfields";
             LOGGER.debug("Schema copyField url: {}", copyFieldUrl);
 
-            //Load current CopyFields not to double add them
+            // Load current CopyFields not to double add them
             JSONObject solrCurrentCopyFields = httpGET(copyFieldUrl);
-            LOGGER.debug("Current Copy fields in Solr are: {}", solrCurrentCopyFields);
+            LOGGER.debug("Current Copy fields in Solr are: {}",
+                    solrCurrentCopyFields);
 
             JSONArray solrFieldUpdates = new JSONArray();
             JSONArray solrCopyFields = new JSONArray();
@@ -199,33 +186,37 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
                             fieldInfo.getJSONObject("field"));
                     solrFieldUpdates.put(fieldInfo.getJSONObject("field"));
                 }
-                currentFieldCopys.put("source",collectionField);
+                currentFieldCopys.put("source", collectionField);
                 currentFieldCopys.put("dest", new JSONArray());
                 solrCopyFields.put(currentFieldCopys);
 
                 for (String solrField : copyField.getValue()) {
                     JSONObject solrFieldInfo = this.httpGET(schemaFieldURL
                             + "/" + solrField);
-                    
-                    //Check if the field exists or not
+
+                    // Check if the field exists or not
                     if (solrFieldInfo.getJSONObject("field").has("dynamicBase")) {
                         LOGGER.debug("Materializing dynamic field: {}",
                                 solrFieldInfo.getJSONObject("field"));
                         solrFieldUpdates.put(solrFieldInfo
                                 .getJSONObject("field"));
                     }
-                    
+
                     boolean hasCopyPair = false;
-                    JSONArray copyFieldPairs = solrCurrentCopyFields.getJSONArray("copyFields");
-                    for(int i = 0; i<copyFieldPairs.length(); i++){
-                        JSONObject copyFieldPair = copyFieldPairs.getJSONObject(i);
-                        if(copyFieldPair.getString("source").replace("\"", "").equals(collectionField) && 
-                                copyFieldPair.getString("dest").replace("\"", "").equals(solrField)){
+                    JSONArray copyFieldPairs = solrCurrentCopyFields
+                            .getJSONArray("copyFields");
+                    for (int i = 0; i < copyFieldPairs.length(); i++) {
+                        JSONObject copyFieldPair = copyFieldPairs
+                                .getJSONObject(i);
+                        if (copyFieldPair.getString("source").replace("\"", "")
+                                .equals(collectionField)
+                                && copyFieldPair.getString("dest")
+                                        .replace("\"", "").equals(solrField)) {
                             hasCopyPair = true;
                         }
                     }
-                    //Check if its the copy pair exists
-                    if(!hasCopyPair){
+                    // Check if its the copy pair exists
+                    if (!hasCopyPair) {
                         currentFieldCopys.getJSONArray("dest").put(solrField);
                     }
                 }
@@ -367,5 +358,29 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
             LOGGER.error("Could not post JSON to {}", url, e);
         }
         return response;
+    }
+
+    @Override
+    public String getUrlBase() {
+        String urlBase = null;
+        try {
+            ZkStateReader zkSateReader = solrServer.getZkStateReader();
+            java.util.Collection<Slice> slices = zkSateReader.getClusterState()
+                    .getActiveSlices(collection.getName());
+
+            String baseUrl = "";
+            for (Slice slice : slices) {
+                String nodeName = slice.getLeader().getNodeName();
+                urlBase = solrServer.getZkStateReader().getBaseUrlForNodeName(
+                        nodeName);
+                LOGGER.debug("Slice state: {}", slice.getState());
+                LOGGER.debug("Leader's node name: {}", nodeName);
+                LOGGER.debug("Base URL for node: {}", baseUrl);
+            }
+            urlBase += "/" + collection.getName();
+        } catch (Exception e) {
+            LOGGER.error("Could not read from XK to get urlBase", e);
+        }
+        return urlBase;
     }
 }
