@@ -25,9 +25,8 @@ import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithValues;
 
-//TODO Steph: Extend TemplatedElement instead. Must be DRY compliant
 @SearchComponent
-public class TemplatedHitList extends SearchElementWithValues<Hit> implements
+public class TemplatedElement extends SearchElementWithValues<Hit> implements
         CachedContent {
 
     protected Set<String> fields;
@@ -46,7 +45,7 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements
     @SearchAttribute
     String idField;
 
-    public TemplatedHitList() {
+    public TemplatedElement() {
         super("Result Set with Template", SearchElement.Type.VIEW);
         this.fields = new TreeSet<String>();
     }
