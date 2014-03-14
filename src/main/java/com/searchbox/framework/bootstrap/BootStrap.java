@@ -43,6 +43,7 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
+import com.searchbox.core.search.result.TemplatedElement;
 import com.searchbox.core.search.result.TemplatedHitList;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
@@ -398,8 +399,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           + "<sbx:tagAttribute limit=\"1\" label=\"Partner Country\" filter=\"eenCompanyCountryLabel\" values=\"${hit.fieldValues['eenCompanyCountryLabel']}\"/>");
       presetEEN.addSearchElement(eenTemplatedHitList);
 
-      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(TemplatedHitList.class);
-      eenViewHitMeta.setLabel("meta");
+      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(TemplatedElement.class);
+      eenViewHitMeta.setLabel("leftCol");
       eenViewHitMeta.setType(SearchElement.Type.INSPECT);
       eenViewHitMeta.setAttributeValue("titleField", "eenContentTitle");
       eenViewHitMeta.setAttributeValue("idField", "eenReferenceExternal");
@@ -420,7 +421,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           );
       presetEEN.addSearchElement(eenViewHitMeta);
       
-      SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplatedHitList.class);
+      SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplatedElement.class);
       eenViewHit.setLabel("body");
       eenViewHit.setType(SearchElement.Type.INSPECT);
       eenViewHit.setAttributeValue("titleField", "eenContentTitle");
@@ -640,9 +641,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     LOGGER.info("*                                                  *");
     LOGGER.info("*                             __ _                 *");
     LOGGER.info("*           ___  _ __  _ __  / _(_)_ __            *");
-    LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\           *");
+    LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\       *");
     LOGGER.info("*         | (_) | |_) | |_) |  _| | | | |          *");
-    LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|          *");
+    LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|         *");
     LOGGER.info("*               |_|   |_|                          *");
     LOGGER.info("*                                                  *");
     LOGGER.info("****************************************************");

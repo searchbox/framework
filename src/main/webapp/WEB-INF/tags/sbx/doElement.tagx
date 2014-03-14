@@ -15,6 +15,8 @@
 
 
  <c:forEach items="${result.getElements()}" var="element">
+   echo ${element.label }
+ 
   <c:if test="${element.label == label }">
    <sb:include element="${element }" result="${result }" admin="false"
      debug="${not empty param.debug}" />
