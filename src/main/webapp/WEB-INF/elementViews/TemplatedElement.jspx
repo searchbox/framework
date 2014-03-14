@@ -10,10 +10,9 @@
   <!-- Mobile version -->
 
   <!-- Standard version -->
-  <div id="results">
-    <ol id="result-list">
+  <div class="templated-element">
       <c:forEach items="${element.values}" var="hit">
-        <li class="result-item"><c:if test="${hit != null}">
+        <c:if test="${hit != null}">
             <c:catch var="includeException">
               <c:set scope="request" var="hit" value="${hit }" />
               <jsp:include page="/${element.getTemplateFile()}" />
@@ -45,8 +44,7 @@
                 </ul>
               </div>
             </c:if>
-          </c:if></li>
+          </c:if>
       </c:forEach>
-    </ol>
   </div>
 </jsp:root>
