@@ -90,7 +90,18 @@
           <td><fmt:formatDate value="${exec.getStartTime()}" dateStyle="long" timeStyle="medium" type="both"/></td>
           <td>
             <c:set var="diffTime" value="${exec.getLastUpdated().getTime() - exec.getStartTime().getTime()}"/>
-            ${diffTime }ms
+            <c:choose>
+              <c:when test="${diffTime > 60000}">
+                <fmt:formatNumber var="diffTimeFormatted" value="${(diffTime/60000)}" maxFractionDigits="2" />
+                ${diffTimeFormatted } min
+              </c:when>
+              <c:when test="${diffTime > 1000}">
+                ${diffTime/1000 } sec
+              </c:when>
+              <c:otherwise>
+                ${diffTime } ms
+              </c:otherwise>
+            </c:choose>
           </td>
           <td><c:choose>
             <c:when test="${exec.getStatus() == 'STARTED'}">
