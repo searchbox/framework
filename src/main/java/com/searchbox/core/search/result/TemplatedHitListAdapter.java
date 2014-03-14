@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
 import org.elasticsearch.common.collect.Lists;
 import org.slf4j.Logger;
@@ -40,41 +41,31 @@ public class TemplatedHitListAdapter {
       query.addHighlightField(fieldHighlightKey);
     }
   }
-
-  // @SearchAdapterMethod(execute = Time.PRE)
-  // public void addHighlightFieldsForTemplate(TemplatedHitList searchElement,
-  // SolrQuery query, FieldAttribute attribute) {
-  //
-  // if (!attribute.getHighlight()) {
-  // return;
-  // }
-  // if (query.getFacetFields() == null
-  // || !Arrays.asList(query.getFacetFields()).contains(
-  // attribute.getField().getKey())) {
-  // query.addField(attribute.getField().getKey());
-  // }
-  // }
-
+  
+  
   @SearchAdapterMethod(execute = Time.PRE)
   public void setRequieredFieldsForTemplate(SolrSearchEngine engine, TemplatedHitList searchElement, SolrQuery query,
       FieldAttribute attribute) {
     
     if(query.getFields() == null){
-      query.setFields("score");
+      query.setFields("score", "*");
     }
     
     Set<String> fields = searchElement.getRequiredFields();
    
+    /** FIXME this is REQUIRED!!! 
     if (fields.contains(attribute.getField().getKey())) {
       String key = engine.getKeyForField(attribute, USE.DEFAULT);
       if (!query.getFields().contains(key)) {
         List<String> qfields = Lists.newArrayList();
         qfields.addAll(Arrays.asList(query.getFields().split(",")));
-        qfields.add(attribute.getField().getKey()+":"+key);
+        qfields.add(attribute.getField().getKey().replace("-", "\\-")+":"+key);
         qfields.remove("*");
         query.setFields(qfields.toArray(new String[0]));
       }
     }
+    LOGGER.info("Query is: " + query);
+    */
   }
 
   @SearchAdapterMethod(execute = Time.POST)

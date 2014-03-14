@@ -4,22 +4,14 @@
  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:output omit-xml-declaration="yes" />
- <spring:message var="title" code="error_uncaughtexception_title"
   htmlEscape="false" />
  ${exception }
  <h2>${fn:escapeXml(title)}</h2>
  <p>
-  <spring:message code="error_uncaughtexception_problemdescription" />
  </p>
  <c:if test="${not empty exception}">
   <p>
-  <h4>
-   <spring:message code="exception_details" />
-  </h4>
-  <spring:message var="message" code="exception_message"
-   htmlEscape="false" />
   <c:out value="${exception.localizedMessage}" />
-  <spring:message var="stacktrace" code="exception_stacktrace"
    htmlEscape="false" />
   <c:forEach items="${exception.stackTrace}" var="trace">
    <c:out value="${trace}" />
