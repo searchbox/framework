@@ -18,7 +18,7 @@
     <c:set var="facetValueLabel" value=""/>
     <c:catch>
      <spring:message var="facetValueLabel"
-      code="${searchbox.getSlug() }.facet.${facetValue.value}.label" />
+      code="${searchbox.getSlug() }.field.${facetValue.value}.label" />
     </c:catch>
     <c:if test="${empty facetValueLabel}">
      <c:set var="facetValueLabel" value="${facetValue.value}" />
@@ -43,7 +43,7 @@
     <c:set var="facetValueLabel" value=""/>
      <c:catch>
       <spring:message var="facetValueLabel"
-       code="${searchbox.getSlug() }.facet.${facetValue.value}.label" />
+       code="${searchbox.getSlug() }.field.${facetValue.value}.label" />
      </c:catch>
 
      <c:if test="${empty facetValueLabel}">
