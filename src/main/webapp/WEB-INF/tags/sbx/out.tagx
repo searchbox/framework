@@ -66,19 +66,36 @@
 
     <!--  match anything else (String among others) -->
     <c:otherwise>
-     <c:if test="${maxLengh gt 0}">
-      <c:set var="words" value="${fn:split(value, ' ')}" />
-      <c:set var="trimmedContent" value="" />
-      <c:forEach items="${words }" var="word" varStatus="wordLoop">
-       <c:if test='${fn:length(trimmedContent) lt maxLengh}'>
-        <c:set var="trimmedContent" value="${trimmedContent } ${word}" />
+     <c:choose>
+      <!--  Is it a date hidding as a string? -->
+      <c:when test="${value.matches('[0-9-]+T[0-9:\\.]+Z')}">
+       <jsp:useBean id="dateValue" class="java.util.Date">
+       </jsp:useBean>
+       <fmt:parseDate value="${value}" var="parsedEmpDate"
+        pattern="yyyy-MM-dd'T'HH:mm:ss" />
+       <c:set var="value">
+        <fmt:formatDate type="date" dateStyle="long"
+         value="${parsedEmpDate}" />
+       </c:set>
+      </c:when>
+
+      <c:when test="${maxLengh gt 0}">
+       <c:set var="words" value="${fn:split(value, ' ')}" />
+       <c:set var="trimmedContent" value="" />
+       <c:forEach items="${words }" var="word" varStatus="wordLoop">
+        <c:if test='${fn:length(trimmedContent) lt maxLengh}'>
+         <c:set var="trimmedContent" value="${trimmedContent } ${word}" />
+        </c:if>
+       </c:forEach>
+       <c:if test="${fn:length(trimmedContent) lt fn:length(value)}">
+        <c:set var="trimmedContent" value="${trimmedContent } ..." />
        </c:if>
-      </c:forEach>
-      <c:if test="${fn:length(trimmedContent) lt fn:length(value)}">
-       <c:set var="trimmedContent" value="${trimmedContent } ..." />
-      </c:if>
-      <c:set value="${fn:trim(trimmedContent)}" var="value" />
-     </c:if>
+       <c:set value="${fn:trim(trimmedContent)}" var="value" />
+      </c:when>
+      <c:otherwise>
+
+      </c:otherwise>
+     </c:choose>
     </c:otherwise>
    </c:choose>
    <!--  Output processed value -->
