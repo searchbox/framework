@@ -2,6 +2,7 @@
  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
  xmlns:spring="http://www.springframework.org/tags"
  xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
  xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 
  <jsp:output omit-xml-declaration="yes" />
@@ -23,7 +24,7 @@
     <c:if test="${empty facetValueLabel}">
      <c:set var="facetValueLabel" value="${facetValue.value}" />
     </c:if>
-    <li><a href="#">${facetValueLabel} (${facetValue.count}) <c:if
+    <li><a href="#"><sbx:out value="${facetValueLabel}"/> (${facetValue.count}) <c:if
        test="${facetValue.getSelected()}">
        <span class="glyphicon glyphicon-ok"> <!-- empty -->
        </span>
@@ -57,7 +58,8 @@
         value="${facetValue.geParamValue()}" checked="checked"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
-        for="${element.fieldName}_${i.index}" class="css-label">${facetValueLabel }</label>
+        for="${element.fieldName}_${i.index}" class="css-label">
+          <sbx:out value="${facetValueLabel}"/></label>
        </li>
       </c:when>
       <c:otherwise>
@@ -67,7 +69,8 @@
         value="${facetValue.geParamValue()}"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
-        for="${element.fieldName}_${i.index}" class="css-label">${facetValueLabel}</label>
+        for="${element.fieldName}_${i.index}" class="css-label">
+          <sbx:out value="${facetValueLabel}"/></label>
        </li>
       </c:otherwise>
      </c:choose>

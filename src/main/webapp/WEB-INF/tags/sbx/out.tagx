@@ -30,66 +30,81 @@
   <c:set value=" " var="join" />
  </c:if>
 
+ <c:catch var="isNotCollection">
+  <c:set var="collectionSize" value="${value.size() }" />
+ </c:catch>
 
- <c:forEach items="${value }" var="item" varStatus="loop">
-  <c:set var="output" value="" />
-  <c:choose>
+ <c:choose>
+  <c:when test="${not empty isNotCollection }">
 
-   <!--  match a INTEGER/LONG -->
-   <c:when test="${item.matches('[0-9]+')}">
-    <c:set var="output" value="${item }" />
-   </c:when>
+   <c:set var="output" value="" />
 
-   <!--  match a time:  2014-04-24T15:00:00.000Z -->
-   <c:when test="${item.matches('[0-9-]+T[0-9:\\.]+.*')}">
-    <jsp:useBean id="dateValue" class="java.util.Date">
-    </jsp:useBean>
-    <fmt:parseDate value="${item}" var="parsedEmpDate"
-     pattern="yyyy-MM-dd'T'HH:mm:ss" />
-    <c:set var="output">
-     <c:choose>
-      <c:when test="${not empty datePattern}">
-       <fmt:formatDate type="date" pattern="${datePattern }"
-        value="${parsedEmpDate}" />
-      </c:when>
-      <c:otherwise>
-       <fmt:formatDate type="date" dateStyle="long"
-        value="${parsedEmpDate}" />
-      </c:otherwise>
-     </c:choose>
-    </c:set>
-   </c:when>
 
-   <!--  match anything else (String among others) -->
-   <c:otherwise>
-    <c:if test="${not empty maxLengh}">
-     <c:set var="words" value="${fn:split(item, ' ')}" />
-     <c:set var="trimmedContent" value="" />
-     <c:forEach items="${words }" var="word" varStatus="wordLoop">
-      <c:if test='${fn:length(trimmedContent) lt maxLengh}'>
-       <c:set var="trimmedContent" value="${trimmedContent } ${word}" />
+
+   <c:choose>
+
+    <!--  match a INTEGER/LONG -->
+    <c:when test="${value.getClass().getName().contains('Integer')}">
+     <c:set var="output" value="${item }" />
+    </c:when>
+
+    <!--  match a time:  2014-04-24T15:00:00.000Z -->
+    <c:when test="${value.getClass().getName().contains('Date')}">
+     <c:set var="value">
+      <c:choose>
+       <c:when test="${not empty datePattern}">
+        <fmt:formatDate type="date" pattern="${datePattern }"
+         value="${value}" />
+       </c:when>
+       <c:otherwise>
+        <fmt:formatDate type="date" dateStyle="medium" value="${value}" />
+       </c:otherwise>
+      </c:choose>
+     </c:set>
+
+    </c:when>
+
+    <!--  match anything else (String among others) -->
+    <c:otherwise>
+     <c:if test="${maxLengh gt 0}">
+      <c:set var="words" value="${fn:split(value, ' ')}" />
+      <c:set var="trimmedContent" value="" />
+      <c:forEach items="${words }" var="word" varStatus="wordLoop">
+       <c:if test='${fn:length(trimmedContent) lt maxLengh}'>
+        <c:set var="trimmedContent" value="${trimmedContent } ${word}" />
+       </c:if>
+      </c:forEach>
+      <c:if test="${fn:length(trimmedContent) lt fn:length(value)}">
+       <c:set var="trimmedContent" value="${trimmedContent } ..." />
       </c:if>
-     </c:forEach>
-     <c:if test="${fn:length(trimmedContent) lt fn:length(item)}">
-      <c:set var="trimmedContent" value="${trimmedContent } ..." />
+      <c:set value="${fn:trim(trimmedContent)}" var="value" />
      </c:if>
-     <c:set value="${fn:trim(trimmedContent)}" var="item" />
+    </c:otherwise>
+   </c:choose>
+   <!--  Output processed value -->
+   <c:out value="${value }" escapeXml="false" />
+  </c:when>
+  <c:otherwise>
+
+   <c:forEach items="${value }" var="item" varStatus="loop">
+
+    <!--  Output the content with decoration or not -->
+    <c:if test="${not empty pre}">
+     <c:out value="${pre }" escapeXml="false" />
     </c:if>
-    <c:set value="${item}" var="output" />
-   </c:otherwise>
-  </c:choose>
 
-  <!--  Output the content with decoration or not -->
-  <c:if test="${not empty pre}">
-   <c:out value="${pre }" escapeXml="false" />
-  </c:if>
-  <c:out value="${output }" escapeXml="false" />
-  <c:if test="${not empty post}">
-   <c:out value="${post }" escapeXml="false" />
-  </c:if>
-  <c:if test="${!loop.last and not empty join}">
-   <c:out value="${join }" escapeXml="false" />
-  </c:if>
+    <!--  recurse on the iterated value -->
+    <sbx:out value="${item }" join="${join }" maxLengh="${maxLengh }"
+     datePattern="${datePattern }" />
 
- </c:forEach>
+    <c:if test="${not empty post}">
+     <c:out value="${post }" escapeXml="false" />
+    </c:if>
+    <c:if test="${!loop.last and not empty join}">
+     <c:out value="${join }" escapeXml="false" />
+    </c:if>
+
+   </c:forEach>
+  </c:otherwise>
+ </c:choose>
 </jsp:root>

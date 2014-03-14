@@ -15,8 +15,9 @@
  ******************************************************************************/
 package com.searchbox.core.search.result;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
@@ -29,7 +30,7 @@ import com.searchbox.core.search.SearchElementWithValues;
 public class TemplatedHitList extends SearchElementWithValues<Hit> implements
         CachedContent {
 
-    protected List<String> fields;
+    protected Set<String> fields;
 
     @SearchAttribute
     private String template;
@@ -47,7 +48,21 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements
 
     public TemplatedHitList() {
         super("Result Set with Template", SearchElement.Type.VIEW);
-        this.fields = new ArrayList<String>();
+        this.fields = new TreeSet<String>();
+    }
+    
+    public Set<String> getRequiredFields(){
+      Set<String> fields = this.getFields();
+      if(idField != null && !idField.isEmpty()){
+        fields.add(idField);
+      }      
+      if(titleField != null && !titleField.isEmpty()){
+        fields.add(titleField);
+      }      
+      if(urlField != null && !urlField.isEmpty()){
+        fields.add(urlField);
+      }
+      return fields;
     }
 
     public String getTemplate() {
@@ -87,11 +102,11 @@ public class TemplatedHitList extends SearchElementWithValues<Hit> implements
         this.idField = idField;
     }
 
-    public void setFields(List<String> fields) {
+    public void setFields(Set<String> fields) {
         this.fields = fields;
     }
 
-    public List<String> getFields() {
+    public Set<String> getFields() {
         return this.fields;
     }
 
