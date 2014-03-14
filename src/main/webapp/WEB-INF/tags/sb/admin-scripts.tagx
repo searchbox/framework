@@ -17,14 +17,14 @@
   var="tablesorter_js_url" />
  <spring:url value="/assets/css/tablesorter.theme.bootstrap.css"
   var="tablesorter_css_url" />
-
+ <spring:url value="/assets/css/searchbox-admin.css"
+  var="searchbox_admin_css" />
 
 
  <link rel="stylesheet" type="text/css" href="${xeditable_css_url}" />
  <link rel="stylesheet" type="text/css" href="${tablesorter_css_url}" />
 
- <link rel="stylesheet" type="text/css"
-  href="/assets/css/searchbox-admin.css" />
+ <link rel="stylesheet" type="text/css" href="${searchbox_admin_css}" />
  <script src="${xeditable_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
  <script src="${bootstrap_growl_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
  <script src="${tablesorter_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
