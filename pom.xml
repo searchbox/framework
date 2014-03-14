@@ -60,6 +60,7 @@
   <aspectj.version>1.7.2</aspectj.version>
   <java.version>1.7</java.version>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <hibernate.version>4.3.4.Final</hibernate.version>
   <slf4j.version>1.7.5</slf4j.version>
   <spring.version>4.0.2.RELEASE</spring.version>
   <spring-batch.version>2.2.5.RELEASE</spring-batch.version>
@@ -141,12 +142,12 @@
   <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-core</artifactId>
-   <version>4.2.2.Final</version>
+   <version>${hibernate.version}</version>
   </dependency>
   <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-entitymanager</artifactId>
-   <version>4.2.2.Final</version>
+   <version>${hibernate.version}</version>
    <exclusions>
     <exclusion>
      <groupId>cglib</groupId>
@@ -160,8 +161,8 @@
   </dependency>
   <dependency>
    <groupId>org.hibernate.javax.persistence</groupId>
-   <artifactId>hibernate-jpa-2.0-api</artifactId>
-   <version>1.0.1.Final</version>
+   <artifactId>hibernate-jpa-2.1-api</artifactId>
+   <version>1.0.0.Final</version>
   </dependency>
   <dependency>
    <groupId>org.hibernate</groupId>
