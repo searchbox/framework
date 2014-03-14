@@ -97,6 +97,7 @@
      </div>
 
      <div class="row">
+     
       <div class="col-md-3 col-sm-5 col-left" id="main-col-left">
        <c:forEach items="${result.getElements('FACET')}" var="element">
         <sb:include element="${element }" result="${result }"
@@ -104,6 +105,9 @@
        </c:forEach>
       </div>
 
+       <div class="clearfix visible-xs" style="margin-bottom: 10px">
+        <!-- clear -->
+       </div>
 
       <div class="col-md-7 col-sm-7" id="main-col-center">
        <div style="clear: all">

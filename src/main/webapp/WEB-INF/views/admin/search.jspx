@@ -116,6 +116,10 @@
               </c:forEach>
             </div>
 
+             <div class="clearfix visible-xs" style="margin-bottom: 10px">
+              <!-- clear -->
+             </div>
+             
             <div class="col-md-7 col-sm-7" id="main-col-center">
 
 
