@@ -72,13 +72,26 @@ public class TopicCollection extends AbstractBatchCollection implements
     private final static String TOPIC_DETAIL_URL = "topicDetail.url";
     private final static String TOPIC_DETAIL_BEGIN = "topicDetail.begin";
     private final static String TOPIC_DETAIL_END = "topicDetail.end";
+    
+    private final static String CALL_LIST_URL = "callList.url";
+    private final static String CALL_DETAIL_URL = "callDetail.url";
+    private final static String CALL_DETAIL_BEGIN = "callDetail.begin";
+    private final static String CALL_DETAIL_END = "callDetail.end";
 
     private final static String CRAWLER_USER_AGENT_DEFAULT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11";
+    
     private final static String TOPIC_LIST_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/data/call/h2020/topics.json";
     private final static String TOPIC_DETAIL_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/h2020/topics/%s.html";
     private final static String TOPIC_DETAIL_BEGIN_DEFAULT = "<div class=\"tab-pane active\" id=\"tab1\">";
     private final static String TOPIC_DETAIL_END_DEFAULT = "</div>";
+    
+    private final static String CALL_LIST_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/data/call/h2020/calls.json";
+    private final static String CALL_DETAIL_URL_DEFAULT = "http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/h2020/calls/%s.html";
+    private final static String CALL_DETAIL_BEGIN_DEFAULT = "<div class=\"tab-pane active\" id=\"tab1\">";
+    private final static String CALL_DETAIL_END_DEFAULT = "</div>";
 
+    private Map<String, FieldMap> calls = new HashMap<String, FieldMap>();
+    
     @Resource
     private Environment env;
 
@@ -88,8 +101,7 @@ public class TopicCollection extends AbstractBatchCollection implements
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(TopicCollection.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TopicCollection.class);
 
     public static List<Field> GET_FIELDS() {
         List<Field> fields = new ArrayList<Field>();
@@ -123,6 +135,12 @@ public class TopicCollection extends AbstractBatchCollection implements
         super(name);
     }
 
+	/**
+	 * Load content from a URL using a valid User agent.
+	 * 
+	 * @param url The Url to load data from
+	 * @return The content of the page as string.
+	 */
     private String loadFromUrl(String url) {
         try {
             HttpClient client = HttpClientBuilder.create().build();
@@ -153,6 +171,13 @@ public class TopicCollection extends AbstractBatchCollection implements
         return null;
     }
 
+	/**
+	 * Load HTML page and extract the part with the description
+	 * 
+	 * @param topicFileName
+	 *            The topic identifier in the URL
+	 * @return The html markup that corresponds to the description
+	 */
     private String getTopicDescription(String topicFileName) {
         String topicUrlDetail = String.format(
                 env.getProperty(TOPIC_DETAIL_URL, TOPIC_DETAIL_URL_DEFAULT),
@@ -165,6 +190,35 @@ public class TopicCollection extends AbstractBatchCollection implements
                                 TOPIC_DETAIL_BEGIN_DEFAULT),
                         env.getProperty(TOPIC_DETAIL_END,
                                 TOPIC_DETAIL_END_DEFAULT)).trim();
+    }
+    
+	/**
+	 * Load HTML page and extract the part with the description
+	 * 
+	 * @param callFileName The call identifier in the URL
+	 * @return The html markup that corresponds to the description
+	 */
+    private String getCallDescription(String callFileName) {
+    	
+    	//If the call is not cashed, load it from URL
+    	if(!calls.get(callFileName).containsKey("descriptionHtml")){
+    		
+    		String topicUrlDetail = String.format(
+                    env.getProperty(CALL_DETAIL_URL, CALL_DETAIL_URL_DEFAULT),
+                    callFileName);
+
+            String htmlValue = StringUtils
+                    .substringBetween(
+                            this.loadFromUrl(topicUrlDetail),
+                            env.getProperty(CALL_DETAIL_BEGIN,
+                                    CALL_DETAIL_BEGIN_DEFAULT),
+                            env.getProperty(CALL_DETAIL_END,
+                                    CALL_DETAIL_END_DEFAULT)).trim();
+            
+    		calls.get(callFileName).put("descriptionHtml", htmlValue);
+    	}
+
+    	return calls.get(callFileName).get("descriptionHtml").toString();
     }
 
     public ItemReader<JSONObject> reader() {
@@ -193,7 +247,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         };
     }
 
-    public ItemProcessor<JSONObject, FieldMap> itemProcessor() {
+    public ItemProcessor<JSONObject, FieldMap> topicProcessor() {
         return new ItemProcessor<JSONObject, FieldMap>() {
 
             public FieldMap process(JSONObject item)
@@ -205,7 +259,10 @@ public class TopicCollection extends AbstractBatchCollection implements
 
                 // Pulling full HTML description from the web
                 String topicDetailHtml = getTopicDescription(topicFileName);
-
+                
+                //Pulling full HTML description for the topic
+                String callDetailHtml = getCallDescription((String) item.get("callIdentifier"));  
+                
                 // Converting HTML to plain text for Solr
                 String topicDetailRaw = new HtmlToPlainText()
                         .getPlainText(Jsoup.parse(topicDetailHtml));
