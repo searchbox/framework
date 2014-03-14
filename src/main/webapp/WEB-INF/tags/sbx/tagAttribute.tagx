@@ -35,45 +35,57 @@
 
  <c:forEach items="${values}" var="value"
   end="${not empty limit ? limit-1 : 29}">
+  <c:set var="facetValueLabel" value="" />
+  <c:catch>
+   <spring:message var="facetValueLabel"
+    code="${searchbox.getSlug() }.field.${value}.label" />
+  </c:catch>
 
-  <c:if test="${not empty filter }">
-   <jsp:useBean id="condition"
-    class="com.searchbox.core.search.filter.FieldValueCondition" />
-   <jsp:setProperty property="fieldName" name="condition"
-    value="${filter}" />
-   <jsp:setProperty property="taged" name="condition" value="true" />
-   <jsp:setProperty property="value" name="condition" value="${value}" />
+  <c:if test="${empty facetValueLabel}">
+   <c:set var="facetValueLabel" value="${value}" />
   </c:if>
 
-  <c:set var="addedCSSClasses">
-   <sbx:out value="${cssClass }" />
-   <c:if test="${conditions.contains(condition)}"><c:out value=" selected"/></c:if>
-  </c:set>
+   <c:if test="${not empty filter }">
+    <jsp:useBean id="condition"
+     class="com.searchbox.core.search.filter.FieldValueCondition" />
+    <jsp:setProperty property="fieldName" name="condition"
+     value="${filter}" />
+    <jsp:setProperty property="taged" name="condition" value="true" />
+    <jsp:setProperty property="value" name="condition" value="${value}" />
+   </c:if>
 
-  <c:choose>
-   <c:when test="${not empty filter}">
-    <div class="label label-tag attributes clickable ${addedCSSClasses}"
-     title="${value}" data-condition="${condition.getUrlParam()}"
-     data-condition-value="${condition.getValueParam() }">
-     <c:if test="${not empty label}">
-      <span class="field-label label-${label}">${label}: </span>
-     </c:if>
-     <span class="field-value value-${label} value_attributes full"><sbx:out
-       value="${value}" datePattern="${datePattern }" /></span>
-    </div>
-   </c:when>
-   <c:otherwise>
-    <div class="label label-tag attributes ${addedCSSClasses}"
-     title="${value}">
-     <c:if test="${not empty label}">
-      <span class="field-label label-${label} ">${label}: </span>
-     </c:if>
-     <span class="field-value value-${label} value_attributes full"><sbx:out
-       value="${value}" datePattern="${datePattern }" /></span>
-    </div>
-   </c:otherwise>
-  </c:choose>
+   <c:set var="addedCSSClasses">
+    <sbx:out value="${cssClass }" />
+    <c:if test="${conditions.contains(condition)}">
+     <c:out value=" selected" />
+    </c:if>
+   </c:set>
 
+   <c:choose>
+    <c:when test="${not empty filter}">
+     <div
+      class="label label-tag attributes clickable ${addedCSSClasses}"
+      title="${facetValueLabel}"
+      data-condition="${condition.getUrlParam()}"
+      data-condition-value="${condition.getValueParam() }">
+      <c:if test="${not empty label}">
+       <span class="field-label label-${label}">${label}: </span>
+      </c:if>
+      <span class="field-value value-${label} value_attributes full"><sbx:out
+        value="${facetValueLabel}" datePattern="${datePattern }" /></span>
+     </div>
+    </c:when>
+    <c:otherwise>
+     <div class="label label-tag attributes ${addedCSSClasses}"
+      title="${facetValueLabel}">
+      <c:if test="${not empty label}">
+       <span class="field-label label-${label} ">${label}: </span>
+      </c:if>
+      <span class="field-value value-${label} value_attributes full"><sbx:out
+        value="${facetValueLabel}" datePattern="${datePattern }" /></span>
+     </div>
+    </c:otherwise>
+   </c:choose>
  </c:forEach>
 </jsp:root>
 
