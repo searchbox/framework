@@ -398,11 +398,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           + "<sbx:tagAttribute limit=\"1\" label=\"Partner Country\" filter=\"eenCompanyCountryLabel\" values=\"${hit.fieldValues['eenCompanyCountryLabel']}\"/>");
       presetEEN.addSearchElement(eenTemplatedHitList);
 
-      SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplatedHitList.class);
-      eenViewHit.setType(SearchElement.Type.INSPECT);
-      eenViewHit.setAttributeValue("titleField", "eenContentTitle");
-      eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
-      eenViewHit.setAttributeValue("template",""
+      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(TemplatedHitList.class);
+      eenViewHitMeta.setLabel("meta");
+      eenViewHitMeta.setType(SearchElement.Type.INSPECT);
+      eenViewHitMeta.setAttributeValue("titleField", "eenContentTitle");
+      eenViewHitMeta.setAttributeValue("idField", "eenReferenceExternal");
+      eenViewHitMeta.setAttributeValue("template",""
 
           // LEFT COLOUMN
           + "<sbx:tagAttribute limit=\"1\" label=\"Cooperation Identifier:\" values=\"${hit.fieldValues['eenReferenceExternal']}\"/>"
@@ -416,7 +417,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           + "<sbx:tagAttribute limit=\"1\" label=\"Published:\" values=\"${hit.fieldValues['eenDatumSubmit']}\"/>"
           + "<sbx:tagAttribute limit=\"1\" label=\"Updated:\" values=\"${hit.fieldValues['eenDatumUpdate']}\"/>"
           + "<sbx:tagAttribute limit=\"1\" label=\"Deadline:\" values=\"${hit.fieldValues['eenDatumDeadline']}\"/>"
-            
+          );
+      presetEEN.addSearchElement(eenViewHitMeta);
+      
+      SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplatedHitList.class);
+      eenViewHit.setLabel("body");
+      eenViewHit.setType(SearchElement.Type.INSPECT);
+      eenViewHit.setAttributeValue("titleField", "eenContentTitle");
+      eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
+      eenViewHit.setAttributeValue("template",""
           // RIGHT COLUMN
           + "<hr/>" + "<sbx:out value=\"${hit.fieldValues['eenContentTitle']}\"/>" + "<hr/>"
           + "<sbx:title hit=\"${hit}\"/>" + "<hr/>"
@@ -426,6 +435,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           );
       presetEEN.addSearchElement(eenViewHit);
 
+      
       /** Create & add a basicSearchStat SearchComponent to the preset; */
       SearchElementDefinition eenBasicStatus = new SearchElementDefinition(
           BasicSearchStats.class);
