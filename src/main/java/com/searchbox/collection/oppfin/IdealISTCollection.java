@@ -26,6 +26,8 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.lf5.util.DateFormatManager;
 import org.elasticsearch.common.collect.Lists;
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -151,8 +153,9 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             }
             buf.close();
             ips.close();
-            LOGGER.info("Received: {}", sb.toString());
+            
             return buildXMLDocument(sb.toString());
+            
         } catch (Exception e) {
             LOGGER.error("Could not get XML from {}", builder.getUri(), e);
         }
@@ -199,17 +202,17 @@ public class IdealISTCollection extends AbstractBatchCollection implements
         };
     }
     
-    private void addDateField(Document document, FieldMap fields, String key,
+    private void addDateField(String uid, Document document, FieldMap fields, String key,
             String fieldName) {
-        this.addField(document, fields, Date.class, key, fieldName);
+        this.addField(uid, document, fields, Date.class, key, fieldName);
     }
 
-    private void addStringField(Document document, FieldMap fields, String key,
+    private void addStringField(String uid, Document document, FieldMap fields, String key,
             String fieldName) {
-        this.addField(document, fields, String.class, key, fieldName);
+        this.addField(uid, document, fields, String.class, key, fieldName);
     }
 
-    private void addField(Document document, FieldMap fields, Class<?> clazz,
+    private void addField(String uid, Document document, FieldMap fields, Class<?> clazz,
             String key, String fieldName) {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String metaDataExpression = "//metadata[@key='" + key + "']|"
@@ -224,7 +227,10 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             for (int i = 0; i < nodeList.getLength(); i++) {
                 String value = nodeList.item(i).getTextContent();
                 if (String.class.isAssignableFrom(clazz)) {
-                    fields.put(fieldName, value);
+                  String content = new HtmlToPlainText()
+                  .getPlainText(Jsoup.parse(value));
+                    fields.put(fieldName, content);
+                    fields.put(fieldName+"Html", value);
                 } else if (Date.class.isAssignableFrom(clazz)) {
                     Date date;
                     try {
@@ -236,7 +242,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                 }
             }
         } catch (XPathExpressionException e) {
-           LOGGER.warn("Could not execute XPATH. Might miss data");
+           LOGGER.warn("Could not execute XPATH for key {} in document {}", key, uid);
         }
     }
 
@@ -254,37 +260,40 @@ public class IdealISTCollection extends AbstractBatchCollection implements
                 FieldMap fields = new FieldMap();
 
                 fields.put("id", uid);
+                fields.put("docSource", "Ideal-Ist");
+                fields.put("docType", "Colaboration");
+                fields.put("programme", "H2020");                
                 
-                addStringField(document, fields, "title", "idealistTitle");
-                addStringField(document, fields, "PS_ID", "idealistPsId");
-                addStringField(document, fields, "Status", "idealistStatus");
-                addDateField(document, fields, "Date_of_last_Modification",
+                addStringField(uid, document, fields, "title", "idealistTitle");
+                addStringField(uid, document, fields, "PS_ID", "idealistPsId");
+                addStringField(uid, document, fields, "Status", "idealistStatus");
+                addDateField(uid, document, fields, "Date_of_last_Modification",
                         "idealistUpdated");
-                addDateField(document, fields, "Date_of_Publication",
+                addDateField(uid, document, fields, "Date_of_Publication",
                         "idealistPublished");
-                addStringField(document, fields, "Call_Identifier",
+                addStringField(uid, document, fields, "Call_Identifier",
                         "callIdentifier");
-                addStringField(document, fields, "Objective",
+                addStringField(uid, document, fields, "Objective",
                         "idealistObjective");
-                addStringField(document, fields, "Funding_Schemes",
+                addStringField(uid, document, fields, "Funding_Schemes",
                         "idealistFundingScheme");
-                addStringField(document, fields, "Evaluation_Scheme",
+                addStringField(uid, document, fields, "Evaluation_Scheme",
                         "idealistEvaluationScheme");
-                addDateField(document, fields, "Closure_Date", "idealistDeadline");
-                addStringField(document, fields, "Type_of_partner_sought",
+                addDateField(uid, document, fields, "Closure_Date", "idealistDeadline");
+                addStringField(uid, document, fields, "Type_of_partner_sought",
                         "idealistTypeOfPartnerSought");
-                addStringField(document, fields, "Coordinator_possible",
+                addStringField(uid, document, fields, "Coordinator_possible",
                         "idealistCoordinationPossible");
-                addStringField(document, fields, "Organisation",
+                addStringField(uid, document, fields, "Organisation",
                         "idealistOrganisation");
-                addStringField(document, fields, "Department",
+                addStringField(uid, document, fields, "Department",
                         "idealistDepartement");
-                addStringField(document, fields, "Type_of_Organisation",
+                addStringField(uid, document, fields, "Type_of_Organisation",
                         "idealistTypeOfOrganisation");
-                addStringField(document, fields, "Country", "idealistCountry");
-                addStringField(document, fields, "Body", "idealistBody");
-                addStringField(document, fields, "outline", "idealistOutline");
-                addStringField(document, fields, "description_of_work",
+                addStringField(uid, document, fields, "Country", "idealistCountry");
+                addStringField(uid, document, fields, "Body", "idealistBody");
+                addStringField(uid, document, fields, "outline", "idealistOutline");
+                addStringField(uid, document, fields, "description_of_work",
                         "idealistDescriptionOfWork");
 
                 if(LOGGER.isDebugEnabled()){

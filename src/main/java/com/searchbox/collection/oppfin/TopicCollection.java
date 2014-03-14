@@ -214,7 +214,7 @@ public class TopicCollection extends AbstractBatchCollection implements
                 FieldMap doc = new FieldMap();
                 
                 doc.put("docSource", "H2020");
-                doc.put("docType", "Topic H2020");
+                doc.put("docType", "Funding");
                 doc.put("programme", "H2020");
                 
                 doc.put("topicIdentifier", topicIdentifier);

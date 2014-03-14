@@ -478,9 +478,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       eenCompanyCountry.setAttributeValue("sort", Sort.DESC);
       presetEEN.addSearchElement(eenCompanyCountry);
 
-      // SearchElementDefinition eenQueryDebug = new
-      // SearchElementDefinition(SolrToString.class);
-      // presetCoooperation.addSearchElement(eenQueryDebug);
+       SearchElementDefinition eenQueryDebug = new
+       SearchElementDefinition(SolrToString.class);
+       presetEEN.addSearchElement(eenQueryDebug);
 
       /**
        * IDEALIST PRESET
