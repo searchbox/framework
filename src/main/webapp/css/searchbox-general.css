@@ -49,6 +49,7 @@ body #main-content {
  }
 }
 
+/** Mobile facets (checkboxes Vs. dropdown) **/
 @media ( max-width : 768px) {
  #main-col-left .panel {
   display: none;
@@ -62,6 +63,40 @@ body #main-content {
  }
 }
 
+
+
+
+/** Pagination **/
+@media ( min-width : 768px) {
+
+}
+
+@media ( max-width : 768px) {
+ #result-list .label-tag {
+  display:list-item;
+  margin-bottom:5px;
+ }
+
+}
+
+/** Pagination **/
+@media ( min-width : 768px) {
+ #basic-pagination a,#basic-pagination span {
+  padding: 5px 11px;
+ }
+ #basic-pagination .gap {
+  display: inline-block;
+ }
+}
+
+@media ( max-width : 768px) {
+ #basic-pagination a,#basic-pagination span {
+  padding: 5px 5px;
+ }
+ #basic-pagination .gap {
+  display: none;
+ }
+}
 /*************************************************************/
 /* Preset bar - dark background, horizontal menu with icon */
 /*************************************************************/
@@ -375,6 +410,7 @@ a.clear_input:hover {
  white-space: nowrap;
  margin-bottom: 2px;
  font-size: 16px;
+ height:1.3em;
 }
 
 #result-list li p {
@@ -490,24 +526,6 @@ a.clear_input:hover {
  top: 50%;
  margin-top: -13px;
  z-index: 2;
-}
-
-@media ( min-width : 768px) {
- #basic-pagination a,#basic-pagination span {
-  padding: 5px 11px;
- }
- #basic-pagination .gap {
-  display: inline-block;
- }
-}
-
-@media ( max-width : 768px) {
- #basic-pagination a,#basic-pagination span {
-  padding: 5px 5px;
- }
- #basic-pagination .gap {
-  display: none;
- }
 }
 
 /*************************************************************/
