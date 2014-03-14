@@ -84,7 +84,7 @@ public abstract class SolrSearchEngine extends
         try {
             return this.getSolrServer().query(query);
         } catch (SolrServerException e) {
-            LOGGER.warn("Could nto execute query {}", e.getMessage());
+            LOGGER.warn("Could not execute query {}", query);
             throw new RuntimeException("Could nexecute Query on  engine", e);
         }
     }
