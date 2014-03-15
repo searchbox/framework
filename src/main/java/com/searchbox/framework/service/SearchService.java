@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchCollector;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -50,7 +51,8 @@ public class SearchService {
     public Set<SearchElement> execute(SearchEngine searchEngine,
             Set<SearchElement> searchElements,
             Set<FieldAttribute> fieldAttributes,
-            Set<AbstractSearchCondition> conditions) {
+            Set<AbstractSearchCondition> conditions,
+            SearchCollector collector) {
 
         Object query = searchEngine.newQuery();
 
@@ -58,7 +60,7 @@ public class SearchService {
 
         // Weave in all SearchElement in Query
         adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine,
-                query, fieldAttributes, searchElements);
+                query, fieldAttributes, searchElements, collector);
 
         for (SearchElement element : searchElements) {
             if (element.getClass().isAssignableFrom(
@@ -73,13 +75,13 @@ public class SearchService {
         LOGGER.debug("Adapting condition from UI: " + conditions);
         adapterService.doAdapt(SearchAdapter.Time.PRE,
                 AbstractSearchCondition.class, searchEngine, query,
-                fieldAttributes, conditions, searchElements);
+                fieldAttributes, conditions, searchElements, collector);
 
         // Weave in all presetConditions in query
         LOGGER.debug("Adapting condition from Preset: " + presetConditions);
         adapterService.doAdapt(SearchAdapter.Time.PRE,
                 AbstractSearchCondition.class, searchEngine, query,
-                fieldAttributes, presetConditions, searchElements);
+                fieldAttributes, presetConditions, searchElements, collector);
 
         // Executing the query on the search engine!!!
         Object result = null;
@@ -98,7 +100,7 @@ public class SearchService {
         Class<?> resultClass = result.getClass();
         adapterService.doAdapt(SearchAdapter.Time.POST, resultClass,
                 searchEngine, query, fieldAttributes, conditions,
-                presetConditions, result, searchElements);
+                presetConditions, result, searchElements, collector);
 
         // Executing a merge on all SearchConditions
         for (SearchElement element : searchElements) {

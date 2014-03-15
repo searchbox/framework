@@ -37,13 +37,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.searchbox.core.SearchCollector;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.CachedContent;
 import com.searchbox.core.search.RetryElement;
 import com.searchbox.core.search.SearchElement;
-import com.searchbox.core.search.SearchResult;
 import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
@@ -148,6 +148,11 @@ public class SearchController {
         return conditions;
     }
     
+    @ModelAttribute("collector")
+    public SearchCollector getSearchCollector(){
+      return new SearchCollector();
+    }
+    
     
     @RequestMapping(value = { "/search", "/search/" })
     public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
@@ -169,23 +174,21 @@ public class SearchController {
             @PathVariable Searchbox searchbox,
             @PathVariable PresetDefinition preset,
             @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
+            @ModelAttribute("collector") SearchCollector collector,
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
         LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
         model.setViewName(getViewViewName());
 
-        SearchResult result = new SearchResult();
         Set<SearchElement> resultElements = executeRequest(searchbox, preset,
-                conditions, SearchElement.Type.QUERY, SearchElement.Type.FILTER,
-                SearchElement.Type.DEBUG, SearchElement.Type.INSPECT,
+                conditions, collector, SearchElement.Type.QUERY,
+                SearchElement.Type.FILTER,
+                SearchElement.Type.DEBUG, 
+                SearchElement.Type.INSPECT,
                 SearchElement.Type.STAT);
-        for (SearchElement element : resultElements) {
-            LOGGER.debug("Adding to result view element["
-                    + element.getPosition() + "] = " + element.getLabel());
-            result.addElement(element);
-        }
-
-        model.addObject("result", result);
+        
+        model.addObject("collector", collector);
+        model.addObject("elements", resultElements);
         model.addObject("preset", preset);
 
         return model;
@@ -196,26 +199,22 @@ public class SearchController {
             @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
             @PathVariable Searchbox searchbox,
             @PathVariable PresetDefinition preset,
+            @ModelAttribute("collector") SearchCollector collector,
             @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions, 
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
         LOGGER.debug("search page for: {} with preset: {}", searchbox, preset);
         model.setViewName(getSearchViewName());
 
-        SearchResult result = new SearchResult();
         Set<SearchElement> resultElements = executeRequest(searchbox, preset,
-                conditions, SearchElement.Type.QUERY, SearchElement.Type.FACET,
+                conditions, collector, 
+                SearchElement.Type.QUERY, SearchElement.Type.FACET,
                 SearchElement.Type.FILTER, SearchElement.Type.SORT,
                 SearchElement.Type.DEBUG, SearchElement.Type.VIEW,
                 SearchElement.Type.STAT);
 
-        for (SearchElement element : resultElements) {
-            LOGGER.debug("Adding to result view element["
-                    + element.getPosition() + "] = " + element.getLabel());
-            result.addElement(element);
-        }
-
-        model.addObject("result", result);
+        model.addObject("collector", collector);
+        model.addObject("elements", resultElements);
         model.addObject("preset", preset);
 
         return model;
@@ -223,7 +222,7 @@ public class SearchController {
 
     protected Set<SearchElement> executeRequest(Searchbox searchbox,
             PresetDefinition preset, Set<AbstractSearchCondition> conditions,
-            SearchElement.Type... types) {
+            SearchCollector collector, SearchElement.Type... types) {
 
         
 
@@ -278,9 +277,10 @@ public class SearchController {
         LOGGER.debug("Current SearchEngine: {}", searchEngine);
 
         Set<SearchElement> resultElements = searchService.execute(searchEngine,
-                searchElements, fieldAttributes, conditions);
+                searchElements, fieldAttributes, conditions, collector);
 
         // Check if we have a retry clause
+        //TODO put the rety in collector.
         boolean retry = false;
         for (SearchElement element : resultElements) {
             if (RetryElement.class.isAssignableFrom(element.getClass())) {
@@ -292,9 +292,9 @@ public class SearchController {
 
         if (retry) {
             resultElements = searchService.execute(searchEngine,
-                    searchElements, fieldAttributes, conditions);
+                    searchElements, fieldAttributes, conditions, collector);
         }
-
+        collector.getCollectedItems("test").add("Hello mademoiselle");
         return resultElements;
     }
 }

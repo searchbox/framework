@@ -34,7 +34,6 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
