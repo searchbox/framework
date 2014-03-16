@@ -3,27 +3,49 @@
  xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
 
 
- <sbx:tagAttribute limit="1" label="Cooperation Identifier:"
-  values="${hit.fieldValues['eenReferenceExternal']}" />
- <sbx:tagAttribute limit="1" label="Opportunity Type:"
-  values="${hit.fieldValues['programme']}" />
- <sbx:tagAttribute limit="1" label="EEN Type:"
-  values="${hit.fieldValues['eenReferenceType']}" />
- <sbx:tagAttribute limit="1" label="Contact:"
-  values="${hit.fieldValues['eenContactOrganization']}" />
- <sbx:tagAttribute limit="1" label="Contact:"
-  values="${hit.fieldValues['eenContactOrganizationcountry']}" />
- <sbx:tagAttribute limit="1" label="Contact:"
-  values="${hit.fieldValues['eenContactFullname']}" />
- <sbx:tagAttribute limit="1" label="Contact:"
-  values="${hit.fieldValues['eenContactPhone']}" />
- <sbx:tagAttribute limit="1" label="Contact:"
-  values="${hit.fieldValues['eenContactEmail']}" />
- <sbx:tagAttribute limit="1" label="Published:"
-  values="${hit.fieldValues['eenDatumSubmit']}" />
- <sbx:tagAttribute limit="1" label="Updated:"
-  values="${hit.fieldValues['eenDatumUpdate']}" />
- <sbx:tagAttribute limit="1" label="Deadline:"
-  values="${hit.fieldValues['eenDatumDeadline']}" />
+ <sbx:out value="${hit.fieldValues['eenReferenceExternal']}" />
+
+ <h5>
+  Opportunity Type<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['programme']}" /></span>
+ </h5>
+ <h5>
+  EEN Type<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenReferenceType']}" /></span>
+ </h5>
+ <h5>
+  Contact<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenContactOrganization']}" /></span>
+ </h5>
+ <h5>
+  Contact<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenContactOrganizationcountry']}" /></span>
+ </h5>
+ <h5>
+  Contact<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenContactFullname']}" /></span>
+ </h5>
+ <h5>
+  Contact<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenContactPhone']}" /></span>
+ </h5>
+ <h5>
+  Contact<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenContactEmail']}" /></span>
+ </h5>
+ <h5>
+  Published<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenDatumSubmit']}" 
+    datePattern="medium"/></span>
+ </h5>
+ <h5>
+  Updated<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenDatumUpdate']}" /></span>
+ </h5>
+ <h5>
+  Deadline<span class="label label-default"><sbx:out
+    value="${hit.fieldValues['eenDatumDeadline']}" /></span>
+ </h5>
+
 
 </jsp:root>

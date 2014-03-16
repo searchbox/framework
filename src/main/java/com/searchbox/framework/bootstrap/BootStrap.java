@@ -245,6 +245,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        */
       SearchElementDefinition viewHit = new SearchElementDefinition(TemplateElement.class);
       viewHit.setType(SearchElement.Type.INSPECT);
+      viewHit.setLabel("body");
       viewHit.setAttributeValue("titleField", "topicTitle");
       viewHit.setAttributeValue("idField", "id");
       viewHit.setAttributeValue("templateFile",
