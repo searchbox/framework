@@ -26,8 +26,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import com.searchbox.core.search.CachedAttribute;
-
 @Service
 public class DirectoryService {
 

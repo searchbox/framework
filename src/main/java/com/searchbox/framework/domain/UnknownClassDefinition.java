@@ -42,7 +42,6 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import com.searchbox.core.ref.ReflectionUtils;
-import com.searchbox.core.search.CachedAttribute;
 
 @Configurable
 @Component
