@@ -18,7 +18,7 @@ import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.service.CollectionService;
 
 @Controller
-@RequestMapping("/{searchbox}/admin/CollectionDefinition")
+@RequestMapping("/admin/{searchbox}/CollectionDefinition")
 public class CollectionDefinitionController {
 
     @SuppressWarnings("unused")

@@ -36,14 +36,13 @@
      </c:if>
 
      <div class="row" id="search-bar">
-
       <div class="col-md-3 col-sm-5 col-left">
 
        <div class="media">
         <spring:url value="/${searchbox.getSlug()}/search/"
          var="home_url" />
         <a class="pull-left" href="${home_url}"> <spring:url
-          value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
+          value="/assets/images/searchbox-logo-big.png" var="searchbox_logo" /> <img
          src='${searchbox_logo}' class="media-object" alt="Searchbox"
          id="logo-image" />
         </a>
@@ -104,6 +103,11 @@
        <sbx:doElement type="VIEW" cssClass="result-list"/>
 
        <sbx:doElement type="DEBUG" />
+       
+       <!--  to style that... -->
+       <c:if test="${not empty param.debug }">
+        ${collector }
+       </c:if>
 
       </div>
 

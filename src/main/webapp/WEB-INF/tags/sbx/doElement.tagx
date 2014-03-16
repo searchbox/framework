@@ -79,7 +79,7 @@
     <c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
     <c:set var="element" value="${element }" scope="request" />
     <spring:url var="formUrl"
-     value="/${searchbox.getSlug() }/admin/searchElementDefinition/${element.definitionId}" />
+     value="/admin/${searchbox.getSlug() }/searchElementDefinition/${element.definitionId}" />
 
     <c:choose>
      <c:when test="${admin or debug}">

@@ -1,0 +1,31 @@
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
+ xmlns:helper="http://www.searchbox.com/helper">
+
+ <jsp:output omit-xml-declaration="yes" />
+ <jsp:output doctype-root-element="HTML"
+  doctype-system="about:legacy-compat" />
+
+ <jsp:directive.page contentType="text/html;charset=UTF-8" />
+ <jsp:directive.page pageEncoding="UTF-8" />
+
+ <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
+
+<sb:base-scripts />
+
+<title>${title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+Hello World
+</body>
+ </html>
+</jsp:root>

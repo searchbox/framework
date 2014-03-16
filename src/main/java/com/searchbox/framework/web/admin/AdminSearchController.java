@@ -28,11 +28,11 @@ import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.Searchbox;
-import com.searchbox.framework.web.SearchController;
+import com.searchbox.framework.web.SearchboxController;
 
 @Controller
-@RequestMapping("/{searchbox}/admin")
-public class AdminSearchController extends SearchController {
+@RequestMapping("/admin/{searchbox}")
+public class AdminSearchController extends SearchboxController {
 
     @Autowired
     JobExplorer jobExplorer;
@@ -51,19 +51,24 @@ public class AdminSearchController extends SearchController {
     public JobExplorer getJobExplorer() {
         return this.jobExplorer;
     }
-
+    
     @Override
-    protected String getViewViewName() {
-        return "admin/view";
+    protected String getViewFolder(){
+      return "admin";
     }
 
-    @Override
-    protected String getSearchViewName() {
-        return "admin/search";
-    }
-
-    @Override
-    protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-        return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
-    }
+//    @Override
+//    protected String getViewViewName() {
+//        return "admin/view";
+//    }
+//
+//    @Override
+//    protected String getSearchViewName() {
+//        return "admin/search";
+//    }
+//
+//    @Override
+//    protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
+//        return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
+//    }
 }

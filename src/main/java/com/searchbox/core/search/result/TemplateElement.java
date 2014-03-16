@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.searchbox.core.search.result;
 
+import java.lang.annotation.ElementType;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -50,7 +51,12 @@ public class TemplateElement extends SearchElement implements UseCollector {
   String idField;
 
   public TemplateElement() {
-    super("Result Set with Template", SearchElement.Type.VIEW);
+    super("Template Element", SearchElement.Type.VIEW);
+    this.fields = new TreeSet<String>();
+  }
+  
+  public TemplateElement(String name){
+    super(name, SearchElement.Type.VIEW);
     this.fields = new TreeSet<String>();
   }
   
@@ -118,10 +124,10 @@ public class TemplateElement extends SearchElement implements UseCollector {
 
   @Override
   public String getCollectorKey() {
-    if(this.getLabel() != null && this.getLabel().isEmpty()){
-      return TemplateElement.COLLECTOR_KEY;
-    } else {
+    if(this.getLabel() != null && !this.getLabel().isEmpty()){
       return this.getLabel();
+    } else {
+      return TemplateElement.COLLECTOR_KEY;
     }
   }
 }

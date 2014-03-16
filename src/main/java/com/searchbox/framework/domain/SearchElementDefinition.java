@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -40,6 +43,8 @@ public class SearchElementDefinition extends UnknownClassDefinition implements
     private Integer position;
 
     private SearchElement.Type type;
+    
+    private String process;
 
     public SearchElementDefinition() {
         super();
@@ -52,6 +57,14 @@ public class SearchElementDefinition extends UnknownClassDefinition implements
     public SearchElementDefinition(String label, Class<?> clazz) {
         super(clazz);
         this.label = label;
+    }
+    
+    public String getProcess() {
+      return process;
+    }
+
+    public void setProcess(String process) {
+      this.process = process;
     }
 
     public PresetDefinition getPreset() {

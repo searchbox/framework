@@ -43,7 +43,7 @@
 
 
    <spring:url
-    value="/${searchbox.getSlug()}/admin/CollectionDefinition/${preset.collection.id}/synchronize"
+    value="/admin/${searchbox.getSlug()}/CollectionDefinition/${preset.collection.id}/synchronize"
     var="synchCollection" />
    <script type="text/javascript">
               $(document).ready(function() {

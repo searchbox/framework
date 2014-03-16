@@ -36,8 +36,8 @@ import com.searchbox.framework.service.SearchAdapterService;
 import com.searchbox.framework.service.SearchEngineService;
 import com.searchbox.framework.service.SearchService;
 
-@Controller
-@RequestMapping("/{searchbox}")
+//@Controller
+//@RequestMapping("/asynch/{searchbox}")
 public class ASynchController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -76,7 +76,7 @@ public class ASynchController {
     public ASynchController() {
     }
 
-    @RequestMapping(value = { "/asynch/{preset}/{id}", "/asynch/{preset}/{id}/" })
+    @RequestMapping(value = { "/{preset}/{id}", "/{preset}/{id}/" })
     @ResponseBody
     public Map<String, Object> getDefaultPreset(
             @PathVariable Searchbox searchbox, @PathVariable Long id,

@@ -25,7 +25,7 @@
   </c:when>
   <c:when test="${not empty hit.getId()}">
    <spring:url var="hitUrl"
-    value="/${searchbox.getSlug() }/view/${preset.getSlug()}/?ff=${hit.idFieldName}[${hit.getId()}]" />
+    value="/${searchbox.getSlug() }/${preset.getSlug()}/view/?ff=${hit.idFieldName}[${hit.getId()}]" />
    <a href="${hitUrl}"><sbx:out value="${title}" /></a>
   </c:when>
   <c:otherwise>

@@ -23,16 +23,13 @@
    <nav class="collapse navbar-collapse bs-navbar-collapse left"
     role="navigation">
     <ul class="nav navbar-nav" id="preset-bar">
-     <c:forEach var="ppreset" items="${presets}">
-      <c:choose>
-       <c:when test="${ppreset.slug.equals(preset.slug)}">
-        <li class="active"><a href="${ppreset.slug }">${ppreset.label }</a></li>
-       </c:when>
-       <c:otherwise>
-        <li><a href="#"
-         onclick="document.getElementById('searchForm').action='${ppreset.slug }';document.getElementById('searchForm').submit();">${ppreset.label }</a></li>
-       </c:otherwise>
-      </c:choose>
+     <c:forEach var="ppreset" items="${presets}">    
+     <c:set var="cssClass" value=""/>
+     <c:if test="${ppreset.slug.equals(preset.slug)}">
+      <c:set var="cssClass" value="active"/>
+     </c:if>
+     <spring:url var="linkUrl" value="/${searchbox.getSlug() }/${ppreset.getSlug() }"/>
+     <li class="${cssClass}"><a href="${linkUrl }">${ppreset.label }</a></li>
      </c:forEach>
     </ul>
 

@@ -74,7 +74,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     registry.addResourceHandler("/assets/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
     registry.addResourceHandler("/assets/images/**").addResourceLocations("/img/").setCachePeriod(31556926);
     registry.addResourceHandler("/assets/js/**").addResourceLocations("/js/").setCachePeriod(31556926);
-    registry.setOrder(Ordered.LOWEST_PRECEDENCE);
+    registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
   }
 
   @Override

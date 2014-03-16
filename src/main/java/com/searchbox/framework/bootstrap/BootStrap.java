@@ -237,20 +237,19 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       TemplateElement.setAttributeValue("idField", "topicIdentifier");
       TemplateElement.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_topicHit.jspx");
-      presetTopic.addSearchElement(TemplateElement);
+      presetTopic.addSearchElement(TemplateElement, "search");
 
       /**
        * Create & add another TemplateElement SearchComponent to the preset;
        * SearchElementType can be overriden
        */
       SearchElementDefinition viewHit = new SearchElementDefinition(TemplateElement.class);
-      viewHit.setType(SearchElement.Type.INSPECT);
       viewHit.setLabel("body");
       viewHit.setAttributeValue("titleField", "topicTitle");
       viewHit.setAttributeValue("idField", "id");
       viewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_topicView.jspx");
-      presetTopic.addSearchElement(viewHit);
+      presetTopic.addSearchElement(viewHit, "view");
 
       /** Create & add a FieldSort SearchComponent to the preset; */
       SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
@@ -259,11 +258,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       sortFields.add(new FieldSort.Value(
           "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.ASC));
       fieldSort.setAttributeValue("values", sortFields);
-      presetTopic.addSearchElement(fieldSort);
+      presetTopic.addSearchElement(fieldSort, "search");
 
       /** Create & add a basicSearchStat SearchComponent to the preset; */
       SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
-      presetTopic.addSearchElement(basicStatus);
+      presetTopic.addSearchElement(basicStatus, "search");
 
       /** Create & add a facet to the presetTopic. */
       SearchElementDefinition callFacet = new SearchElementDefinition(FieldFacet.class);
@@ -271,7 +270,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       callFacet.setLabel("Call");
       callFacet.setAttributeValue("order", Order.BY_VALUE);
       callFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(callFacet);
+      presetTopic.addSearchElement(callFacet, "search");
 
       /**
        * Ideally this is a range facet. We agreed that for now it will be a list
@@ -282,17 +281,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       deadlineFacet.setLabel("Deadline");
       deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
       deadlineFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(deadlineFacet);
+      presetTopic.addSearchElement(deadlineFacet, "search");
 
       SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
       flagFacet.setAttributeValue("field", collection.getFieldDefinition("topicFlags").getInstance());
       flagFacet.setLabel("Flags");
       flagFacet.setAttributeValue("order", Order.BY_VALUE);
       flagFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(flagFacet);
+      presetTopic.addSearchElement(flagFacet, "search");
 
       SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
-      presetTopic.addSearchElement(pagination);
+      presetTopic.addSearchElement(pagination, "search");
 
       searchbox.addPresetDefinition(presetTopic);
 

@@ -39,8 +39,8 @@ import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.repository.UserRoleRepository;
 
-@Controller
-@RequestMapping("/{searchbox}/admin")
+//@Controller
+//@RequestMapping("/admin/{searchbox}")
 public class AdminController {
 
     @Autowired

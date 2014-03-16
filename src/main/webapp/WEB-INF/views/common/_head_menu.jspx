@@ -17,13 +17,20 @@
     <sec:authorize access="isAuthenticated()">
      <spring:url value="/logout" var="logoutUrl" />
      <li><a href="${logoutUrl }">Logout</a></li>
+     <li class="divider">
+      <!-- divider -->
+     </li>
     </sec:authorize>
-    <li><a href="about">About ${currentSearchbox.getName() }</a></li>
+    <spring:url var="home" value="/${searchbox.getSlug() }/" />
+    <spring:url var="admin" value="/admin/${searchbox.getSlug() }/" />
+    <li><a href="${home }">Home</a></li>
+    <li><a href="${admin }">Admin</a></li>
     <li class="divider">
      <!-- divider -->
     </li>
-    <c:forEach var="searchbox" items="${searchboxes}">
-     <li><a href="?searchbox=${searchbox.getSlug() }">${searchbox.getName() }</a></li>
+    <c:forEach var="otherSearchbox" items="${searchboxes}">
+     <spring:url var="othersb" value="/${otherSearchbox.getSlug() }/" />
+     <li><a href="${othersb }">${otherSearchbox.getName() }</a></li>
     </c:forEach>
    </ul></li>
  </ul>
