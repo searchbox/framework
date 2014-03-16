@@ -7,7 +7,6 @@
 
  <jsp:output omit-xml-declaration="yes" />
 
-
  <jsp:directive.attribute name="values" type="java.lang.Object"
   required="true" rtexprvalue="true" description="values to display" />
 
@@ -25,8 +24,6 @@
 
  <jsp:directive.attribute name="boost" type="String" required="false"
   rtexprvalue="true" description="name of the field to boost" />
-
-
 
  <jsp:directive.attribute name="datePattern" type="String"
   required="false" rtexprvalue="true"
