@@ -125,7 +125,7 @@ public class DirectoryService {
       if(!fileExists(tempFile)){
         createFile(tempFile, value);
       }
-      String path = getApplicationRelativePath(tempFile);
+      String path = "/"+getApplicationRelativePath(tempFile);
       LOGGER.info("Saved {} with path: {}",tempFile, path );
       return path;
     }
