@@ -533,12 +533,6 @@
       <configuration>
        <artifactItems>
         <artifactItem>
-         <groupId>com.github.jsimone</groupId>
-         <artifactId>webapp-runner</artifactId>
-         <version>7.0.40.0</version>
-         <destFileName>tomcat-runner.jar</destFileName>
-        </artifactItem>
-        <artifactItem>
          <groupId>org.mortbay.jetty</groupId>
          <artifactId>jetty-runner</artifactId>
          <version>8.1.14.v20131031</version>

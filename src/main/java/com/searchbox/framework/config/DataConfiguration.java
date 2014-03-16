@@ -67,7 +67,11 @@ public class DataConfiguration {
   @Bean
   public DataSource dataSource() {
     BoneCPDataSource dataSource = new BoneCPDataSource();
-
+    dataSource.setMinConnectionsPerPartition(5);
+    dataSource.setMaxConnectionsPerPartition(10);
+    dataSource.setPartitionCount(1);
+    dataSource.setConnectionTimeoutInMs(5 * 1000);
+    dataSource.setLazyInit(true);
     dataSource.setDriverClass(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
     dataSource.setJdbcUrl(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
     dataSource.setUsername(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));

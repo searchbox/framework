@@ -18,7 +18,10 @@ package com.searchbox.framework.config;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,6 +29,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -40,6 +44,8 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = { "com.searchbox.framework.web", "com.searchbox.framework.bootstrap" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+  private static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
+  
   private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
   private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
 
@@ -83,6 +89,16 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     resolver.setSuffix(".jspx");
     resolver.setViewClass(JstlView.class);
     return resolver;
+  }
+  
+  @Bean
+  public CharacterEncodingFilter getCharEncodingFilter(ServletContext servletContext){
+    LOGGER.info("Servlet Context is: " + servletContext);
+    CharacterEncodingFilter charEncodingFilter = new CharacterEncodingFilter();
+    charEncodingFilter.setEncoding("UTF-8");
+    charEncodingFilter.setForceEncoding(true);
+    charEncodingFilter.setServletContext(servletContext);
+    return charEncodingFilter;
   }
 
   @Bean

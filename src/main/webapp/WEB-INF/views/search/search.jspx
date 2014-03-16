@@ -2,8 +2,8 @@
  xmlns:c="http://java.sun.com/jsp/jstl/core"
  xmlns:spring="http://www.springframework.org/tags"
  xmlns:form="http://www.springframework.org/tags/form"
- xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
- xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx">
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
 
  <jsp:output omit-xml-declaration="yes" />
  <jsp:output doctype-root-element="HTML"
@@ -43,7 +43,7 @@
         <spring:url value="/${searchbox.getSlug()}/search/"
          var="home_url" />
         <a class="pull-left" href="${home_url}"> <spring:url
-          value="/img/oppfin-logo.png" var="searchbox_logo" /> <img
+          value="/img/searchbox-logo-big.png" var="searchbox_logo" /> <img
          src='${searchbox_logo}' class="media-object" alt="Searchbox"
          id="logo-image" />
         </a>
@@ -55,10 +55,7 @@
       </div>
 
       <div class="col-md-7 col-sm-7">
-       <c:forEach items="${result.getElements('QUERY')}" var="element">
-        <sb:include element="${element }" result="${result }"
-         admin="false" debug="${not empty param.debug}" />
-       </c:forEach>
+       <sbx:doElement type="QUERY" />
       </div>
      </div>
 
@@ -68,18 +65,14 @@
 
        <!-- Found x results in x time -->
        <div class="col-md-3 col-sm-5 col-xs-7 col-left">
-        <c:forEach items="${result.getElements('STAT')}" var="element">
-         <sb:include element="${element }" result="${result }"
-          admin="false" debug="${not empty param.debug}" />
-        </c:forEach>
+        <sbx:doElement type="STAT" />
+
        </div>
        <!-- Sort button -->
        <div
         class="col-md-2 col-md-push-5 col-sm-2 col-sm-push-5 col-xs-5 sort-col">
-        <c:forEach items="${result.getElements('SORT')}" var="element">
-         <sb:include element="${element }" result="${result }"
-          admin="false" debug="${not empty param.debug}" />
-        </c:forEach>
+        <sbx:doElement type="SORT" />
+
        </div>
 
        <!-- Tags -->
@@ -98,30 +91,20 @@
      </div>
 
      <div class="row">
-     
       <div class="col-md-3 col-sm-5 col-left" id="main-col-left">
-        <c:forEach items="${result.getElements('FACET')}" var="element">
-        <sb:include element="${element }" result="${result }"
-         admin="false" debug="${not empty param.debug}" />
-       </c:forEach>
+       <sbx:doElement type="FACET" />
+
       </div>
 
-       <div class="clearfix visible-xs" style="margin-bottom: 10px">
-        <!-- clear -->
-       </div>
 
       <div class="col-md-7 col-sm-7" id="main-col-center">
        <div style="clear: all">
         <!-- clear all -->
        </div>
-       <c:forEach items="${result.getElements('VIEW')}" var="element">
-        <sb:include element="${element }" result="${result }"
-         admin="false" debug="${not empty param.debug}" />
-       </c:forEach>
-       <c:forEach items="${result.getElements('DEBUG')}" var="element">
-        <sb:include element="${element }" result="${result }"
-         admin="false" debug="${not empty param.debug}" />
-       </c:forEach>
+       <sbx:doElement type="VIEW" cssClass="result-list"/>
+
+       <sbx:doElement type="DEBUG" />
+
       </div>
 
       <div class="col-md-2" id="main-col-right">

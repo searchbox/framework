@@ -49,135 +49,123 @@ import com.searchbox.core.ref.ReflectionUtils;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class UnknownClassDefinition {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(UnknownClassDefinition.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UnknownClassDefinition.class);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private long version;
+  @Version
+  @Column(name = "OPTLOCK")
+  private long version;
 
-    @Transient
-    private static AutowireCapableBeanFactory factory;
+  @Transient
+  private static AutowireCapableBeanFactory factory;
 
-    private Class<?> clazz;
+  private Class<?> clazz;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<UnknownAttributeDefinition> attributes;
+  @OneToMany(cascade = CascadeType.ALL)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private List<UnknownAttributeDefinition> attributes;
 
-    public UnknownClassDefinition() {
-        this.attributes = new ArrayList<UnknownAttributeDefinition>();
+  public UnknownClassDefinition() {
+    this.attributes = new ArrayList<UnknownAttributeDefinition>();
+  }
+
+  protected UnknownClassDefinition(Class<?> clazz) {
+    this.clazz = clazz;
+    this.attributes = new ArrayList<UnknownAttributeDefinition>();
+    ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
+  }
+
+  @Autowired
+  public void setFactory(AutowireCapableBeanFactory factory) {
+    UnknownClassDefinition.factory = factory;
+  }
+
+  @Transient
+  protected Object toObject() {
+    Object element = null;
+    try {
+      element = factory.createBean(this.getClazz());
+      // element = factory.createBean(this.getClazz(), Autowire.BY_TYPE,
+      // true);
+      // element = this.getClazz().newInstance();
+    } catch (Exception e) {
+      LOGGER.error("Could not create new instance of: " + this.getClazz(), e);
     }
 
-    protected UnknownClassDefinition(Class<?> clazz) {
-        this.clazz = clazz;
-        this.attributes = new ArrayList<UnknownAttributeDefinition>();
-        ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
-    }
-
-    @Autowired
-    public void setFactory(AutowireCapableBeanFactory factory) {
-        UnknownClassDefinition.factory = factory;
-    }
-
-    @Transient
-    protected Object toObject() {
-        Object element = null;
+    for (UnknownAttributeDefinition attribute : this.getAttributes()) {
+      if (attribute.getValue() != null) {
+        Method setter = null;
         try {
-            element = factory.createBean(this.getClazz());
-            // element = factory.createBean(this.getClazz(), Autowire.BY_TYPE,
-            // true);
-            // element = this.getClazz().newInstance();
+          setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
+          if (setter == null) {
+            LOGGER.error("Could not find setter: " + element.getClass().getName() + "#" + attribute.getName());
+            throw new RuntimeException("Could not construct element for class: " + getClazz());
+          } else {
+            setter.setAccessible(true);
+            setter.invoke(element, attribute.getValue());
+          }
         } catch (Exception e) {
-            LOGGER.error(
-                    "Could not create new instance of: " + this.getClazz(), e);
+          LOGGER.error("Error in setter: " + element.getClass().getName() + "#" + setter.getName() + "["
+              + attribute.getType() + "]");
+          throw new RuntimeException("Could not construct element for class: " + getClazz(), e);
         }
-
-        for (UnknownAttributeDefinition attribute : this.getAttributes()) {
-            if (attribute.getValue() != null) {
-                Method setter = null;
-                try {
-                    setter = new PropertyDescriptor(attribute.getName(),
-                            element.getClass()).getWriteMethod();
-                    if (setter == null) {
-                        LOGGER.error("Could not find setter: "
-                                + element.getClass().getName() + "#"
-                                + attribute.getName());
-                        throw new RuntimeException(
-                                "Could not construct element for class: "
-                                        + getClazz());
-                    } else {
-                        setter.setAccessible(true);
-                        setter.invoke(element, attribute.getValue());
-                    }
-                } catch (Exception e) {
-                    LOGGER.error("Error in setter: "
-                            + element.getClass().getName() + "#"
-                            + setter.getName() + "[" + attribute.getType()
-                            + "]");
-                    throw new RuntimeException(
-                            "Could not construct element for class: "
-                                    + getClazz(), e);
-                }
-            }
-        }
-        return element;
+      }
     }
+    return element;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public long getVersion() {
-        return version;
-    }
+  public long getVersion() {
+    return version;
+  }
 
-    public void setVersion(long version) {
-        this.version = version;
-    }
+  public void setVersion(long version) {
+    this.version = version;
+  }
 
-    public Class<?> getClazz() {
-        return clazz;
-    }
+  public Class<?> getClazz() {
+    return clazz;
+  }
 
-    public void setClazz(Class<?> clazz) {
-        this.clazz = clazz;
-        ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
-    }
+  public void setClazz(Class<?> clazz) {
+    this.clazz = clazz;
+    ReflectionUtils.inspectAndSaveAttribute(clazz, attributes);
+  }
 
-    public List<UnknownAttributeDefinition> getAttributes() {
-        return this.attributes;
-    }
+  public List<UnknownAttributeDefinition> getAttributes() {
+    return this.attributes;
+  }
 
-    public void setAttributes(List<UnknownAttributeDefinition> attributes) {
-        this.attributes = attributes;
-    }
+  public void setAttributes(List<UnknownAttributeDefinition> attributes) {
+    this.attributes = attributes;
+  }
 
-    public UnknownAttributeDefinition getAttributeByName(String name) {
-        for (UnknownAttributeDefinition attr : this.attributes) {
-            if (attr.getName().equals(name)) {
-                return attr;
-            }
-        }
-        return null;
+  public UnknownAttributeDefinition getAttributeByName(String name) {
+    for (UnknownAttributeDefinition attr : this.attributes) {
+      if (attr.getName().equals(name)) {
+        return attr;
+      }
     }
+    return null;
+  }
 
-    public UnknownClassDefinition setAttributeValue(String name, Object value) {
-        UnknownAttributeDefinition attr = this.getAttributeByName(name);
-        if (attr != null) {
-            this.getAttributeByName(name).setValue(value);
-        } else {
-            LOGGER.error("Could not set Attribute \"" + name
-                    + "\" for element: " + this.clazz.getSimpleName());
-        }
-        return this;
+  public void setAttributeValue(String name, Object value) {
+    UnknownAttributeDefinition attr = this.getAttributeByName(name);
+    if (attr != null) {
+      this.getAttributeByName(name).setValue(value);
+    } else {
+      LOGGER.error("Could not set Attribute \" {}\" for element: {}",
+          name, this.clazz.getSimpleName());
     }
+  }
 }

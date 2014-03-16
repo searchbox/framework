@@ -117,4 +117,17 @@ public class DirectoryService {
         return null;
     }
 
+    public String createRelativeCachedAttribute(String value) {
+
+      Integer hash = value.hashCode();
+      
+      String tempFile = "cached_" + hash + ".jspx";
+      if(!fileExists(tempFile)){
+        createFile(tempFile, value);
+      }
+      String path = "/"+getApplicationRelativePath(tempFile);
+      LOGGER.info("Saved {} with path: {}",tempFile, path );
+      return path;
+    }
+
 }

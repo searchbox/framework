@@ -38,8 +38,8 @@ var handleFacet = function(action, groupName, facetValue, baseUrl) {
 
 /** Handle events on clickable tags **/
 var bindClickableTagsEvents = function(){
-  $("#results .label-tag.clickable").unbind();
-  $("#results .label-tag.clickable").click(function() {
+  $(".label-tag.clickable").unbind();
+  $(".label-tag.clickable").click(function() {
     var tag = $(this);
     if($(this).hasClass("selected")){
         $('input[name=ff]').each(function(){

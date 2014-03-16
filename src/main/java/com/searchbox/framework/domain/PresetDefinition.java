@@ -35,8 +35,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.query.EdismaxQuery;
-import com.searchbox.core.search.result.HitList;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -200,23 +198,6 @@ public class PresetDefinition extends UnknownClassDefinition implements
     @Override
     public void setClazz(Class<?> clazz) {
         super.setClazz(Preset.class);
-    }
-
-    public static PresetDefinition BasicPreset(Searchbox sb,
-            CollectionDefinition collection) {
-        PresetDefinition pdef = new PresetDefinition(collection);
-        pdef.setSlug("all");
-        pdef.setLabel("Basic Preset");
-
-        SearchElementDefinition query = new SearchElementDefinition(
-                "EdismaxQuery", EdismaxQuery.class);
-        pdef.addSearchElement(query);
-
-        SearchElementDefinition result = new SearchElementDefinition("HitList",
-                HitList.class);
-        pdef.addSearchElement(result);
-
-        return pdef;
     }
 
     @PrePersist

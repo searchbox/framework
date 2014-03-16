@@ -8,28 +8,26 @@ import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
-import org.elasticsearch.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.SearchCollector;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
-public class TemplatedHitListAdapter {
+public class TemplateElementSolrAdapter {
 
-  @SuppressWarnings("unused")
-  private static final Logger LOGGER = LoggerFactory.getLogger(TemplatedHitListAdapter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TemplateElementSolrAdapter.class);
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void setHighlightFieldsForTemplate(SolrSearchEngine engine, TemplatedHitList searchElement, SolrQuery query,
-      FieldAttribute attribute) {
+  public void setHighlightFieldsForTemplate(SolrSearchEngine engine, 
+      TemplateElement searchElement, SolrQuery query, FieldAttribute attribute) {
 
     if (!attribute.getHighlight()) {
       return;
@@ -37,18 +35,21 @@ public class TemplatedHitListAdapter {
 
     String fieldHighlightKey = engine.getKeyForField(attribute, USE.SEARCH);
 
-    if (query.getHighlightFields() == null || !Arrays.asList(query.getHighlightFields()).contains(fieldHighlightKey)) {
+    if (query.getHighlightFields() == null || !Arrays.asList(
+        query.getHighlightFields()).contains(fieldHighlightKey)) {
       query.addHighlightField(fieldHighlightKey);
     }
   }
   
   
   @SearchAdapterMethod(execute = Time.PRE)
-  public void setRequieredFieldsForTemplate(SolrSearchEngine engine, TemplatedHitList searchElement, SolrQuery query,
+  public void setRequieredFieldsForTemplate(SolrSearchEngine engine,
+      TemplateElement searchElement, SolrQuery query,
       FieldAttribute attribute) {
     
+    //TODO check if template has a template. if not ask for all fields.
     if(query.getFields() == null){
-      query.setFields("score", "*");
+      query.setFields("score","[shard]","*");
     }
     
     Set<String> fields = searchElement.getRequiredFields();
@@ -60,7 +61,6 @@ public class TemplatedHitListAdapter {
         List<String> qfields = Lists.newArrayList();
         qfields.addAll(Arrays.asList(query.getFields().split(",")));
         qfields.add(attribute.getField().getKey().replace("-", "\\-")+":"+key);
-        qfields.remove("*");
         query.setFields(qfields.toArray(new String[0]));
       }
     }
@@ -69,20 +69,35 @@ public class TemplatedHitListAdapter {
   }
 
   @SearchAdapterMethod(execute = Time.POST)
-  public void generateHitElementsForTemplate(TemplatedHitList element, QueryResponse response, FieldAttribute attribute) {
-
+  public void generateHitElementsForTemplate(TemplateElement element,
+      QueryResponse response, FieldAttribute attribute, 
+      SearchCollector collector) {
+   
     LOGGER.debug("Search for ID Attribute. {} Got: {} Needed: {}",
-        (!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())), attribute.getField().getKey(),
+        (!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())),
+        attribute.getField().getKey(),
         element.getIdField());
 
     if (!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())) {
       return;
     }
 
+    LOGGER.debug("Generate Hit!!!");
+
     Iterator<SolrDocument> documents = response.getResults().iterator();
     while (documents.hasNext()) {
       SolrDocument document = documents.next();
-      Hit hit = element.newHit((Float) document.get("score"));
+      Hit hit = new Hit((Float) document.get("score"));
+      
+      //Set fields per element configuration
+      hit.setIdFieldName(element.getIdField());
+      hit.setTitleFieldName(element.getTitleField());
+      hit.setUrlFieldName(element.getUrlField());
+      
+      //Set the template as per element definition
+      LOGGER.debug("Template file is {}", element.getTemplateFile());
+      hit.setDisplayTemplate(element.getTemplateFile());
+      
       for (String field : document.getFieldNames()) {
         hit.addFieldValue(field, document.get(field));
       }
@@ -93,10 +108,14 @@ public class TemplatedHitListAdapter {
         for (String fieldkey : document.getFieldNames()) {
           if (highlihgtkey.contains(fieldkey)) {
             hit.getHighlights().put(fieldkey, highlights.get(highlihgtkey));
-            break;
           }
         }
       }
+      
+    
+      
+      //And we collect the hit for future use :)
+      collector.getCollectedItems(element.getCollectorKey()).add(hit);
     }
   }
 }

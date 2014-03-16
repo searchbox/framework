@@ -1,0 +1,14 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
+
+ <div class="result">
+ <h4 class="result-title">
+  <sbx:title hit="${hit}"
+   link="http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}" />
+ </h4>
+  <p><sbx:snippet hit="${hit}" field="article-abstract" /></p>
+  <sbx:tagAttribute filter="author" limit="5" label="Author(s)"
+   values="${hit.fieldValues['author']}" />
+ </div>
+</jsp:root>
