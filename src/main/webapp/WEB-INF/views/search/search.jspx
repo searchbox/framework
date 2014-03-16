@@ -54,8 +54,6 @@
        <!-- clear -->
       </div>
 
-      ${collector.getCollectedItems('test') }
-
       <div class="col-md-7 col-sm-7">
        <sbx:doElement type="QUERY" />
       </div>
