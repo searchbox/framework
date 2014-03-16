@@ -49,7 +49,8 @@ import com.searchbox.core.ref.ReflectionUtils;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class UnknownClassDefinition {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UnknownClassDefinition.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(UnknownClassDefinition.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -99,18 +100,22 @@ public class UnknownClassDefinition {
       if (attribute.getValue() != null) {
         Method setter = null;
         try {
-          setter = new PropertyDescriptor(attribute.getName(), element.getClass()).getWriteMethod();
+          setter = new PropertyDescriptor(attribute.getName(),
+              element.getClass()).getWriteMethod();
           if (setter == null) {
-            LOGGER.error("Could not find setter: " + element.getClass().getName() + "#" + attribute.getName());
-            throw new RuntimeException("Could not construct element for class: " + getClazz());
+            LOGGER.error("Could not find setter: "
+                + element.getClass().getName() + "#" + attribute.getName());
+            throw new RuntimeException(
+                "Could not construct element for class: " + getClazz());
           } else {
             setter.setAccessible(true);
             setter.invoke(element, attribute.getValue());
           }
         } catch (Exception e) {
-          LOGGER.error("Error in setter: " + element.getClass().getName() + "#" + setter.getName() + "["
-              + attribute.getType() + "]");
-          throw new RuntimeException("Could not construct element for class: " + getClazz(), e);
+          LOGGER.error("Error in setter: " + element.getClass().getName() + "#"
+              + setter.getName() + "[" + attribute.getType() + "]");
+          throw new RuntimeException("Could not construct element for class: "
+              + getClazz(), e);
         }
       }
     }
@@ -164,8 +169,8 @@ public class UnknownClassDefinition {
     if (attr != null) {
       this.getAttributeByName(name).setValue(value);
     } else {
-      LOGGER.error("Could not set Attribute \" {}\" for element: {}",
-          name, this.clazz.getSimpleName());
+      LOGGER.error("Could not set Attribute \" {}\" for element: {}", name,
+          this.clazz.getSimpleName());
     }
   }
 }

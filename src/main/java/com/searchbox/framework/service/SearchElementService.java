@@ -17,12 +17,13 @@ import com.searchbox.framework.domain.SearchElementDefinition;
 
 @Service
 public class SearchElementService {
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(SearchElementService.class);
+
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchElementService.class);
 
   @Autowired
   ApplicationContext context;
-  
+
   public SearchElement getSearchElement(SearchElementDefinition definition) {
 
     SearchElement element = (SearchElement) definition.toObject();
@@ -32,10 +33,10 @@ public class SearchElementService {
     if (definition.getType() != null) {
       element.setType(definition.getType());
     }
-    
-    //TODO should use an interface
-    if(TemplateElement.class.isAssignableFrom(element.getClass())){
-      TemplateElement tmpl = (TemplateElement)element;
+
+    // TODO should use an interface
+    if (TemplateElement.class.isAssignableFrom(element.getClass())) {
+      TemplateElement tmpl = (TemplateElement) element;
       try {
         Resource resource = context.getResource(tmpl.getTemplateFile());
         LOGGER.debug("Read file for template from: {}", resource);
@@ -45,7 +46,7 @@ public class SearchElementService {
       } catch (IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
-      } 
+      }
     }
     return element;
   }

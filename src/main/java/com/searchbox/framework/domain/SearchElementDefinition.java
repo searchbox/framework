@@ -15,9 +15,6 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -32,109 +29,109 @@ import com.searchbox.core.search.SearchElement;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class SearchElementDefinition extends UnknownClassDefinition implements
-        Comparable<SearchElementDefinition> {
+    Comparable<SearchElementDefinition> {
 
-    @NotNull
-    @ManyToOne(targetEntity = PresetDefinition.class)
-    private PresetDefinition preset;
+  @NotNull
+  @ManyToOne(targetEntity = PresetDefinition.class)
+  private PresetDefinition preset;
 
-    private String label;
+  private String label;
 
-    private Integer position;
+  private Integer position;
 
-    private SearchElement.Type type;
-    
-    private String process;
+  private SearchElement.Type type;
 
-    public SearchElementDefinition() {
-        super();
-    }
+  private String process;
 
-    public SearchElementDefinition(Class<?> clazz) {
-        super(clazz);
-    }
+  public SearchElementDefinition() {
+    super();
+  }
 
-    public SearchElementDefinition(String label, Class<?> clazz) {
-        super(clazz);
-        this.label = label;
-    }
-    
-    public String getProcess() {
-      return process;
-    }
+  public SearchElementDefinition(Class<?> clazz) {
+    super(clazz);
+  }
 
-    public void setProcess(String process) {
-      this.process = process;
-    }
+  public SearchElementDefinition(String label, Class<?> clazz) {
+    super(clazz);
+    this.label = label;
+  }
 
-    public PresetDefinition getPreset() {
-        return preset;
-    }
+  public String getProcess() {
+    return process;
+  }
 
-    public void setPreset(PresetDefinition preset) {
-        this.preset = preset;
-    }
+  public void setProcess(String process) {
+    this.process = process;
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public PresetDefinition getPreset() {
+    return preset;
+  }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+  public void setPreset(PresetDefinition preset) {
+    this.preset = preset;
+  }
 
-    public Integer getPosition() {
-        return position;
-    }
+  public String getLabel() {
+    return label;
+  }
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
-    public SearchElement.Type getType() {
-        return type;
-    }
+  public Integer getPosition() {
+    return position;
+  }
 
-    public void setType(SearchElement.Type type) {
-        this.type = type;
-    }
+  public void setPosition(Integer position) {
+    this.position = position;
+  }
 
-    @Override
-    public int compareTo(SearchElementDefinition o) {
-        return this.getPosition().compareTo(o.getPosition());
-    }
+  public SearchElement.Type getType() {
+    return type;
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+  public void setType(SearchElement.Type type) {
+    this.type = type;
+  }
 
-    // TODO put that in a JUNIT
-    public static void main(String... args) {
-        // SearchElementDefinition fdef = new
-        // SearchElementDefinition(FieldFacet.class);
-        //
-        // fdef.setAttributeValue("fieldName", "MyField");
-        // fdef.setAttributeValue("label", "Hello World");
-        //
-        // for(DefinitionAttribute attr:fdef.getAttributes()){
-        // System.out.println("Field["+attr.getType().getSimpleName()+"]\t" +
-        // attr.getName()+"\t"+attr.getValue());
-        // }
-        //
-        // SearchElement elem;
-        // try {
-        // elem = (FieldFacet) fdef.toElement((SearchElement)
-        // fdef.getClazz().newInstance());
-        // } catch (InstantiationException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // } catch (IllegalAccessException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // //System.out.println("element Label: " +
-        // ((FieldFacet)elem.getLabel()));
-    }
+  @Override
+  public int compareTo(SearchElementDefinition o) {
+    return this.getPosition().compareTo(o.getPosition());
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this,
+        ToStringStyle.SHORT_PREFIX_STYLE);
+  }
+
+  // TODO put that in a JUNIT
+  public static void main(String... args) {
+    // SearchElementDefinition fdef = new
+    // SearchElementDefinition(FieldFacet.class);
+    //
+    // fdef.setAttributeValue("fieldName", "MyField");
+    // fdef.setAttributeValue("label", "Hello World");
+    //
+    // for(DefinitionAttribute attr:fdef.getAttributes()){
+    // System.out.println("Field["+attr.getType().getSimpleName()+"]\t" +
+    // attr.getName()+"\t"+attr.getValue());
+    // }
+    //
+    // SearchElement elem;
+    // try {
+    // elem = (FieldFacet) fdef.toElement((SearchElement)
+    // fdef.getClazz().newInstance());
+    // } catch (InstantiationException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // } catch (IllegalAccessException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // //System.out.println("element Label: " +
+    // ((FieldFacet)elem.getLabel()));
+  }
 }
