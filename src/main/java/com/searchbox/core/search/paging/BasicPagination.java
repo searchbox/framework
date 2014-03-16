@@ -91,6 +91,11 @@ public class BasicPagination extends
     public Integer getPage() {
       return this.page;
     }
+
+    @Override
+    public String getParamValue() {
+      return Integer.toString(page);
+    }
   }
 
   @SearchConverter
@@ -103,11 +108,6 @@ public class BasicPagination extends
       return new PageCondition(Integer.parseInt(source));
     }
 
-  }
-
-  @Override
-  public String geParamValue() {
-    return this.currentPage + "";
   }
 
   @Override

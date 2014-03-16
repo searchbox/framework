@@ -50,12 +50,6 @@ public class RangeFacet extends
         this.upperElement);
   }
 
-  @Override
-  public String geParamValue() {
-    return this.fieldName + "[" + this.lowerElement + "##" + this.upperElement
-        + "]";
-  }
-
   public class Value extends ValueElement {
 
     /**
@@ -94,7 +88,6 @@ public class RangeFacet extends
     public void setValue(String value) {
       this.value = value;
     }
-
   }
 
   @SearchCondition(urlParam = "fr")
@@ -108,6 +101,13 @@ public class RangeFacet extends
       this.fieldName = field;
       this.lowerElement = from;
       this.upperElement = to;
+    }
+    
+
+    @Override
+    public String getParamValue() {
+      return this.fieldName + "[" + this.lowerElement + "##" + this.upperElement
+          + "]";
     }
   }
 

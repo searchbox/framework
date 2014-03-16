@@ -112,11 +112,6 @@ public class FieldFacet extends
     }
 
     @Override
-    public String geParamValue() {
-      return field.getKey() + "[" + this.value + "]";
-    }
-
-    @Override
     public int compareTo(ValueElement other) {
       FieldFacet.Value o = (FieldFacet.Value) other;
       int diff = 0;

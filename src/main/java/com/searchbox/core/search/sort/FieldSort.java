@@ -78,11 +78,6 @@ public class FieldSort extends
     }
 
     @Override
-    public String geParamValue() {
-      return field + " " + this.sort;
-    }
-
-    @Override
     public Condition getSearchCondition() {
       return new FieldSort.Condition(this.field, this.sort);
     }
@@ -122,6 +117,12 @@ public class FieldSort extends
     public Sort getSort() {
       return sort;
     }
+    
+    @Override
+    public String getParamValue() {
+      return field + " " + this.sort;
+    }
+
   }
 
   @Override

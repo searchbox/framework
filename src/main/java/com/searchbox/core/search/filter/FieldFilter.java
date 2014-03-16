@@ -13,12 +13,6 @@ public class FieldFilter extends ConditionalSearchElement<FieldValueCondition> {
   }
 
   @Override
-  public String geParamValue() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public FieldValueCondition getSearchCondition() {
     // TODO Auto-generated method stub
     return null;

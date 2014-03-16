@@ -62,11 +62,6 @@ public class EdismaxQuery extends
   }
 
   @Override
-  public String geParamValue() {
-    return query;
-  }
-
-  @Override
   public EdismaxQuery.Condition getSearchCondition() {
     return new EdismaxQuery.Condition(query);
   }
@@ -121,6 +116,12 @@ public class EdismaxQuery extends
     public String getQuery() {
       return query;
     }
+
+    @Override
+    public String getParamValue() {
+      return query;
+    }
+    
   }
 
   @SearchConverter

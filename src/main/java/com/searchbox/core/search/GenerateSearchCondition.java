@@ -21,5 +21,5 @@ public interface GenerateSearchCondition<K extends AbstractSearchCondition> {
 
   public Class<?> getConditionClass();
 
-  public String geParamValue();
+  public String getParamValue();
 }

@@ -55,7 +55,7 @@
        <li class="list-group-item selected"><span class="badge">${facetValue.count}</span>
         <input id="${element.fieldName}_${i.index}" class="css-checkbox"
         type="checkbox" name="${facetValue.getUrlParam()}"
-        value="${facetValue.geParamValue()}" checked="checked"
+        value="${facetValue.getParamValue()}" checked="checked"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
         for="${element.fieldName}_${i.index}" class="css-label">
@@ -66,7 +66,7 @@
        <li class="list-group-item"><span class="badge">${facetValue.count}</span>
         <input id="${element.fieldName}_${i.index}" class="css-checkbox"
         type="checkbox" name="${facetValue.getUrlParam()}"
-        value="${facetValue.geParamValue()}"
+        value="${facetValue.getParamValue()}"
         onclick="$('form').submit();" /> <label
         title="${facetValue.value}"
         for="${element.fieldName}_${i.index}" class="css-label">

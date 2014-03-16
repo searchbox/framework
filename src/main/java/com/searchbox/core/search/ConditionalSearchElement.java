@@ -46,4 +46,8 @@ public abstract class ConditionalSearchElement<K extends AbstractSearchCondition
       return "missingAnnotationOnSearchConditionClass";
     }
   }
+  
+  public String getParamValue(){
+    return this.getSearchCondition().getParamValue();
+  }
 }

@@ -69,7 +69,7 @@
        class="label label-tag attributes clickable ${addedCSSClasses}"
        title="${facetValueLabel}"
        data-condition="${condition.getUrlParam()}"
-       data-condition-value="${condition.getValueParam() }">
+       data-condition-value="${condition.getParamValue() }">
        <c:if test="${not empty label}">
         <span class="field-label label-${label}">${label}: </span>
        </c:if>

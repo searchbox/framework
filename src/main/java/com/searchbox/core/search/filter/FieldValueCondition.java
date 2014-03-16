@@ -53,9 +53,8 @@ public class FieldValueCondition extends AbstractSearchCondition {
     this.fieldName = fieldName;
   }
 
-  @Deprecated
-  // FIXME use converter...
-  public String getValueParam() {
+  @Override
+  public String getParamValue() {
     return getFieldName() + "[" + getValue() + "]" + ((getTaged()) ? "x" : "");
   }
 

@@ -59,7 +59,7 @@ public class FieldValueConditionTest {
 
     // TODO Fix fails because of tag issue in Adapter...
     Converter<String, FieldValueCondition> vv = new FieldValueCondition.FieldValueConditionConverter();
-    FieldValueCondition vc = vv.convert(value.geParamValue());
+    FieldValueCondition vc = vv.convert(value.getParamValue());
     LOGGER.info("ORIG:\t" + orig);
     LOGGER.info("URL: \t" + vc);
     Assert.assertEquals("Transformed and original", vc, orig);

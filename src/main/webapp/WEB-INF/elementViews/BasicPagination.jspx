@@ -23,7 +23,7 @@
 
    <c:if test="${prevPage >= 0}">
     <a href="#"
-     onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${prevPage})"
+     onclick="submitForm('${element.getUrlParam()}', ${prevPage})"
      class="prevLink">Prev</a>
    </c:if>
 
@@ -42,7 +42,7 @@
      </c:when>
      <c:otherwise>
       <a href="#" class="step"
-       onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
+       onclick="submitForm('${element.getUrlParam()}', ${i.index})">${i.index+1}</a>
      </c:otherwise>
     </c:choose>
    </c:forEach>
@@ -53,19 +53,9 @@
 
    <c:if test="${nextPage > 0}">
     <a class="nextLink" href="#"
-     onclick="${element.getClass().getSimpleName()}_submit('${element.getUrlParam()}', ${nextPage})">Next</a>
+     onclick="submitForm('${element.getUrlParam()}', ${nextPage})">Next</a>
    </c:if>
   </div>
 
-  <!-- DO NOT set value="currentStart" to input so it gets whiped on search action -->
-  <input id="iPage" type="hidden" name="" value="${element.currentPage}" />
  </c:if>
-
- <script>
-	 function ${element.getClass().getSimpleName()}_submit(param, page){
-		 $("#iPage").val(page);
-		 $("#iPage").attr("name",param);
-		 $("#searchForm").submit();
-	 }
-	</script>
 </jsp:root>
