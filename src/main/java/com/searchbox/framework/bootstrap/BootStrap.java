@@ -38,7 +38,7 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
-import com.searchbox.core.search.result.TemplatedHitList;
+import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.SolrCloud;
@@ -55,6 +55,7 @@ import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
+import com.searchbox.framework.service.DirectoryService;
 import com.searchbox.framework.service.UserService;
 
 @Component
@@ -77,6 +78,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   @Autowired
   UserService userService;
+  
+  @Autowired
+  DirectoryService directoryService;
 
   @Autowired
   ApplicationEventPublisher publisher;
@@ -178,16 +182,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       preset.addSearchElement(query);
 
       /** Create & add a TemplatedHitLIst SearchComponent to the preset; */
-      SearchElementDefinition templatedHitList = new SearchElementDefinition(TemplatedHitList.class);
+      SearchElementDefinition templatedHitList = new SearchElementDefinition(
+          TemplateElement.class);
       templatedHitList.setAttributeValue("titleField", "article-title");
       templatedHitList.setAttributeValue("idField", "id");
       templatedHitList.setAttributeValue("urlField", "article-title");
-      templatedHitList
-          .setAttributeValue(
-              "template",
-              "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"
-                  + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
-                  + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>");
+//      templatedHitList
+//          .setAttributeValue("templateFile",directoryService.createRelativeCachedAttribute(
+//              "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"
+//                  + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
+//                  + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"));
+      
       preset.addSearchElement(templatedHitList);
 
       /**
