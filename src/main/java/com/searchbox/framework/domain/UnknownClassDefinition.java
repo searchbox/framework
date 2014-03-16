@@ -84,7 +84,7 @@ public class UnknownClassDefinition {
   }
 
   @Transient
-  protected Object toObject() {
+  public Object toObject() {
     Object element = null;
     try {
       element = factory.createBean(this.getClazz());

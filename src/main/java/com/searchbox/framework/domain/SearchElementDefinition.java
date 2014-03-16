@@ -32,7 +32,7 @@ import com.searchbox.core.search.SearchElement;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class SearchElementDefinition extends UnknownClassDefinition implements
-        Comparable<SearchElementDefinition>, ElementFactory<SearchElement> {
+        Comparable<SearchElementDefinition> {
 
     @NotNull
     @ManyToOne(targetEntity = PresetDefinition.class)
@@ -136,17 +136,5 @@ public class SearchElementDefinition extends UnknownClassDefinition implements
         // }
         // //System.out.println("element Label: " +
         // ((FieldFacet)elem.getLabel()));
-    }
-
-    @Override
-    public SearchElement getInstance() {
-        SearchElement element = (SearchElement) super.toObject();
-        element.setLabel(this.getLabel());
-        element.setPosition(this.getPosition());
-        element.setDefinitionId(this.getId());
-        if (this.type != null) {
-            element.setType(type);
-        }
-        return element;
     }
 }

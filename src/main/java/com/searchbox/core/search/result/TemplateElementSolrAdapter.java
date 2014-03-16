@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.elasticsearch.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,23 +50,20 @@ public class TemplateElementSolrAdapter {
     
     //TODO check if template has a template. if not ask for all fields.
     if(query.getFields() == null){
-      query.setFields("score","[shard]","*");
+      query.setFields("score","[shard]");
     }
     
     Set<String> fields = searchElement.getRequiredFields();
    
-    /** FIXME this is REQUIRED!!! 
     if (fields.contains(attribute.getField().getKey())) {
       String key = engine.getKeyForField(attribute, USE.DEFAULT);
       if (!query.getFields().contains(key)) {
         List<String> qfields = Lists.newArrayList();
         qfields.addAll(Arrays.asList(query.getFields().split(",")));
-        qfields.add(attribute.getField().getKey().replace("-", "\\-")+":"+key);
+        qfields.add(attribute.getField().getKey()+":"+key);
         query.setFields(qfields.toArray(new String[0]));
       }
     }
-    LOGGER.info("Query is: " + query);
-    */
   }
 
   @SearchAdapterMethod(execute = Time.POST)
