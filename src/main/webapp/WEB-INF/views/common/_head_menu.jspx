@@ -21,8 +21,9 @@
       <!-- divider -->
      </li>
     </sec:authorize>
+    
     <spring:url var="home" value="/${searchbox.getSlug() }/" />
-    <spring:url var="admin" value="/admin/${searchbox.getSlug() }/" />
+    <spring:url var="admin" value="/admin/${searchbox.getSlug() }/${preset.getSlug() }/${process }" />
     <li><a href="${home }">Home</a></li>
     <li><a href="${admin }">Admin</a></li>
     <li class="divider">
