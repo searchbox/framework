@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,65 +26,43 @@ import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.domain.SearchElementDefinition;
 import com.searchbox.framework.domain.Searchbox;
-import com.searchbox.framework.repository.FieldAttributeRepository;
-import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchElementRepository;
-import com.searchbox.framework.repository.SearchEngineRepository;
-import com.searchbox.framework.service.DirectoryService;
 import com.searchbox.framework.service.SearchAdapterService;
-import com.searchbox.framework.service.SearchEngineService;
-import com.searchbox.framework.service.SearchService;
+import com.searchbox.framework.service.SearchElementService;
 
-//@Controller
-//@RequestMapping("/asynch/{searchbox}")
+@Controller
+@RequestMapping("/asynch/{searchbox}")
 public class ASynchController {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(ASynchController.class);
 
     @Autowired
-    ApplicationConversionService applicationConversionService;
-
-    @Autowired
-    ConversionService conversionService;
+    ApplicationConversionService conversionService;
 
     @Autowired
     private SearchAdapterService adapterService;
 
     @Autowired
-    SearchService searchService;
-
-    @Autowired
-    SearchEngineService searchEngineService;
-
-    @Autowired
-    DirectoryService directoryService;
-
-    @Autowired
     SearchElementRepository elementRepository;
 
     @Autowired
-    FieldAttributeRepository fieldAttributeRepository;
+    SearchElementService elementService;
 
-    @Autowired
-    protected PresetRepository presetRepository;
-
-    @Autowired
-    protected SearchEngineRepository searchEngineRepository;
 
     public ASynchController() {
     }
 
-    @RequestMapping(value = { "/{preset}/{id}", "/{preset}/{id}/" })
+    @RequestMapping(value = { "/{preset}/element/{id}", "/{preset}/element/{id}/" })
     @ResponseBody
-    public Map<String, Object> getDefaultPreset(
+    public Map<String, Object> executeAsynchElement(
             @PathVariable Searchbox searchbox, @PathVariable Long id,
             @PathVariable PresetDefinition preset, HttpServletRequest request,
             ModelAndView model, RedirectAttributes redirectAttributes) {
 
         // Fetch all search Conditions within HTTP params
         Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
-        for (String param : applicationConversionService
+        for (String param : conversionService
                 .getSearchConditionParams()) {
             if (request.getParameterValues(param) != null) {
                 for (String value : request.getParameterValues(param)) {
@@ -94,7 +71,7 @@ public class ASynchController {
                             AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
                                     .convert(
                                             value,
-                                            applicationConversionService
+                                            conversionService
                                                     .getSearchConditionClass(param));
                             conditions.add(cond);
                         } catch (Exception e) {
@@ -109,7 +86,7 @@ public class ASynchController {
 
         SearchElementDefinition elementDefinition = elementRepository
                 .findOne(id);
-        SearchElement element = elementDefinition.getInstance();
+        SearchElement element = elementService.getSearchElement(elementDefinition);
 
         Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
         for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
