@@ -20,6 +20,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -31,8 +32,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import com.jolbox.bonecp.BoneCPDataSource;
 
 @Configuration
 @EnableTransactionManagement
@@ -68,15 +67,10 @@ public class DataConfiguration {
 
   @Bean
   public DataSource dataSource() {
-    BoneCPDataSource dataSource = new BoneCPDataSource();
-    dataSource.setMinConnectionsPerPartition(5);
-    dataSource.setMaxConnectionsPerPartition(10);
-    dataSource.setPartitionCount(1);
-    dataSource.setConnectionTimeoutInMs(5 * 1000);
-    dataSource.setLazyInit(true);
-    dataSource.setDriverClass(environment
+    BasicDataSource dataSource = new BasicDataSource();
+    dataSource.setDriverClassName(environment
         .getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
-    dataSource.setJdbcUrl(environment
+    dataSource.setUrl(environment
         .getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
     dataSource.setUsername(environment
         .getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));

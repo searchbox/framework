@@ -130,9 +130,9 @@
    <version>9.0-801.jdbc4</version> </dependency> -->
   <!-- BoneCP -->
   <dependency>
-   <groupId>com.jolbox</groupId>
-   <artifactId>bonecp</artifactId>
-   <version>0.8.0.RELEASE</version>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-dbcp2</artifactId>
+   <version>2.0</version>
   </dependency>
   <!-- ************************************************* -->
   <!-- -->
