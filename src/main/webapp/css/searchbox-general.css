@@ -113,6 +113,7 @@ body #main-content {
  margin-right: -15px;
  margin-left: -15px;
  padding: 0 15px 0 15px;
+ font-weight: 200;
 }
 
 #navbar-top {
@@ -156,6 +157,7 @@ body #main-content {
 
 #preset-bar a {
  letter-spacing: 0.1em;
+ font-weight: 200;
 }
 
 #preset-bar li.active>a:after,#preset-bar>a:hover:after {
@@ -277,6 +279,7 @@ a.clear_input:hover {
  color: #999;;
  font-size: 12px;
  font-weight: normal;
+ font-weight: 200;
 }
 
 #search-status-bar h4 {
@@ -316,6 +319,8 @@ a.clear_input:hover {
 
 #main-col-left h3.panel-title {
  text-transform: uppercase;
+ font-weight: 400;
+font-size: 13px;
 }
 
 #main-col-left input[type=checkbox].css-checkbox {
@@ -339,7 +344,7 @@ a.clear_input:hover {
  font-size: 12px;
  vertical-align: middle;
  cursor: pointer;
- font-weight: normal;
+ font-weight: 300;
  white-space: nowrap;
  overflow: hidden;
  text-overflow: ellipsis;
@@ -368,6 +373,11 @@ a.clear_input:hover {
 
 #main-col-left .list-group .list-group-item:last-child {
  border-bottom: none;
+}
+
+#main-col-left .list-group .list-group-item a {
+font-weight: 300;
+font-size: 90%;
 }
 
 #main-col-left .list-group .list-group-item:first-child {
@@ -400,8 +410,9 @@ a.clear_input:hover {
  text-overflow: ellipsis;
  overflow: hidden;
  white-space: nowrap;
- margin-bottom: 5px;
+ margin: 0px;
  font-size: 16px;
+ height: 20px;
 }
 
 .result-list {
@@ -411,6 +422,7 @@ a.clear_input:hover {
 
 .result-list .result {
  margin-bottom: 30px;
+ font-weight: 300;
 }
 
 .result-list .label {
@@ -447,6 +459,7 @@ a.clear_input:hover {
 
 .result-list .label-tag .field-value {
  color: black;
+ font-weight: 200;
 }
 /*************************************************************/
 /*                    BasicPagination                        */
