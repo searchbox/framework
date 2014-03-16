@@ -118,6 +118,10 @@ public class TemplateElement extends SearchElement implements UseCollector {
 
   @Override
   public String getCollectorKey() {
-    return TemplateElement.COLLECTOR_KEY;
+    if(this.getLabel().isEmpty()){
+      return TemplateElement.COLLECTOR_KEY;
+    } else {
+      return this.getLabel();
+    }
   }
 }
