@@ -88,6 +88,16 @@ public class TemplateElementSolrAdapter {
     while (documents.hasNext()) {
       SolrDocument document = documents.next();
       Hit hit = new Hit((Float) document.get("score"));
+      
+      //Set fields per element configuration
+      hit.setIdFieldName(element.getIdField());
+      hit.setTitleFieldName(element.getTitleField());
+      hit.setUrlFieldName(element.getUrlField());
+      
+      //Set the template as per element definition
+      LOGGER.debug("Template file is {}", element.getTemplateFile());
+      hit.setDisplayTemplate(element.getTemplateFile());
+      
       for (String field : document.getFieldNames()) {
         hit.addFieldValue(field, document.get(field));
       }
@@ -102,9 +112,7 @@ public class TemplateElementSolrAdapter {
         }
       }
       
-      //Set the template as per element definition
-      LOGGER.debug("Template file is {}", element.getTemplateFile());
-      hit.setDisplayTemplate(element.getTemplateFile());
+    
       
       //And we collect the hit for future use :)
       collector.getCollectedItems(element.getCollectorKey()).add(hit);
