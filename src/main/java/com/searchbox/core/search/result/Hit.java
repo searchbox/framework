@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.searchbox.core.search.result;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,6 @@ public class Hit implements Comparable<Hit> {
 
   public Map<String, Object> fieldValues;
   public Map<String, List<String>> highlights;
-
-  private Collection collection;
 
   private Float score;
 
@@ -45,14 +42,6 @@ public class Hit implements Comparable<Hit> {
     this.score = score;
     this.fieldValues = new HashMap<String, Object>();
     this.highlights = new HashMap<String, List<String>>();
-  }
-
-  public Collection getCollection() {
-    return collection;
-  }
-
-  public void setCollection(Collection collection) {
-    this.collection = collection;
   }
 
   public String getIdFieldName() {
