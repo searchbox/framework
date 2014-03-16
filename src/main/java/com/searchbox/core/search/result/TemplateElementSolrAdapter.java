@@ -82,7 +82,7 @@ public class TemplateElementSolrAdapter {
       return;
     }
 
-    LOGGER.info("Generate Hit!!!");
+    LOGGER.debug("Generate Hit!!!");
 
     Iterator<SolrDocument> documents = response.getResults().iterator();
     while (documents.hasNext()) {
@@ -103,7 +103,7 @@ public class TemplateElementSolrAdapter {
       }
       
       //Set the template as per element definition
-      LOGGER.info("Template file is {}", element.getTemplateFile());
+      LOGGER.debug("Template file is {}", element.getTemplateFile());
       hit.setDisplayTemplate(element.getTemplateFile());
       
       //And we collect the hit for future use :)
