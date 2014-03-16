@@ -4,7 +4,6 @@
 
 
  <sbx:out value="${hit.fieldValues['eenReferenceExternal']}" />
-
  <h5>
   Opportunity Type<span class="label label-default"><sbx:out
     value="${hit.fieldValues['programme']}" /></span>

@@ -75,7 +75,7 @@ public class SearchboxController {
 
   public SearchboxController() {
   }
- 
+
   protected String getViewFolder() {
     return "search";
   }
@@ -121,74 +121,73 @@ public class SearchboxController {
   public SearchCollector getSearchCollector() {
     return new SearchCollector();
   }
-  
+
   @RequestMapping(value = { "", "/" })
   @ResponseBody
-  public ModelAndView getHome(@PathVariable Searchbox searchbox, HttpServletRequest request,
-      ModelAndView model, RedirectAttributes redirectAttributes) {
-    model.setViewName(this.getViewFolder()+"/home");
-    return model;
+  public ModelAndView getHome(@PathVariable Searchbox searchbox,
+      HttpServletRequest request, ModelAndView model,
+      RedirectAttributes redirectAttributes) {
+    model.setViewName(this.getViewFolder() + "/home");
+
+    // TODO when security is true, check LoggedIn
+    PresetDefinition preset = searchbox.getPresets().get(0);
+    LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
+    ModelAndView redirect = new ModelAndView(
+        new RedirectView("/" + searchbox.getSlug() + "/" + preset.getSlug(), true));
+    return redirect;
   }
 
   @RequestMapping(value = { "/{preset}", "/{preset}/" })
   public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
-      HttpServletRequest request, @PathVariable PresetDefinition preset,
+      HttpServletRequest request,@PathVariable PresetDefinition preset,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
     String process = preset.getDefaultProcess();
-    LOGGER.info("Missing process. Redirecting to default process of preset: {}",process);
-    ModelAndView redirect = new ModelAndView(
-        new RedirectView("/"+searchbox.getSlug()+"/"+preset.getSlug()+"/"+process, true));
+    LOGGER.info("Missing process. Redirecting to default process of preset: {}", process);
+    ModelAndView redirect = new ModelAndView(new RedirectView("/" + searchbox.getSlug() + "/" + preset.getSlug() + "/"
+        + process, true));
     return redirect;
 
   }
 
-  @RequestMapping(value={"/{preset}/{process}", "/{preset}/{process}/"})
+  @RequestMapping(value = { "/{preset}/{process}", "/{preset}/{process}/" })
   public ModelAndView executeSearch(@PathVariable String process,
-      @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
-      @PathVariable Searchbox searchbox, @PathVariable PresetDefinition preset,
-      @ModelAttribute("collector") SearchCollector collector,
+      @ModelAttribute("searchboxes") List<Searchbox> searchboxes, @PathVariable Searchbox searchbox,
+      @PathVariable PresetDefinition preset, @ModelAttribute("collector") SearchCollector collector,
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions, ModelAndView model,
       RedirectAttributes redirectAttributes) {
 
-    
-    LOGGER.debug("search page for: {} with preset: {} and process: {}",
-        searchbox, preset, process);
-    
-    //TODO check if we have a view for that process.
-    model.setViewName(this.getViewFolder()+"/"+process);
+    LOGGER.debug("search page for: {} with preset: {} and process: {}", searchbox, preset, process);
 
-    Set<SearchElement> resultElements = executeRequest(searchbox, preset,
-        process, conditions, collector);
-    
+    // TODO check if we have a view for that process.
+    model.setViewName(this.getViewFolder() + "/" + process);
+
+    Set<SearchElement> resultElements = executeRequest(searchbox, preset, process, conditions, collector);
+
     model.addObject("preset", preset);
-    model.addObject("process",process);
+    model.addObject("process", process);
     model.addObject("elements", resultElements);
     model.addObject("collector", collector);
 
     return model;
   }
 
-  protected Set<SearchElement> executeRequest(Searchbox searchbox,
-      PresetDefinition preset, String process, 
+  protected Set<SearchElement> executeRequest(Searchbox searchbox, PresetDefinition preset, String process,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
-    
-    Set<SearchElementDefinition> searchElementDefinitions = 
-        new TreeSet<SearchElementDefinition>();
-    searchElementDefinitions.addAll(preset
-        .getSearchElements(PresetDefinition.DEFAULT_PROCESS));
-    searchElementDefinitions.addAll(preset
-        .getSearchElements(process));
+
+    Set<SearchElementDefinition> searchElementDefinitions = new TreeSet<SearchElementDefinition>();
+    searchElementDefinitions.addAll(preset.getSearchElements(PresetDefinition.DEFAULT_PROCESS));
+    searchElementDefinitions.addAll(preset.getSearchElements(process));
 
     // Build the Preset DTO with dependancies
     Set<SearchElement> searchElements = new TreeSet<SearchElement>();
-    
-    //Filter on the elements that we want for the process
+
+    // Filter on the elements that we want for the process
     for (SearchElementDefinition elementdefinition : searchElementDefinitions) {
-      LOGGER.debug("Adding SearchElementDefinition: {}" , elementdefinition);
+      LOGGER.debug("Adding SearchElementDefinition: {}", elementdefinition);
       try {
         SearchElement searchElement = elementdefinition.getInstance();
-        LOGGER.trace("Adding SearchElementDefinition: {}" , searchElement);
+        LOGGER.trace("Adding SearchElementDefinition: {}", searchElement);
         searchElements.add(searchElement);
       } catch (Exception e) {
         LOGGER.error("Could not get SearchElement for: " + elementdefinition, e);

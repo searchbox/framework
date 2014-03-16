@@ -382,25 +382,23 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       eenTemplateElement.setAttributeValue("idField", "eenReferenceExternal");
       eenTemplateElement.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_eenHit.jspx");
-     presetEEN.addSearchElement(eenTemplateElement);
+     presetEEN.addSearchElement(eenTemplateElement, "search");
 
       SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(TemplateElement.class);
       eenViewHitMeta.setLabel("leftCol");
-      eenViewHitMeta.setType(SearchElement.Type.INSPECT);
       eenViewHitMeta.setAttributeValue("titleField", "eenContentTitle");
       eenViewHitMeta.setAttributeValue("idField", "eenReferenceExternal");
       eenViewHitMeta.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_eenViewMeta.jspx");
-      presetEEN.addSearchElement(eenViewHitMeta);
+      presetEEN.addSearchElement(eenViewHitMeta, "view");
       
       SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplateElement.class);
       eenViewHit.setLabel("body");
-      eenViewHit.setType(SearchElement.Type.INSPECT);
       eenViewHit.setAttributeValue("titleField", "eenContentTitle");
       eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
       eenViewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_eenView.jspx");
-      presetEEN.addSearchElement(eenViewHit);
+      presetEEN.addSearchElement(eenViewHit, "view");
 
       
       /** Create & add a basicSearchStat SearchComponent to the preset; */

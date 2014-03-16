@@ -232,7 +232,7 @@
              <td>${item.count }</td>
              <td>${searchbox.name }</td>
              <td>${searchbox.alias }</td>
-             <spring:url value="/${searchbox.slug }/search"
+             <spring:url value="/${searchbox.slug }"
               var="searchboxUrl" />
              <td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
              <td></td>
