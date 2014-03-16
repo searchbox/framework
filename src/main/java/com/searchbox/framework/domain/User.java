@@ -41,139 +41,139 @@ import com.searchbox.framework.web.user.SocialMediaService;
 @Entity
 public class User implements SocialUserDetails, UserDetails {
 
-    /**
+  /**
 	 * 
 	 */
-    private static final long serialVersionUID = -2384552120318639487L;
+  private static final long serialVersionUID = -2384552120318639487L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private long version;
+  @Version
+  @Column(name = "OPTLOCK")
+  private long version;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    private String password;
+  private String password;
 
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
-    private boolean enabled = true;
+  private boolean accountNonExpired = true;
+  private boolean accountNonLocked = true;
+  private boolean credentialsNonExpired = true;
+  private boolean enabled = true;
 
-    private SocialMediaService SignInProvider;
+  private SocialMediaService SignInProvider;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    List<UserRole> roles = new ArrayList<UserRole>();
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+  @LazyCollection(LazyCollectionOption.FALSE)
+  List<UserRole> roles = new ArrayList<UserRole>();
 
-    // private Map<Searchbox, UserRole> roles = new
-    // HashMap<Searchbox,UserRole>();
+  // private Map<Searchbox, UserRole> roles = new
+  // HashMap<Searchbox,UserRole>();
 
-    public User() {
-    }
+  public User() {
+  }
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+  public User(String email, String password) {
+    this.email = email;
+    this.password = password;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public long getVersion() {
-        return version;
-    }
+  public long getVersion() {
+    return version;
+  }
 
-    public void setVersion(long version) {
-        this.version = version;
-    }
+  public void setVersion(long version) {
+    this.version = version;
+  }
 
-    public List<UserRole> getRoles() {
-        return roles;
-    }
+  public List<UserRole> getRoles() {
+    return roles;
+  }
 
-    public void setRoles(List<UserRole> roles) {
-        this.roles = roles;
-    }
+  public void setRoles(List<UserRole> roles) {
+    this.roles = roles;
+  }
 
-    public SocialMediaService getSignInProvider() {
-        return SignInProvider;
-    }
+  public SocialMediaService getSignInProvider() {
+    return SignInProvider;
+  }
 
-    public void setSignInProvider(SocialMediaService signInProvider) {
-        SignInProvider = signInProvider;
-    }
+  public void setSignInProvider(SocialMediaService signInProvider) {
+    SignInProvider = signInProvider;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.roles;
+  }
 
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
+  @Override
+  public String getUsername() {
+    return this.email;
+  }
 
-    public String setUsername() {
-        return this.email;
-    }
+  public String setUsername() {
+    return this.email;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return this.accountNonExpired;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        // TODO Auto-generated method stub
-        return this.accountNonLocked;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    // TODO Auto-generated method stub
+    return this.accountNonLocked;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        // TODO Auto-generated method stub
-        return this.credentialsNonExpired;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    // TODO Auto-generated method stub
+    return this.credentialsNonExpired;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isEnabled() {
+    return this.enabled;
+  }
 
-    @Override
-    public String getUserId() {
-        return getUsername();
-    }
+  @Override
+  public String getUserId() {
+    return getUsername();
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this,
+        ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 }

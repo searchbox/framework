@@ -24,11 +24,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchEngineService {
 
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(SearchEngineService.class);
+  @SuppressWarnings("unused")
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchEngineService.class);
 
-    @Autowired
-    private ApplicationEventPublisher publisher;
+  @Autowired
+  private ApplicationEventPublisher publisher;
 
 }

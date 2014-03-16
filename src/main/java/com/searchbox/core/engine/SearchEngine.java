@@ -25,27 +25,27 @@ import com.searchbox.core.search.SearchElement;
 
 public interface SearchEngine<Q, R> {
 
-    String getName();
+  String getName();
 
-    String getDescription();
+  String getDescription();
 
-    Class<Q> getQueryClass();
+  Class<Q> getQueryClass();
 
-    Class<R> getResponseClass();
+  Class<R> getResponseClass();
 
-    Q newQuery();
+  Q newQuery();
 
-    R execute(Q query);
+  R execute(Q query);
 
-    boolean indexFile(String collectionName, File file);
+  boolean indexFile(String collectionName, File file);
 
-    boolean indexMap(String collectionName, Map<String, Object> fields);
+  boolean indexMap(String collectionName, Map<String, Object> fields);
 
-    List<SearchElement> getSupportedElements();
+  List<SearchElement> getSupportedElements();
 
-    Boolean supportsElement(SearchElement element);
+  Boolean supportsElement(SearchElement element);
 
-    Boolean supportsCondition(AbstractSearchCondition condition);
+  Boolean supportsCondition(AbstractSearchCondition condition);
 
-    void setCollection(Collection collection);
+  void setCollection(Collection collection);
 }

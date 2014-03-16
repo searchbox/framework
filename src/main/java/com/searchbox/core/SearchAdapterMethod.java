@@ -27,5 +27,5 @@ import com.searchbox.core.SearchAdapter.Time;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SearchAdapterMethod {
-    Time execute() default Time.BEFORE;
+  Time execute() default Time.BEFORE;
 }

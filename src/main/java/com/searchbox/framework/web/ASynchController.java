@@ -34,76 +34,70 @@ import com.searchbox.framework.service.SearchElementService;
 @RequestMapping("/asynch/{searchbox}")
 public class ASynchController {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(ASynchController.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(ASynchController.class);
 
-    @Autowired
-    ApplicationConversionService conversionService;
+  @Autowired
+  ApplicationConversionService conversionService;
 
-    @Autowired
-    private SearchAdapterService adapterService;
+  @Autowired
+  private SearchAdapterService adapterService;
 
-    @Autowired
-    SearchElementRepository elementRepository;
+  @Autowired
+  SearchElementRepository elementRepository;
 
-    @Autowired
-    SearchElementService elementService;
+  @Autowired
+  SearchElementService elementService;
 
+  public ASynchController() {
+  }
 
-    public ASynchController() {
-    }
+  @RequestMapping(value = { "/{preset}/element/{id}", "/{preset}/element/{id}/" })
+  @ResponseBody
+  public Map<String, Object> executeAsynchElement(
+      @PathVariable Searchbox searchbox, @PathVariable Long id,
+      @PathVariable PresetDefinition preset, HttpServletRequest request,
+      ModelAndView model, RedirectAttributes redirectAttributes) {
 
-    @RequestMapping(value = { "/{preset}/element/{id}", "/{preset}/element/{id}/" })
-    @ResponseBody
-    public Map<String, Object> executeAsynchElement(
-            @PathVariable Searchbox searchbox, @PathVariable Long id,
-            @PathVariable PresetDefinition preset, HttpServletRequest request,
-            ModelAndView model, RedirectAttributes redirectAttributes) {
-
-        // Fetch all search Conditions within HTTP params
-        Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
-        for (String param : conversionService
-                .getSearchConditionParams()) {
-            if (request.getParameterValues(param) != null) {
-                for (String value : request.getParameterValues(param)) {
-                    if (value != null && !value.isEmpty()) {
-                        try {
-                            AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
-                                    .convert(
-                                            value,
-                                            conversionService
-                                                    .getSearchConditionClass(param));
-                            conditions.add(cond);
-                        } catch (Exception e) {
-                            LOGGER.error("Could not convert " + value, e);
-                        }
-                    }
-                }
+    // Fetch all search Conditions within HTTP params
+    Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
+    for (String param : conversionService.getSearchConditionParams()) {
+      if (request.getParameterValues(param) != null) {
+        for (String value : request.getParameterValues(param)) {
+          if (value != null && !value.isEmpty()) {
+            try {
+              AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
+                  .convert(value,
+                      conversionService.getSearchConditionClass(param));
+              conditions.add(cond);
+            } catch (Exception e) {
+              LOGGER.error("Could not convert " + value, e);
             }
+          }
         }
-
-        LOGGER.debug("Assynch conditions: {}", conditions);
-
-        SearchElementDefinition elementDefinition = elementRepository
-                .findOne(id);
-        SearchElement element = elementService.getSearchElement(elementDefinition);
-
-        Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-        for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
-            fieldAttributes.add(def.getInstance());
-        }
-
-        SearchEngine<?, ?> searchEngine = preset.getCollection()
-                .getSearchEngine().getInstance();
-        searchEngine.setCollection(preset.getCollection().getInstance());
-
-        Map<String, Object> results = new HashMap<String, Object>();
-
-        adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine,
-                searchEngine.newQuery(), results, fieldAttributes, element,
-                conditions);
-
-        return results;
+      }
     }
+
+    LOGGER.debug("Assynch conditions: {}", conditions);
+
+    SearchElementDefinition elementDefinition = elementRepository.findOne(id);
+    SearchElement element = elementService.getSearchElement(elementDefinition);
+
+    Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
+    for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
+      fieldAttributes.add(def.getInstance());
+    }
+
+    SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
+        .getInstance();
+    searchEngine.setCollection(preset.getCollection().getInstance());
+
+    Map<String, Object> results = new HashMap<String, Object>();
+
+    adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine,
+        searchEngine.newQuery(), results, fieldAttributes, element, conditions);
+
+    return results;
+  }
 
 }

@@ -27,32 +27,32 @@ import com.searchbox.core.engine.SearchEngine;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class SearchEngineDefinition extends UnknownClassDefinition implements
-        ElementFactory<SearchEngine<?, ?>> {
+    ElementFactory<SearchEngine<?, ?>> {
 
-    protected String name;
+  protected String name;
 
-    public SearchEngineDefinition() {
-        super();
-    }
+  public SearchEngineDefinition() {
+    super();
+  }
 
-    public SearchEngineDefinition(Class<?> searchEngineClass, String name) {
-        super(searchEngineClass);
-        this.name = name;
-    }
+  public SearchEngineDefinition(Class<?> searchEngineClass, String name) {
+    super(searchEngineClass);
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public SearchEngine<?, ?> getInstance() {
-        AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super
-                .toObject();
-        BeanUtils.copyProperties(this, engine);
-        return engine;
-    }
+  @Override
+  public SearchEngine<?, ?> getInstance() {
+    AbstractSearchEngine<?, ?> engine = (AbstractSearchEngine<?, ?>) super
+        .toObject();
+    BeanUtils.copyProperties(this, engine);
+    return engine;
+  }
 }

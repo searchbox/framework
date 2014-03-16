@@ -41,11 +41,12 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = { "com.searchbox.framework.web", "com.searchbox.framework.bootstrap" })
+@ComponentScan(basePackages = { "com.searchbox.framework.web",
+    "com.searchbox.framework.bootstrap" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
   private static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
-  
+
   private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
   private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
 
@@ -62,23 +63,29 @@ public class WebConfig extends WebMvcConfigurerAdapter {
   public MessageSource messageSource() {
     ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-    messageSource.setBasename(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_BASENAME));
-    messageSource.setUseCodeAsDefaultMessage(Boolean.parseBoolean(environment
-        .getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE)));
+    messageSource.setBasename(environment
+        .getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_BASENAME));
+    messageSource
+        .setUseCodeAsDefaultMessage(Boolean.parseBoolean(environment
+            .getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE)));
 
     return messageSource;
   }
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/assets/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
-    registry.addResourceHandler("/assets/images/**").addResourceLocations("/img/").setCachePeriod(31556926);
-    registry.addResourceHandler("/assets/js/**").addResourceLocations("/js/").setCachePeriod(31556926);
+    registry.addResourceHandler("/assets/css/**").addResourceLocations("/css/")
+        .setCachePeriod(31556926);
+    registry.addResourceHandler("/assets/images/**")
+        .addResourceLocations("/img/").setCachePeriod(31556926);
+    registry.addResourceHandler("/assets/js/**").addResourceLocations("/js/")
+        .setCachePeriod(31556926);
     registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
   }
 
   @Override
-  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+  public void configureDefaultServletHandling(
+      DefaultServletHandlerConfigurer configurer) {
     configurer.enable();
   }
 
@@ -90,9 +97,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     resolver.setViewClass(JstlView.class);
     return resolver;
   }
-  
+
   @Bean
-  public CharacterEncodingFilter getCharEncodingFilter(ServletContext servletContext){
+  public CharacterEncodingFilter getCharEncodingFilter(
+      ServletContext servletContext) {
     LOGGER.info("Servlet Context is: " + servletContext);
     CharacterEncodingFilter charEncodingFilter = new CharacterEncodingFilter();
     charEncodingFilter.setEncoding("UTF-8");

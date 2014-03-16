@@ -16,7 +16,6 @@
 package com.searchbox.core.search.debug;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.searchbox.core.SearchAdapter;
@@ -30,75 +29,74 @@ import com.searchbox.engine.solr.SolrSearchEngine;
 @SearchComponent
 public class SolrToString extends SearchElement {
 
-    private String query;
-    private QueryResponse response;
-    private SolrQuery request;
-    private SolrSearchEngine engine;
-    
-    public SolrToString() {
-        super("Solr Debug", SearchElement.Type.DEBUG);
+  private String query;
+  private QueryResponse response;
+  private SolrQuery request;
+  private SolrSearchEngine engine;
+
+  public SolrToString() {
+    super("Solr Debug", SearchElement.Type.DEBUG);
+  }
+
+  public String getQuery() {
+    return query;
+  }
+
+  public void setQuery(String query) {
+    this.query = query;
+  }
+
+  public QueryResponse getResponse() {
+    return response;
+  }
+
+  public void setResponse(QueryResponse response) {
+    this.response = response;
+  }
+
+  public SolrQuery getRequest() {
+    return request;
+  }
+
+  public void setRequest(SolrQuery request) {
+    this.request = request;
+  }
+
+  public SolrSearchEngine getEngine() {
+    return engine;
+  }
+
+  public void setEngine(SolrSearchEngine engine) {
+    this.engine = engine;
+  }
+
+  public String getExternalQueryURL() {
+    if (AccessibleSearchEngine.class.isAssignableFrom(this.engine.getClass())) {
+      return ((AccessibleSearchEngine) engine).getUrlBase() + "/select?"
+          + query.toString();
+    } else {
+      return null;
+    }
+  }
+
+  @SearchAdapter
+  public static class SolrAdaptor {
+
+    @SearchAdapterMethod(execute = Time.PRE)
+    public SolrQuery addDebug(SolrSearchEngine engine,
+        SolrToString searchElement, SolrQuery query) {
+      query.set("debug", "true");
+      searchElement.setEngine(engine);
+      searchElement.setRequest(query);
+      return query;
     }
 
-    public String getQuery() {
-        return query;
+    @SearchAdapterMethod(execute = Time.POST)
+    public SolrToString getDebugInfo(SolrToString searchElement,
+        SolrQuery query, QueryResponse response) {
+      searchElement.setQuery(query.toString());
+      searchElement.setResponse(response);
+      return searchElement;
     }
-
-    public void setQuery(String query) {
-        this.query = query;
-    }
-
-    public QueryResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(QueryResponse response) {
-        this.response = response;
-    }
-
-    public SolrQuery getRequest() {
-        return request;
-    }
-
-    public void setRequest(SolrQuery request) {
-        this.request = request;
-    }
-
-    public SolrSearchEngine getEngine() {
-        return engine;
-    }
-
-    public void setEngine(SolrSearchEngine engine) {
-        this.engine = engine;
-    }
-    
-    public String getExternalQueryURL(){
-        if(AccessibleSearchEngine.class.isAssignableFrom(this.engine.getClass())){
-            return ((AccessibleSearchEngine)engine).getUrlBase()
-                    +"/select?"+query.toString();
-        } else {
-            return null;
-        }
-    }
-
-
-    @SearchAdapter
-    public static class SolrAdaptor {
-
-        @SearchAdapterMethod(execute = Time.PRE)
-        public SolrQuery addDebug(SolrSearchEngine engine, 
-                SolrToString searchElement, SolrQuery query) {
-            query.set("debug", "true");
-            searchElement.setEngine(engine);
-            searchElement.setRequest(query);
-            return query;
-        }
-
-        @SearchAdapterMethod(execute = Time.POST)
-        public SolrToString getDebugInfo(SolrToString searchElement,
-                SolrQuery query, QueryResponse response) {
-            searchElement.setQuery(query.toString());
-            searchElement.setResponse(response);
-            return searchElement;
-        }
-    }
+  }
 }

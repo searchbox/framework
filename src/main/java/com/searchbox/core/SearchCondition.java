@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SearchCondition {
-    String urlParam() default "missingParam";
+  String urlParam() default "missingParam";
 }

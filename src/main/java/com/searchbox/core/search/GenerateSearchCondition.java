@@ -17,9 +17,9 @@ package com.searchbox.core.search;
 
 public interface GenerateSearchCondition<K extends AbstractSearchCondition> {
 
-    public K getSearchCondition();
+  public K getSearchCondition();
 
-    public Class<?> getConditionClass();
+  public Class<?> getConditionClass();
 
-    public String geParamValue();
+  public String geParamValue();
 }

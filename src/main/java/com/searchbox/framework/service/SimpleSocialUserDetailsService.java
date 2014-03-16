@@ -24,16 +24,16 @@ import org.springframework.social.security.SocialUserDetailsService;
 
 public class SimpleSocialUserDetailsService implements SocialUserDetailsService {
 
-    private UserDetailsService userDetailsService;
+  private UserDetailsService userDetailsService;
 
-    public SimpleSocialUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+  public SimpleSocialUserDetailsService(UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
-    @Override
-    public SocialUserDetails loadUserByUserId(String userId)
-            throws UsernameNotFoundException, DataAccessException {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
-        return (SocialUserDetails) userDetails;
-    }
+  @Override
+  public SocialUserDetails loadUserByUserId(String userId)
+      throws UsernameNotFoundException, DataAccessException {
+    UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+    return (SocialUserDetails) userDetails;
+  }
 }

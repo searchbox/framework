@@ -33,27 +33,27 @@ import org.springframework.core.task.TaskExecutor;
 @DependsOn(value = { "dataSource" })
 public class BatchConfiguration extends SimpleBatchConfiguration {
 
-    @Bean
-    public TaskExecutor taskExecutor() {
-        return new SimpleAsyncTaskExecutor();
-    }
+  @Bean
+  public TaskExecutor taskExecutor() {
+    return new SimpleAsyncTaskExecutor();
+  }
 
-    @Bean
-    @Override
-    public JobLauncher jobLauncher() throws Exception {
-        SimpleJobLauncher jl = new SimpleJobLauncher();
-        jl.setJobRepository(jobRepository());
-        jl.setTaskExecutor(taskExecutor());
-        return jl;
-    }
+  @Bean
+  @Override
+  public JobLauncher jobLauncher() throws Exception {
+    SimpleJobLauncher jl = new SimpleJobLauncher();
+    jl.setJobRepository(jobRepository());
+    jl.setTaskExecutor(taskExecutor());
+    return jl;
+  }
 
-    @Bean
-    public JobExplorerFactoryBean jobExplorerFactoryBean(DataSource datasource)
-            throws Exception {
+  @Bean
+  public JobExplorerFactoryBean jobExplorerFactoryBean(DataSource datasource)
+      throws Exception {
 
-        System.out.println("Data source is: " + datasource);
-        JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
-        factory.setDataSource(datasource);
-        return factory;
-    }
+    System.out.println("Data source is: " + datasource);
+    JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
+    factory.setDataSource(datasource);
+    return factory;
+  }
 }

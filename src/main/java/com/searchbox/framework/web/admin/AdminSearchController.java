@@ -26,49 +26,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.Searchbox;
 import com.searchbox.framework.web.SearchboxController;
 
 @Controller
 @RequestMapping("/admin/{searchbox}")
 public class AdminSearchController extends SearchboxController {
 
-    @Autowired
-    JobExplorer jobExplorer;
+  @Autowired
+  JobExplorer jobExplorer;
 
-    @ModelAttribute("OrderEnum")
-    public List<Order> getReferenceOrder() {
-        return Arrays.asList(Order.values());
-    }
+  @ModelAttribute("OrderEnum")
+  public List<Order> getReferenceOrder() {
+    return Arrays.asList(Order.values());
+  }
 
-    @ModelAttribute("SortEnum")
-    public List<Sort> getReferenceSort() {
-        return Arrays.asList(Sort.values());
-    }
+  @ModelAttribute("SortEnum")
+  public List<Sort> getReferenceSort() {
+    return Arrays.asList(Sort.values());
+  }
 
-    @ModelAttribute("jobExplorer")
-    public JobExplorer getJobExplorer() {
-        return this.jobExplorer;
-    }
-    
-    @Override
-    protected String getViewFolder(){
-      return "admin";
-    }
+  @ModelAttribute("jobExplorer")
+  public JobExplorer getJobExplorer() {
+    return this.jobExplorer;
+  }
 
-//    @Override
-//    protected String getViewViewName() {
-//        return "admin/view";
-//    }
-//
-//    @Override
-//    protected String getSearchViewName() {
-//        return "admin/search";
-//    }
-//
-//    @Override
-//    protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset) {
-//        return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
-//    }
+  @Override
+  protected String getViewFolder() {
+    return "admin";
+  }
+
+  // @Override
+  // protected String getViewViewName() {
+  // return "admin/view";
+  // }
+  //
+  // @Override
+  // protected String getSearchViewName() {
+  // return "admin/search";
+  // }
+  //
+  // @Override
+  // protected String getSearchUrl(Searchbox searchbox, PresetDefinition preset)
+  // {
+  // return "/" + searchbox.getSlug() + "/admin/search/" + preset.getSlug();
+  // }
 }

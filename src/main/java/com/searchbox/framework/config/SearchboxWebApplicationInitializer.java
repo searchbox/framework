@@ -20,13 +20,14 @@ import javax.servlet.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class SearchboxWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SearchboxWebApplicationInitializer extends
+    AbstractAnnotationConfigDispatcherServletInitializer {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SearchboxWebApplicationInitializer.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchboxWebApplicationInitializer.class);
 
   private static double JAVA_VERSION = getVersion();
 
@@ -34,8 +35,8 @@ public class SearchboxWebApplicationInitializer extends AbstractAnnotationConfig
     super();
 
     if (JAVA_VERSION < 1.7) {
-      LOGGER.error("Java 7 is required to run Searchbox. Current version: " + JAVA_VERSION
-          + ". Please update your system.");
+      LOGGER.error("Java 7 is required to run Searchbox. Current version: "
+          + JAVA_VERSION + ". Please update your system.");
       // throw new Exception("bad value");
       System.exit(0);
     }
@@ -58,7 +59,7 @@ public class SearchboxWebApplicationInitializer extends AbstractAnnotationConfig
 
   @Override
   protected Filter[] getServletFilters() {
-    
+
     return new Filter[] { new HiddenHttpMethodFilter(),
         new OpenEntityManagerInViewFilter() };
   }

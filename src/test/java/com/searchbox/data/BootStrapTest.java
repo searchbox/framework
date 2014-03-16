@@ -19,16 +19,16 @@ import org.junit.Test;
 
 public class BootStrapTest {
 
-    // private BootStrap bootStrap = new BootStrap();
+  // private BootStrap bootStrap = new BootStrap();
 
-    @Test
-    public void onApplicationEvent() {
-        org.junit.Assert.assertTrue(true);
-    }
+  @Test
+  public void onApplicationEvent() {
+    org.junit.Assert.assertTrue(true);
+  }
 
-    @Test
-    public void main() {
-        System.out.println("Wasssssup");
-        org.junit.Assert.assertTrue(true);
-    }
+  @Test
+  public void main() {
+    System.out.println("Wasssssup");
+    org.junit.Assert.assertTrue(true);
+  }
 }

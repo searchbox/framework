@@ -55,108 +55,106 @@ import com.searchbox.framework.repository.SearchElementRepository;
 @RequestMapping("/admin/{searchbox}/searchElementDefinition")
 public class SearchElementDefinitionController {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(SearchElementDefinitionController.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchElementDefinitionController.class);
 
-    @Autowired
-    ConversionService conversionService;
+  @Autowired
+  ConversionService conversionService;
 
-    @Autowired
-    SearchElementRepository repository;
+  @Autowired
+  SearchElementRepository repository;
 
-    @Autowired
-    PresetRepository presetRepository;
+  @Autowired
+  PresetRepository presetRepository;
 
-    @ModelAttribute("OrderEnum")
-    public List<Order> getReferenceOrder() {
-        return Arrays.asList(Order.values());
+  @ModelAttribute("OrderEnum")
+  public List<Order> getReferenceOrder() {
+    return Arrays.asList(Order.values());
+  }
+
+  @ModelAttribute("SortEnum")
+  public List<Sort> getReferenceSort() {
+    return Arrays.asList(Sort.values());
+  }
+
+  @ModelAttribute("presetdefinitions")
+  public List<PresetDefinition> getPresetDefinitions() {
+    ArrayList<PresetDefinition> presetDefinitions = new ArrayList<PresetDefinition>();
+    Iterator<PresetDefinition> presets = presetRepository.findAll().iterator();
+    while (presets.hasNext()) {
+      presetDefinitions.add(presets.next());
     }
+    return presetDefinitions;
+  }
 
-    @ModelAttribute("SortEnum")
-    public List<Sort> getReferenceSort() {
-        return Arrays.asList(Sort.values());
+  @RequestMapping(method = RequestMethod.POST)
+  public ModelAndView update(@Valid SearchElementDefinition elementDefinition,
+      BindingResult bindingResult, HttpServletRequest httpServletRequest,
+      ServerHttpResponse response) {
+    LOGGER.info("Creating an filed element: "
+        + elementDefinition.getClazz().getSimpleName() + " for preset: "
+        + elementDefinition.getPreset().getSlug());
+
+    ModelAndView model = new ModelAndView(
+        "admin/SearchElementDefinition/updateForm");
+
+    if (bindingResult.hasErrors()) {
+      LOGGER.error("Bindding has error...");
+      for (ObjectError error : bindingResult.getAllErrors()) {
+        LOGGER.error("Error: " + error.getDefaultMessage());
+      }
+      response.setStatusCode(HttpStatus.PRECONDITION_FAILED);
+      return model;
     }
-
-    @ModelAttribute("presetdefinitions")
-    public List<PresetDefinition> getPresetDefinitions() {
-        ArrayList<PresetDefinition> presetDefinitions = new ArrayList<PresetDefinition>();
-        Iterator<PresetDefinition> presets = presetRepository.findAll()
-                .iterator();
-        while (presets.hasNext()) {
-            presetDefinitions.add(presets.next());
-        }
-        return presetDefinitions;
+    try {
+      elementDefinition = repository.save(elementDefinition);
+    } catch (Exception e) {
+      LOGGER.error("Could not save elementDefinition", e);
     }
+    model.addObject("searchElementDefinition", elementDefinition);
+    return model;
+  }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView update(
-            @Valid SearchElementDefinition elementDefinition,
-            BindingResult bindingResult, HttpServletRequest httpServletRequest,
-            ServerHttpResponse response) {
-        LOGGER.info("Creating an filed element: "
-                + elementDefinition.getClazz().getSimpleName()
-                + " for preset: " + elementDefinition.getPreset().getSlug());
+  @RequestMapping(params = "form")
+  public String create(Model uiModel) {
+    LOGGER.info("Creating EMPTY filed element");
+    // populateEditForm(uiModel, new SearchElementDefinition());
+    return "/admin/searchElementDefinition/create";
+  }
 
-        ModelAndView model = new ModelAndView(
-                "admin/SearchElementDefinition/updateForm");
+  @RequestMapping(value = "/{id}")
+  public ModelAndView show(@PathVariable("id") Long id) {
+    LOGGER.info("VIEW an filed element");
+    SearchElementDefinition elementDef = repository.findOne(id);
+    ModelAndView model = new ModelAndView(
+        "admin/SearchElementDefinition/updateForm");
+    model.addObject("searchElementDefinition", elementDef);
+    return model;
+  }
 
-        if (bindingResult.hasErrors()) {
-            LOGGER.error("Bindding has error...");
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                LOGGER.error("Error: " + error.getDefaultMessage());
+  @InitBinder
+  protected void initBinder(WebDataBinder binder) {
+    binder.addValidators(new Validator() {
+
+      @Override
+      public boolean supports(Class<?> clazz) {
+        return SearchElementDefinition.class.isAssignableFrom(clazz);
+      }
+
+      @Override
+      public void validate(Object target, Errors errors) {
+        SearchElementDefinition element = (SearchElementDefinition) target;
+        for (UnknownAttributeDefinition attr : element.getAttributes()) {
+          if (!attr.getType().getName()
+              .equals(attr.getValue().getClass().getName())) {
+            if (conversionService.canConvert(attr.getValue().getClass(),
+                attr.getType())) {
+              attr.setValue(conversionService.convert(attr.getValue(),
+                  attr.getType()));
             }
-            response.setStatusCode(HttpStatus.PRECONDITION_FAILED);
-            return model;
+          }
         }
-        try {
-            elementDefinition = repository.save(elementDefinition);
-        } catch (Exception e) {
-            LOGGER.error("Could not save elementDefinition", e);
-        }
-        model.addObject("searchElementDefinition", elementDefinition);
-        return model;
-    }
-
-    @RequestMapping(params = "form")
-    public String create(Model uiModel) {
-        LOGGER.info("Creating EMPTY filed element");
-        // populateEditForm(uiModel, new SearchElementDefinition());
-        return "/admin/searchElementDefinition/create";
-    }
-
-    @RequestMapping(value = "/{id}")
-    public ModelAndView show(@PathVariable("id") Long id) {
-        LOGGER.info("VIEW an filed element");
-        SearchElementDefinition elementDef = repository.findOne(id);
-        ModelAndView model = new ModelAndView(
-                "admin/SearchElementDefinition/updateForm");
-        model.addObject("searchElementDefinition", elementDef);
-        return model;
-    }
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(new Validator() {
-
-            @Override
-            public boolean supports(Class<?> clazz) {
-                return SearchElementDefinition.class.isAssignableFrom(clazz);
-            }
-
-            @Override
-            public void validate(Object target, Errors errors) {
-                SearchElementDefinition element = (SearchElementDefinition) target;
-                for (UnknownAttributeDefinition attr : element.getAttributes()) {
-                    if (!attr.getType().getName()
-                            .equals(attr.getValue().getClass().getName())) {
-                        if (conversionService.canConvert(attr.getValue()
-                                .getClass(), attr.getType())) {
-                            attr.setValue(conversionService.convert(
-                                    attr.getValue(), attr.getType()));
-                        }
-                    }
-                }
-            }
-        });
-    }
+      }
+    });
+  }
 }

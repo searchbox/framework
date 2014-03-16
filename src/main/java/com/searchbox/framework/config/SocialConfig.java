@@ -44,63 +44,62 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 @EnableSocial
 public class SocialConfig implements SocialConfigurer {
 
-    @Autowired
-    private DataSource dataSource;
+  @Autowired
+  private DataSource dataSource;
 
-    /**
-     * Configures the connection factories for Facebook and Twitter.
-     * 
-     * @param cfConfig
-     * @param env
-     */
-    @Override
-    public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig,
-            Environment env) {
-        if (env.getProperty("twitter.consumer.key") != null
-                && env.getProperty("twitter.consumer.secret") != null) {
-            cfConfig.addConnectionFactory(new TwitterConnectionFactory(env
-                    .getProperty("twitter.consumer.key"), env
-                    .getProperty("twitter.consumer.secret")));
-        }
-        if (env.getProperty("facebook.app.id") != null
-                && env.getProperty("facebook.app.secret") != null) {
-            cfConfig.addConnectionFactory(new FacebookConnectionFactory(env
-                    .getProperty("facebook.app.id"), env
-                    .getProperty("facebook.app.secret")));
-        }
+  /**
+   * Configures the connection factories for Facebook and Twitter.
+   * 
+   * @param cfConfig
+   * @param env
+   */
+  @Override
+  public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig,
+      Environment env) {
+    if (env.getProperty("twitter.consumer.key") != null
+        && env.getProperty("twitter.consumer.secret") != null) {
+      cfConfig.addConnectionFactory(new TwitterConnectionFactory(env
+          .getProperty("twitter.consumer.key"), env
+          .getProperty("twitter.consumer.secret")));
     }
+    if (env.getProperty("facebook.app.id") != null
+        && env.getProperty("facebook.app.secret") != null) {
+      cfConfig.addConnectionFactory(new FacebookConnectionFactory(env
+          .getProperty("facebook.app.id"), env
+          .getProperty("facebook.app.secret")));
+    }
+  }
 
-    /**
-     * The UserIdSource determines the account ID of the user. The example
-     * application uses the username as the account ID.
-     */
-    @Override
-    public UserIdSource getUserIdSource() {
-        return new AuthenticationNameUserIdSource();
-    }
+  /**
+   * The UserIdSource determines the account ID of the user. The example
+   * application uses the username as the account ID.
+   */
+  @Override
+  public UserIdSource getUserIdSource() {
+    return new AuthenticationNameUserIdSource();
+  }
 
-    @Override
-    public UsersConnectionRepository getUsersConnectionRepository(
-            ConnectionFactoryLocator connectionFactoryLocator) {
-        return new JdbcUsersConnectionRepository(dataSource,
-                connectionFactoryLocator,
-                /**
-                 * The TextEncryptor object encrypts the authorization details
-                 * of the connection. In our example, the authorization details
-                 * are stored as plain text. DO NOT USE THIS IN PRODUCTION.
-                 */
-                Encryptors.noOpText());
-    }
+  @Override
+  public UsersConnectionRepository getUsersConnectionRepository(
+      ConnectionFactoryLocator connectionFactoryLocator) {
+    return new JdbcUsersConnectionRepository(dataSource,
+        connectionFactoryLocator,
+        /**
+         * The TextEncryptor object encrypts the authorization details of the
+         * connection. In our example, the authorization details are stored as
+         * plain text. DO NOT USE THIS IN PRODUCTION.
+         */
+        Encryptors.noOpText());
+  }
 
-    /**
-     * This bean manages the connection flow between the account provider and
-     * the example application.
-     */
-    @Bean
-    public ConnectController connectController(
-            ConnectionFactoryLocator connectionFactoryLocator,
-            ConnectionRepository connectionRepository) {
-        return new ConnectController(connectionFactoryLocator,
-                connectionRepository);
-    }
+  /**
+   * This bean manages the connection flow between the account provider and the
+   * example application.
+   */
+  @Bean
+  public ConnectController connectController(
+      ConnectionFactoryLocator connectionFactoryLocator,
+      ConnectionRepository connectionRepository) {
+    return new ConnectController(connectionFactoryLocator, connectionRepository);
+  }
 }

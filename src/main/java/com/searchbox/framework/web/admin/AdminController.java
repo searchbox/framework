@@ -23,7 +23,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,65 +42,65 @@ import com.searchbox.framework.repository.UserRoleRepository;
 //@RequestMapping("/admin/{searchbox}")
 public class AdminController {
 
-    @Autowired
-    SearchboxRepository searchboxRepository;
+  @Autowired
+  SearchboxRepository searchboxRepository;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserRepository userRepository;
 
-    @Autowired
-    UserRoleRepository userRoleRepository;
+  @Autowired
+  UserRoleRepository userRoleRepository;
 
-    @ModelAttribute("OrderEnum")
-    public List<Order> getReferenceOrder() {
-        return Arrays.asList(Order.values());
+  @ModelAttribute("OrderEnum")
+  public List<Order> getReferenceOrder() {
+    return Arrays.asList(Order.values());
+  }
+
+  @ModelAttribute("SortEnum")
+  public List<Sort> getReferenceSort() {
+    return Arrays.asList(Sort.values());
+  }
+
+  @ModelAttribute("searchboxes")
+  public List<Searchbox> getAllSearchboxes() {
+    ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
+    Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
+    while (sbx.hasNext()) {
+      searchboxes.add(sbx.next());
     }
+    return searchboxes;
+  }
 
-    @ModelAttribute("SortEnum")
-    public List<Sort> getReferenceSort() {
-        return Arrays.asList(Sort.values());
+  @ModelAttribute("users")
+  public List<User> getAllUsers() {
+    ArrayList<User> list = new ArrayList<User>();
+    Iterator<User> it = userRepository.findAll().iterator();
+    while (it.hasNext()) {
+      list.add(it.next());
     }
+    return list;
+  }
 
-    @ModelAttribute("searchboxes")
-    public List<Searchbox> getAllSearchboxes() {
-        ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
-        Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
-        while (sbx.hasNext()) {
-            searchboxes.add(sbx.next());
-        }
-        return searchboxes;
+  @ModelAttribute("userRoles")
+  public List<UserRole> getAllUserRoles() {
+    ArrayList<UserRole> list = new ArrayList<UserRole>();
+    Iterator<UserRole> it = userRoleRepository.findAll().iterator();
+    while (it.hasNext()) {
+      list.add(it.next());
     }
+    return list;
+  }
 
-    @ModelAttribute("users")
-    public List<User> getAllUsers() {
-        ArrayList<User> list = new ArrayList<User>();
-        Iterator<User> it = userRepository.findAll().iterator();
-        while (it.hasNext()) {
-            list.add(it.next());
-        }
-        return list;
-    }
+  @ModelAttribute("searchbox")
+  public Searchbox getSearchbox(@PathVariable Searchbox searchbox) {
+    return searchbox;
+  }
 
-    @ModelAttribute("userRoles")
-    public List<UserRole> getAllUserRoles() {
-        ArrayList<UserRole> list = new ArrayList<UserRole>();
-        Iterator<UserRole> it = userRoleRepository.findAll().iterator();
-        while (it.hasNext()) {
-            list.add(it.next());
-        }
-        return list;
-    }
+  @RequestMapping(value = { "/", "" })
+  public ModelAndView search(HttpServletRequest request, ModelAndView model,
+      RedirectAttributes redirectAttributes) {
 
-    @ModelAttribute("searchbox")
-    public Searchbox getSearchbox(@PathVariable Searchbox searchbox) {
-        return searchbox;
-    }
-
-    @RequestMapping(value = { "/", "" })
-    public ModelAndView search(HttpServletRequest request, ModelAndView model,
-            RedirectAttributes redirectAttributes) {
-
-        ModelAndView mav = new ModelAndView("admin/index");
-        return mav;
-    }
+    ModelAndView mav = new ModelAndView("admin/index");
+    return mav;
+  }
 }

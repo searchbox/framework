@@ -62,10 +62,11 @@ import eu.europa.ec.een.tools.services.soap.IPODServiceSOAPProxy;
 
 @Configurable
 @Component
-public class EENCollection extends AbstractBatchCollection implements SynchronizedCollection, StandardCollection,
-    ExpiringDocuments {
+public class EENCollection extends AbstractBatchCollection implements
+    SynchronizedCollection, StandardCollection, ExpiringDocuments {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(EENCollection.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(EENCollection.class);
 
   /** Properties */
   private final static String CRAWLER_USER_AGENT = "crawler.userAgent";
@@ -170,7 +171,8 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
       List<Profile> profiles;
       Date date = new Date(System.currentTimeMillis());
       Date start = new Date(System.currentTimeMillis());
-      DateFormat dfmt = new DateFormatManager("YYYYMMdd").getDateFormatInstance();
+      DateFormat dfmt = new DateFormatManager("YYYYMMdd")
+          .getDateFormatInstance();
 
       {
         // Get the service
@@ -178,8 +180,10 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
 
         // Set the password
         request = new ProfileQueryRequest();
-        request.setUsername(env.getProperty(EEN_SERVICE_USER, EEN_SERVICE_USER_DEFAULT));
-        request.setPassword(env.getProperty(EEN_SERVICE_PWD, EEN_SERVICE_PWD_DEFAULT));
+        request.setUsername(env.getProperty(EEN_SERVICE_USER,
+            EEN_SERVICE_USER_DEFAULT));
+        request.setPassword(env.getProperty(EEN_SERVICE_PWD,
+            EEN_SERVICE_PWD_DEFAULT));
 
         // Start with an empty list of profiles
         profiles = new ArrayList<Profile>();
@@ -193,7 +197,8 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
           request.setDeadlineDateAfter(dfmt.format(from));
           request.setDeadlineDateBefore(dfmt.format(to));
           Profile[] newProfiles = eenService.getProfiles(request);
-          EENCollection.LOGGER.info("adding: " + newProfiles.length + " new profiles");
+          EENCollection.LOGGER.info("adding: " + newProfiles.length
+              + " new profiles");
           profiles.addAll(Arrays.asList(newProfiles));
         } catch (Exception e) {
           LOGGER.error("Could not load profiles: " + e);
@@ -206,10 +211,12 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
         }
 
         if (profiles.isEmpty()) {
-          while(start.before(DateUtils.addYears(date, 3)) && profiles.isEmpty()){
+          while (start.before(DateUtils.addYears(date, 3))
+              && profiles.isEmpty()) {
             Date end = DateUtils.addDays(start, 5);
-            EENCollection.LOGGER.info("Fetching EEN from " + dfmt.format(start) + " to " + dfmt.format(end));
-            fillProfiles(start,end);
+            EENCollection.LOGGER.info("Fetching EEN from " + dfmt.format(start)
+                + " to " + dfmt.format(end));
+            fillProfiles(start, end);
             start = end;
           }
           if (start.after(DateUtils.addYears(date, 3))) {
@@ -221,38 +228,50 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
     };
   }
 
-  private static void getFieldValues(Object target, String path, FieldMap fields) throws IllegalArgumentException,
-      IllegalAccessException, InvocationTargetException, NoSuchMethodException, IntrospectionException {
+  private static void getFieldValues(Object target, String path, FieldMap fields)
+      throws IllegalArgumentException, IllegalAccessException,
+      InvocationTargetException, NoSuchMethodException, IntrospectionException {
 
     if (Date.class.isAssignableFrom(target.getClass())) {
       fields.put(path, target);
     } else if (Calendar.class.isAssignableFrom(target.getClass())) {
       fields.put(path, ((Calendar) target).getTime());
-    } else if (!target.getClass().isArray() && target.getClass().getName().startsWith("java.")) {
+    } else if (!target.getClass().isArray()
+        && target.getClass().getName().startsWith("java.")) {
       if (!target.toString().isEmpty()) {
         fields.put(path, target.toString());
       }
     } else {
-      for (java.lang.reflect.Field field : target.getClass().getDeclaredFields()) {
-        if (field.getName().startsWith("_") || Modifier.isStatic(field.getModifiers())) {
+      for (java.lang.reflect.Field field : target.getClass()
+          .getDeclaredFields()) {
+        if (field.getName().startsWith("_")
+            || Modifier.isStatic(field.getModifiers())) {
           continue;
         }
 
         field.setAccessible(true);
-        Method reader = new PropertyDescriptor(field.getName(), target.getClass()).getReadMethod();
+        Method reader = new PropertyDescriptor(field.getName(),
+            target.getClass()).getReadMethod();
         try {
           if (reader != null) {
             Object obj = reader.invoke(target);
             if (field.getType().isArray()) {
               for (Object object : (Object[]) obj) {
-                getFieldValues(object, path + WordUtils.capitalize(field.getName().toLowerCase()), fields);
+                getFieldValues(object,
+                    path + WordUtils.capitalize(field.getName().toLowerCase()),
+                    fields);
               }
-            } else if (java.util.Collection.class.isAssignableFrom(obj.getClass())) {
+            } else if (java.util.Collection.class.isAssignableFrom(obj
+                .getClass())) {
               for (Object object : (java.util.Collection) obj) {
-                getFieldValues(object, path + WordUtils.capitalize(field.getName().toLowerCase()), fields);
+                getFieldValues(object,
+                    path + WordUtils.capitalize(field.getName().toLowerCase()),
+                    fields);
               }
             } else {
-              getFieldValues(obj, path + WordUtils.capitalize(field.getName().toLowerCase()), fields);
+              getFieldValues(obj,
+                  path + WordUtils.capitalize(field.getName().toLowerCase()),
+                  fields);
             }
           }
         } catch (Exception e) {
@@ -267,7 +286,7 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
 
       public FieldMap process(Profile item) throws IOException {
 
-        LOGGER.info("indexing profile {}",item.getReference().getExternal());
+        LOGGER.info("indexing profile {}", item.getReference().getExternal());
         FieldMap doc = new FieldMap();
 
         doc.put("docSource", "EEN");
@@ -294,7 +313,8 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
   @Override
   protected FlowJobBuilder getJobFlow(JobBuilder builder) {
     try {
-      Step step = stepBuilderFactory.get("getFile").<Profile, FieldMap> chunk(50).reader(reader())
+      Step step = stepBuilderFactory.get("getFile")
+          .<Profile, FieldMap> chunk(50).reader(reader())
           .processor(itemProcessor()).writer(fieldMapWriter()).build();
 
       return builder.flow(step).end();
@@ -304,9 +324,11 @@ public class EENCollection extends AbstractBatchCollection implements Synchroniz
     return null;
   }
 
-  public static void main(String... args) throws JobExecutionAlreadyRunningException, JobRestartException,
+  public static void main(String... args)
+      throws JobExecutionAlreadyRunningException, JobRestartException,
       JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+        RootConfiguration.class);
 
     EENCollection collection = context.getBean(EENCollection.class);
     collection.synchronize();

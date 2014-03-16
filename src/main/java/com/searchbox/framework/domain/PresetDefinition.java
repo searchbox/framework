@@ -15,10 +15,7 @@
  ******************************************************************************/
 package com.searchbox.framework.domain;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,9 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
@@ -40,14 +35,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import com.searchbox.core.dm.Preset;
-import com.searchbox.core.search.SearchElement;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class PresetDefinition extends UnknownClassDefinition implements ElementFactory<Preset> {
+public class PresetDefinition extends UnknownClassDefinition implements
+    ElementFactory<Preset> {
 
   @SuppressWarnings("unused")
-  private static final Logger LOGGER = LoggerFactory.getLogger(PresetDefinition.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(PresetDefinition.class);
 
   @ManyToOne
   private Searchbox searchbox;
@@ -67,7 +63,7 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
   private String description;
 
   private Integer position;
-  
+
   private String defaultProcess = "search";
 
   @OneToMany(targetEntity = FieldAttributeDefinition.class, cascade = CascadeType.ALL)
@@ -174,7 +170,8 @@ public class PresetDefinition extends UnknownClassDefinition implements ElementF
     this.addSearchElement(definition, DEFAULT_PROCESS);
   }
 
-  public void addSearchElement(SearchElementDefinition definition, String process) {
+  public void addSearchElement(SearchElementDefinition definition,
+      String process) {
     definition.setPreset(this);
     definition.setPosition(this.searchElements.size() + 1);
     definition.setProcess(process);

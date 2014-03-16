@@ -19,7 +19,6 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,23 +40,22 @@ public class StringUtils {
   }
 
   public static Set<String> extractHitFields(String template) {
-        Set<String> fields = new TreeSet<String>();
-        Pattern pattern = Pattern
-                .compile("\\{hit.fieldValues\\['([^\\s^\\^\\'}]+)'\\]\\}");
-        Matcher matcher = pattern.matcher(template);
-        while (matcher.find()) {
-            fields.add(matcher.group(1));
-        }
-        
-        pattern = Pattern
-            .compile("field=\"([^\\s^\\^\\'}]+)\"");
-        matcher = pattern.matcher(template);
-        while (matcher.find()) {
-            fields.add(matcher.group(1));
-        }
-                
-        return fields;
+    Set<String> fields = new TreeSet<String>();
+    Pattern pattern = Pattern
+        .compile("\\{hit.fieldValues\\['([^\\s^\\^\\'}]+)'\\]\\}");
+    Matcher matcher = pattern.matcher(template);
+    while (matcher.find()) {
+      fields.add(matcher.group(1));
     }
+
+    pattern = Pattern.compile("field=\"([^\\s^\\^\\'}]+)\"");
+    matcher = pattern.matcher(template);
+    while (matcher.find()) {
+      fields.add(matcher.group(1));
+    }
+
+    return fields;
+  }
 
   private static Map<Class<?>, String> classToSlug = new HashMap<Class<?>, String>();
   private static Map<String, Class<?>> slugToClass = new HashMap<String, Class<?>>();

@@ -8,9 +8,11 @@
 package org.tempuri;
 
 public interface QueryService extends javax.xml.rpc.Service {
-    public java.lang.String getBasicHttpBinding_IPODServiceSOAPAddress();
+  public java.lang.String getBasicHttpBinding_IPODServiceSOAPAddress();
 
-    public eu.europa.ec.een.tools.services.soap.IPODServiceSOAP getBasicHttpBinding_IPODServiceSOAP() throws javax.xml.rpc.ServiceException;
+  public eu.europa.ec.een.tools.services.soap.IPODServiceSOAP getBasicHttpBinding_IPODServiceSOAP()
+      throws javax.xml.rpc.ServiceException;
 
-    public eu.europa.ec.een.tools.services.soap.IPODServiceSOAP getBasicHttpBinding_IPODServiceSOAP(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+  public eu.europa.ec.een.tools.services.soap.IPODServiceSOAP getBasicHttpBinding_IPODServiceSOAP(
+      java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }

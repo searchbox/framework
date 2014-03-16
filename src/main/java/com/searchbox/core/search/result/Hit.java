@@ -20,131 +20,132 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Hit implements Comparable<Hit>{
+public class Hit implements Comparable<Hit> {
 
-    public Map<String, Object> fieldValues;
-    public Map<String, List<String>> highlights;
+  public Map<String, Object> fieldValues;
+  public Map<String, List<String>> highlights;
 
-    private Collection collection;
+  private Collection collection;
 
-    private Float score;
+  private Float score;
 
-    private String idFieldName;
+  private String idFieldName;
 
-    private String titleFieldName;
+  private String titleFieldName;
 
-    private String urlFieldName;
-    
-    private String displayTemplate;
+  private String urlFieldName;
 
-    //Prevent building a Hit with no score.
-    private Hit(){}
-    
-    public Hit(Float score) {        
-        this.score = score;
-        this.fieldValues = new HashMap<String, Object>();
-        this.highlights = new HashMap<String, List<String>>();
+  private String displayTemplate;
+
+  // Prevent building a Hit with no score.
+  private Hit() {
+  }
+
+  public Hit(Float score) {
+    this.score = score;
+    this.fieldValues = new HashMap<String, Object>();
+    this.highlights = new HashMap<String, List<String>>();
+  }
+
+  public Collection getCollection() {
+    return collection;
+  }
+
+  public void setCollection(Collection collection) {
+    this.collection = collection;
+  }
+
+  public String getIdFieldName() {
+    return idFieldName;
+  }
+
+  public void setIdFieldName(String idFieldName) {
+    this.idFieldName = idFieldName;
+  }
+
+  public String getTitleFieldName() {
+    return titleFieldName;
+  }
+
+  public void setTitleFieldName(String titleFieldName) {
+    this.titleFieldName = titleFieldName;
+  }
+
+  public String getUrlFieldName() {
+    return urlFieldName;
+  }
+
+  public void setUrlFieldName(String urlFieldName) {
+    this.urlFieldName = urlFieldName;
+  }
+
+  public String getDisplayTemplate() {
+    return displayTemplate;
+  }
+
+  public void setDisplayTemplate(String displayTemplate) {
+    this.displayTemplate = displayTemplate;
+  }
+
+  public Float getScore() {
+    return score;
+  }
+
+  public void setFieldValues(Map<String, Object> fieldValues) {
+    this.fieldValues = fieldValues;
+  }
+
+  public void setHighlights(Map<String, List<String>> highlights) {
+    this.highlights = highlights;
+  }
+
+  public void addFieldValue(String name, Object value) {
+    this.fieldValues.put(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  public String getId() {
+    Object id = this.fieldValues.get(this.idFieldName);
+    if (List.class.isAssignableFrom(id.getClass())) {
+      return ((List<String>) id).get(0);
+    } else {
+      return (String) id;
     }
+  }
 
-    public Collection getCollection() {
-      return collection;
+  @SuppressWarnings("unchecked")
+  public String getTitle() {
+    Object title = this.fieldValues.get(this.titleFieldName);
+    if (List.class.isAssignableFrom(title.getClass())) {
+      return ((List<String>) title).get(0);
+    } else {
+      return (String) title;
     }
+  }
 
-    public void setCollection(Collection collection) {
-      this.collection = collection;
+  @SuppressWarnings("unchecked")
+  public String getUrl() {
+    Object url = this.fieldValues.get(this.urlFieldName);
+    if (List.class.isAssignableFrom(url.getClass())) {
+      return ((List<String>) url).get(0);
+    } else {
+      return (String) url;
     }
+  }
 
-    public String getIdFieldName() {
-      return idFieldName;
-    }
+  public Map<String, Object> getFieldValues() {
+    return this.fieldValues;
+  }
 
-    public void setIdFieldName(String idFieldName) {
-      this.idFieldName = idFieldName;
-    }
+  /**
+   * @return the highlights
+   */
+  public Map<String, List<String>> getHighlights() {
+    return highlights;
+  }
 
-    public String getTitleFieldName() {
-      return titleFieldName;
-    }
-
-    public void setTitleFieldName(String titleFieldName) {
-      this.titleFieldName = titleFieldName;
-    }
-
-    public String getUrlFieldName() {
-      return urlFieldName;
-    }
-
-    public void setUrlFieldName(String urlFieldName) {
-      this.urlFieldName = urlFieldName;
-    }
-
-    public String getDisplayTemplate() {
-      return displayTemplate;
-    }
-
-    public void setDisplayTemplate(String displayTemplate) {
-      this.displayTemplate = displayTemplate;
-    }
-
-    public Float getScore() {
-      return score;
-    }
-
-    public void setFieldValues(Map<String, Object> fieldValues) {
-      this.fieldValues = fieldValues;
-    }
-
-    public void setHighlights(Map<String, List<String>> highlights) {
-      this.highlights = highlights;
-    }
-
-    public void addFieldValue(String name, Object value) {
-        this.fieldValues.put(name, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getId() {
-        Object id = this.fieldValues.get(this.idFieldName);
-        if (List.class.isAssignableFrom(id.getClass())) {
-            return ((List<String>) id).get(0);
-        } else {
-            return (String) id;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getTitle() {
-        Object title = this.fieldValues.get(this.titleFieldName);
-        if (List.class.isAssignableFrom(title.getClass())) {
-            return ((List<String>) title).get(0);
-        } else {
-            return (String) title;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getUrl() {
-        Object url = this.fieldValues.get(this.urlFieldName);
-        if (List.class.isAssignableFrom(url.getClass())) {
-            return ((List<String>) url).get(0);
-        } else {
-            return (String) url;
-        }
-    }
-
-    public Map<String, Object> getFieldValues() {
-        return this.fieldValues;
-    }
-
-    /**
-     * @return the highlights
-     */
-    public Map<String, List<String>> getHighlights() {
-        return highlights;
-    }
-
-    @Override
-    public int compareTo(Hit other) {
-        return score.compareTo(other.getScore() + 0.001f) * -1;
-    }
+  @Override
+  public int compareTo(Hit other) {
+    return score.compareTo(other.getScore() + 0.001f) * -1;
+  }
 }

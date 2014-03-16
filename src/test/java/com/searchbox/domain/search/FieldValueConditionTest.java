@@ -28,42 +28,41 @@ import com.searchbox.core.search.filter.FieldValueCondition;
 
 public class FieldValueConditionTest {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(FieldValueConditionTest.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(FieldValueConditionTest.class);
 
-    public static final String FIELD_NAME = "field";
-    public static final String FIELD_VALUE = "value";
-    public static final String URL_PARAM = "field[value]s";
+  public static final String FIELD_NAME = "field";
+  public static final String FIELD_VALUE = "value";
+  public static final String URL_PARAM = "field[value]s";
 
-    @Test
-    public void testConverter() {
+  @Test
+  public void testConverter() {
 
-        Converter<String, FieldValueCondition> vv = new FieldValueCondition.FieldValueConditionConverter();
-        FieldValueCondition vc = vv.convert(URL_PARAM);
-        Assert.assertEquals("FieldName value", FIELD_NAME, vc.getFieldName());
-        Assert.assertEquals("Value value", FIELD_VALUE, vc.getValue());
-    }
+    Converter<String, FieldValueCondition> vv = new FieldValueCondition.FieldValueConditionConverter();
+    FieldValueCondition vc = vv.convert(URL_PARAM);
+    Assert.assertEquals("FieldName value", FIELD_NAME, vc.getFieldName());
+    Assert.assertEquals("Value value", FIELD_VALUE, vc.getValue());
+  }
 
-    @Test
-    public void testLoopConverter() {
-        FieldFacet facet = new FieldFacet("test Facet",
-                Field.stringField("athor"));
+  @Test
+  public void testLoopConverter() {
+    FieldFacet facet = new FieldFacet("test Facet", Field.stringField("athor"));
 
-        FieldFacet.Value value = facet.new Value("Stephane", "stephane", 3);
+    FieldFacet.Value value = facet.new Value("Stephane", "stephane", 3);
 
-        FieldValueCondition orig = new FieldValueCondition("athor", "stephane",
-                facet.getSticky());
+    FieldValueCondition orig = new FieldValueCondition("athor", "stephane",
+        facet.getSticky());
 
-        AbstractSearchCondition condition = value.getSearchCondition();
+    AbstractSearchCondition condition = value.getSearchCondition();
 
-        Assert.assertEquals("Original and from Facet", orig, condition);
+    Assert.assertEquals("Original and from Facet", orig, condition);
 
-        // TODO Fix fails because of tag issue in Adapter...
-        Converter<String, FieldValueCondition> vv = new FieldValueCondition.FieldValueConditionConverter();
-        FieldValueCondition vc = vv.convert(value.geParamValue());
-        LOGGER.info("ORIG:\t" + orig);
-        LOGGER.info("URL: \t" + vc);
-        Assert.assertEquals("Transformed and original", vc, orig);
-    }
+    // TODO Fix fails because of tag issue in Adapter...
+    Converter<String, FieldValueCondition> vv = new FieldValueCondition.FieldValueConditionConverter();
+    FieldValueCondition vc = vv.convert(value.geParamValue());
+    LOGGER.info("ORIG:\t" + orig);
+    LOGGER.info("URL: \t" + vc);
+    Assert.assertEquals("Transformed and original", vc, orig);
+  }
 
 }

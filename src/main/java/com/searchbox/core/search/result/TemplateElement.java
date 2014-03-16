@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.searchbox.core.search.result;
 
-import java.lang.annotation.ElementType;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -30,8 +29,9 @@ import com.searchbox.core.search.UseCollector;
 @SearchComponent
 public class TemplateElement extends SearchElement implements UseCollector {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TemplateElement.class);
-  
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(TemplateElement.class);
+
   private static final String COLLECTOR_KEY = "hits";
   private static final String DEFAUTL_TEMPLATE = "/WEB-INF/templates/_defaultHitView.jspx";
 
@@ -54,13 +54,13 @@ public class TemplateElement extends SearchElement implements UseCollector {
     super("Template Element", SearchElement.Type.VIEW);
     this.fields = new TreeSet<String>();
   }
-  
-  public TemplateElement(String name){
+
+  public TemplateElement(String name) {
     super(name, SearchElement.Type.VIEW);
     this.fields = new TreeSet<String>();
   }
-  
-  public boolean hasTempalte(){
+
+  public boolean hasTempalte() {
     return this.templateFile != null && !this.templateFile.isEmpty();
   }
 
@@ -77,13 +77,13 @@ public class TemplateElement extends SearchElement implements UseCollector {
     }
     return fields;
   }
-  
+
   public void setTemplateFile(String templateFile) {
     this.templateFile = templateFile;
   }
 
   public String getTemplateFile() {
-    if(hasTempalte()){
+    if (hasTempalte()) {
       return this.templateFile;
     } else {
       return TemplateElement.DEFAUTL_TEMPLATE;
@@ -124,7 +124,7 @@ public class TemplateElement extends SearchElement implements UseCollector {
 
   @Override
   public String getCollectorKey() {
-    if(this.getLabel() != null && !this.getLabel().isEmpty()){
+    if (this.getLabel() != null && !this.getLabel().isEmpty()) {
       return this.getLabel();
     } else {
       return TemplateElement.COLLECTOR_KEY;

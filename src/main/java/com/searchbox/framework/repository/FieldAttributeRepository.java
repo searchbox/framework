@@ -23,7 +23,7 @@ import com.searchbox.framework.domain.FieldAttributeDefinition;
 import com.searchbox.framework.domain.PresetDefinition;
 
 public interface FieldAttributeRepository extends
-        CrudRepository<FieldAttributeDefinition, Long> {
+    CrudRepository<FieldAttributeDefinition, Long> {
 
-    public Set<FieldAttributeDefinition> findAllByPreset(PresetDefinition p);
+  public Set<FieldAttributeDefinition> findAllByPreset(PresetDefinition p);
 }

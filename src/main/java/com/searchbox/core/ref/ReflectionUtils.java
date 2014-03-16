@@ -30,117 +30,114 @@ import com.searchbox.framework.domain.UnknownAttributeDefinition;
 
 public class ReflectionUtils {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(ReflectionUtils.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(ReflectionUtils.class);
 
-    public static void copyAllFields(Object from, Object to) {
-        for (Field fromField : findAllFields(from.getClass())) {
+  public static void copyAllFields(Object from, Object to) {
+    for (Field fromField : findAllFields(from.getClass())) {
+      try {
+        Field toField = findUnderlying(to.getClass(), fromField.getName());
+        if (toField != null) {
+          toField.setAccessible(true);
+          fromField.setAccessible(true);
+          toField.set(to, fromField.get(from));
+        }
+      } catch (Exception e) {
+        LOGGER.warn("Could not copye Fields.", e);
+      }
+    }
+  }
+
+  public static void inspectAndSaveAttribute(Class<?> searchElement,
+      List<UnknownAttributeDefinition> attributes) {
+    if (searchElement != null) {
+      for (Field field : searchElement.getDeclaredFields()) {
+        if (field.isAnnotationPresent(SearchAttribute.class)) {
+          UnknownAttributeDefinition attrDef = new UnknownAttributeDefinition(
+              field.getType(), field.getName());
+          String value = field.getAnnotation(SearchAttribute.class).value();
+          if (value != null && !value.isEmpty()) {
             try {
-                Field toField = findUnderlying(to.getClass(),
-                        fromField.getName());
-                if (toField != null) {
-                    toField.setAccessible(true);
-                    fromField.setAccessible(true);
-                    toField.set(to, fromField.get(from));
-                }
-            } catch (Exception e) {
-                LOGGER.warn("Could not copye Fields.", e);
+              Object ovalue = BeanUtils.instantiateClass(field.getType()
+                  .getConstructor(String.class), value);
+              attrDef.setValue(ovalue);
+            } catch (BeanInstantiationException | NoSuchMethodException
+                | SecurityException e) {
+              LOGGER.trace(
+                  "Could not construct default value (not much of a problem)",
+                  e);
             }
+          }
+          attributes.add(attrDef);
         }
+      }
+      inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);
+    } else {
+      return;
     }
+  }
 
-    public static void inspectAndSaveAttribute(Class<?> searchElement,
-            List<UnknownAttributeDefinition> attributes) {
-        if (searchElement != null) {
-            for (Field field : searchElement.getDeclaredFields()) {
-                if (field.isAnnotationPresent(SearchAttribute.class)) {
-                    UnknownAttributeDefinition attrDef = new UnknownAttributeDefinition(
-                            field.getType(), field.getName());
-                    String value = field.getAnnotation(SearchAttribute.class)
-                            .value();
-                    if (value != null && !value.isEmpty()) {
-                        try {
-                            Object ovalue = BeanUtils.instantiateClass(field
-                                    .getType().getConstructor(String.class),
-                                    value);
-                            attrDef.setValue(ovalue);
-                        } catch (BeanInstantiationException
-                                | NoSuchMethodException | SecurityException e) {
-                            LOGGER.trace(
-                                    "Could not construct default value (not much of a problem)",
-                                    e);
-                        }
-                    }
-                    attributes.add(attrDef);
-                }
-            }
-            inspectAndSaveAttribute(searchElement.getSuperclass(), attributes);
-        } else {
-            return;
+  public static List<Field> findAllFields(Class<?> element) {
+    ArrayList<Field> fields = new ArrayList<Field>();
+    if (element != null) {
+      for (Field field : element.getDeclaredFields()) {
+        fields.add(field);
+      }
+      fields.addAll(findAllFields(element.getSuperclass()));
+      return fields;
+    } else {
+      return Collections.emptyList();
+    }
+  }
+
+  public static Field findUnderlying(Class<?> element, String fieldName) {
+    if (element != null) {
+      Field field = null;
+      try {
+        field = element.getDeclaredField(fieldName);
+      } catch (Exception e) {
+
+      }
+      if (field != null) {
+        return field;
+      } else {
+        return findUnderlying(element.getSuperclass(), fieldName);
+      }
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Permute all possible parameters
+   * 
+   * @param caller
+   * @param method
+   * @param allArguments
+   * @param offset
+   * @param arguments
+   */
+  public static List<Object[]> findAllArgumentPermutations(
+      Object[][] allArguments) {
+    return findAllArgumentPermutations(allArguments, 0, 0,
+        new Object[allArguments.length], new ArrayList<Object[]>());
+
+  }
+
+  public static List<Object[]> findAllArgumentPermutations(
+      Object[][] allArguments, int depth, int offset, Object[] arguments,
+      List<Object[]> results) {
+    if (depth < allArguments.length) {
+      for (int i = offset; i < allArguments[depth].length; i++) {
+        arguments[depth] = allArguments[depth][i];
+        // we got a bag here...
+        if ((depth + 1) == arguments.length) {
+          results.add(arguments.clone());
         }
+        findAllArgumentPermutations(allArguments, depth + 1, offset, arguments,
+            results);
+      }
     }
-
-    public static List<Field> findAllFields(Class<?> element) {
-        ArrayList<Field> fields = new ArrayList<Field>();
-        if (element != null) {
-            for (Field field : element.getDeclaredFields()) {
-                fields.add(field);
-            }
-            fields.addAll(findAllFields(element.getSuperclass()));
-            return fields;
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public static Field findUnderlying(Class<?> element, String fieldName) {
-        if (element != null) {
-            Field field = null;
-            try {
-                field = element.getDeclaredField(fieldName);
-            } catch (Exception e) {
-
-            }
-            if (field != null) {
-                return field;
-            } else {
-                return findUnderlying(element.getSuperclass(), fieldName);
-            }
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Permute all possible parameters
-     * 
-     * @param caller
-     * @param method
-     * @param allArguments
-     * @param offset
-     * @param arguments
-     */
-    public static List<Object[]> findAllArgumentPermutations(
-            Object[][] allArguments) {
-        return findAllArgumentPermutations(allArguments, 0, 0,
-                new Object[allArguments.length], new ArrayList<Object[]>());
-
-    }
-
-    public static List<Object[]> findAllArgumentPermutations(
-            Object[][] allArguments, int depth, int offset, Object[] arguments,
-            List<Object[]> results) {
-        if (depth < allArguments.length) {
-            for (int i = offset; i < allArguments[depth].length; i++) {
-                arguments[depth] = allArguments[depth][i];
-                // we got a bag here...
-                if ((depth + 1) == arguments.length) {
-                    results.add(arguments.clone());
-                }
-                findAllArgumentPermutations(allArguments, depth + 1, offset,
-                        arguments, results);
-            }
-        }
-        return results;
-    }
+    return results;
+  }
 }

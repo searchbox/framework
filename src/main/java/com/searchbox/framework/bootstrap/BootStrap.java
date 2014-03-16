@@ -117,7 +117,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /** The base Searchbox. */
       LOGGER.info("++ Creating oppfin searchbox");
-      Searchbox searchbox = new Searchbox("oppfin", "Opportunity Finder Searchbox");
+      Searchbox searchbox = new Searchbox("oppfin",
+          "Opportunity Finder Searchbox");
 
       /** The embedded Solr SearchEngine */
       LOGGER.info("++ Creating Embedded Solr Engine");
@@ -169,7 +170,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /** The base collection for searchbox */
       LOGGER.info("++ Creating oppfin Topic Collection");
-      CollectionDefinition collection = new CollectionDefinition(TopicCollection.class, "H2020Topics");
+      CollectionDefinition collection = new CollectionDefinition(
+          TopicCollection.class, "H2020Topics");
       collection.setIdFieldName("topicIdentifier");
       collection.setAutoStart(false);
       collection.setSearchEngine(engine);
@@ -243,7 +245,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * Create & add another TemplateElement SearchComponent to the preset;
        * SearchElementType can be overriden
        */
-      SearchElementDefinition viewHit = new SearchElementDefinition(TemplateElement.class);
+      SearchElementDefinition viewHit = new SearchElementDefinition(
+          TemplateElement.class);
       viewHit.setLabel("body");
       viewHit.setAttributeValue("titleField", "topicTitle");
       viewHit.setAttributeValue("idField", "id");
@@ -252,21 +255,27 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetTopic.addSearchElement(viewHit, "view");
 
       /** Create & add a FieldSort SearchComponent to the preset; */
-      SearchElementDefinition fieldSort = new SearchElementDefinition(FieldSort.class);
+      SearchElementDefinition fieldSort = new SearchElementDefinition(
+          FieldSort.class);
       SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
       sortFields.add(FieldSort.getRelevancySort());
-      sortFields.add(new FieldSort.Value(
-          "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>", "callDeadline", Sort.ASC));
+      sortFields
+          .add(new FieldSort.Value(
+              "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
+              "callDeadline", Sort.ASC));
       fieldSort.setAttributeValue("values", sortFields);
       presetTopic.addSearchElement(fieldSort, "search");
 
       /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition basicStatus = new SearchElementDefinition(BasicSearchStats.class);
+      SearchElementDefinition basicStatus = new SearchElementDefinition(
+          BasicSearchStats.class);
       presetTopic.addSearchElement(basicStatus, "search");
 
       /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition callFacet = new SearchElementDefinition(FieldFacet.class);
-      callFacet.setAttributeValue("field", collection.getFieldDefinition("callIdentifier").getInstance());
+      SearchElementDefinition callFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      callFacet.setAttributeValue("field",
+          collection.getFieldDefinition("callIdentifier").getInstance());
       callFacet.setLabel("Call");
       callFacet.setAttributeValue("order", Order.BY_VALUE);
       callFacet.setAttributeValue("sort", Sort.DESC);
@@ -276,21 +285,26 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * Ideally this is a range facet. We agreed that for now it will be a list
        * of months For instance(March 14, April 14, May 14, June 14, ...)
        */
-      SearchElementDefinition deadlineFacet = new SearchElementDefinition(FieldFacet.class);
-      deadlineFacet.setAttributeValue("field", collection.getFieldDefinition("callDeadline").getInstance());
+      SearchElementDefinition deadlineFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      deadlineFacet.setAttributeValue("field",
+          collection.getFieldDefinition("callDeadline").getInstance());
       deadlineFacet.setLabel("Deadline");
       deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
       deadlineFacet.setAttributeValue("sort", Sort.DESC);
       presetTopic.addSearchElement(deadlineFacet, "search");
 
-      SearchElementDefinition flagFacet = new SearchElementDefinition(FieldFacet.class);
-      flagFacet.setAttributeValue("field", collection.getFieldDefinition("topicFlags").getInstance());
+      SearchElementDefinition flagFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      flagFacet.setAttributeValue("field",
+          collection.getFieldDefinition("topicFlags").getInstance());
       flagFacet.setLabel("Flags");
       flagFacet.setAttributeValue("order", Order.BY_VALUE);
       flagFacet.setAttributeValue("sort", Sort.DESC);
       presetTopic.addSearchElement(flagFacet, "search");
 
-      SearchElementDefinition pagination = new SearchElementDefinition(BasicPagination.class);
+      SearchElementDefinition pagination = new SearchElementDefinition(
+          BasicPagination.class);
       presetTopic.addSearchElement(pagination, "search");
 
       searchbox.addPresetDefinition(presetTopic);
@@ -301,7 +315,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /** The base collection for een */
       LOGGER.info("++ Creating oppfin EEN Collection");
-      CollectionDefinition eenCollection = new CollectionDefinition(EENCollection.class, "eenCooperations");
+      CollectionDefinition eenCollection = new CollectionDefinition(
+          EENCollection.class, "eenCooperations");
       eenCollection.setIdFieldName("eenReferenceExternal");
       eenCollection.setAutoStart(false);
       eenCollection.setSearchEngine(engine);
@@ -373,26 +388,30 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetEEN.addFieldAttribute(eenDescriptionField);
 
       /** Create & add a query SearchComponent to the preset; */
-      SearchElementDefinition eenQuery = new SearchElementDefinition(EdismaxQuery.class);
+      SearchElementDefinition eenQuery = new SearchElementDefinition(
+          EdismaxQuery.class);
       presetEEN.addSearchElement(eenQuery);
 
       /** Create & add a TemplateElement SearchComponent to the preset; */
-      SearchElementDefinition eenTemplateElement = new SearchElementDefinition(TemplateElement.class);
+      SearchElementDefinition eenTemplateElement = new SearchElementDefinition(
+          TemplateElement.class);
       eenTemplateElement.setAttributeValue("titleField", "eenContentTitle");
       eenTemplateElement.setAttributeValue("idField", "eenReferenceExternal");
       eenTemplateElement.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_eenHit.jspx");
-     presetEEN.addSearchElement(eenTemplateElement, "search");
+      presetEEN.addSearchElement(eenTemplateElement, "search");
 
-      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(TemplateElement.class);
+      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(
+          TemplateElement.class);
       eenViewHitMeta.setLabel("leftCol");
       eenViewHitMeta.setAttributeValue("titleField", "eenContentTitle");
       eenViewHitMeta.setAttributeValue("idField", "eenReferenceExternal");
       eenViewHitMeta.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_eenViewMeta.jspx");
       presetEEN.addSearchElement(eenViewHitMeta, "view");
-      
-      SearchElementDefinition eenViewHit = new SearchElementDefinition(TemplateElement.class);
+
+      SearchElementDefinition eenViewHit = new SearchElementDefinition(
+          TemplateElement.class);
       eenViewHit.setLabel("body");
       eenViewHit.setAttributeValue("titleField", "eenContentTitle");
       eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
@@ -400,7 +419,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           "/WEB-INF/templates/oppfin/_eenView.jspx");
       presetEEN.addSearchElement(eenViewHit, "view");
 
-      
       /** Create & add a basicSearchStat SearchComponent to the preset; */
       SearchElementDefinition eenBasicStatus = new SearchElementDefinition(
           BasicSearchStats.class);
@@ -411,51 +429,59 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetEEN.addSearchElement(eenPagination);
 
       /** Create & add a FieldSort SearchComponent to the preset; */
-      SearchElementDefinition eenFieldSort = new SearchElementDefinition(FieldSort.class);
+      SearchElementDefinition eenFieldSort = new SearchElementDefinition(
+          FieldSort.class);
       SortedSet<FieldSort.Value> eenSortFields = new TreeSet<FieldSort.Value>();
       eenSortFields.add(FieldSort.getRelevancySort());
-      eenSortFields.add(new FieldSort.Value("Newest first", "eenDatumUpdate", Sort.DESC));
+      eenSortFields.add(new FieldSort.Value("Newest first", "eenDatumUpdate",
+          Sort.DESC));
       eenFieldSort.setAttributeValue("values", eenSortFields);
       presetEEN.addSearchElement(eenFieldSort);
 
       /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenDocSource = new SearchElementDefinition(FieldFacet.class);
-      eenDocSource.setAttributeValue("field", eenCollection.getFieldDefinition("docSource").getInstance());
+      SearchElementDefinition eenDocSource = new SearchElementDefinition(
+          FieldFacet.class);
+      eenDocSource.setAttributeValue("field",
+          eenCollection.getFieldDefinition("docSource").getInstance());
       eenDocSource.setLabel("Cooperation Source");
       eenDocSource.setAttributeValue("order", Order.BY_VALUE);
       eenDocSource.setAttributeValue("sort", Sort.DESC);
       presetEEN.addSearchElement(eenDocSource);
 
       /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenReferenceTypeFacet = new SearchElementDefinition(FieldFacet.class);
-      eenReferenceTypeFacet.setAttributeValue("field", eenCollection.getFieldDefinition("eenReferenceType")
-          .getInstance());
+      SearchElementDefinition eenReferenceTypeFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      eenReferenceTypeFacet.setAttributeValue("field", eenCollection
+          .getFieldDefinition("eenReferenceType").getInstance());
       eenReferenceTypeFacet.setLabel("EEN Type");
       eenReferenceTypeFacet.setAttributeValue("order", Order.BY_VALUE);
       eenReferenceTypeFacet.setAttributeValue("sort", Sort.DESC);
       presetEEN.addSearchElement(eenReferenceTypeFacet);
 
       /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenKeyword = new SearchElementDefinition(FieldFacet.class);
-      eenKeyword.setAttributeValue("field", eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel")
-          .getInstance());
+      SearchElementDefinition eenKeyword = new SearchElementDefinition(
+          FieldFacet.class);
+      eenKeyword.setAttributeValue("field",
+          eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel")
+              .getInstance());
       eenKeyword.setLabel("Keyword");
       eenKeyword.setAttributeValue("order", Order.BY_VALUE);
       eenKeyword.setAttributeValue("sort", Sort.DESC);
       presetEEN.addSearchElement(eenKeyword);
 
       /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenCompanyCountry = new SearchElementDefinition(FieldFacet.class);
-      eenCompanyCountry.setAttributeValue("field", eenCollection.getFieldDefinition("eenCompanyCountryLabel")
-          .getInstance());
+      SearchElementDefinition eenCompanyCountry = new SearchElementDefinition(
+          FieldFacet.class);
+      eenCompanyCountry.setAttributeValue("field", eenCollection
+          .getFieldDefinition("eenCompanyCountryLabel").getInstance());
       eenCompanyCountry.setLabel("Partner Country");
       eenCompanyCountry.setAttributeValue("order", Order.BY_VALUE);
       eenCompanyCountry.setAttributeValue("sort", Sort.DESC);
       presetEEN.addSearchElement(eenCompanyCountry);
 
-       SearchElementDefinition eenQueryDebug = new
-       SearchElementDefinition(SolrToString.class);
-       presetEEN.addSearchElement(eenQueryDebug);
+      SearchElementDefinition eenQueryDebug = new SearchElementDefinition(
+          SolrToString.class);
+      presetEEN.addSearchElement(eenQueryDebug);
 
       /**
        * IDEALIST PRESET
@@ -525,7 +551,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       idealistTmpHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistHit.jspx");
       presetIDEALIST.addSearchElement(idealistTmpHit);
-      
+
       SearchElementDefinition idealistTmpView = new SearchElementDefinition(
           TemplateElement.class);
       idealistTmpView.setType(SearchElement.Type.INSPECT);
@@ -534,9 +560,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       idealistTmpView.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistView.jspx");
       presetIDEALIST.addSearchElement(idealistTmpView);
-      
-      
-
 
       // SearchElementDefinition idealistViewHit = new SearchElementDefinition(
       // TemplateElement.class);
@@ -588,7 +611,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     LOGGER.info("Starting all your engine");
-    Iterator<SearchEngineDefinition> engineDefinitions = engineRepository.findAll().iterator();
+    Iterator<SearchEngineDefinition> engineDefinitions = engineRepository
+        .findAll().iterator();
 
     while (engineDefinitions.hasNext()) {
       SearchEngineDefinition engineDefinition = engineDefinitions.next();
@@ -625,8 +649,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
   }
 
   public static void main(String... args) {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class,
-        BootStrap.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+        RootConfiguration.class, BootStrap.class);
 
     // context.getBeanFactory().createBean(BootStrap.class).doBootStrap();
   }

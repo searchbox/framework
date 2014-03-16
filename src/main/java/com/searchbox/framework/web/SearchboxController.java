@@ -55,7 +55,8 @@ import com.searchbox.framework.service.SearchService;
 @RequestMapping("/{searchbox}")
 public class SearchboxController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SearchboxController.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchboxController.class);
 
   @Autowired
   ApplicationConversionService conversionService;
@@ -68,7 +69,7 @@ public class SearchboxController {
 
   @Autowired
   protected PresetRepository presetRepository;
-  
+
   @Autowired
   protected SearchElementService elementService;
 
@@ -95,7 +96,8 @@ public class SearchboxController {
   }
 
   @ModelAttribute("conditions")
-  public Set<AbstractSearchCondition> getSearchConditions(HttpServletRequest request) {
+  public Set<AbstractSearchCondition> getSearchConditions(
+      HttpServletRequest request) {
     // Fetch all search Conditions within HTTP params
     Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
     for (String param : conversionService.getSearchConditionParams()) {
@@ -103,8 +105,9 @@ public class SearchboxController {
         for (String value : request.getParameterValues(param)) {
           if (value != null && !value.isEmpty()) {
             try {
-              AbstractSearchCondition cond = (AbstractSearchCondition) conversionService.convert(value,
-                  conversionService.getSearchConditionClass(param));
+              AbstractSearchCondition cond = (AbstractSearchCondition) conversionService
+                  .convert(value,
+                      conversionService.getSearchConditionClass(param));
               conditions.add(cond);
             } catch (Exception e) {
               LOGGER.error("Could not convert " + value, e);
@@ -131,37 +134,42 @@ public class SearchboxController {
     // TODO when security is true, check LoggedIn
     PresetDefinition preset = searchbox.getPresets().get(0);
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
-    ModelAndView redirect = new ModelAndView(
-        new RedirectView("/" + searchbox.getSlug() + "/" + preset.getSlug(), true));
+    ModelAndView redirect = new ModelAndView(new RedirectView("/"
+        + searchbox.getSlug() + "/" + preset.getSlug(), true));
     return redirect;
   }
 
   @RequestMapping(value = { "/{preset}", "/{preset}/" })
   public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
-      HttpServletRequest request,@PathVariable PresetDefinition preset,
+      HttpServletRequest request, @PathVariable PresetDefinition preset,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
     String process = preset.getDefaultProcess();
-    LOGGER.info("Missing process. Redirecting to default process of preset: {}", process);
-    ModelAndView redirect = new ModelAndView(new RedirectView("/" + searchbox.getSlug() + "/" + preset.getSlug() + "/"
-        + process, true));
+    LOGGER.info(
+        "Missing process. Redirecting to default process of preset: {}",
+        process);
+    ModelAndView redirect = new ModelAndView(new RedirectView("/"
+        + searchbox.getSlug() + "/" + preset.getSlug() + "/" + process, true));
     return redirect;
 
   }
 
   @RequestMapping(value = { "/{preset}/{process}", "/{preset}/{process}/" })
   public ModelAndView executeSearch(@PathVariable String process,
-      @ModelAttribute("searchboxes") List<Searchbox> searchboxes, @PathVariable Searchbox searchbox,
-      @PathVariable PresetDefinition preset, @ModelAttribute("collector") SearchCollector collector,
-      @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions, ModelAndView model,
-      RedirectAttributes redirectAttributes) {
+      @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
+      @PathVariable Searchbox searchbox, @PathVariable PresetDefinition preset,
+      @ModelAttribute("collector") SearchCollector collector,
+      @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
+      ModelAndView model, RedirectAttributes redirectAttributes) {
 
-    LOGGER.debug("search page for: {} with preset: {} and process: {}", searchbox, preset, process);
+    LOGGER.debug("search page for: {} with preset: {} and process: {}",
+        searchbox, preset, process);
 
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
 
-    Set<SearchElement> resultElements = executeRequest(searchbox, preset, process, conditions, collector);
+    Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+        process, conditions, collector);
 
     model.addObject("preset", preset);
     model.addObject("process", process);
@@ -171,11 +179,13 @@ public class SearchboxController {
     return model;
   }
 
-  protected Set<SearchElement> executeRequest(Searchbox searchbox, PresetDefinition preset, String process,
+  protected Set<SearchElement> executeRequest(Searchbox searchbox,
+      PresetDefinition preset, String process,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
     Set<SearchElementDefinition> searchElementDefinitions = new TreeSet<SearchElementDefinition>();
-    searchElementDefinitions.addAll(preset.getSearchElements(PresetDefinition.DEFAULT_PROCESS));
+    searchElementDefinitions.addAll(preset
+        .getSearchElements(PresetDefinition.DEFAULT_PROCESS));
     searchElementDefinitions.addAll(preset.getSearchElements(process));
 
     // Build the Preset DTO with dependancies
@@ -185,11 +195,13 @@ public class SearchboxController {
     for (SearchElementDefinition elementdefinition : searchElementDefinitions) {
       LOGGER.debug("Adding SearchElementDefinition: {}", elementdefinition);
       try {
-        SearchElement searchElement = elementService.getSearchElement(elementdefinition);
+        SearchElement searchElement = elementService
+            .getSearchElement(elementdefinition);
         LOGGER.trace("Adding SearchElementDefinition: {}", searchElement);
         searchElements.add(searchElement);
       } catch (Exception e) {
-        LOGGER.error("Could not get SearchElement for: " + elementdefinition, e);
+        LOGGER
+            .error("Could not get SearchElement for: " + elementdefinition, e);
       }
     }
 
@@ -198,13 +210,14 @@ public class SearchboxController {
       fieldAttributes.add(def.getInstance());
     }
 
-    SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine().getInstance();
+    SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
+        .getInstance();
     searchEngine.setCollection(preset.getCollection().getInstance());
 
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
 
-    Set<SearchElement> resultElements = searchService.execute(searchEngine, searchElements, fieldAttributes,
-        conditions, collector);
+    Set<SearchElement> resultElements = searchService.execute(searchEngine,
+        searchElements, fieldAttributes, conditions, collector);
 
     // Check if we have a retry clause
     // TODO put the rety in collector.
@@ -218,7 +231,8 @@ public class SearchboxController {
     }
 
     if (retry) {
-      resultElements = searchService.execute(searchEngine, searchElements, fieldAttributes, conditions, collector);
+      resultElements = searchService.execute(searchEngine, searchElements,
+          fieldAttributes, conditions, collector);
     }
     collector.getCollectedItems("test").add("Hello mademoiselle");
     return resultElements;

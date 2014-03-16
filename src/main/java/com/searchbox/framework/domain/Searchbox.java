@@ -156,7 +156,7 @@ public class Searchbox {
   @Override
   public String toString() {
     // FIXME. Do not reflection on toString (breaks Lazy INiti)
-    return ReflectionToStringBuilder.toString(this, 
+    return ReflectionToStringBuilder.toString(this,
         ToStringStyle.SHORT_PREFIX_STYLE);
   }
 }

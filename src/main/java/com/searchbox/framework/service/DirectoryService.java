@@ -29,105 +29,101 @@ import org.springframework.stereotype.Service;
 @Service
 public class DirectoryService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(DirectoryService.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(DirectoryService.class);
 
-    @Autowired
-    ApplicationContext context;
+  @Autowired
+  ApplicationContext context;
 
-    File tempDir;
+  File tempDir;
 
-    DirectoryService() {
-        // this.tempDir = new File
+  DirectoryService() {
+    // this.tempDir = new File
+  }
+
+  public String getApplicationRelativePath(String fname) {
+    Resource tempDir = context.getResource("WEB-INF/temp/");
+    File file;
+    try {
+      file = new File(tempDir.getFile().getAbsolutePath() + "/" + fname);
+      LOGGER.debug("Application absolutePath: "
+          + context.getResource("").getFile().getAbsolutePath());
+      String relative = context.getResource("").getFile().toURI()
+          .relativize(file.toURI()).getPath();
+      return relative;
+    } catch (IOException e) {
+      LOGGER.error("Could not create temp file in directoryService", e);
     }
+    return null;
+  }
 
-    public String getApplicationRelativePath(String fname) {
-        Resource tempDir = context.getResource("WEB-INF/temp/");
-        File file;
-        try {
-            file = new File(tempDir.getFile().getAbsolutePath() + "/" + fname);
-            LOGGER.debug("Application absolutePath: "
-                    + context.getResource("").getFile().getAbsolutePath());
-            String relative = context.getResource("").getFile().toURI()
-                    .relativize(file.toURI()).getPath();
-            return relative;
-        } catch (IOException e) {
-            LOGGER.error("Could not create temp file in directoryService", e);
-        }
-        return null;
+  public String getApplicationRelativePath(File file) {
+    try {
+      LOGGER.debug("Application absolutePath: "
+          + context.getResource("").getFile().getAbsolutePath());
+      String relative = context.getResource("").getFile().toURI()
+          .relativize(file.toURI()).getPath();
+      return relative;
+    } catch (IOException e) {
+      LOGGER.error(
+          "Could not get application-relative path in directoryService", e);
     }
+    return null;
+  }
 
-    public String getApplicationRelativePath(File file) {
-        try {
-            LOGGER.debug("Application absolutePath: "
-                    + context.getResource("").getFile().getAbsolutePath());
-            String relative = context.getResource("").getFile().toURI()
-                    .relativize(file.toURI()).getPath();
-            return relative;
-        } catch (IOException e) {
-            LOGGER.error(
-                    "Could not get application-relative path in directoryService",
-                    e);
-        }
-        return null;
+  public Boolean fileExists(String fname) {
+    Resource tempDir = context.getResource("WEB-INF/temp/");
+    File newFile;
+    try {
+      newFile = new File(tempDir.getFile().getAbsolutePath() + "/" + fname);
+      return newFile.exists();
+    } catch (IOException e) {
+      LOGGER.error("Could not create temp file in directoryService", e);
     }
+    return false;
+  }
 
-    public Boolean fileExists(String fname) {
-        Resource tempDir = context.getResource("WEB-INF/temp/");
-        File newFile;
-        try {
-            newFile = new File(tempDir.getFile().getAbsolutePath() + "/"
-                    + fname);
-            return newFile.exists();
-        } catch (IOException e) {
-            LOGGER.error("Could not create temp file in directoryService", e);
-        }
-        return false;
+  public File createFile(String fname, String content) {
+    File file = this.createFile(fname);
+    try {
+      FileUtils.writeStringToFile(file, content);
+    } catch (IOException e) {
+      LOGGER.error("Could not write to temp file in directoryService", e);
     }
+    return file;
+  }
 
-    public File createFile(String fname, String content) {
-        File file = this.createFile(fname);
-        try {
-            FileUtils.writeStringToFile(file, content);
-        } catch (IOException e) {
-            LOGGER.error("Could not write to temp file in directoryService", e);
-        }
-        return file;
-    }
-
-    public File createFile(String fname) {
-        Resource tempDir = context.getResource("WEB-INF/temp/");
-        if (!tempDir.exists()) {
-            try {
-                tempDir.getFile().mkdirs();
-            } catch (IOException e) {
-                LOGGER.error("Could not create temp file in directoryService",
-                        e);
-            }
-        }
-        try {
-            File newFile = new File(tempDir.getFile().getAbsolutePath() + "/"
-                    + fname);
-            newFile.deleteOnExit();
-            return newFile;
-        } catch (IOException e) {
-            LOGGER.error("Could not create temp file in directoryService", e);
-
-        }
-        return null;
-    }
-
-    public String createRelativeCachedAttribute(String value) {
-
-      Integer hash = value.hashCode();
-      
-      String tempFile = "cached_" + hash + ".jspx";
-      if(!fileExists(tempFile)){
-        createFile(tempFile, value);
+  public File createFile(String fname) {
+    Resource tempDir = context.getResource("WEB-INF/temp/");
+    if (!tempDir.exists()) {
+      try {
+        tempDir.getFile().mkdirs();
+      } catch (IOException e) {
+        LOGGER.error("Could not create temp file in directoryService", e);
       }
-      String path = "/"+getApplicationRelativePath(tempFile);
-      LOGGER.info("Saved {} with path: {}",tempFile, path );
-      return path;
     }
+    try {
+      File newFile = new File(tempDir.getFile().getAbsolutePath() + "/" + fname);
+      newFile.deleteOnExit();
+      return newFile;
+    } catch (IOException e) {
+      LOGGER.error("Could not create temp file in directoryService", e);
+
+    }
+    return null;
+  }
+
+  public String createRelativeCachedAttribute(String value) {
+
+    Integer hash = value.hashCode();
+
+    String tempFile = "cached_" + hash + ".jspx";
+    if (!fileExists(tempFile)) {
+      createFile(tempFile, value);
+    }
+    String path = "/" + getApplicationRelativePath(tempFile);
+    LOGGER.info("Saved {} with path: {}", tempFile, path);
+    return path;
+  }
 
 }

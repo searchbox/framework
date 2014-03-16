@@ -9,10 +9,10 @@ import org.springframework.batch.core.repository.JobRestartException;
 
 public interface SynchronizedCollection {
 
-    public Date getLastUpdate();
+  public Date getLastUpdate();
 
-    public void synchronize() throws JobExecutionAlreadyRunningException,
-            JobRestartException, JobInstanceAlreadyCompleteException,
-            JobParametersInvalidException;
+  public void synchronize() throws JobExecutionAlreadyRunningException,
+      JobRestartException, JobInstanceAlreadyCompleteException,
+      JobParametersInvalidException;
 
 }

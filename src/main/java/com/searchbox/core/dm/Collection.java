@@ -27,91 +27,91 @@ import com.searchbox.core.engine.SearchEngine;
 
 public class Collection {
 
-    /**
+  /**
      */
-    @SearchAttribute
-    protected String name;
+  @SearchAttribute
+  protected String name;
 
-    @SearchAttribute
-    protected String description;
+  @SearchAttribute
+  protected String description;
 
-    protected List<Field> fields = new ArrayList<Field>();
+  protected List<Field> fields = new ArrayList<Field>();
 
-    @SearchAttribute
-    protected SearchEngine<?, ?> searchEngine;
+  @SearchAttribute
+  protected SearchEngine<?, ?> searchEngine;
 
-    @SearchAttribute
-    String idFieldName;
+  @SearchAttribute
+  String idFieldName;
 
-    public Collection() {
+  public Collection() {
 
+  }
+
+  public Collection(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this,
+        ToStringStyle.SHORT_PREFIX_STYLE);
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public List<Field> getFields() {
+    return fields;
+  }
+
+  public void setFields(List<Field> fields) {
+    this.fields = fields;
+  }
+
+  public SearchEngine<?, ?> getSearchEngine() {
+    return searchEngine;
+  }
+
+  public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+    this.searchEngine = searchEngine;
+  }
+
+  /**
+   * @return the idFieldName
+   */
+  public String getIdFieldName() {
+    return idFieldName;
+  }
+
+  /**
+   * @param idFieldName
+   *          the idFieldName to set
+   */
+  public void setIdFieldName(String idFieldName) {
+    this.idFieldName = idFieldName;
+  }
+
+  public static class FieldMap extends HashMap<String, List<Object>> {
+    public void put(String key, Object number) {
+      List<Object> current = get(key);
+      if (current == null) {
+        current = new ArrayList<Object>();
+        super.put(key, current);
+      }
+      current.add(number);
     }
-
-    public Collection(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
-    }
-
-    public SearchEngine<?, ?> getSearchEngine() {
-        return searchEngine;
-    }
-
-    public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
-        this.searchEngine = searchEngine;
-    }
-
-    /**
-     * @return the idFieldName
-     */
-    public String getIdFieldName() {
-        return idFieldName;
-    }
-
-    /**
-     * @param idFieldName
-     *            the idFieldName to set
-     */
-    public void setIdFieldName(String idFieldName) {
-        this.idFieldName = idFieldName;
-    }
-
-    public static class FieldMap extends HashMap<String, List<Object>> {
-        public void put(String key, Object number) {
-            List<Object> current = get(key);
-            if (current == null) {
-                current = new ArrayList<Object>();
-                super.put(key, current);
-            }
-            current.add(number);
-        }
-    }
+  }
 }

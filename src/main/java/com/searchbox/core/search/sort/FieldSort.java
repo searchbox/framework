@@ -30,140 +30,136 @@ import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 
 @SearchComponent
-public class FieldSort
-        extends
-        SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
+public class FieldSort extends
+    SearchElementWithConditionalValues<FieldSort.Value, FieldSort.Condition> {
 
-    @SearchAttribute
-    protected SortedSet<FieldSort.Value> values;
+  @SearchAttribute
+  protected SortedSet<FieldSort.Value> values;
 
-    public FieldSort() {
-        super("Sort Component", SearchElement.Type.SORT);
-    }
+  public FieldSort() {
+    super("Sort Component", SearchElement.Type.SORT);
+  }
 
-    public static class Value extends
-            ConditionalValueElement<FieldSort.Condition> implements
-            Serializable {
+  public static class Value extends
+      ConditionalValueElement<FieldSort.Condition> implements Serializable {
 
-        /**
+    /**
 		 * 
 		 */
-        private static final long serialVersionUID = -230559535275452676L;
+    private static final long serialVersionUID = -230559535275452676L;
 
-        private String field;
+    private String field;
 
-        private Sort sort;
+    private Sort sort;
 
-        private Boolean selected;
+    private Boolean selected;
 
-        public Value(String label, String field, Sort sort) {
-            super(label);
-            this.field = field;
-            this.sort = sort;
-            this.selected = false;
-        }
-
-        public String getFieldName() {
-            return field;
-        }
-
-        public Sort getSort() {
-            return sort;
-        }
-
-        public Boolean getSelected() {
-            return selected;
-        }
-
-        public void setSelected(Boolean selected) {
-            this.selected = selected;
-        }
-
-        @Override
-        public String geParamValue() {
-            return field + " " + this.sort;
-        }
-
-        @Override
-        public Condition getSearchCondition() {
-            return new FieldSort.Condition(this.field, this.sort);
-        }
-
-        @Override
-        public int compareTo(ValueElement other) {
-            return this.getLabel().compareTo(
-                    ((FieldSort.Value) other).getLabel());
-        }
-
-        @Override
-        public Class<?> getConditionClass() {
-            return FieldSort.Condition.class;
-        }
+    public Value(String label, String field, Sort sort) {
+      super(label);
+      this.field = field;
+      this.sort = sort;
+      this.selected = false;
     }
 
-    @SearchCondition(urlParam = "s")
-    public static class Condition extends AbstractSearchCondition {
+    public String getFieldName() {
+      return field;
+    }
 
-        private final String field;
-        private final Sort sort;
+    public Sort getSort() {
+      return sort;
+    }
 
-        Condition(String field, Sort sort) {
-            this.field = field;
-            this.sort = sort;
-        }
+    public Boolean getSelected() {
+      return selected;
+    }
 
-        /**
-         * @return the field
-         */
-        public String getField() {
-            return field;
-        }
-
-        /**
-         * @return the sort
-         */
-        public Sort getSort() {
-            return sort;
-        }
+    public void setSelected(Boolean selected) {
+      this.selected = selected;
     }
 
     @Override
-    public void mergeSearchCondition(AbstractSearchCondition condition) {
-        if (FieldSort.Condition.class.isAssignableFrom(condition.getClass())) {
-            FieldSort.Condition sortCondition = (FieldSort.Condition) condition;
-            for (FieldSort.Value value : this.getValues()) {
-                if (value.getFieldName().equals(sortCondition.getField())
-                        && value.getSort().equals(sortCondition.getSort())) {
-                    value.selected = true;
-                } else {
-                    value.selected = false;
-                }
-            }
+    public String geParamValue() {
+      return field + " " + this.sort;
+    }
+
+    @Override
+    public Condition getSearchCondition() {
+      return new FieldSort.Condition(this.field, this.sort);
+    }
+
+    @Override
+    public int compareTo(ValueElement other) {
+      return this.getLabel().compareTo(((FieldSort.Value) other).getLabel());
+    }
+
+    @Override
+    public Class<?> getConditionClass() {
+      return FieldSort.Condition.class;
+    }
+  }
+
+  @SearchCondition(urlParam = "s")
+  public static class Condition extends AbstractSearchCondition {
+
+    private final String field;
+    private final Sort sort;
+
+    Condition(String field, Sort sort) {
+      this.field = field;
+      this.sort = sort;
+    }
+
+    /**
+     * @return the field
+     */
+    public String getField() {
+      return field;
+    }
+
+    /**
+     * @return the sort
+     */
+    public Sort getSort() {
+      return sort;
+    }
+  }
+
+  @Override
+  public void mergeSearchCondition(AbstractSearchCondition condition) {
+    if (FieldSort.Condition.class.isAssignableFrom(condition.getClass())) {
+      FieldSort.Condition sortCondition = (FieldSort.Condition) condition;
+      for (FieldSort.Value value : this.getValues()) {
+        if (value.getFieldName().equals(sortCondition.getField())
+            && value.getSort().equals(sortCondition.getSort())) {
+          value.selected = true;
+        } else {
+          value.selected = false;
         }
+      }
     }
+  }
 
-    public static FieldSort.Value getRelevancySort() {
-        FieldSort.Value sortValue = new FieldSort.Value("Relevancy", "score",
-                Sort.DESC);
-        sortValue.setSelected(true);
-        return sortValue;
+  public static FieldSort.Value getRelevancySort() {
+    FieldSort.Value sortValue = new FieldSort.Value("Relevancy", "score",
+        Sort.DESC);
+    sortValue.setSelected(true);
+    return sortValue;
+  }
+
+  @SearchConverter
+  public static class SortConverter implements
+      org.springframework.core.convert.converter.Converter<String, Condition> {
+
+    @Override
+    public Condition convert(String source) {
+      String cfield = source.split(" ")[0];
+      String sort = source.split(" ")[1];
+
+      if (sort.equalsIgnoreCase(Sort.DESC.toString())) {
+        return new Condition(cfield, Sort.DESC);
+      } else {
+        return new Condition(cfield, Sort.ASC);
+      }
     }
-
-    @SearchConverter
-    public static class SortConverter
-            implements
-            org.springframework.core.convert.converter.Converter<String, Condition> {
-
-        @Override
-        public Condition convert(String source) {
-            String cfield = source.split(" ")[0];
-            String sort = source.split(" ")[1];
-
-            if (sort.equalsIgnoreCase(Sort.DESC.toString())) {
-                return new Condition(cfield, Sort.DESC);
-            } else {
-                return new Condition(cfield, Sort.ASC);
-            }
-        }
-    }
+  }
 }

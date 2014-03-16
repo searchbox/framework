@@ -29,7 +29,6 @@ import org.springframework.batch.core.job.builder.FlowJobBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -41,84 +40,84 @@ import com.searchbox.core.dm.Field;
 
 @Configurable
 public class PubmedCollection extends AbstractBatchCollection implements
-        SynchronizedCollection {
+    SynchronizedCollection {
 
-    @Autowired
-    ApplicationContext context;
+  @Autowired
+  ApplicationContext context;
 
-    @Autowired
-    StepBuilderFactory stepBuilderFactory;
+  @Autowired
+  StepBuilderFactory stepBuilderFactory;
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(PubmedCollection.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(PubmedCollection.class);
 
-    public static List<Field> GET_FIELDS() {
-        List<Field> fields = new ArrayList<Field>();
-        fields.add(new Field(String.class, "id"));
-        fields.add(new Field(Date.class, "article-creation-date"));
-        fields.add(new Field(Integer.class, "article-year"));
-        fields.add(new Field(Date.class, "article-completion-date"));
-        fields.add(new Field(Date.class, "article-revision-date"));
-        fields.add(new Field(String.class, "article-pubmodel"));
-        fields.add(new Field(String.class, "journal-title"));
-        fields.add(new Field(String.class, "journal-title-abrv"));
-        fields.add(new Field(String.class, "article-title"));
-        fields.add(new Field(String.class, "article-abstract"));
-        fields.add(new Field(String.class, "author"));
-        fields.add(new Field(String.class, "article-lang"));
-        fields.add(new Field(String.class, "publication-type"));
-        fields.add(new Field(String.class, "substance-name"));
-        fields.add(new Field(String.class, "article-descriptor"));
-        fields.add(new Field(String.class, "article-qualifier"));
-        return fields;
-    }
+  public static List<Field> GET_FIELDS() {
+    List<Field> fields = new ArrayList<Field>();
+    fields.add(new Field(String.class, "id"));
+    fields.add(new Field(Date.class, "article-creation-date"));
+    fields.add(new Field(Integer.class, "article-year"));
+    fields.add(new Field(Date.class, "article-completion-date"));
+    fields.add(new Field(Date.class, "article-revision-date"));
+    fields.add(new Field(String.class, "article-pubmodel"));
+    fields.add(new Field(String.class, "journal-title"));
+    fields.add(new Field(String.class, "journal-title-abrv"));
+    fields.add(new Field(String.class, "article-title"));
+    fields.add(new Field(String.class, "article-abstract"));
+    fields.add(new Field(String.class, "author"));
+    fields.add(new Field(String.class, "article-lang"));
+    fields.add(new Field(String.class, "publication-type"));
+    fields.add(new Field(String.class, "substance-name"));
+    fields.add(new Field(String.class, "article-descriptor"));
+    fields.add(new Field(String.class, "article-qualifier"));
+    return fields;
+  }
 
-    public PubmedCollection() {
-    }
+  public PubmedCollection() {
+  }
 
-    public PubmedCollection(String name) {
-        super(name);
-    }
+  public PubmedCollection(String name) {
+    super(name);
+  }
 
-    public ItemReader<Resource> reader() {
-        return new ItemReader<Resource>() {
-            boolean hasmore = true;
+  public ItemReader<Resource> reader() {
+    return new ItemReader<Resource>() {
+      boolean hasmore = true;
 
-            @Override
-            public Resource read() {
-                if (hasmore) {
-                    hasmore = false;
-                    Resource resource = context
-                            .getResource("classpath:data/pubmedIndex.xml");
-                    if (resource.exists()) {
-                        LOGGER.info("Read has created this resource: "
-                                + resource.getFilename());
-                        return resource;
-                    }
-                }
-                return null;
-            }
-        };
-    }
+      @Override
+      public Resource read() {
+        if (hasmore) {
+          hasmore = false;
+          Resource resource = context
+              .getResource("classpath:data/pubmedIndex.xml");
+          if (resource.exists()) {
+            LOGGER.info("Read has created this resource: "
+                + resource.getFilename());
+            return resource;
+          }
+        }
+        return null;
+      }
+    };
+  }
 
-    public ItemProcessor<Resource, File> itemProcessor() {
-        return new ItemProcessor<Resource, File>() {
-            @Override
-            public File process(Resource item) throws IOException {
-                LOGGER.info("Processing stuff here...");
-                return item.getFile();
-            }
-        };
-    }
+  public ItemProcessor<Resource, File> itemProcessor() {
+    return new ItemProcessor<Resource, File>() {
+      @Override
+      public File process(Resource item) throws IOException {
+        LOGGER.info("Processing stuff here...");
+        return item.getFile();
+      }
+    };
+  }
 
-    @Override
-    protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+  @Override
+  protected FlowJobBuilder getJobFlow(JobBuilder builder) {
 
-        Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
-                .reader(reader()).processor(itemProcessor()).writer(fileWriter())
-                .build();
+    Step step = stepBuilderFactory.get("getFile").<Resource, File> chunk(1)
+        .reader(reader()).processor(itemProcessor()).writer(fileWriter())
+        .build();
 
-        return builder.flow(step).end();
+    return builder.flow(step).end();
 
-    }
+  }
 }

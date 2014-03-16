@@ -16,94 +16,94 @@ import com.searchbox.core.dm.FieldAttribute.USE;
 
 public class SolrSearchEngineTest {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(SolrSearchEngineTest.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SolrSearchEngineTest.class);
 
-    private static final String FIELD_NAME_SEARCH = "title_txt";
-    private static final String FIELD_NAME_DEFAULT = "title";
+  private static final String FIELD_NAME_SEARCH = "title_txt";
+  private static final String FIELD_NAME_DEFAULT = "title";
 
-    private static final String FIELD_YEARS_DEFAULT = "years";
-    private static final String FIELD_YEARS_SEARCH = "years_tis";
+  private static final String FIELD_YEARS_DEFAULT = "years";
+  private static final String FIELD_YEARS_SEARCH = "years_tis";
 
-    SolrSearchEngine engine;
+  SolrSearchEngine engine;
 
-    FieldAttribute attr;
-    FieldAttribute attr2;
+  FieldAttribute attr;
+  FieldAttribute attr2;
 
-    @Before
-    public void setSearchEngine() {
-        this.attr = new FieldAttribute();
-        attr.setField(Field.stringField(FIELD_NAME_DEFAULT));
-        attr.setHighlight(true);
-        attr.setSearchable(true);
+  @Before
+  public void setSearchEngine() {
+    this.attr = new FieldAttribute();
+    attr.setField(Field.stringField(FIELD_NAME_DEFAULT));
+    attr.setHighlight(true);
+    attr.setSearchable(true);
 
-        this.attr2 = new FieldAttribute();
-        attr2.setField(Field.intField(FIELD_YEARS_DEFAULT));
-        attr2.setSearchable(true);
+    this.attr2 = new FieldAttribute();
+    attr2.setField(Field.intField(FIELD_YEARS_DEFAULT));
+    attr2.setSearchable(true);
 
-        this.engine = new SolrSearchEngine() {
+    this.engine = new SolrSearchEngine() {
 
-            @Override
-            protected SolrServer getSolrServer() {
-                return null;
-            }
+      @Override
+      protected SolrServer getSolrServer() {
+        return null;
+      }
 
-            @Override
-            public void reloadEngine() {
-                // TODO Auto-generated method stub
+      @Override
+      public void reloadEngine() {
+        // TODO Auto-generated method stub
 
-            }
+      }
 
-            @Override
-            public void register() {
-                // TODO Auto-generated method stub
+      @Override
+      public void register() {
+        // TODO Auto-generated method stub
 
-            }
+      }
 
-            @Override
-            protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
-                // TODO Auto-generated method stub
-                return false;
-            }
-        };
+      @Override
+      protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+        // TODO Auto-generated method stub
+        return false;
+      }
+    };
+  }
+
+  @Test
+  public void testKeysForAttribute() {
+
+    Set<String> fieldNames = this.engine.getAllKeysForField(this.attr);
+    for (String fieldName : fieldNames) {
+      LOGGER.info("Got fieldName: " + fieldName);
     }
 
-    @Test
-    public void testKeysForAttribute() {
+    Assert.assertTrue("Missing field in fieldNames from engine",
+        fieldNames.size() == 2);
+    Assert.assertTrue("Wrong field in fieldNames from engine",
+        fieldNames.contains(FIELD_NAME_SEARCH));
+  }
 
-        Set<String> fieldNames = this.engine.getAllKeysForField(this.attr);
-        for (String fieldName : fieldNames) {
-            LOGGER.info("Got fieldName: " + fieldName);
-        }
+  @Test
+  public void testKeyForAttributeByUSE() {
 
-        Assert.assertTrue("Missing field in fieldNames from engine",
-                fieldNames.size() == 2);
-        Assert.assertTrue("Wrong field in fieldNames from engine",
-                fieldNames.contains(FIELD_NAME_SEARCH));
-    }
+    String fieldName = this.engine.getKeyForField(this.attr, USE.SEARCH);
+    LOGGER.info("Got fieldName: " + fieldName);
 
-    @Test
-    public void testKeyForAttributeByUSE() {
+    Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
+        fieldName != null && !fieldName.isEmpty());
+    Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
+        fieldName.equals(FIELD_NAME_SEARCH));
+  }
 
-        String fieldName = this.engine.getKeyForField(this.attr, USE.SEARCH);
-        LOGGER.info("Got fieldName: " + fieldName);
+  @Test
+  public void testKeyForIntegerAttributeByUSE() {
 
-        Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
-                fieldName != null && !fieldName.isEmpty());
-        Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
-                fieldName.equals(FIELD_NAME_SEARCH));
-    }
+    String fieldName = this.engine.getKeyForField(this.attr2, USE.SEARCH);
+    LOGGER.info("Got fieldName: " + fieldName);
 
-    @Test
-    public void testKeyForIntegerAttributeByUSE() {
-
-        String fieldName = this.engine.getKeyForField(this.attr2, USE.SEARCH);
-        LOGGER.info("Got fieldName: " + fieldName);
-
-        Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
-                fieldName != null && !fieldName.isEmpty());
-        Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
-                fieldName.equals(FIELD_YEARS_SEARCH));
-    }
+    Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
+        fieldName != null && !fieldName.isEmpty());
+    Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
+        fieldName.equals(FIELD_YEARS_SEARCH));
+  }
 
 }

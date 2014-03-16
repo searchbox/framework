@@ -31,87 +31,87 @@ import org.springframework.util.SerializationUtils;
 @Entity
 public class UnknownAttributeDefinition {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(UnknownAttributeDefinition.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(UnknownAttributeDefinition.class);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private long version;
+  @Version
+  @Column(name = "OPTLOCK")
+  private long version;
 
-    private Class<?> type;
+  private Class<?> type;
 
-    private String name;
+  private String name;
 
-    @Lob
-    @Column(name = "value", length = Integer.MAX_VALUE - 1)
-    private byte[] valueAsByteArray;
+  @Lob
+  @Column(name = "value", length = Integer.MAX_VALUE - 1)
+  private byte[] valueAsByteArray;
 
-    public UnknownAttributeDefinition() {
+  public UnknownAttributeDefinition() {
 
+  }
+
+  public UnknownAttributeDefinition(Class<?> type, String name) {
+    this.type = type;
+    this.name = name;
+  }
+
+  public UnknownAttributeDefinition(String name, Object value) {
+    this.name = name;
+    this.setValue(value);
+    this.type = value.getClass();
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public long getVersion() {
+    return version;
+  }
+
+  public void setVersion(long version) {
+    this.version = version;
+  }
+
+  public Class<?> getType() {
+    return type;
+  }
+
+  public void setType(Class<?> type) {
+    this.type = type;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Transient
+  public Object getValue() {
+    try {
+      return SerializationUtils.deserialize(valueAsByteArray);
+    } catch (Exception e) {
+      LOGGER.error("Could not deserialize value: " + this, e);
+      return null;
     }
+  }
 
-    public UnknownAttributeDefinition(Class<?> type, String name) {
-        this.type = type;
-        this.name = name;
+  public void setValue(Object value) {
+    try {
+      this.valueAsByteArray = SerializationUtils.serialize(value);
+    } catch (Exception e) {
+      LOGGER.error("Could not serialize value: " + this, e);
     }
-
-    public UnknownAttributeDefinition(String name, Object value) {
-        this.name = name;
-        this.setValue(value);
-        this.type = value.getClass();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public void setType(Class<?> type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Transient
-    public Object getValue() {
-        try {
-            return SerializationUtils.deserialize(valueAsByteArray);
-        } catch (Exception e) {
-            LOGGER.error("Could not deserialize value: " + this, e);
-            return null;
-        }
-    }
-
-    public void setValue(Object value) {
-        try {
-            this.valueAsByteArray = SerializationUtils.serialize(value);
-        } catch (Exception e) {
-            LOGGER.error("Could not serialize value: " + this, e);
-        }
-    }
+  }
 }

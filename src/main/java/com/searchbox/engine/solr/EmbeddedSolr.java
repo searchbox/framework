@@ -32,7 +32,6 @@ import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.schema.CopyField;
 import org.apache.solr.schema.IndexSchema;
-import org.apache.solr.schema.SchemaField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -41,136 +40,136 @@ import org.springframework.beans.factory.InitializingBean;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Field;
 
-public class EmbeddedSolr extends SolrSearchEngine
-    implements InitializingBean, DisposableBean{
+public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
+    DisposableBean {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(EmbeddedSolr.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(EmbeddedSolr.class);
 
-    @SearchAttribute
-    private String solrHome;
+  @SearchAttribute
+  private String solrHome;
 
-    @SearchAttribute
-    private String dataDir;
+  @SearchAttribute
+  private String dataDir;
 
-    private static CoreContainer coreContainer = null;
+  private static CoreContainer coreContainer = null;
 
-    public EmbeddedSolr() {
-        super();
+  public EmbeddedSolr() {
+    super();
+  }
+
+  public EmbeddedSolr(String name, String solrHome) {
+    super(name);
+    this.solrHome = solrHome;
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    if (EmbeddedSolr.coreContainer == null) {
+      try {
+        LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
+        EmbeddedSolr.coreContainer = new CoreContainer(this.solrHome);
+        EmbeddedSolr.coreContainer.load();
+      } catch (Exception e) {
+        LOGGER.error("Could not start search engine", e);
+      }
+    }
+  }
+
+  @Override
+  public void destroy() throws Exception {
+    coreContainer.shutdown();
+  }
+
+  @Override
+  protected SolrServer getSolrServer() {
+    return new EmbeddedSolrServer(coreContainer, this.collection.getName());
+  }
+
+  public String getDataDir() {
+    return dataDir;
+  }
+
+  public void setDataDir(String dataDir) {
+    this.dataDir = dataDir;
+  }
+
+  public String getSolrHome() {
+    return solrHome;
+  }
+
+  public void setSolrHome(String solrHome) {
+    this.solrHome = solrHome;
+  }
+
+  @Override
+  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+    for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
+      this.addCopyFields(copyField.getKey(), copyField.getValue());
+    }
+    return true;
+  }
+
+  private boolean addCopyFields(Field field, Set<String> copyFields) {
+    SolrCore core = coreContainer.getCore(this.collection.getName());
+    IndexSchema schema = core.getLatestSchema();
+
+    for (CopyField copyField : schema.getCopyFieldsList(field.getKey())) {
+      copyFields.remove(copyField.getDestination().getName());
     }
 
-    public EmbeddedSolr(String name, String solrHome) {
-        super(name);
-        this.solrHome = solrHome;
+    Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+    copyFieldsMap.put(field.getKey(), copyFields);
+    schema = schema.addCopyFields(copyFieldsMap);
+
+    core.setLatestSchema(schema);
+
+    return true;
+  }
+
+  @Override
+  public void reloadEngine() {
+    try {
+      coreContainer.reload(this.collection.getName());
+    } catch (Exception e) {
+      LOGGER.warn(e.getMessage());
     }
-    
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (EmbeddedSolr.coreContainer == null) {
-            try {
-                LOGGER.info("Embedded solr.solr.home is: " + this.solrHome);
-                EmbeddedSolr.coreContainer = new CoreContainer(this.solrHome);
-                EmbeddedSolr.coreContainer.load();
-            } catch (Exception e) {
-                LOGGER.error("Could not start search engine", e);
-            }
-        }
-    }
-    
-    @Override
-    public void destroy() throws Exception {
-        coreContainer.shutdown();        
-    }
+  }
 
-    @Override
-    protected SolrServer getSolrServer() {
-        return new EmbeddedSolrServer(coreContainer, this.collection.getName());
-    }
+  @Override
+  public void register() {
 
-    public String getDataDir() {
-        return dataDir;
-    }
+    String coreInstanceDir = this.solrHome;
 
-    public void setDataDir(String dataDir) {
-        this.dataDir = dataDir;
-    }
+    Properties properties = new Properties();
 
-    public String getSolrHome() {
-        return solrHome;
-    }
-
-    public void setSolrHome(String solrHome) {
-        this.solrHome = solrHome;
-    }
-
-    @Override
-    protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
-        for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
-            this.addCopyFields(copyField.getKey(), copyField.getValue());
-        }
-        return true;
-    }
-
-    private boolean addCopyFields(Field field, Set<String> copyFields) {
-        SolrCore core = coreContainer.getCore(this.collection.getName());
-        IndexSchema schema = core.getLatestSchema();
-
-        for (CopyField copyField : schema.getCopyFieldsList(field.getKey())) {
-            copyFields.remove(copyField.getDestination().getName());
-        }
-
-        Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
-        copyFieldsMap.put(field.getKey(), copyFields);
-        schema = schema.addCopyFields(copyFieldsMap);
-
-        core.setLatestSchema(schema);
-
-        return true;
-    }
-
-    @Override
-    public void reloadEngine() {
+    if (this.dataDir != null) {
+      File dataDir = new File(this.dataDir);
+      if (dataDir.exists()) {
         try {
-            coreContainer.reload(this.collection.getName());
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage());
+          FileUtils.deleteDirectory(dataDir);
+        } catch (IOException e) {
+          LOGGER.error("Could not delete DataDir: " + dataDir);
         }
+      }
+      properties.setProperty("dataDir", this.dataDir);
+    } else {
+      properties.setProperty("dataDir",
+          coreInstanceDir + "/" + this.collection.getName() + "/data/");
     }
 
-    @Override
-    public void register() {
+    CoreDescriptor dcore = new CoreDescriptor(coreContainer,
+        this.collection.getName(), coreInstanceDir, properties);
 
-        String coreInstanceDir = this.solrHome;
+    try {
+      SolrCore core = coreContainer.create(dcore);
+      coreContainer.register(core, false);
 
-        Properties properties = new Properties();
-
-        if (this.dataDir != null) {
-            File dataDir = new File(this.dataDir);
-            if (dataDir.exists()) {
-                try {
-                    FileUtils.deleteDirectory(dataDir);
-                } catch (IOException e) {
-                    LOGGER.error("Could not delete DataDir: " + dataDir);
-                }
-            }
-            properties.setProperty("dataDir", this.dataDir);
-        } else {
-            properties.setProperty("dataDir", coreInstanceDir + "/"
-                    + this.collection.getName() + "/data/");
-        }
-
-        CoreDescriptor dcore = new CoreDescriptor(coreContainer,
-                this.collection.getName(), coreInstanceDir, properties);
-
-        try {
-            SolrCore core = coreContainer.create(dcore);
-            coreContainer.register(core, false);
-
-            LOGGER.info("Solr Core config: " + core.getConfigResource());
-            LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
-            LOGGER.info("Solr Data dir: " + core.getDataDir());
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage());
-        }
+      LOGGER.info("Solr Core config: " + core.getConfigResource());
+      LOGGER.info("Solr SchemaResource: " + core.getSchemaResource());
+      LOGGER.info("Solr Data dir: " + core.getDataDir());
+    } catch (Exception e) {
+      LOGGER.warn(e.getMessage());
     }
+  }
 }

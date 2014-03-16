@@ -15,93 +15,90 @@ import com.searchbox.framework.web.user.RegistrationForm;
 @Transactional
 public class UserService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(UserService.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(UserService.class);
 
-    private PasswordEncoder passwordEncoder;
+  private PasswordEncoder passwordEncoder;
 
-    private UserRepository repository;
+  private UserRepository repository;
 
-    @Autowired
-    public UserService(PasswordEncoder passwordEncoder,
-            UserRepository repository) {
-        this.passwordEncoder = passwordEncoder;
-        this.repository = repository;
+  @Autowired
+  public UserService(PasswordEncoder passwordEncoder, UserRepository repository) {
+    this.passwordEncoder = passwordEncoder;
+    this.repository = repository;
+  }
+
+  public User registerNewUserAccount(String email, String password) {
+    RegistrationForm form = new RegistrationForm();
+    form.setEmail(email);
+    form.setPassword(password);
+    return registerNewUserAccount(form);
+  }
+
+  public User registerNewUserAccount(RegistrationForm userAccountData)
+      throws RuntimeException {
+    LOGGER.debug("Registering new user account with information: {}",
+        userAccountData);
+
+    if (emailExist(userAccountData.getEmail())) {
+      LOGGER.debug("Email: {} exists. Throwing exception.",
+          userAccountData.getEmail());
+      throw new RuntimeException("The email address: "
+          + userAccountData.getEmail() + " is already in use.");
     }
 
-    public User registerNewUserAccount(String email, String password) {
-        RegistrationForm form = new RegistrationForm();
-        form.setEmail(email);
-        form.setPassword(password);
-        return registerNewUserAccount(form);
+    LOGGER.debug("Email: {} does not exist. Continuing registration.",
+        userAccountData.getEmail());
+
+    String encodedPassword = encodePassword(userAccountData);
+
+    User registered = new User();
+    registered.setEmail(userAccountData.getEmail());
+    registered.setPassword(encodedPassword);
+
+    // User.Builder user =
+    // User.getBuilder().email(userAccountData.getEmail())
+    // .firstName(userAccountData.getFirstName())
+    // .lastName(userAccountData.getLastName())
+    // .password(encodedPassword);
+
+    if (userAccountData.isSocialSignIn()) {
+      registered.setSignInProvider(userAccountData.getSignInProvider());
     }
 
-    public User registerNewUserAccount(RegistrationForm userAccountData)
-            throws RuntimeException {
-        LOGGER.debug("Registering new user account with information: {}",
-                userAccountData);
+    // User registered = user.build();
 
-        if (emailExist(userAccountData.getEmail())) {
-            LOGGER.debug("Email: {} exists. Throwing exception.",
-                    userAccountData.getEmail());
-            throw new RuntimeException("The email address: "
-                    + userAccountData.getEmail() + " is already in use.");
-        }
+    LOGGER.debug("Persisting new user with information: {}", registered);
 
-        LOGGER.debug("Email: {} does not exist. Continuing registration.",
-                userAccountData.getEmail());
+    return repository.save(registered);
+  }
 
-        String encodedPassword = encodePassword(userAccountData);
+  private boolean emailExist(String email) {
+    LOGGER.debug("Checking if email {} is already found from the database.",
+        email);
 
-        User registered = new User();
-        registered.setEmail(userAccountData.getEmail());
-        registered.setPassword(encodedPassword);
+    User user = repository.findByEmail(email);
 
-        // User.Builder user =
-        // User.getBuilder().email(userAccountData.getEmail())
-        // .firstName(userAccountData.getFirstName())
-        // .lastName(userAccountData.getLastName())
-        // .password(encodedPassword);
-
-        if (userAccountData.isSocialSignIn()) {
-            registered.setSignInProvider(userAccountData.getSignInProvider());
-        }
-
-        // User registered = user.build();
-
-        LOGGER.debug("Persisting new user with information: {}", registered);
-
-        return repository.save(registered);
+    if (user != null) {
+      LOGGER.debug("User account: {} found with email: {}. Returning true.",
+          user, email);
+      return true;
     }
 
-    private boolean emailExist(String email) {
-        LOGGER.debug(
-                "Checking if email {} is already found from the database.",
-                email);
+    LOGGER.debug("No user account found with email: {}. Returning false.",
+        email);
 
-        User user = repository.findByEmail(email);
+    return false;
+  }
 
-        if (user != null) {
-            LOGGER.debug(
-                    "User account: {} found with email: {}. Returning true.",
-                    user, email);
-            return true;
-        }
+  private String encodePassword(RegistrationForm dto) {
+    String encodedPassword = null;
 
-        LOGGER.debug("No user account found with email: {}. Returning false.",
-                email);
-
-        return false;
+    if (dto.isNormalRegistration()) {
+      LOGGER.debug("Registration is normal registration. Encoding password.");
+      encodedPassword = passwordEncoder.encode(dto.getPassword());
     }
 
-    private String encodePassword(RegistrationForm dto) {
-        String encodedPassword = null;
-
-        if (dto.isNormalRegistration()) {
-            LOGGER.debug("Registration is normal registration. Encoding password.");
-            encodedPassword = passwordEncoder.encode(dto.getPassword());
-        }
-
-        return encodedPassword;
-    }
+    return encodedPassword;
+  }
 }

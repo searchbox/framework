@@ -25,126 +25,126 @@ import com.searchbox.core.SearchAttribute;
 
 public class FieldAttribute {
 
-    public enum USE {
-        MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
-    }
+  public enum USE {
+    MATCH, SEARCH, VALUE, TF, SORT, SPELL, MULTILANG, SUGGEST, DEFAULT
+  }
 
-    protected Field field;
+  protected Field field;
 
-    @SearchAttribute
-    protected String label = "";
+  @SearchAttribute
+  protected String label = "";
 
-    @SearchAttribute
-    protected Boolean searchable = false;
+  @SearchAttribute
+  protected Boolean searchable = false;
 
-    @SearchAttribute
-    List<String> lang = new ArrayList<String>();
+  @SearchAttribute
+  List<String> lang = new ArrayList<String>();
 
-    @SearchAttribute
-    protected Boolean highlight = false;
+  @SearchAttribute
+  protected Boolean highlight = false;
 
-    @SearchAttribute
-    protected Boolean sortable = false;
+  @SearchAttribute
+  protected Boolean sortable = false;
 
-    @SearchAttribute
-    protected Boolean spelling = false;
+  @SearchAttribute
+  protected Boolean spelling = false;
 
-    @SearchAttribute
-    protected Boolean suggestion = false;
+  @SearchAttribute
+  protected Boolean suggestion = false;
 
-    @SearchAttribute("1f")
-    protected Float boost = 1f;
+  @SearchAttribute("1f")
+  protected Float boost = 1f;
 
-    public FieldAttribute() {
+  public FieldAttribute() {
 
-    }
+  }
 
-    public FieldAttribute(Field field) {
-        this.field = field;
-    }
+  public FieldAttribute(Field field) {
+    this.field = field;
+  }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this,
-                ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this,
+        ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public String getLabel() {
+    return label;
+  }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
-    public Boolean getSearchable() {
-        return this.searchable;
-    }
+  public Boolean getSearchable() {
+    return this.searchable;
+  }
 
-    public void setSearchable(Boolean searchable) {
-        this.searchable = searchable;
-    }
+  public void setSearchable(Boolean searchable) {
+    this.searchable = searchable;
+  }
 
-    public Boolean getHighlight() {
-        return this.highlight;
-    }
+  public Boolean getHighlight() {
+    return this.highlight;
+  }
 
-    public void setHighlight(Boolean highlight) {
-        this.highlight = highlight;
-    }
+  public void setHighlight(Boolean highlight) {
+    this.highlight = highlight;
+  }
 
-    public Boolean getSortable() {
-        return this.sortable;
-    }
+  public Boolean getSortable() {
+    return this.sortable;
+  }
 
-    public void setSortable(Boolean sortable) {
-        this.sortable = sortable;
-    }
+  public void setSortable(Boolean sortable) {
+    this.sortable = sortable;
+  }
 
-    public Boolean getSpelling() {
-        return this.spelling;
-    }
+  public Boolean getSpelling() {
+    return this.spelling;
+  }
 
-    public void setSpelling(Boolean spelling) {
-        this.spelling = spelling;
-    }
+  public void setSpelling(Boolean spelling) {
+    this.spelling = spelling;
+  }
 
-    public Boolean getSuggestion() {
-        return this.suggestion;
-    }
+  public Boolean getSuggestion() {
+    return this.suggestion;
+  }
 
-    public void setSuggestion(Boolean suggestion) {
-        this.suggestion = suggestion;
-    }
+  public void setSuggestion(Boolean suggestion) {
+    this.suggestion = suggestion;
+  }
 
-    public Float getBoost() {
-        return this.boost;
-    }
+  public Float getBoost() {
+    return this.boost;
+  }
 
-    public void setBoost(Float boost) {
-        this.boost = boost;
-    }
+  public void setBoost(Float boost) {
+    this.boost = boost;
+  }
 
-    public void setField(Field field) {
-        this.field = field;
-    }
+  public void setField(Field field) {
+    this.field = field;
+  }
 
-    public Field getField() {
-        return this.field;
-    }
+  public Field getField() {
+    return this.field;
+  }
 
-    /**
-     * @return the lang
-     */
-    public List<String> getLang() {
-        return lang;
-    }
+  /**
+   * @return the lang
+   */
+  public List<String> getLang() {
+    return lang;
+  }
 
-    /**
-     * @param lang
-     *            the lang to set
-     */
-    public void setLang(List<String> lang) {
-        this.lang = lang;
-    }
+  /**
+   * @param lang
+   *          the lang to set
+   */
+  public void setLang(List<String> lang) {
+    this.lang = lang;
+  }
 }

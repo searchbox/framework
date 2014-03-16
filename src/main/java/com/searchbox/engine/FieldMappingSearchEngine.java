@@ -6,11 +6,11 @@ import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 
 public interface FieldMappingSearchEngine {
-    
-    public String getKeyForField(FieldAttribute fieldAttribute);
 
-    public String getKeyForField(FieldAttribute fieldAttribute, USE operation);
+  public String getKeyForField(FieldAttribute fieldAttribute);
 
-    Set<String> getAllKeysForField(FieldAttribute fieldAttribute);
+  public String getKeyForField(FieldAttribute fieldAttribute, USE operation);
+
+  Set<String> getAllKeysForField(FieldAttribute fieldAttribute);
 
 }

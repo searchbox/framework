@@ -21,42 +21,42 @@ import com.searchbox.framework.service.CollectionService;
 @RequestMapping("/admin/{searchbox}/CollectionDefinition")
 public class CollectionDefinitionController {
 
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(CollectionDefinitionController.class);
+  @SuppressWarnings("unused")
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(CollectionDefinitionController.class);
 
-    @Autowired
-    CollectionRepository repository;
+  @Autowired
+  CollectionRepository repository;
 
-    @Autowired
-    JobExplorer jobExplorer;
+  @Autowired
+  JobExplorer jobExplorer;
 
-    @Autowired
-    CollectionService service;
+  @Autowired
+  CollectionService service;
 
-    @RequestMapping(value = "/{id}")
-    public ModelAndView show(@PathVariable("id") Long id) {
-        CollectionDefinition collectiondef = repository.findOne(id);
-        ModelAndView model = new ModelAndView(
-                "admin/CollectionDefinition/updateForm");
-        model.addObject("collectionDefinition", collectiondef);
-        model.addObject("jobExplorer", jobExplorer);
+  @RequestMapping(value = "/{id}")
+  public ModelAndView show(@PathVariable("id") Long id) {
+    CollectionDefinition collectiondef = repository.findOne(id);
+    ModelAndView model = new ModelAndView(
+        "admin/CollectionDefinition/updateForm");
+    model.addObject("collectionDefinition", collectiondef);
+    model.addObject("jobExplorer", jobExplorer);
 
-        return model;
-    }
+    return model;
+  }
 
-    @RequestMapping(value = { "/{id}/synchronize", "/{id}/synchronize/" }, method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, String> synchronizeData(@PathVariable("id") Long id) {
-        CollectionDefinition collectiondef = repository.findOne(id);
-        return service.synchronizeData(collectiondef);
-    }
+  @RequestMapping(value = { "/{id}/synchronize", "/{id}/synchronize/" }, method = RequestMethod.POST)
+  @ResponseBody
+  public Map<String, String> synchronizeData(@PathVariable("id") Long id) {
+    CollectionDefinition collectiondef = repository.findOne(id);
+    return service.synchronizeData(collectiondef);
+  }
 
-    @RequestMapping(value = { "/{id}/merge", "/{id}/merge/" }, method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, String> synchronizeDm(@PathVariable("id") Long id) {
-        CollectionDefinition collectiondef = repository.findOne(id);
-        return service.synchronizeDm(collectiondef);
-    }
+  @RequestMapping(value = { "/{id}/merge", "/{id}/merge/" }, method = RequestMethod.POST)
+  @ResponseBody
+  public Map<String, String> synchronizeDm(@PathVariable("id") Long id) {
+    CollectionDefinition collectiondef = repository.findOne(id);
+    return service.synchronizeDm(collectiondef);
+  }
 
 }
