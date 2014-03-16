@@ -188,6 +188,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       templatedHitList.setAttributeValue("idField", "id");
       templatedHitList.setAttributeValue("urlField", "article-title");
       templatedHitList
+      .setAttributeValue("templateFile","/WEB-INF/templates/_pubmedHit.jspx");
+      
+      /** Sample to make a dynamic (not on file). Use Directory Service to 
+       * persist the template. Template can them be a field of the 
+       * SearchElementDefinition. TBD.
+       *
+      templatedHitList
           .setAttributeValue("templateFile",directoryService.createRelativeCachedAttribute(
                 "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" " 
                   + "xmlns:sbx=\"urn:jsptagdir:/WEB-INF/tags/sbx\" "
@@ -197,6 +204,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
                   + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
                   + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
                   + "</jsp:root>"));
+      */
       
       preset.addSearchElement(templatedHitList);
 
