@@ -363,12 +363,12 @@ a.clear_input:hover {
  margin-top: 0;
 }
 
-#result-list {
+.result-list {
  list-style-type: none;
  padding-left: 0;
 }
 
-#result-list li .result-title {
+.result-list .result-title {
  margin: 0;
  text-overflow: ellipsis;
  overflow: hidden;
@@ -377,47 +377,48 @@ a.clear_input:hover {
  font-size: 16px;
 }
 
-#result-list li p {
+.result-list p {
  margin-bottom: 7px;
  font-size: 13px;
  line-height: 17px;
 }
 
-#result-list li {
- margin-bottom: 30px;
+.result-list .result {
+  margin-bottom: 30px;
 }
 
-#result-list .label {
+
+.result-list .label {
  margin-right: 15px;
  padding: 5px;
 }
 
 /** tag attributes **/
-#result-list .label-tag {
+.result-list .label-tag {
  background-color: rgba(42, 100, 150, 0.1);
  font-weight: normal;
 }
 
-#result-list .label-tag.clickable {
+.result-list .label-tag.clickable {
  cursor: pointer;
  border: 1px solid lightblue;
 }
 
-#result-list .label-tag.selected {
+.result-list .label-tag.selected {
  border: 1px solid blue;
  background-color: rgba(42, 100, 150, 0.25);
 }
 
-#result-list .label-tag.clickable:hover {
+.result-list .label-tag.clickable:hover {
  border: 1px solid blue;
  background-color: rgba(42, 100, 150, 0.25);
 }
 
-#result-list .label-tag .field-label {
+.result-list .label-tag .field-label {
  color: #999;
 }
 
-#result-list .label-tag .field-value {
+.result-list .label-tag .field-value {
  color: black;
 }
 /*************************************************************/

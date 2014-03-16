@@ -101,7 +101,7 @@
        <div style="clear: all">
         <!-- clear all -->
        </div>
-       <sbx:doElement type="VIEW" />
+       <sbx:doElement type="VIEW" cssClass="result-list"/>
 
        <sbx:doElement type="DEBUG" />
 

@@ -18,11 +18,15 @@
 
  <jsp:directive.attribute name="admin" type="java.lang.Boolean"
   required="false" rtexprvalue="true" description="decorate with admin" />
- 
-   <c:if test="${not empty param.debug}">
-      <c:set var="debug" value="true" />
-     </c:if>
- 
+
+ <jsp:directive.attribute name="cssClass" type="java.lang.String"
+  required="false" rtexprvalue="true" description="decorate with admin" />
+
+
+ <c:if test="${not empty param.debug}">
+  <c:set var="debug" value="true" />
+ </c:if>
+
  <c:forEach items="${elements}" var="currentElement">
   <c:set var="element" />
   <c:choose>
@@ -30,14 +34,15 @@
     test="${(not empty type) and currentElement.getElementType().toString() == type }">
     <c:set var="element" value="${currentElement}" />
    </c:when>
-   <c:when test="${(not empty label) and currentElement.getLabel() == label }">
+   <c:when
+    test="${(not empty label) and currentElement.getLabel() == label }">
     <c:set var="element" value="${currentElement}" />
    </c:when>
    <c:otherwise>
    </c:otherwise>
   </c:choose>
-  
-     <!--  if we have an element display it -->
+
+  <!--  if we have an element display it -->
   <c:if test="${not empty element }">
    <c:catch var="catchException">
     <c:if test="${admin }">
@@ -56,7 +61,7 @@
 
                     $(form).on('submit', function(event) {
                       console.log("submiting form");
-                      $.ajax({ 
+                      $.ajax({
                         type : form.attr('method'),
                         url : form.attr('action'),
                         data : form.serialize(),
@@ -72,7 +77,7 @@
     </c:if>
 
     <c:set var="elementInset">/WEB-INF/elementViews/${element.getClass().getSimpleName()}.jspx</c:set>
-    <c:set var="element" value="${element }" scope="request"/>
+    <c:set var="element" value="${element }" scope="request" />
     <spring:url var="formUrl"
      value="/${searchbox.getSlug() }/admin/searchElementDefinition/${element.definitionId}" />
 
@@ -117,12 +122,16 @@
         </div>
        </div>
        <div class="panel-body">
-        <jsp:include page="${elementInset}" />
+        <div class="${cssClass }">
+         <jsp:include page="${elementInset}" />
+        </div>
        </div>
       </div>
      </c:when>
      <c:otherwise>
-      <jsp:include page="${elementInset}" />
+      <div class="${cssClass }">
+       <jsp:include page="${elementInset}" />
+      </div>
      </c:otherwise>
     </c:choose>
    </c:catch>
@@ -135,6 +144,6 @@
     </div>
    </c:if>
   </c:if>
-   
+
  </c:forEach>
 </jsp:root>
