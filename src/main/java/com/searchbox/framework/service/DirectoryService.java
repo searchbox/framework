@@ -26,6 +26,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.search.CachedAttribute;
+
 @Service
 public class DirectoryService {
 
@@ -115,6 +117,19 @@ public class DirectoryService {
 
         }
         return null;
+    }
+
+    public String createRelativeCachedAttribute(String value) {
+
+      Integer hash = value.hashCode();
+      
+      String tempFile = "cached_" + hash + ".jspx";
+      if(!fileExists(tempFile)){
+        createFile(tempFile, value);
+      }
+      String path = getApplicationRelativePath(tempFile);
+      LOGGER.info("Saved {} with path: {}",tempFile, path );
+      return path;
     }
 
 }
