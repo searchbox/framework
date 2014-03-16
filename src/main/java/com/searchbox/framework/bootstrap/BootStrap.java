@@ -187,11 +187,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       templatedHitList.setAttributeValue("titleField", "article-title");
       templatedHitList.setAttributeValue("idField", "id");
       templatedHitList.setAttributeValue("urlField", "article-title");
-//      templatedHitList
-//          .setAttributeValue("templateFile",directoryService.createRelativeCachedAttribute(
-//              "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"
-//                  + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
-//                  + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"));
+      templatedHitList
+          .setAttributeValue("templateFile",directoryService.createRelativeCachedAttribute(
+                "<jsp:root xmlns:jsp=\"http://java.sun.com/JSP/Page\" " 
+                  + "xmlns:sbx=\"urn:jsptagdir:/WEB-INF/tags/sbx\" "
+                  + "xmlns:c=\"http://java.sun.com/jsp/jstl/core\" " 
+                  + "version=\"2.0\">" 
+                  + "<sbx:title hit=\"${hit}\" link=\"http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}\"/>"
+                  + "<sbx:snippet hit=\"${hit}\" field=\"article-abstract\"/>"
+                  + "<sbx:tagAttribute filter=\"author\" limit=\"3\" label=\"Author(s)\" values=\"${hit.fieldValues['author']}\"/>"
+                  + "</jsp:root>"));
       
       preset.addSearchElement(templatedHitList);
 
