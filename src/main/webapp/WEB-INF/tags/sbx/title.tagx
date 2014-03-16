@@ -18,20 +18,18 @@
  <c:if test="${not empty hit.highlights[hit.titleFieldName]}">
   <c:set var="title" value="${hit.highlights[hit.titleFieldName]}" />
  </c:if>
- <h4 class="result-title">
-  <c:choose>
-   <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
-   <c:when test="${not empty link}">
-    <a target="_blank" href="${link}"><sbx:out value="${title}" /></a>
-   </c:when>
-   <c:when test="${not empty hit.getId()}">
-    <spring:url var="hitUrl"
-     value="/${searchbox.getSlug() }/view/${preset.getSlug()}/?ff=${hit.IDFieldName}[${hit.getId()}]" />
-    <a href="${hitUrl}"><sbx:out value="${title}" /></a>
-   </c:when>
-   <c:otherwise>
+ <c:choose>
+  <!--  //TODO should get the param from FIELDFILTER.getParam or something -->
+  <c:when test="${not empty link}">
+   <a target="_blank" href="${link}"><sbx:out value="${title}" /></a>
+  </c:when>
+  <c:when test="${not empty hit.getId()}">
+   <spring:url var="hitUrl"
+    value="/${searchbox.getSlug() }/view/${preset.getSlug()}/?ff=${hit.IDFieldName}[${hit.getId()}]" />
+   <a href="${hitUrl}"><sbx:out value="${title}" /></a>
+  </c:when>
+  <c:otherwise>
             ${hit.getTitle()}
           </c:otherwise>
-  </c:choose>
- </h4>
+ </c:choose>
 </jsp:root>
