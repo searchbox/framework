@@ -15,67 +15,87 @@
  ******************************************************************************/
 package com.searchbox.core.search.result;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.searchbox.core.search.ValueElement;
-
-public class Hit extends ValueElement {
-
-    /**
-	 * 
-	 */
-    private static final long serialVersionUID = -6419221783189375788L;
+public class Hit implements Comparable<Hit>{
 
     public Map<String, Object> fieldValues;
     public Map<String, List<String>> highlights;
 
+    private Collection collection;
+
     private Float score;
 
-    private String IDFieldName;
+    private String idFieldName;
 
-    private String TitleFieldName;
+    private String titleFieldName;
 
-    private String URLFieldName;
+    private String urlFieldName;
+    
+    private String displayTemplate;
 
-    public Hit(Float score) {
-        super("");
+    //Prevent building a Hit with no score.
+    private Hit(){}
+    
+    public Hit(Float score) {        
         this.score = score;
         this.fieldValues = new HashMap<String, Object>();
         this.highlights = new HashMap<String, List<String>>();
     }
 
-    public String getIDFieldName() {
-        return IDFieldName;
+    public Collection getCollection() {
+      return collection;
     }
 
-    public void setIDFieldName(String iDFieldName) {
-        IDFieldName = iDFieldName;
+    public void setCollection(Collection collection) {
+      this.collection = collection;
+    }
+
+    public String getIdFieldName() {
+      return idFieldName;
+    }
+
+    public void setIdFieldName(String idFieldName) {
+      this.idFieldName = idFieldName;
     }
 
     public String getTitleFieldName() {
-        return TitleFieldName;
+      return titleFieldName;
     }
 
     public void setTitleFieldName(String titleFieldName) {
-        TitleFieldName = titleFieldName;
+      this.titleFieldName = titleFieldName;
     }
 
-    public String getURLFieldName() {
-        return URLFieldName;
+    public String getUrlFieldName() {
+      return urlFieldName;
     }
 
-    public void setURLFieldName(String uRLFieldName) {
-        URLFieldName = uRLFieldName;
+    public void setUrlFieldName(String urlFieldName) {
+      this.urlFieldName = urlFieldName;
+    }
+
+    public String getDisplayTemplate() {
+      return displayTemplate;
+    }
+
+    public void setDisplayTemplate(String displayTemplate) {
+      this.displayTemplate = displayTemplate;
     }
 
     public Float getScore() {
-        return this.score;
+      return score;
     }
 
-    public void setScore(Float score) {
-        this.score = score;
+    public void setFieldValues(Map<String, Object> fieldValues) {
+      this.fieldValues = fieldValues;
+    }
+
+    public void setHighlights(Map<String, List<String>> highlights) {
+      this.highlights = highlights;
     }
 
     public void addFieldValue(String name, Object value) {
@@ -84,7 +104,7 @@ public class Hit extends ValueElement {
 
     @SuppressWarnings("unchecked")
     public String getId() {
-        Object id = this.fieldValues.get(this.IDFieldName);
+        Object id = this.fieldValues.get(this.idFieldName);
         if (List.class.isAssignableFrom(id.getClass())) {
             return ((List<String>) id).get(0);
         } else {
@@ -94,7 +114,7 @@ public class Hit extends ValueElement {
 
     @SuppressWarnings("unchecked")
     public String getTitle() {
-        Object title = this.fieldValues.get(this.TitleFieldName);
+        Object title = this.fieldValues.get(this.titleFieldName);
         if (List.class.isAssignableFrom(title.getClass())) {
             return ((List<String>) title).get(0);
         } else {
@@ -104,7 +124,7 @@ public class Hit extends ValueElement {
 
     @SuppressWarnings("unchecked")
     public String getUrl() {
-        Object url = this.fieldValues.get(this.URLFieldName);
+        Object url = this.fieldValues.get(this.urlFieldName);
         if (List.class.isAssignableFrom(url.getClass())) {
             return ((List<String>) url).get(0);
         } else {
@@ -123,16 +143,8 @@ public class Hit extends ValueElement {
         return highlights;
     }
 
-    /**
-     * @param highlights
-     *            the highlights to set
-     */
-    public void setHighlights(Map<String, List<String>> highlights) {
-        this.highlights = highlights;
-    }
-
     @Override
-    public int compareTo(ValueElement other) {
-        return score.compareTo(((Hit) other).getScore() + 0.001f) * -1;
+    public int compareTo(Hit other) {
+        return score.compareTo(other.getScore() + 0.001f) * -1;
     }
 }
