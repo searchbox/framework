@@ -46,7 +46,7 @@
 
        <div class="media">
         <a class="pull-left" href="#"> <spring:url
-          value="/img/oppfin-logo.png" var="searchbox_logo" /> <img
+          value="/assets/images/oppfin-logo.png" var="searchbox_logo" /> <img
          src='${searchbox_logo}' class="media-object" alt="Searchbox"
          id="logo-image" />
         </a>
