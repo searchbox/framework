@@ -190,7 +190,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       topicIdentifier.setAttributeValue("suggestion", true);
       topicIdentifier.setAttributeValue("label", "Topic ID");
       presetTopic.addFieldAttribute(topicIdentifier);
-
+      
+      FieldAttributeDefinition topicFileName = new FieldAttributeDefinition(
+          collection.getFieldDefinition("topicFileName"));
+      topicIdentifier.setAttributeValue("searchable", false);
+      topicIdentifier.setAttributeValue("spelling", false);
+      topicIdentifier.setAttributeValue("suggestion", false);
+      presetTopic.addFieldAttribute(topicFileName);
+          
       FieldAttributeDefinition callIdentifier = new FieldAttributeDefinition(
           collection.getFieldDefinition("callIdentifier"));
       callIdentifier.setAttributeValue("searchable", true);
@@ -244,16 +251,27 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       TemplateElement.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_topicHit.jspx");
       presetTopic.addSearchElement(TemplateElement, "search");
+          
 
       /**
        * Create & add another TemplateElement SearchComponent to the preset;
        * SearchElementType can be overriden
        */
+      
+      SearchElementDefinition topicViewHitMeta = new SearchElementDefinition(
+              TemplateElement.class);
+      topicViewHitMeta.setLabel("leftCol");
+      topicViewHitMeta.setAttributeValue("titleField", "topicTitle");
+      topicViewHitMeta.setAttributeValue("idField", "topicIdentifier");
+      topicViewHitMeta.setAttributeValue("templateFile",
+	      "/WEB-INF/templates/oppfin/_topicViewMeta.jspx");
+	  presetTopic.addSearchElement(topicViewHitMeta, "view");
+          
       SearchElementDefinition viewHit = new SearchElementDefinition(
           TemplateElement.class);
       viewHit.setLabel("body");
       viewHit.setAttributeValue("titleField", "topicTitle");
-      viewHit.setAttributeValue("idField", "id");
+      viewHit.setAttributeValue("idField", "topicIdentifier");
       viewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_topicView.jspx");
       presetTopic.addSearchElement(viewHit, "view");

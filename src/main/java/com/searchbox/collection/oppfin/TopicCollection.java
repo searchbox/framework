@@ -121,6 +121,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 
     // Topic Fields
     fields.add(new Field(String.class, "topicIdentifier"));
+    fields.add(new Field(String.class, "topicFileName"));
     fields.add(new Field(String.class, "topicTitle"));
     fields.add(new Field(String.class, "topicDescriptionHtml"));
     fields.add(new Field(String.class, "topicDescriptionRaw"));
@@ -132,6 +133,7 @@ public class TopicCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "callIdentifier"));
     fields.add(new Field(Date.class, "callDeadline"));
     fields.add(new Field(String.class, "callStatus"));
+    fields.add(new Field(Integer.class, "totalCallBudget"));
 
     // Generic fields
     fields.add(new Field(String.class, "docType"));
@@ -358,6 +360,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         doc.put("programme", "H2020");
 
         doc.put("topicIdentifier", topicIdentifier);
+        doc.put("topicFileName", topicFileName);
         doc.put("topicTitle", (String) topicObject.get("title"));
         doc.put("topicDescriptionRaw", topicDetailRaw);
         doc.put("topicDescriptionHtml", topicDetailHtml);
@@ -477,7 +480,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         try {
           Long num = (Long) NumberFormat.getNumberInstance(java.util.Locale.US)
               .parse((String) callObject.get("TotalIndicativeBudget"));
-          doc.put("indicativeBudget", num);
+          doc.put("totalCallBudget", num);
         } catch (ParseException e) {
           LOGGER.error("ParseException : " + e.getLocalizedMessage());
         }
