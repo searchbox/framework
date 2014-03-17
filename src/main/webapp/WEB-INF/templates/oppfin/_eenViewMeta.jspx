@@ -44,9 +44,9 @@
     " />
 
   <sbx:tagAttribute limit="1" label="Submit Date"
-    values="${hit.fieldValues['eenDatumSubmit']}" />
+    datePattern="dd.MM.yyyy" values="${hit.fieldValues['eenDatumSubmit']}" />
 
   <sbx:tagAttribute limit="1" label="Deadline"
-    values="${hit.fieldValues['eenDatumDeadline']}" />
+    datePattern="dd.MM.yyyy" values="${hit.fieldValues['eenDatumDeadline']}" />
 
 </jsp:root>

@@ -32,7 +32,7 @@
   <!-- Funding scheme - Looks like we don't have that data anymore -->
 
   <sbx:tagAttribute limit="1" label="Submission Deadline"
-    values="${hit.fieldValues['callDeadline']}" />
+    datePattern="dd.MM.yyyy" values="${hit.fieldValues['callDeadline']}" />
 
   <!--  TODO: Check that it works with call data -->
   <sbx:tagAttribute limit="1" label="Call Budget"
