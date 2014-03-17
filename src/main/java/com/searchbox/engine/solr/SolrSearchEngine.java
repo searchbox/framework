@@ -143,7 +143,6 @@ public abstract class SolrSearchEngine extends
     if (!fields.containsKey("id")) {
       document.addField("id", fields.get(this.collection.getIdFieldName()));
     }
-    LOGGER.info("callDeadline: " + fields.get("callDeadline"));
     for (Entry<String, Object> entry : fields.entrySet()) {
       if(entry.getValue() == null){
         continue;

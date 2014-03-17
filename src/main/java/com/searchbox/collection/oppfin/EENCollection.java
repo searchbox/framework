@@ -131,17 +131,23 @@ public class EENCollection extends AbstractBatchCollection implements
 
   @Override
   public Date getPublishedValue(FieldMap fields) {
-    return (Date) fields.get("eenDatumSubmit").get(0);
+    return (Date) (fields.get("eenDatumSubmit")!=null?
+        fields.get("eenDatumSubmit").get(0):
+        null);
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-    return (Date) fields.get("eenDatumUpdate").get(0);
+    return (Date) (fields.get("eenDatumUpdate")!=null?
+        fields.get("eenDatumUpdate").get(0):
+          getPublishedValue(fields));
   }
 
   @Override
   public Date getDeadlineValue(FieldMap fields) {
-    return (Date) fields.get("eenDatumDeadline").get(0);
+    return (Date) (fields.get("eenDatumDeadline")!=null?
+        fields.get("eenDatumDeadline").get(0):
+        null);
   }
 
   public EENCollection() {
