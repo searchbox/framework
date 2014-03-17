@@ -73,7 +73,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
   DocumentBuilder db;
 
-  DateFormat dfmt = new DateFormatManager("MM/dd/YYYY").getDateFormatInstance();
+  DateFormat dfmt = new DateFormatManager("dd/MM/yyyy").getDateFormatInstance();
 
   public IdealISTCollection() {
     super("Idealist");

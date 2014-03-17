@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -44,6 +45,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.log4j.lf5.util.DateFormatManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -542,8 +544,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         RootConfiguration.class, TopicCollection.class);
 
     TopicCollection collection = context.getBean(TopicCollection.class);
-
+    
     collection.synchronize();
-
   }
 }
