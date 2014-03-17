@@ -179,8 +179,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       LOGGER.info("++ Creating Topic preset");
       PresetDefinition presetTopic = new PresetDefinition(collection);
-      presetTopic.setLabel("H2020 Topics");
-      presetTopic.setDescription("H2020 open calls");
+      presetTopic.setLabel("Project Funding");
+      presetTopic.setDescription("Project Funding (open calls)");
       presetTopic.setSlug("topic");
 
       FieldAttributeDefinition topicIdentifier = new FieldAttributeDefinition(
@@ -560,6 +560,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       idealistBodyField.setAttributeValue("lang", lang);
       presetIDEALIST.addFieldAttribute(idealistBodyField);
 
+      
+      /** Facets for the presetIdealist. */
+     /**
+      * - Cooperation Source
+      * - Partner Country
+      */
+      
       /** Create & add a query SearchComponent to the preset; */
       SearchElementDefinition idealistQuery = new SearchElementDefinition(
           EdismaxQuery.class);
@@ -574,14 +581,28 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           "/WEB-INF/templates/oppfin/_idealistHit.jspx");
       presetIDEALIST.addSearchElement(idealistTmpHit);
 
-      SearchElementDefinition idealistTmpView = new SearchElementDefinition(
+
+      /** Create view page **/
+      SearchElementDefinition idealistViewHitMeta = new SearchElementDefinition(
+              TemplateElement.class);
+      idealistViewHitMeta.setLabel("leftCol");
+      idealistViewHitMeta.setAttributeValue("titleField", "idealistTitle");
+      idealistViewHitMeta.setAttributeValue("idField", "id");
+      idealistViewHitMeta.setAttributeValue("templateFile",
+              "/WEB-INF/templates/oppfin/_idealistViewMeta.jspx");
+      presetIDEALIST.addSearchElement(idealistViewHitMeta, "view");
+
+      SearchElementDefinition idealistViewHit = new SearchElementDefinition(
           TemplateElement.class);
-      idealistTmpView.setType(SearchElement.Type.INSPECT);
-      idealistTmpView.setAttributeValue("titleField", "idealistTitle");
-      idealistTmpView.setAttributeValue("idField", "id");
-      idealistTmpView.setAttributeValue("templateFile",
+      idealistViewHit.setLabel("body");
+      idealistViewHit.setAttributeValue("titleField", "idealistTitle");
+      idealistViewHit.setAttributeValue("idField", "id");
+      idealistViewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistView.jspx");
-      presetIDEALIST.addSearchElement(idealistTmpView);
+      presetIDEALIST.addSearchElement(idealistViewHit, "view");
+      
+          
+     
 
       // SearchElementDefinition idealistViewHit = new SearchElementDefinition(
       // TemplateElement.class);
