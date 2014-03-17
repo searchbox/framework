@@ -23,6 +23,10 @@
    <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Deadline"
     values="${hit.fieldValues['callDeadline']}" />
    
+   
+      <sbx:tagAttribute limit="1" label="Call Budget"
+    values="${hit.fieldValues['callTotalBudget']}" />
+   
     Call Budget (callBudget formatter en Mio EUR))
  </div>
  
