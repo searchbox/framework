@@ -7,7 +7,10 @@
    <sbx:title hit="${hit}" />
   </h4>
   <p><sbx:snippet hit="${hit}" field="topicDescriptionRaw"/></p>
-  <p><strong>Flag(s): </strong><sbx:out value="${hit.fieldValues['topicFlags']}"/></p>
+  
+  <c:if test="${not empty hit.fieldValues['topicFlags']}">
+    <p><strong>Flag(s): </strong><sbx:out value="${hit.fieldValues['topicFlags']}"/></p>
+  </c:if>
       
    <sbx:tagAttribute limit="1" label="Source"
     values="${hit.fieldValues['source']}"

@@ -5,10 +5,12 @@
  <h2><sbx:out value="${hit.fieldValues['eenContentTitle']}" /></h2>
  <sbx:out value="${hit.fieldValues['eenContentSummary']}" />
  <h3>Description</h3>
- <hr />
  <sbx:out value="${hit.fieldValues['eenContentDescription']}" />
  <hr />
+ 
  <h3>Related R&amp;D Fundings</h3>
+ 
+ 
  <hr />
  <h3>Related Cooperations</h3>
 
