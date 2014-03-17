@@ -2,13 +2,17 @@
  xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
  xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
 
- <div class="result">
-  <h4 class="result-title">
-   <sbx:title hit="${hit}" />
-  </h4>
-  <sbx:snippet hit="${hit}" field="idealistBody" />
-  <hr />
-  <sbx:snippet hit="${hit}" field="idealistOutline" />
- </div>
-</jsp:root>
+  <h2><sbx:out value="${hit.fieldValues['idealistTitle']}" /></h2> 
+  <sbx:out value="${hit.fieldValues['idealistBody']}" />
+ 
+ <h3>Proposal Outline</h3>
+ <sbx:out value="${hit.fieldValues['idealistOutline']}" />
 
+ <h3>Partner Profile Sought</h3>
+ 
+ <h4>Required skills and Expertise:</h4>
+ <sbx:out value="${hit.fieldValues['idealistTypeOfPartnerSought']}" />
+
+ <h4>Type of partner(s) sought:</h4>
+ <sbx:out value="${hit.fieldValues['idealistDescriptionOfWork']}" />
+</jsp:root>
