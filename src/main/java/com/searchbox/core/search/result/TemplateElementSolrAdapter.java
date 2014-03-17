@@ -36,7 +36,10 @@ public class TemplateElementSolrAdapter {
     }
 
     String fieldHighlightKey = engine.getKeyForField(attribute, USE.SEARCH);
-
+    query.setHighlight(true);
+    query.setHighlightSnippets(3);
+    
+    
     if (query.getHighlightFields() == null
         || !Arrays.asList(query.getHighlightFields()).contains(
             fieldHighlightKey)) {
