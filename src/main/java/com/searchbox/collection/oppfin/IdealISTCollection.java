@@ -89,9 +89,11 @@ public class IdealISTCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "idealistTitle"));
     fields.add(new Field(String.class, "idealistPsId"));
     fields.add(new Field(String.class, "idealistStatus"));
-    fields.add(new Field(String.class, "idealistDeadline"));
-    fields.add(new Field(String.class, "idealistUpdated"));
-    fields.add(new Field(String.class, "idealistPublished"));
+    
+    fields.add(new Field(Date.class, "idealistDeadline"));
+    fields.add(new Field(Date.class, "idealistUpdated"));
+    fields.add(new Field(Date.class, "idealistPublished"));
+    
     fields.add(new Field(String.class, "idealistObjective"));
     fields.add(new Field(String.class, "idealistFundingScheme"));
     fields.add(new Field(String.class, "idealistEvaluationScheme"));
