@@ -221,6 +221,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           collection.getFieldDefinition("callDeadline"));
       fieldAttr3.setAttributeValue("sortable", true);
       presetTopic.addFieldAttribute(fieldAttr3);
+      
+     FieldAttributeDefinition fieldAttr4 = new FieldAttributeDefinition(
+              collection.getFieldDefinition("source"));
+      presetTopic.addFieldAttribute(fieldAttr4);
 
       /** Create & add a querydebug SearchComponent to the preset; */
       SearchElementDefinition querydebug = new SearchElementDefinition(

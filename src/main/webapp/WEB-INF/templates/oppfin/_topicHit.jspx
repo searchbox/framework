@@ -7,11 +7,20 @@
    <sbx:title hit="${hit}" />
   </h4>
   <p><sbx:snippet hit="${hit}" field="topicDescriptionRaw"/></p>
-  <p><sbx:out value="${hit.fieldValues['topicFlags']}"/></p>
-  <sbx:tagAttribute limit="1" label="Deadline" 
-    values="${hit.fieldValues['callDeadline']}"/>
-  <sbx:tagAttribute limit="1" label="Call" 
+  <p><strong>Flag(s): </strong><sbx:out value="${hit.fieldValues['topicFlags']}"/></p>
+      
+   <sbx:tagAttribute limit="1" label="Source"
+    values="${hit.fieldValues['source']}"
+     cssClass="${hit.fieldValues['source']}"
+     />
+    
+   <sbx:tagAttribute limit="1" label="Call" 
     filter="callIdentifier" values="${hit.fieldValues['callIdentifier']}"/>
+    
+   <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Deadline"
+    values="${hit.fieldValues['callDeadline']}" />
+   
+    Call Budget (callBudget formatter en Mio EUR))
  </div>
  
 </jsp:root>
