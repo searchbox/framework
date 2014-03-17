@@ -1,7 +1,9 @@
-package com.searchbox.collection.oppfin;
-
 /*******************************************************************************
- * Copyright Searchbox - http://www.searchbox.com
+ * Copyright Euresearch - 2014 - http://www.euresearch.ch
+ * Proprietary software license.
+ *******************************************************************************/
+package com.searchbox.collection.oppfin;
+/*******************************************************************************
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

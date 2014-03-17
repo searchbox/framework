@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright Euresearch - 2014 - http://www.euresearch.ch
+ * Proprietary software license.
+ *******************************************************************************/
+
 package com.searchbox.collection.oppfin;
 
 import java.io.BufferedReader;
@@ -256,7 +261,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
         fields.put("id", uid);
         fields.put("docSource", "Ideal-Ist");
-        fields.put("docType", "Colaboration");
+        fields.put("docType", "Collaboration");
         fields.put("programme", "H2020");
 
         addStringField(uid, document, fields, "title", "idealistTitle");
