@@ -52,13 +52,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.searchbox.collection.AbstractBatchCollection;
+import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.Collection.FieldMap;
 
 @Configurable
 @Component
 public class IdealISTCollection extends AbstractBatchCollection implements
-    SynchronizedCollection, InitializingBean {
+    SynchronizedCollection, StandardCollection, InitializingBean {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(IdealISTCollection.class);
@@ -81,7 +83,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
-    fields.add(new Field(String.class, "id"));
+    fields.add(new Field(String.class, "uid"));
     fields.add(new Field(String.class, "docSource"));
     fields.add(new Field(String.class, "docType"));
     fields.add(new Field(String.class, "programme"));
@@ -111,7 +113,32 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
     return fields;
   }
+  
+  @Override
+  public String getIdValue(FieldMap fields) {
+    return (String) fields.get("idealistPsId").get(0);
+  }
 
+  @Override
+  public String getBodyValue(FieldMap fields) {
+        return (String) fields.get("idealistBody").get(0);
+  }
+
+  @Override
+  public String getTitleValue(FieldMap fields) {
+    return (String) fields.get("idealistTitle").get(0);
+  }
+  
+  @Override
+  public Date getPublishedValue(FieldMap fields) {
+        return null;
+  }
+
+  @Override
+  public Date getUpdateValue(FieldMap fields) {
+        return null;
+  }
+  
   @Override
   public void afterPropertiesSet() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -261,7 +288,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
         LOGGER.debug("Got Document: {}", document);
         FieldMap fields = new FieldMap();
 
-        fields.put("id", uid);
+        fields.put("uid", uid);
         fields.put("docSource", "Ideal-Ist");
         fields.put("docType", "Collaboration");
         fields.put("programme", "H2020");

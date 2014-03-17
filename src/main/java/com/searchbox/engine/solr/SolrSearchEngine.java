@@ -139,12 +139,15 @@ public abstract class SolrSearchEngine extends
   public boolean indexMap(String collectionName, Map<String, Object> fields) {
 
     SolrInputDocument document = new SolrInputDocument();
-    // Make sure we use the ID field...
+    //TODO should never need this.. Make sure we use the ID field...
     if (!fields.containsKey("id")) {
       document.addField("id", fields.get(this.collection.getIdFieldName()));
     }
+    LOGGER.info("callDeadline: " + fields.get("callDeadline"));
     for (Entry<String, Object> entry : fields.entrySet()) {
-      if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
+      if(entry.getValue() == null){
+        continue;
+      } else if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
         for (Object value : ((Collection<?>) entry.getValue())) {
           document.addField(entry.getKey(), value);
         }

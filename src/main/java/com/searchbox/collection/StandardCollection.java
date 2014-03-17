@@ -6,11 +6,11 @@ import com.searchbox.core.dm.Collection.FieldMap;
 
 public interface StandardCollection {
 
-  public static final String STD_ID_FIELD = "sb_id";
-  public static final String STD_TITLE_FIELD = "sb_title";
-  public static final String STD_BODY_FIELD = "sb_body";
-  public static final String STD_PUBLISHED_FIELD = "sb_published";
-  public static final String STD_UPDATED_FIELD = "sb_udpated";
+  public static final String STD_ID_FIELD = "id";
+  public static final String STD_TITLE_FIELD = "title";
+  public static final String STD_BODY_FIELD = "body";
+  public static final String STD_PUBLISHED_FIELD = "published";
+  public static final String STD_UPDATED_FIELD = "udpated";
 
   String getIdValue(FieldMap fields);
 

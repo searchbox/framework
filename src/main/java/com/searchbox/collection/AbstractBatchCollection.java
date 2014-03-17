@@ -139,25 +139,38 @@ public abstract class AbstractBatchCollection extends Collection implements
           Map<String, Object> actualFields = new HashMap<String, Object>();
 
           // Manage STD fields for collection
-          if (StandardCollection.class.isAssignableFrom(this.getClass())) {
+          if (StandardCollection.class.isAssignableFrom(collection.getClass())) {
+            if (((StandardCollection) collection).getIdValue(fields) == null) {
+              throw new RuntimeException(
+                  "Collection Implementing StandardColleciton "
+                      + "cannot have a null value for field StandardCollection.STD_ID_FIELD");
+            }
             actualFields.put(StandardCollection.STD_ID_FIELD,
                 ((StandardCollection) collection).getIdValue(fields));
 
-            actualFields.put(StandardCollection.STD_TITLE_FIELD,
-                ((StandardCollection) collection).getTitleValue(fields));
+            if (((StandardCollection) collection).getTitleValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_TITLE_FIELD,
+                  ((StandardCollection) collection).getTitleValue(fields));
+            }
 
-            actualFields.put(StandardCollection.STD_PUBLISHED_FIELD,
-                ((StandardCollection) collection).getPublishedValue(fields));
+            if (((StandardCollection) collection).getPublishedValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_PUBLISHED_FIELD,
+                  ((StandardCollection) collection).getPublishedValue(fields));
+            }
 
-            actualFields.put(StandardCollection.STD_UPDATED_FIELD,
-                ((StandardCollection) collection).getUpdateValue(fields));
+            if (((StandardCollection) collection).getUpdateValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_UPDATED_FIELD,
+                  ((StandardCollection) collection).getUpdateValue(fields));
+            }
 
-            actualFields.put(StandardCollection.STD_BODY_FIELD,
-                ((StandardCollection) collection).getBodyValue(fields));
+            if (((StandardCollection) collection).getBodyValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_BODY_FIELD,
+                  ((StandardCollection) collection).getBodyValue(fields));
+            }
           }
 
           // Manage STD_EXPIRE fields for collection
-          if (ExpiringDocuments.class.isAssignableFrom(this.getClass())) {
+          if (ExpiringDocuments.class.isAssignableFrom(collection.getClass())) {
             actualFields.put(ExpiringDocuments.STD_DEADLINE_FIELD,
                 ((ExpiringDocuments) collection).getDeadlineValue(fields));
           }
@@ -165,8 +178,7 @@ public abstract class AbstractBatchCollection extends Collection implements
           for (Entry<String, List<Object>> field : fields.entrySet()) {
             if (!field.getValue().isEmpty()) {
               actualFields.put(field.getKey(),
-                  (field.getValue().size() > 1) ? field.getValue() : field
-                      .getValue().get(0));
+              (field.getValue().size() == 1) ? field.getValue().get(0) : field.getValue());
             }
           }
           try {

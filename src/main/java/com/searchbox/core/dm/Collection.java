@@ -105,6 +105,11 @@ public class Collection {
   }
 
   public static class FieldMap extends HashMap<String, List<Object>> {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6364672700946040334L;
+
     public void put(String key, Object number) {
       List<Object> current = get(key);
       if (current == null) {

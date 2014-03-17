@@ -170,21 +170,21 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /** The base collection for searchbox */
       LOGGER.info("++ Creating oppfin Topic Collection");
-      CollectionDefinition collection = new CollectionDefinition(
+      CollectionDefinition topicsCollection = new CollectionDefinition(
           TopicCollection.class, "H2020Topics");
-      collection.setIdFieldName("topicIdentifier");
-      collection.setAutoStart(false);
-      collection.setSearchEngine(engine);
-      collection = collectionRepository.save(collection);
+      topicsCollection.setIdFieldName("topicIdentifier");
+      topicsCollection.setAutoStart(false);
+      topicsCollection.setSearchEngine(engine);
+      topicsCollection = collectionRepository.save(topicsCollection);
 
       LOGGER.info("++ Creating Topic preset");
-      PresetDefinition presetTopic = new PresetDefinition(collection);
+      PresetDefinition presetTopic = new PresetDefinition(topicsCollection);
       presetTopic.setLabel("Project Funding");
       presetTopic.setDescription("Project Funding (open calls)");
       presetTopic.setSlug("topic");
 
       FieldAttributeDefinition topicIdentifier = new FieldAttributeDefinition(
-          collection.getFieldDefinition("topicIdentifier"));
+          topicsCollection.getFieldDefinition("topicIdentifier"));
       topicIdentifier.setAttributeValue("searchable", true);
       topicIdentifier.setAttributeValue("spelling", true);
       topicIdentifier.setAttributeValue("suggestion", true);
@@ -192,14 +192,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetTopic.addFieldAttribute(topicIdentifier);
       
       FieldAttributeDefinition topicFileName = new FieldAttributeDefinition(
-          collection.getFieldDefinition("topicFileName"));
+          topicsCollection.getFieldDefinition("topicFileName"));
       topicIdentifier.setAttributeValue("searchable", false);
       topicIdentifier.setAttributeValue("spelling", false);
       topicIdentifier.setAttributeValue("suggestion", false);
       presetTopic.addFieldAttribute(topicFileName);
           
       FieldAttributeDefinition callIdentifier = new FieldAttributeDefinition(
-          collection.getFieldDefinition("callIdentifier"));
+          topicsCollection.getFieldDefinition("callIdentifier"));
       callIdentifier.setAttributeValue("searchable", true);
       callIdentifier.setAttributeValue("spelling", true);
       callIdentifier.setAttributeValue("suggestion", true);
@@ -207,7 +207,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetTopic.addFieldAttribute(callIdentifier);
 
       FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(
-          collection.getFieldDefinition("topicTitle"));
+          topicsCollection.getFieldDefinition("topicTitle"));
       fieldAttr.setAttributeValue("searchable", true);
       fieldAttr.setAttributeValue("highlight", true);
       fieldAttr.setAttributeValue("spelling", true);
@@ -216,7 +216,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetTopic.addFieldAttribute(fieldAttr);
 
       FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(
-          collection.getFieldDefinition("topicDescriptionRaw"));
+          topicsCollection.getFieldDefinition("topicDescriptionRaw"));
       fieldAttr2.setAttributeValue("searchable", true);
       fieldAttr2.setAttributeValue("highlight", true);
       fieldAttr2.setAttributeValue("spelling", true);
@@ -225,12 +225,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetTopic.addFieldAttribute(fieldAttr2);
 
       FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(
-          collection.getFieldDefinition("callDeadline"));
+          topicsCollection.getFieldDefinition("callDeadline"));
       fieldAttr3.setAttributeValue("sortable", true);
       presetTopic.addFieldAttribute(fieldAttr3);
       
      FieldAttributeDefinition fieldAttr4 = new FieldAttributeDefinition(
-              collection.getFieldDefinition("source"));
+              topicsCollection.getFieldDefinition("source"));
       presetTopic.addFieldAttribute(fieldAttr4);
 
       /** Create & add a querydebug SearchComponent to the preset; */
@@ -297,7 +297,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition callFacet = new SearchElementDefinition(
           FieldFacet.class);
       callFacet.setAttributeValue("field",
-          collection.getFieldDefinition("callIdentifier").getInstance());
+          topicsCollection.getFieldDefinition("callIdentifier").getInstance());
       callFacet.setLabel("Call");
       callFacet.setAttributeValue("order", Order.BY_VALUE);
       callFacet.setAttributeValue("sort", Sort.DESC);
@@ -310,7 +310,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition deadlineFacet = new SearchElementDefinition(
           FieldFacet.class);
       deadlineFacet.setAttributeValue("field",
-          collection.getFieldDefinition("callDeadline").getInstance());
+          topicsCollection.getFieldDefinition("callDeadline").getInstance());
       deadlineFacet.setLabel("Deadline");
       deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
       deadlineFacet.setAttributeValue("sort", Sort.DESC);
@@ -319,7 +319,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition flagFacet = new SearchElementDefinition(
           FieldFacet.class);
       flagFacet.setAttributeValue("field",
-          collection.getFieldDefinition("topicFlags").getInstance());
+          topicsCollection.getFieldDefinition("topicFlags").getInstance());
       flagFacet.setLabel("Flags");
       flagFacet.setAttributeValue("order", Order.BY_VALUE);
       flagFacet.setAttributeValue("sort", Sort.DESC);
@@ -517,7 +517,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       LOGGER.info("++ Creating oppfin IDEALIST Collection");
       CollectionDefinition idealistCollection = new CollectionDefinition(
           IdealISTCollection.class, "idealistCooperations");
-      idealistCollection.setIdFieldName("id");
+      idealistCollection.setIdFieldName("idealistPsId");
       idealistCollection.setAutoStart(false);
       idealistCollection.setSearchEngine(engine);
       idealistCollection = collectionRepository.save(idealistCollection);

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -104,7 +105,7 @@ public class TopicCollection extends AbstractBatchCollection implements
   private final static String CALL_DETAIL_END_DEFAULT = "</div>";
 
   private final Map<String, FieldMap> callList = new HashMap<String, FieldMap>();
-
+  
   @Resource
   private Environment env;
 
@@ -116,6 +117,8 @@ public class TopicCollection extends AbstractBatchCollection implements
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(TopicCollection.class);
+  
+  DateFormat df;
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
@@ -180,10 +183,14 @@ public class TopicCollection extends AbstractBatchCollection implements
   
   public TopicCollection() {
     super("topicCollection");
+    this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 
   public TopicCollection(String name) {
     super(name);
+    this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 
   /**
@@ -252,7 +259,6 @@ public class TopicCollection extends AbstractBatchCollection implements
    */
   private String getCallDescription(String callFileName) {
 
-    LOGGER.info("Loading call description [" + callFileName + "]");
 
     // If the call is not cached, load it from URL
     if (!callList.containsKey(callFileName)) {
@@ -261,6 +267,7 @@ public class TopicCollection extends AbstractBatchCollection implements
     }
 
     if (!callList.get(callFileName).containsKey("callDescriptionHtml")) {
+      LOGGER.info("Loading call description [" + callFileName + "]");
 
       String topicUrlDetail = String.format(
           env.getProperty(CALL_DETAIL_URL, CALL_DETAIL_URL_DEFAULT),
@@ -272,6 +279,49 @@ public class TopicCollection extends AbstractBatchCollection implements
           env.getProperty(CALL_DETAIL_END, CALL_DETAIL_END_DEFAULT)).trim();
 
       callList.get(callFileName).put("callDescriptionHtml", htmlValue);
+      
+      String callDetailRaw = new HtmlToPlainText().getPlainText(Jsoup
+          .parse(htmlValue));
+      
+      callList.get(callFileName).put("callDescriptionRaw", callDetailRaw);
+
+      
+      // Creating a new enhancedCall
+      JSONObject enhancedCall = new JSONObject();        
+      // Pulling full HTML description from the web
+     
+      String callIdentifier = (String) callList.get(callFileName).get("callId").get(0);
+      enhancedCall.put("eur_call_description_html", htmlValue);
+      enhancedCall.put("eur_call_description_raw", callDetailRaw);
+
+      enhancedCall
+      .put("FileName", callFileName);
+      enhancedCall
+          .put("eur_call_timestamp", Calendar.getInstance().getTime());
+      enhancedCall.put("eur_call_FileName", callFileName);
+      enhancedCall.put("eur_call_CallId", callIdentifier);
+
+      // Saving the enhanced file
+      try {
+        File file = new File("output/calls/" + callFileName + ".json");
+        file.getParentFile().mkdirs();
+
+        FileWriter writer = new FileWriter(file);
+        writer.write(enhancedCall.toJSONString());
+        writer.flush();
+        writer.close();
+        LOGGER.debug("File saved under " + file.getAbsolutePath());
+
+        // Saving the list of calls identifiers
+        File file2 = new File("output/calls/calls_identifiers.txt");
+        FileWriter writer2 = new FileWriter(file2, true);
+        writer2.write(callIdentifier + "\n");
+        writer2.flush();
+        writer2.close();
+      } catch (IOException e) {
+        LOGGER.error(e.getLocalizedMessage());
+      }
+      
     }
 
     return callList.get(callFileName).get("callDescriptionHtml").toString();
@@ -390,15 +440,22 @@ public class TopicCollection extends AbstractBatchCollection implements
         }
 
         // Creating the Field Map
-        //FieldMap doc = new FieldMap();
+        FieldMap doc = new FieldMap();
+        
+        //Lazzy Load the call description: 
+        if(!callList.get(callFileName).containsKey("callDescriptionHtml")){
+          getCallDescription(callFileName);
+        }
+        
+        //Merging
+        for(Entry<String, List<Object>> entry:callList.get(callFileName).entrySet()){
+          doc.put(entry.getKey(), entry.getValue());
+        }
 
         LOGGER.info("Inserting call {} into topic {}", 
         		callFileName,topicFileName);
         
-        FieldMap doc = callList.get(callFileName);
-        
         LOGGER.info("Current doc has "+doc.size());
-        //LOGGER.info("Current doc is "+doc.toString());
         
         doc.put("source", "H2020");
         doc.put("docType", "Funding");
@@ -412,15 +469,13 @@ public class TopicCollection extends AbstractBatchCollection implements
 
         doc.put("topicTags", (JSONArray) topicObject.get("tags"));
         doc.put("topicFlags", (JSONArray) topicObject.get("flags"));
-
-        
-
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String utcDate = df.format(new Date((Long) topicObject
-            .get("callDeadline")));
-
+       
+        String utcDate = df.format(new Date(((Long) topicObject
+            .get("callDeadline"))));
         doc.put("callDeadline", utcDate);
+        doc.put("callIdentifier", (String)topicObject.get("callIdentifier"));
+        
+        
 
         if (LOGGER.isDebugEnabled()) {
           for (String key : doc.keySet()) {
@@ -467,57 +522,20 @@ public class TopicCollection extends AbstractBatchCollection implements
         String callIdentifier = (String) callIdentifierObject.get("CallId");
         String callFileName = (String) callIdentifierObject.get("FileName");
 
-        // Pulling full HTML description from the web
-        String callDetailHtml = getCallDescription(callFileName);
-
-        // Converting HTML to plain text for Solr
-        String callDetailRaw = new HtmlToPlainText().getPlainText(Jsoup
-            .parse(callDetailHtml));
-
-        // Creating a new enhancedCall
-        JSONObject enhancedCall = new JSONObject();
-        enhancedCall.put("eur_call_description_html", callDetailHtml);
-        enhancedCall.put("eur_call_description_raw", callDetailRaw);
-        enhancedCall
-            .put("eur_call_timestamp", Calendar.getInstance().getTime());
-        enhancedCall.put("eur_call_FileName", callFileName);
-        enhancedCall.put("eur_call_CallId", callIdentifier);
-
-        // Saving the enhanced file
-        try {
-          File file = new File("output/calls/" + callFileName + ".json");
-          file.getParentFile().mkdirs();
-
-          FileWriter writer = new FileWriter(file);
-          writer.write(enhancedCall.toJSONString());
-          writer.flush();
-          writer.close();
-          LOGGER.debug("File saved under " + file.getAbsolutePath());
-
-          // Saving the list of calls identifiers
-          File file2 = new File("output/calls/calls_identifiers.txt");
-          FileWriter writer2 = new FileWriter(file2, true);
-          writer2.write(callIdentifier + "\n");
-          writer2.flush();
-          writer2.close();
-        } catch (IOException e) {
-          LOGGER.error(e.getLocalizedMessage());
-        }
-
         FieldMap doc = new FieldMap();
 
         doc.put("callId", callIdentifier);
         doc.put("callFileName", callFileName);
         doc.put("callTitle", (String) callObject.get("Title"));
-        doc.put("callDescriptionRaw", callDetailRaw);
-        doc.put("callDescriptionHtml", callDetailHtml);
         doc.put("callDocType", "Call H2020");
         doc.put("callProgramme", "H2020");
 
         doc.put("callProgrammeDescription",
             (String) callObject.get("MainSpecificProgrammeLevel1Description"));
-        doc.put("callPublication", (Long) callObject.get("PublicationDate"));
-        //doc.put("callDeadline", (Long) callObject.get("DeadlineDate"));
+        
+        doc.put("callPublication", df.format(new Date((Long) callObject.get("PublicationDate"))));
+        //We get the deadline from the topic. Do not push multiple (else cannot sort)
+        //doc.put("callDeadline", df.format(new Date((Long) callObject.get("PublicationDate"))));
         doc.put("callFrameworkProgramme",
             (String) callObject.get("FrameworkProgramme"));
         doc.put("callType", (String) callObject.get("Type"));
@@ -571,11 +589,11 @@ public class TopicCollection extends AbstractBatchCollection implements
   @Override
   protected FlowJobBuilder getJobFlow(JobBuilder builder) {
     Step callStep = stepBuilderFactory.get("getCalls")
-        .<JSONObject, FieldMap> chunk(50).reader(callReader())
+        .<JSONObject, FieldMap> chunk(200).reader(callReader())
         .processor(callProcessor()).writer(hashMapWriter()).build();
 
     Step topicStep = stepBuilderFactory.get("getTopics")
-        .<JSONObject, FieldMap> chunk(50).reader(topicReader())
+        .<JSONObject, FieldMap> chunk(10).reader(topicReader())
         .processor(topicProcessor()).writer(fieldMapWriter()).build();
 
     return builder.flow(callStep).next(topicStep).end();
