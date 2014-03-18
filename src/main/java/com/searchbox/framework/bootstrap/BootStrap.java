@@ -517,7 +517,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       LOGGER.info("++ Creating oppfin IDEALIST Collection");
       CollectionDefinition idealistCollection = new CollectionDefinition(
           IdealISTCollection.class, "idealistCooperations");
-      idealistCollection.setIdFieldName("idealistPsId");
+      idealistCollection.setIdFieldName("uid");
       idealistCollection.setAutoStart(false);
       idealistCollection.setSearchEngine(engine);
       idealistCollection = collectionRepository.save(idealistCollection);
@@ -576,7 +576,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition idealistTmpHit = new SearchElementDefinition(
           TemplateElement.class);
       idealistTmpHit.setAttributeValue("titleField", "idealistTitle");
-      idealistTmpHit.setAttributeValue("idField", "id");
+      idealistTmpHit.setAttributeValue("idField", idealistCollection.getIdFieldName());
       idealistTmpHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistHit.jspx");
       presetIDEALIST.addSearchElement(idealistTmpHit);
@@ -587,7 +587,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
               TemplateElement.class);
       idealistViewHitMeta.setLabel("leftCol");
       idealistViewHitMeta.setAttributeValue("titleField", "idealistTitle");
-      idealistViewHitMeta.setAttributeValue("idField", "id");
+      idealistViewHitMeta.setAttributeValue("idField", idealistCollection.getIdFieldName());
       idealistViewHitMeta.setAttributeValue("templateFile",
               "/WEB-INF/templates/oppfin/_idealistViewMeta.jspx");
       presetIDEALIST.addSearchElement(idealistViewHitMeta, "view");
@@ -596,7 +596,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           TemplateElement.class);
       idealistViewHit.setLabel("body");
       idealistViewHit.setAttributeValue("titleField", "idealistTitle");
-      idealistViewHit.setAttributeValue("idField", "id");
+      idealistViewHit.setAttributeValue("idField", idealistCollection.getIdFieldName());
       idealistViewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistView.jspx");
       presetIDEALIST.addSearchElement(idealistViewHit, "view");

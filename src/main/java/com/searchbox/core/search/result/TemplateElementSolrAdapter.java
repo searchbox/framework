@@ -104,10 +104,12 @@ public class TemplateElementSolrAdapter {
       // Now we push the highlights
       Object id = document.getFirstValue(attribute.getField().getKey());
       Map<String, List<String>> highlights = response.getHighlighting().get(id);
-      for (String highlihgtkey : highlights.keySet()) {
-        for (String fieldkey : document.getFieldNames()) {
-          if (highlihgtkey.contains(fieldkey)) {
-            hit.getHighlights().put(fieldkey, highlights.get(highlihgtkey));
+      if(highlights != null){
+        for (String highlihgtkey : highlights.keySet()) {
+          for (String fieldkey : document.getFieldNames()) {
+            if (highlihgtkey.contains(fieldkey)) {
+              hit.getHighlights().put(fieldkey, highlights.get(highlihgtkey));
+            }
           }
         }
       }

@@ -116,7 +116,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
   
   @Override
   public String getIdValue(FieldMap fields) {
-    return (String) fields.get("idealistPsId").get(0);
+    return (String) fields.get(this.getIdFieldName()).get(0);
   }
 
   @Override
@@ -337,7 +337,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
   @Override
   protected FlowJobBuilder getJobFlow(JobBuilder builder) {
-    Step step = stepBuilderFactory.get("getFile").<String, FieldMap> chunk(50)
+    Step step = stepBuilderFactory.get("getFile").<String, FieldMap> chunk(10)
         .reader(reader()).processor(itemProcessor()).writer(fieldMapWriter())
         .build();
 
