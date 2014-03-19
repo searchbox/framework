@@ -2,7 +2,6 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,7 @@ import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
@@ -62,10 +62,11 @@ public abstract class SolrSearchEngine extends
 
   protected abstract SolrServer getSolrServer();
 
-  protected abstract boolean updateDataModel(Map<Field, Set<String>> copyFields);
+  protected abstract boolean updateDataModel(Collection collection, 
+      Map<Field, Set<String>> copyFields);
 
   @Override
-  public SolrQuery newQuery() {
+  public SolrQuery newQuery(Collection collection) {
     try {
       SolrQuery query = this.getQueryClass().newInstance();
       query.setParam("collection", collection.getName());
@@ -88,10 +89,10 @@ public abstract class SolrSearchEngine extends
   }
 
   @Override
-  public void reloadPlugins() {
+  public void reloadPlugins(Collection collection) {
     try {
       LOGGER.info("Updating Solr Suggester");
-      SolrQuery query = this.newQuery();
+      SolrQuery query = this.newQuery(collection);
       query.setRequestHandler("/suggest");
       query.setQuery("a");
       query.setParam("suggest.build", true);
@@ -99,7 +100,7 @@ public abstract class SolrSearchEngine extends
       QueryResponse response = this.execute(query);
 
       LOGGER.info("Updating Solr Spellchecker");
-      query = this.newQuery();
+      query = this.newQuery(collection);
       query.setRequestHandler("/spell");
       query.setParam("spellcheck.build", true);
       response = this.execute(query);
@@ -109,15 +110,15 @@ public abstract class SolrSearchEngine extends
   }
 
   @Override
-  public boolean indexFile(String collectionName, File file) {
-    LOGGER.info("Indexing for collection: " + collectionName);
+  public boolean indexFile(Collection collection, File file) {
+    LOGGER.info("Indexing for collection: " + collection.getName());
     LOGGER.info("Indexing file: " + file.getAbsolutePath());
     ContentStreamBase contentstream = new ContentStreamBase.FileStream(file);
     contentstream.setContentType("text/xml");
     ContentStreamUpdateRequest request = new ContentStreamUpdateRequest(
         "/update");
     request.setCommitWithin(1000);
-    request.setParam("collection", collectionName);
+    request.setParam("collection", collection.getName());
     request.addContentStream(contentstream);
     UpdateResponse response;
     try {
@@ -125,7 +126,7 @@ public abstract class SolrSearchEngine extends
       LOGGER.info("Solr Response: " + response);
       // TODO not there...
       UpdateRequest commit = new UpdateRequest();
-      commit.setParam("collection", collectionName);
+      commit.setParam("collection", collection.getName());
       commit.setAction(ACTION.COMMIT, false, false);
       commit.process(this.getSolrServer());
       return true;
@@ -136,18 +137,18 @@ public abstract class SolrSearchEngine extends
   }
 
   @Override
-  public boolean indexMap(String collectionName, Map<String, Object> fields) {
+  public boolean indexMap(Collection collection, Map<String, Object> fields) {
 
     SolrInputDocument document = new SolrInputDocument();
     //TODO should never need this.. Make sure we use the ID field...
     if (!fields.containsKey("id")) {
-      document.addField("id", fields.get(this.collection.getIdFieldName()));
+      document.addField("id", fields.get(collection.getIdFieldName()));
     }
     for (Entry<String, Object> entry : fields.entrySet()) {
       if(entry.getValue() == null){
         continue;
       } else if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
-        for (Object value : ((Collection<?>) entry.getValue())) {
+        for (Object value : ((java.util.Collection<?>) entry.getValue())) {
           document.addField(entry.getKey(), value);
         }
       } else {
@@ -157,7 +158,7 @@ public abstract class SolrSearchEngine extends
 
     UpdateRequest update = new UpdateRequest();
     update.setCommitWithin(10000);
-    update.setParam("collection", collectionName);
+    update.setParam("collection", collection.getName());
     update.add(document);
     try {
       LOGGER.debug("Indexing document {}", document);
@@ -169,9 +170,9 @@ public abstract class SolrSearchEngine extends
       return false;
     }
   }
-
+  
   @Override
-  public boolean updateDataModel(List<FieldAttribute> fieldAttributes) {
+  public boolean updateDataModel(Collection collection, List<FieldAttribute> fieldAttributes) {
     /** Get the translation for the field's key */
     Map<Field, Set<String>> copyFields = new HashMap<Field, Set<String>>();
     for (FieldAttribute fieldAttribute : fieldAttributes) {
@@ -179,9 +180,9 @@ public abstract class SolrSearchEngine extends
           this.getAllKeysForField(fieldAttribute));
     }
     LOGGER.info("Updating all fields");
-    this.updateDataModel(copyFields);
+    this.updateDataModel(collection, copyFields);
     LOGGER.info("Reloading engine");
-    this.reloadEngine();
+    this.reloadEngine(collection);
     return true;
 
   }

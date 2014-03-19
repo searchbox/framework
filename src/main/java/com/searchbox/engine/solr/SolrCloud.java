@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
@@ -91,7 +92,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public void register() {
+  public void register(Collection collection) {
 
     try {
       SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
@@ -135,7 +136,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public void reloadEngine() {
+  public void reloadEngine(Collection collection) {
     try {
 
       SolrZkClient zkServer = getZkStateReader().getZkClient();
@@ -166,12 +167,11 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     }
   }
 
-  @Override
-  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+  protected boolean updateDataModel(Collection collection, Map<Field, Set<String>> copyFields) {
 
     try {
 
-      String baseUrl = this.getUrlBase();
+      String baseUrl = this.getUrlBase(collection);
 
       String schemaFieldURL = baseUrl + "/schema/fields";
       LOGGER.debug("Schema field url: {}", schemaFieldURL);
@@ -366,7 +366,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public String getUrlBase() {
+  public String getUrlBase(Collection collection) {
     String urlBase = null;
     try {
       ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer())
@@ -387,5 +387,11 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
       LOGGER.error("Could not read from XK to get urlBase", e);
     }
     return urlBase;
+  }
+
+  @Override
+  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+    // TODO Auto-generated method stub
+    return false;
   }
 }

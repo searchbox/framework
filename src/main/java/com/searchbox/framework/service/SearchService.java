@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchCollector;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -48,11 +49,11 @@ public class SearchService {
   }
 
   @SuppressWarnings("rawtypes")
-  public Set<SearchElement> execute(SearchEngine searchEngine,
+  public Set<SearchElement> execute(SearchEngine searchEngine, Collection collection,
       Set<SearchElement> searchElements, Set<FieldAttribute> fieldAttributes,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
-    Object query = searchEngine.newQuery();
+    Object query = searchEngine.newQuery(collection);
 
     Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 

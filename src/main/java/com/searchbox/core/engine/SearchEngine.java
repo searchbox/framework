@@ -33,13 +33,13 @@ public interface SearchEngine<Q, R> {
 
   Class<R> getResponseClass();
 
-  Q newQuery();
+  Q newQuery(Collection collection);
 
   R execute(Q query);
 
-  boolean indexFile(String collectionName, File file);
+  boolean indexFile(Collection collection, File file);
 
-  boolean indexMap(String collectionName, Map<String, Object> fields);
+  boolean indexMap(Collection collection, Map<String, Object> fields);
 
   List<SearchElement> getSupportedElements();
 
@@ -47,5 +47,4 @@ public interface SearchEngine<Q, R> {
 
   Boolean supportsCondition(AbstractSearchCondition condition);
 
-  void setCollection(Collection collection);
 }

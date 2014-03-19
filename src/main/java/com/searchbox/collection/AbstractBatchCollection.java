@@ -35,11 +35,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.env.Environment;
 
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.dm.FieldMap;
 import com.searchbox.core.engine.ManagedSearchEngine;
 
 @Configurable
-public abstract class AbstractBatchCollection extends Collection implements
+public abstract class AbstractBatchCollection extends DefaultCollection implements
     SynchronizedCollection, JobExecutionListener {
 
   private static final Logger LOGGER = LoggerFactory
@@ -63,7 +64,7 @@ public abstract class AbstractBatchCollection extends Collection implements
   @Autowired
   protected JobExplorer explorer;
 
-  private final Collection collection;
+  private final DefaultCollection collection;
 
   public AbstractBatchCollection() {
     collection = this;
@@ -122,7 +123,7 @@ public abstract class AbstractBatchCollection extends Collection implements
         return;
       } else if (ManagedSearchEngine.class.isAssignableFrom(this.searchEngine
           .getClass())) {
-        ((ManagedSearchEngine) this.searchEngine).reloadPlugins();
+        ((ManagedSearchEngine) this.searchEngine).reloadPlugins(this.collection);
       }
     } catch (Exception e) {
       LOGGER.warn(
@@ -183,7 +184,7 @@ public abstract class AbstractBatchCollection extends Collection implements
             }
           }
           try {
-            getSearchEngine().indexMap(getName(), actualFields);
+            getSearchEngine().indexMap(collection, actualFields);
           } catch (Exception e) {
             LOGGER.error("Could not index document", e);
           }
@@ -198,7 +199,7 @@ public abstract class AbstractBatchCollection extends Collection implements
       @Override
       public void write(List<? extends File> items) {
         for (File item : items) {
-          getSearchEngine().indexFile(getName(), item);
+          getSearchEngine().indexFile(collection, item);
         }
       }
     };

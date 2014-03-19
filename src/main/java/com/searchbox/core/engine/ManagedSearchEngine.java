@@ -1,16 +1,22 @@
 package com.searchbox.core.engine;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.VirtualCollection;
 
 public interface ManagedSearchEngine {
 
-  public boolean updateDataModel(List<FieldAttribute> fieldAttributes);
+  public boolean updateDataModel(Collection collection, List<FieldAttribute> fieldAttributes);
 
-  public void reloadEngine();
+  public void reloadEngine(Collection collection);
 
-  public void register();
+  public void register(Collection collection);
+  
+  public void reloadPlugins(Collection collection);
 
-  public void reloadPlugins();
 }

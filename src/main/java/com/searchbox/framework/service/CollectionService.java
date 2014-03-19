@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.collection.SynchronizedCollection;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
@@ -48,7 +49,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   public Map<String, String> synchronizeData(CollectionDefinition collectiondef) {
 
     Map<String, String> result = new HashMap<String, String>();
-    com.searchbox.core.dm.Collection collection = collectiondef.getInstance();
+    com.searchbox.core.dm.DefaultCollection collection = collectiondef.getInstance();
     if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
       SearchEngine<?, ?> engine = collection.getSearchEngine();
       LOGGER.info("Starting Data synchronization for \"" + collection.getName()
@@ -71,12 +72,12 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 
   public Map<String, String> synchronizeDm(CollectionDefinition collectiondef) {
     Map<String, String> result = new HashMap<String, String>();
-    com.searchbox.core.dm.Collection collection = collectiondef.getInstance();
+    Collection collection = collectiondef.getInstance();
     SearchEngine<?, ?> engine = collection.getSearchEngine();
     if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
       LOGGER.info("Register Searchengine Configuration for \""
           + collection.getName() + "\"");
-      ((ManagedSearchEngine) engine).register();
+      ((ManagedSearchEngine) engine).register(collection);
       LOGGER.info("Starting DM synchronization for \"" + collection.getName()
           + "\"");
       for (PresetDefinition presetDef : collectiondef.getPresets()) {
@@ -85,7 +86,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
             .getFieldAttributes()) {
           fieldAttributes.add(fieldAttr.getInstance());
         }
-        ((ManagedSearchEngine) engine).updateDataModel(fieldAttributes);
+        ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
       }
     }
     return result;

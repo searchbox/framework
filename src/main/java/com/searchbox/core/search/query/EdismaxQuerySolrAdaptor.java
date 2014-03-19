@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.engine.solr.SolrSearchEngine;
@@ -82,10 +83,10 @@ public class EdismaxQuerySolrAdaptor {
   }
 
   @SearchAdapterMethod(execute = Time.ASYNCH)
-  public void getSugestions(SolrSearchEngine engine,
+  public void getSugestions(SolrSearchEngine engine, Collection collection,
       EdismaxQuery.Condition condition, Map<String, Object> result) {
 
-    SolrQuery query = engine.newQuery();
+    SolrQuery query = engine.newQuery(collection);
     query.setRequestHandler("/suggest");
     query.setQuery(condition.getQuery());
     SolrResponse response = engine.execute(query);

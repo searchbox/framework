@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -90,12 +91,12 @@ public class ASynchController {
 
     SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
         .getInstance();
-    searchEngine.setCollection(preset.getCollection().getInstance());
-
+    Collection collection = preset.getCollection().getInstance();
+    
     Map<String, Object> results = new HashMap<String, Object>();
 
-    adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine,
-        searchEngine.newQuery(), results, fieldAttributes, element, conditions);
+    adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine, collection,
+        searchEngine.newQuery(collection), results, fieldAttributes, element, conditions);
 
     return results;
   }

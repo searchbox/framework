@@ -34,13 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.dm.Field;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class CollectionDefinition extends UnknownClassDefinition implements
-    ElementFactory<Collection> {
+    ElementFactory<DefaultCollection> {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionDefinition.class);
@@ -180,15 +180,14 @@ public class CollectionDefinition extends UnknownClassDefinition implements
   }
 
   @Override
-  public Collection getInstance() {
-    Collection collection = (Collection) super.toObject();
+  public DefaultCollection getInstance() {
+    DefaultCollection collection = (DefaultCollection) super.toObject();
     BeanUtils.copyProperties(this, collection);
     for (FieldDefinition fieldDef : this.fields) {
       collection.getFields().add(
           new Field(fieldDef.getClazz(), fieldDef.getKey()));
     }
     collection.setSearchEngine(searchEngine.getInstance());
-    collection.getSearchEngine().setCollection(collection);
     return collection;
   }
 }
