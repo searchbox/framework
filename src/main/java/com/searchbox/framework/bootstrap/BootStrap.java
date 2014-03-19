@@ -228,10 +228,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           topicsCollection.getFieldDefinition("callDeadline"));
       fieldAttr3.setAttributeValue("sortable", true);
       presetTopic.addFieldAttribute(fieldAttr3);
-      
-     FieldAttributeDefinition fieldAttr4 = new FieldAttributeDefinition(
-              topicsCollection.getFieldDefinition("source"));
-      presetTopic.addFieldAttribute(fieldAttr4);
 
       /** Create & add a querydebug SearchComponent to the preset; */
       SearchElementDefinition querydebug = new SearchElementDefinition(
@@ -346,9 +342,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       LOGGER.info("++ Creating Cooperation preset");
       PresetDefinition presetEEN = new PresetDefinition(eenCollection);
-      presetEEN.setLabel("Cooperations");
+      presetEEN.setLabel("EEN");
       presetEEN.setDescription("EEN cooperations");
-      presetEEN.setSlug("coop");
+      presetEEN.setSlug("een");
       presetEEN.setCollection(eenCollection);
       searchbox.addPresetDefinition(presetEEN);
 

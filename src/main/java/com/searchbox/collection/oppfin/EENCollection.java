@@ -131,21 +131,21 @@ public class EENCollection extends AbstractBatchCollection implements
 
   @Override
   public Date getPublishedValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumSubmit")!=null?
+    return (Date) (fields.get("eenDatumSubmit").size()!=0?
         fields.get("eenDatumSubmit").get(0):
         null);
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumUpdate")!=null?
+    return (Date) (fields.get("eenDatumUpdate").size()!=0?
         fields.get("eenDatumUpdate").get(0):
           getPublishedValue(fields));
   }
 
   @Override
   public Date getDeadlineValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumDeadline")!=null?
+    return (Date) (fields.get("eenDatumDeadline").size()!=0?
         fields.get("eenDatumDeadline").get(0):
         null);
   }
@@ -285,8 +285,8 @@ public class EENCollection extends AbstractBatchCollection implements
         FieldMap doc = new FieldMap();
 
         doc.put("docSource", "EEN");
-        doc.put("programme", "EEN");
         doc.put("docType", "Collaboration");
+        doc.put("programme", "EEN");
 
         try {
 

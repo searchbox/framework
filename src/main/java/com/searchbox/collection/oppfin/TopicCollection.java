@@ -153,7 +153,7 @@ public class TopicCollection extends AbstractBatchCollection implements
     // Generic fields
     fields.add(new Field(String.class, "docType"));
     fields.add(new Field(String.class, "programme"));
-    fields.add(new Field(String.class, "source"));
+    fields.add(new Field(String.class, "docSource"));
     return fields;
   }
 
@@ -456,7 +456,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         LOGGER.info("Inserting call {} into topic {}", 
         		callFileName,topicFileName);
                 
-        doc.put("source", "H2020");
+        doc.put("docSource", "H2020");
         doc.put("docType", "Funding");
         doc.put("programme", "H2020");
 

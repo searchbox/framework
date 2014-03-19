@@ -121,12 +121,16 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
   @Override
   public String getBodyValue(FieldMap fields) {
-        return (String) fields.get("idealistBody").get(0);
+    return fields.get("idealistBody").size() != 0 
+        ?(String) fields.get("idealistBody").get(0):
+          null;
   }
 
   @Override
   public String getTitleValue(FieldMap fields) {
-    return (String) fields.get("idealistTitle").get(0);
+    return fields.get("idealistTitle").size() != 0 
+        ? (String) fields.get("idealistTitle").get(0):
+          null;
   }
   
   @Override
@@ -253,6 +257,9 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
       for (int i = 0; i < nodeList.getLength(); i++) {
         String value = nodeList.item(i).getTextContent();
+        if(value.isEmpty()){
+          continue;
+        }
         if (String.class.isAssignableFrom(clazz)) {
           String content = new HtmlToPlainText().getPlainText(Jsoup
               .parse(value));
@@ -264,7 +271,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             date = dfmt.parse(value);
             fields.put(fieldName, date);
           } catch (ParseException e) {
-            LOGGER.warn("Could not parse date", e);
+            LOGGER.warn("Could not parse date for for key {} in document {}", key, uid);
           }
         }
       }
