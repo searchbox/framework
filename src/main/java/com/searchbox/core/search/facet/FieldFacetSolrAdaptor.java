@@ -40,6 +40,8 @@ public class FieldFacetSolrAdaptor {
       }
     }
     if (!defined) {
+      query.setFacetMinCount(facet.getMinCount());
+      query.setFacetLimit(facet.getLimit());
       if (facet.getSticky()) {
         query.addFacetField("{!ex=" + facetKey + "}" + facetKey);
       } else {
