@@ -25,12 +25,15 @@ public class FieldMap extends HashMap<String, List<Object>> {
      */
     private static final long serialVersionUID = 6364672700946040334L;
 
-    public void put(String key, Object number) {
-      List<Object> current = get(key);
-      if (current == null) {
-        current = new ArrayList<Object>();
-        super.put(key, current);
+    /**
+     * Add item of any type to the field defined by key
+     * @param key String
+     * @param item Object
+     */
+    public void put(String key, Object item) {
+      if (!super.containsKey(key)) {
+        super.put(key, new ArrayList<Object>());
       }
-      current.add(number);
+      super.get(key).add(item);
     }
   }
