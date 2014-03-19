@@ -601,6 +601,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           "/WEB-INF/templates/oppfin/_idealistView.jspx");
       presetIDEALIST.addSearchElement(idealistViewHit, "view");
           
+      
+      /** Create & add a basicSearchStat SearchComponent to the preset; */
+      SearchElementDefinition idealistBasicStatus = new SearchElementDefinition(
+          BasicSearchStats.class);
+      presetIDEALIST.addSearchElement(idealistBasicStatus);
+
+      SearchElementDefinition idealistPagination = new SearchElementDefinition(
+          BasicPagination.class);
+      presetIDEALIST.addSearchElement(idealistPagination);
+
+      SearchElementDefinition idealistDebug = new SearchElementDefinition(
+          SolrToString.class);
+      presetIDEALIST.addSearchElement(idealistDebug);
+      
       /**
        * Cordis Preset
        */
@@ -714,7 +728,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition cordisViewHitMeta = new SearchElementDefinition(
               TemplateElement.class);
       cordisViewHitMeta.setLabel("leftCol");
-      cordisViewHitMeta.setAttributeValue("titleField", "idealistTitle");
+      cordisViewHitMeta.setAttributeValue("titleField", "cordisTitle");
       cordisViewHitMeta.setAttributeValue("idField", cordisCollection.getIdFieldName());
       cordisViewHitMeta.setAttributeValue("templateFile",
               "/WEB-INF/templates/oppfin/_cordisViewMeta.jspx");
@@ -723,7 +737,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchElementDefinition cordisViewHit = new SearchElementDefinition(
           TemplateElement.class);
       cordisViewHit.setLabel("body");
-      cordisViewHit.setAttributeValue("titleField", "idealistTitle");
+      cordisViewHit.setAttributeValue("titleField", "cordisTitle");
       cordisViewHit.setAttributeValue("idField", cordisCollection.getIdFieldName());
       cordisViewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_cordisView.jspx");
