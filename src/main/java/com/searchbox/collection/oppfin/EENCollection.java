@@ -51,7 +51,6 @@ import com.searchbox.framework.config.RootConfiguration;
 import eu.europa.ec.een.tools.services.soap.IPODServiceSOAPProxy;
 
 @Configurable
-@Component
 public class EENCollection extends AbstractBatchCollection implements
     SynchronizedCollection, StandardCollection, ExpiringDocuments {
 
