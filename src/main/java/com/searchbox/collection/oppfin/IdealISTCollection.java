@@ -116,17 +116,23 @@ public class IdealISTCollection extends AbstractBatchCollection implements
   
   @Override
   public String getIdValue(FieldMap fields) {
-    return (String) fields.get(this.getIdFieldName()).get(0);
+    return (fields.get(this.getIdFieldName()).size() > 0) ?
+    		(String) fields.get(this.getIdFieldName()).get(0) :
+    		null;
   }
 
   @Override
   public String getBodyValue(FieldMap fields) {
-        return (String) fields.get("idealistBody").get(0);
+        return (fields.get("idealistBody").size() > 0)  ? 
+        		(String) fields.get("idealistBody").get(0) : 
+        		null;
   }
 
   @Override
   public String getTitleValue(FieldMap fields) {
-    return (String) fields.get("idealistTitle").get(0);
+    return (fields.get("idealistTitle").size() > 0) ? 
+    		(String) fields.get("idealistTitle").get(0) : 
+    		null;
   }
   
   @Override
