@@ -1,0 +1,11 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
+
+ <h2><sbx:out value="${hit.fieldValues['cordisTitle']}" /></h2>
+ <sbx:out value="${hit.fieldValues['cordisSnippet']}" />
+ <hr />
+
+<h2>Related Technology Partners</h2>
+
+</jsp:root>

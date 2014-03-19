@@ -33,12 +33,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
@@ -602,31 +602,99 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       presetIDEALIST.addSearchElement(idealistViewHit, "view");
       
           
+      
+      /**
+       * Cordis Preset
+       */
      
+      LOGGER.info("++ Creating oppfin CORDIS Collection");
+      CollectionDefinition cordisCollection = new CollectionDefinition(
+          CordisCollection.class, "fundedProjects");
+      cordisCollection.setIdFieldName("cordisId");
+      cordisCollection.setAutoStart(false);
+      cordisCollection.setSearchEngine(engine);
+      cordisCollection = collectionRepository.save(cordisCollection);
 
-      // SearchElementDefinition idealistViewHit = new SearchElementDefinition(
-      // TemplateElement.class);
-      // idealistViewHit.setType(SearchElement.Type.INSPECT);
-      // idealistViewHit.setAttributeValue("titleField", "idealistTitle");
-      // idealistViewHit.setAttributeValue("idField", "id");
-      // idealistViewHit
-      // .setAttributeValue(
-      // "template","template here"
-      // );
-      // presetIDEALIST.addSearchElement(idealistViewHit);
+      LOGGER.info("++ Creating CORDIS preset");
+      PresetDefinition presetCordis = new PresetDefinition(cordisCollection);
+      presetCordis.setLabel("Funded Projects");
+      presetCordis.setDescription("Funded projects");
+      presetCordis.setSlug("funded");
+      presetCordis.setCollection(cordisCollection);
+      searchbox.addPresetDefinition(presetCordis);
 
+      FieldAttributeDefinition cordisTitleField = new FieldAttributeDefinition(
+    		  cordisCollection.getFieldDefinition("cordisTitle"));
+      cordisTitleField.setAttributeValue("searchable", true);
+      cordisTitleField.setAttributeValue("highlight", true);
+      cordisTitleField.setAttributeValue("spelling", true);
+      cordisTitleField.setAttributeValue("suggestion", true);
+      cordisTitleField.setAttributeValue("label", "Title");
+      cordisTitleField.setAttributeValue("lang", lang);
+      presetCordis.addFieldAttribute(cordisTitleField);
+
+      FieldAttributeDefinition cordisBodyField = new FieldAttributeDefinition(
+    		  cordisCollection.getFieldDefinition("cordisSnippet"));
+      cordisBodyField.setAttributeValue("searchable", true);
+      cordisBodyField.setAttributeValue("highlight", true);
+      cordisBodyField.setAttributeValue("spelling", true);
+      cordisBodyField.setAttributeValue("suggestion", true);
+      cordisBodyField.setAttributeValue("label", "Summary");
+      cordisBodyField.setAttributeValue("lang", lang);
+      presetCordis.addFieldAttribute(cordisBodyField);
+      
+      
+
+      
+
+      /** Create & add a query SearchComponent to the preset; */
+      SearchElementDefinition cordisQuery = new SearchElementDefinition(
+          EdismaxQuery.class);
+      presetCordis.addSearchElement(cordisQuery);
+
+      /** Create & add a TemplateElement SearchComponent to the preset; */
+      SearchElementDefinition cordisTmpHit = new SearchElementDefinition(
+          TemplateElement.class);
+      cordisTmpHit.setAttributeValue("titleField", "cordisTitle");
+      cordisTmpHit.setAttributeValue("idField", cordisCollection.getIdFieldName());
+      cordisTmpHit.setAttributeValue("templateFile",
+          "/WEB-INF/templates/oppfin/_cordisHit.jspx");
+      presetCordis.addSearchElement(cordisTmpHit);
+          
+          
+      /** Create view page **/
+      SearchElementDefinition cordisViewHitMeta = new SearchElementDefinition(
+              TemplateElement.class);
+      cordisViewHitMeta.setLabel("leftCol");
+      cordisViewHitMeta.setAttributeValue("titleField", "idealistTitle");
+      cordisViewHitMeta.setAttributeValue("idField", cordisCollection.getIdFieldName());
+      cordisViewHitMeta.setAttributeValue("templateFile",
+              "/WEB-INF/templates/oppfin/_cordisViewMeta.jspx");
+      presetCordis.addSearchElement(cordisViewHitMeta, "view");
+
+      SearchElementDefinition cordisViewHit = new SearchElementDefinition(
+          TemplateElement.class);
+      cordisViewHit.setLabel("body");
+      cordisViewHit.setAttributeValue("titleField", "idealistTitle");
+      cordisViewHit.setAttributeValue("idField", cordisCollection.getIdFieldName());
+      cordisViewHit.setAttributeValue("templateFile",
+          "/WEB-INF/templates/oppfin/_cordisView.jspx");
+      presetCordis.addSearchElement(cordisViewHit, "view");
+      
+      
+      
       /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition idealistBasicStatus = new SearchElementDefinition(
+      SearchElementDefinition cordisBasicStatus = new SearchElementDefinition(
           BasicSearchStats.class);
-      presetIDEALIST.addSearchElement(idealistBasicStatus);
+      presetCordis.addSearchElement(cordisBasicStatus);
 
-      SearchElementDefinition idealistPagination = new SearchElementDefinition(
+      SearchElementDefinition cordisPagination = new SearchElementDefinition(
           BasicPagination.class);
-      presetIDEALIST.addSearchElement(idealistPagination);
+      presetCordis.addSearchElement(cordisPagination);
 
-      SearchElementDefinition idealistDeb = new SearchElementDefinition(
+      SearchElementDefinition cordisDeb = new SearchElementDefinition(
           SolrToString.class);
-      presetIDEALIST.addSearchElement(idealistDeb);
+      presetCordis.addSearchElement(cordisDeb);
 
       /** Create & add a FieldSort SearchComponent to the preset; */
       // SearchElementDefinition idealistFieldSort = new
