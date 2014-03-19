@@ -2,7 +2,7 @@ package com.searchbox.collection;
 
 import java.util.Date;
 
-import com.searchbox.core.dm.Collection.FieldMap;
+import com.searchbox.core.dm.FieldMap;
 
 public interface ExpiringDocuments {
 

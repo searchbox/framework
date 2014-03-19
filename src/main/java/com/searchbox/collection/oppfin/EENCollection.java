@@ -45,6 +45,7 @@ import com.searchbox.collection.ExpiringDocuments;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.FieldMap;
 import com.searchbox.framework.config.RootConfiguration;
 
 import eu.europa.ec.een.tools.services.soap.IPODServiceSOAPProxy;

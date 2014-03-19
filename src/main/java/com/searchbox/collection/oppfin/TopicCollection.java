@@ -74,6 +74,7 @@ import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.FieldMap;
 import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
