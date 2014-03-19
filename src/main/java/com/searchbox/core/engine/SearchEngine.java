@@ -35,7 +35,7 @@ public interface SearchEngine<Q, R> {
 
   Q newQuery(Collection collection);
 
-  R execute(Q query);
+  R execute(Collection collection, Q query);
 
   boolean indexFile(Collection collection, File file);
 

@@ -89,7 +89,7 @@ public class EdismaxQuerySolrAdaptor {
     SolrQuery query = engine.newQuery(collection);
     query.setRequestHandler("/suggest");
     query.setQuery(condition.getQuery());
-    SolrResponse response = engine.execute(query);
+    SolrResponse response = engine.execute(collection, query);
 
     List<String> suggestionTerms = new ArrayList<String>();
     /**

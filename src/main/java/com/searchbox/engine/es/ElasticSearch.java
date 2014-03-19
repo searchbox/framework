@@ -28,7 +28,7 @@ public class ElasticSearch extends
   }
 
   @Override
-  public MultiSearchResponse execute(SearchRequestBuilder query) {
+  public MultiSearchResponse execute(Collection collection, SearchRequestBuilder query) {
     // TODO Auto-generated method stub
     return null;
   }

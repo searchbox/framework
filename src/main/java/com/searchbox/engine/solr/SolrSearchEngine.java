@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.AbstractUpdateRequest.ACTION;
@@ -19,6 +20,7 @@ import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.util.ContentStreamBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,7 @@ public abstract class SolrSearchEngine extends
     super(name, SolrQuery.class, QueryResponse.class);
   }
 
-  protected abstract SolrServer getSolrServer();
+  protected abstract SolrServer getSolrServer(Collection collection);
 
   protected abstract boolean updateDataModel(Collection collection, 
       Map<Field, Set<String>> copyFields);
@@ -79,9 +81,9 @@ public abstract class SolrSearchEngine extends
   }
 
   @Override
-  public QueryResponse execute(SolrQuery query) {
+  public QueryResponse execute(Collection collection, SolrQuery query) {
     try {
-      return this.getSolrServer().query(query);
+      return this.getSolrServer(collection).query(query);
     } catch (SolrServerException e) {
       LOGGER.warn("Could not execute query {}", query);
       throw new RuntimeException("Could nexecute Query on  engine", e);
@@ -97,13 +99,13 @@ public abstract class SolrSearchEngine extends
       query.setQuery("a");
       query.setParam("suggest.build", true);
       LOGGER.info("Query is: " + query);
-      QueryResponse response = this.execute(query);
+      QueryResponse response = this.execute(collection, query);
 
       LOGGER.info("Updating Solr Spellchecker");
       query = this.newQuery(collection);
       query.setRequestHandler("/spell");
       query.setParam("spellcheck.build", true);
-      response = this.execute(query);
+      response = this.execute(collection, query);
     } catch (Exception e) {
       LOGGER.warn("Error while reloading plugins (Nothing commited yet?)");
     }
@@ -122,13 +124,13 @@ public abstract class SolrSearchEngine extends
     request.addContentStream(contentstream);
     UpdateResponse response;
     try {
-      response = request.process(this.getSolrServer());
+      response = request.process(this.getSolrServer(collection));
       LOGGER.info("Solr Response: " + response);
       // TODO not there...
       UpdateRequest commit = new UpdateRequest();
       commit.setParam("collection", collection.getName());
       commit.setAction(ACTION.COMMIT, false, false);
-      commit.process(this.getSolrServer());
+      commit.process(this.getSolrServer(collection));
       return true;
     } catch (SolrServerException | IOException e) {
       LOGGER.error("Could not index file: " + file, e);
@@ -162,7 +164,7 @@ public abstract class SolrSearchEngine extends
     update.add(document);
     try {
       LOGGER.debug("Indexing document {}", document);
-      UpdateResponse response = update.process(this.getSolrServer());
+      UpdateResponse response = update.process(this.getSolrServer(collection));
       LOGGER.debug("Updated Solr with status: " + response.getStatus());
       return true;
     } catch (Exception e) {

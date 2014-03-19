@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
@@ -44,27 +45,30 @@ public class SolrSearchEngineTest {
     this.engine = new SolrSearchEngine() {
 
       @Override
-      protected SolrServer getSolrServer() {
+      public void reloadEngine(Collection collection) {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void register(Collection collection) {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      protected SolrServer getSolrServer(Collection collection) {
+        // TODO Auto-generated method stub
         return null;
       }
 
       @Override
-      public void reloadEngine() {
-        // TODO Auto-generated method stub
-
-      }
-
-      @Override
-      public void register() {
-        // TODO Auto-generated method stub
-
-      }
-
-      @Override
-      protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+      protected boolean updateDataModel(Collection collection,
+          Map<Field, Set<String>> copyFields) {
         // TODO Auto-generated method stub
         return false;
       }
+
     };
   }
 
