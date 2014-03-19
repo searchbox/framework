@@ -388,10 +388,4 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     }
     return urlBase;
   }
-
-  @Override
-  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 }
