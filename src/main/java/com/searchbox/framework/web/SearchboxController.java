@@ -216,6 +216,7 @@ public class SearchboxController {
     Collection collection = preset.getCollection().getInstance();
     
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
+    LOGGER.info("Current Collection: {}", collection);
 
     Set<SearchElement> resultElements = searchService.execute(searchEngine,
         collection, searchElements, fieldAttributes, conditions, collector);

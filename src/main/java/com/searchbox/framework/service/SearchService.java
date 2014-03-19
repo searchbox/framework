@@ -58,7 +58,7 @@ public class SearchService {
     Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
     // Weave in all SearchElement in Query
-    adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine, query,
+    adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine, collection, query,
         fieldAttributes, searchElements, collector);
 
     for (SearchElement element : searchElements) {
@@ -71,14 +71,14 @@ public class SearchService {
 
     // Weave in all UI Conditions in query
     LOGGER.debug("Adapting condition from UI: " + conditions);
-    adapterService.doAdapt(SearchAdapter.Time.PRE,
-        AbstractSearchCondition.class, searchEngine, query, fieldAttributes,
+    adapterService.doAdapt(SearchAdapter.Time.PRE,AbstractSearchCondition.class,
+        collection, searchEngine, query, fieldAttributes,
         conditions, searchElements, collector);
 
     // Weave in all presetConditions in query
     LOGGER.debug("Adapting condition from Preset: " + presetConditions);
-    adapterService.doAdapt(SearchAdapter.Time.PRE,
-        AbstractSearchCondition.class, searchEngine, query, fieldAttributes,
+    adapterService.doAdapt(SearchAdapter.Time.PRE, AbstractSearchCondition.class,
+        searchEngine, collection, query, fieldAttributes,
         presetConditions, searchElements, collector);
 
     // Executing the query on the search engine!!!
@@ -98,7 +98,7 @@ public class SearchService {
     Class<?> resultClass = result.getClass();
     adapterService.doAdapt(SearchAdapter.Time.POST, resultClass, searchEngine,
         query, fieldAttributes, conditions, presetConditions, result,
-        searchElements, collector);
+        collection, searchElements, collector);
 
     // Executing a merge on all SearchConditions
     for (SearchElement element : searchElements) {

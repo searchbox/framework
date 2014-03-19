@@ -6,7 +6,7 @@
 
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:output omit-xml-declaration="yes" />
-
+ 
  <c:set var="externalQueryUrl" value="${element.getExternalQueryURL() }" />
  <div class="panel-group" id="accordion">
   <div class="panel panel-default">
@@ -26,7 +26,7 @@
    <div id="collapseOne" class="panel-collapse collapse">
     <div class="panel-body">
      <ul>
-      <c:forEach items="${fn:split(element.query,'&amp;')}" var="qparam">
+      <c:forEach items="${fn:split(element.request,'&amp;')}" var="qparam">
       <str:decodeUrl var="thisparam">${qparam}</str:decodeUrl>
        <li><str:decodeUrl>${fn:replace(thisparam,',',', ')}</str:decodeUrl></li>
       </c:forEach>
