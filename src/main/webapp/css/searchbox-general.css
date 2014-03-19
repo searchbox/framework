@@ -67,7 +67,7 @@ body #main-content {
 }
 
 @media ( max-width : 768px) {
- #result-list .label-tag {
+ .result-list .label-tag {
   display: list-item;
   margin-bottom: 5px;
  }
