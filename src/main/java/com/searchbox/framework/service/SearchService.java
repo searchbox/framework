@@ -85,7 +85,7 @@ public class SearchService {
     Object result = null;
     try {
       LOGGER.debug("Using: " + searchEngine);
-      result = reflectionExecute(searchEngine, query);
+      result = reflectionExecute(searchEngine, collection, query);
     } catch (Exception e) {
       SearchElement error = new SearchError(e.getMessage(), e);
       error.setPosition(100000);
@@ -119,10 +119,11 @@ public class SearchService {
   }
 
   private Object reflectionExecute(final SearchEngine<?, ?> engine,
+      final Collection collection, 
       final Object query) throws NoSuchMethodException, IllegalAccessException,
       InvocationTargetException {
     Method execute = engine.getClass().getMethod("execute",
-        engine.getQueryClass());
-    return execute.invoke(engine, query);
+        Collection.class, engine.getQueryClass());
+    return execute.invoke(engine, collection, query);
   }
 }

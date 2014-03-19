@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.engine.SearchEngine;
 
-public class VirtualCollection implements Collection {
+public class MultiCollection implements Collection {
 
   @SearchAttribute
   protected String name;
@@ -34,7 +34,7 @@ public class VirtualCollection implements Collection {
   protected String description;
 
   @SearchAttribute
-  protected List<DefaultCollection> collections = new ArrayList<DefaultCollection>();
+  protected List<Collection> collections = new ArrayList<Collection>();
 
   @SearchAttribute
   protected SearchEngine<?, ?> searchEngine;
@@ -42,11 +42,11 @@ public class VirtualCollection implements Collection {
   @SearchAttribute
   protected String idFieldName;
 
-  public VirtualCollection() {
+  public MultiCollection() {
 
   }
 
-  public VirtualCollection(String name) {
+  public MultiCollection(String name) {
     this.name = name;
   }
 
@@ -80,11 +80,11 @@ public class VirtualCollection implements Collection {
     this.searchEngine = searchEngine;
   }
 
-  public List<DefaultCollection> getCollections() {
+  public List<Collection> getCollections() {
     return collections;
   }
 
-  public void setCollections(List<DefaultCollection> collections) {
+  public void setCollections(List<Collection> collections) {
     this.collections = collections;
   }
 

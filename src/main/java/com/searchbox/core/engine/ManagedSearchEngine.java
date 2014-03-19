@@ -7,7 +7,7 @@ import java.util.Set;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.dm.VirtualCollection;
+import com.searchbox.core.dm.MultiCollection;
 
 public interface ManagedSearchEngine {
 
