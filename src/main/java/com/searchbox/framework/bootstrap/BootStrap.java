@@ -570,7 +570,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       /** Create & add a query SearchComponent to the preset; */
       SearchElementDefinition idealistQuery = new SearchElementDefinition(
           EdismaxQuery.class);
-      presetIDEALIST.addSearchElement(idealistQuery);
+      presetIDEALIST.addSearchElement(idealistQuery);     
 
       /** Create & add a TemplateElement SearchComponent to the preset; */
       SearchElementDefinition idealistTmpHit = new SearchElementDefinition(
@@ -600,9 +600,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       idealistViewHit.setAttributeValue("templateFile",
           "/WEB-INF/templates/oppfin/_idealistView.jspx");
       presetIDEALIST.addSearchElement(idealistViewHit, "view");
-      
           
-      
       /**
        * Cordis Preset
        */
@@ -652,6 +650,56 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           EdismaxQuery.class);
       presetCordis.addSearchElement(cordisQuery);
 
+      /** Create & add Year facet. */
+      SearchElementDefinition yearFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      yearFacet.setAttributeValue("field",
+          cordisCollection.getFieldDefinition("cordisStartYear").getInstance());
+      yearFacet.setLabel("Year");
+      yearFacet.setAttributeValue("order", Order.BY_KEY);
+      yearFacet.setAttributeValue("sort", Sort.DESC);
+      presetCordis.addSearchElement(yearFacet, "search");
+      
+      /** Create & add Area facet. */
+      SearchElementDefinition areaFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      areaFacet.setAttributeValue("field",
+          cordisCollection.getFieldDefinition("cordisArea").getInstance());
+      areaFacet.setLabel("Area");
+      areaFacet.setAttributeValue("order", Order.BY_VALUE);
+      areaFacet.setAttributeValue("sort", Sort.DESC);
+      presetCordis.addSearchElement(areaFacet, "search");
+      
+      /** Create & add Area facet. */
+      SearchElementDefinition categoryFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      categoryFacet.setAttributeValue("field",
+          cordisCollection.getFieldDefinition("cordisCategory").getInstance());
+      categoryFacet.setLabel("Category");
+      categoryFacet.setAttributeValue("order", Order.BY_VALUE);
+      categoryFacet.setAttributeValue("sort", Sort.DESC);
+      presetCordis.addSearchElement(categoryFacet, "search");
+      
+      /** Create & add Tag facet. */
+      SearchElementDefinition tagFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      tagFacet.setAttributeValue("field",
+          cordisCollection.getFieldDefinition("cordisTag").getInstance());
+      tagFacet.setLabel("Tag");
+      tagFacet.setAttributeValue("order", Order.BY_VALUE);
+      tagFacet.setAttributeValue("sort", Sort.DESC);
+      presetCordis.addSearchElement(tagFacet, "search");
+      
+      /** Create & add Tag facet. */
+      SearchElementDefinition statusFacet = new SearchElementDefinition(
+          FieldFacet.class);
+      statusFacet.setAttributeValue("field",
+          cordisCollection.getFieldDefinition("cordisProjectStatus").getInstance());
+      statusFacet.setLabel("Status");
+      statusFacet.setAttributeValue("order", Order.BY_VALUE);
+      statusFacet.setAttributeValue("sort", Sort.DESC);
+      presetCordis.addSearchElement(statusFacet, "search");
+      
       /** Create & add a TemplateElement SearchComponent to the preset; */
       SearchElementDefinition cordisTmpHit = new SearchElementDefinition(
           TemplateElement.class);
