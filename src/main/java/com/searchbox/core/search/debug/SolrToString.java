@@ -22,6 +22,7 @@ import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 import com.searchbox.core.search.SearchElement;
 import com.searchbox.engine.solr.SolrSearchEngine;
@@ -33,9 +34,18 @@ public class SolrToString extends SearchElement {
   private QueryResponse response;
   private SolrQuery request;
   private SolrSearchEngine engine;
+  private Collection collection;
 
   public SolrToString() {
     super("Solr Debug", SearchElement.Type.DEBUG);
+  }
+
+  public Collection getCollection() {
+    return collection;
+  }
+
+  public void setCollection(Collection collection) {
+    this.collection = collection;
   }
 
   public String getQuery() {
@@ -72,7 +82,7 @@ public class SolrToString extends SearchElement {
 
   public String getExternalQueryURL() {
     if (AccessibleSearchEngine.class.isAssignableFrom(this.engine.getClass())) {
-      return ((AccessibleSearchEngine) engine).getUrlBase() + "/select?"
+      return ((AccessibleSearchEngine) engine).getUrlBase(collection) + "/select?"
           + query.toString();
     } else {
       return null;
@@ -83,9 +93,10 @@ public class SolrToString extends SearchElement {
   public static class SolrAdaptor {
 
     @SearchAdapterMethod(execute = Time.PRE)
-    public SolrQuery addDebug(SolrSearchEngine engine,
+    public SolrQuery addDebug(SolrSearchEngine engine, Collection collection,
         SolrToString searchElement, SolrQuery query) {
       query.set("debug", "true");
+      searchElement.setCollection(collection);
       searchElement.setEngine(engine);
       searchElement.setRequest(query);
       return query;

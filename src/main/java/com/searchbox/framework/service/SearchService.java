@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchCollector;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -48,11 +49,11 @@ public class SearchService {
   }
 
   @SuppressWarnings("rawtypes")
-  public Set<SearchElement> execute(SearchEngine searchEngine,
+  public Set<SearchElement> execute(SearchEngine searchEngine, Collection collection,
       Set<SearchElement> searchElements, Set<FieldAttribute> fieldAttributes,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
-    Object query = searchEngine.newQuery();
+    Object query = searchEngine.newQuery(collection);
 
     Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
@@ -84,7 +85,7 @@ public class SearchService {
     Object result = null;
     try {
       LOGGER.debug("Using: " + searchEngine);
-      result = reflectionExecute(searchEngine, query);
+      result = reflectionExecute(searchEngine, collection, query);
     } catch (Exception e) {
       SearchElement error = new SearchError(e.getMessage(), e);
       error.setPosition(100000);
@@ -118,10 +119,11 @@ public class SearchService {
   }
 
   private Object reflectionExecute(final SearchEngine<?, ?> engine,
+      final Collection collection, 
       final Object query) throws NoSuchMethodException, IllegalAccessException,
       InvocationTargetException {
     Method execute = engine.getClass().getMethod("execute",
-        engine.getQueryClass());
-    return execute.invoke(engine, query);
+        Collection.class, engine.getQueryClass());
+    return execute.invoke(engine, collection, query);
   }
 }

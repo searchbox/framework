@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
@@ -60,7 +61,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
   @Override
   public void destroy() throws Exception {
-    getSolrServer().shutdown();
+    getSolrServer(null).shutdown();
   }
 
   private static CloudSolrServer solrServer;
@@ -83,7 +84,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  protected SolrServer getSolrServer() {
+  protected SolrServer getSolrServer(Collection collection) {
     if (solrServer == null) {
       initServer();
     }
@@ -91,7 +92,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public void register() {
+  public void register(Collection collection) {
 
     try {
       SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
@@ -105,12 +106,12 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
       if (coreExists(zkServer, collection.getName())) {
         CollectionAdminResponse response = CollectionAdminRequest
-            .reloadCollection(collection.getName(), getSolrServer());
+            .reloadCollection(collection.getName(), getSolrServer(collection));
         LOGGER.info("Reloaded Existing collection: " + response);
       } else {
         CollectionAdminResponse response = CollectionAdminRequest
             .createCollection(collection.getName(), 1, collection.getName(),
-                getSolrServer());
+                getSolrServer(collection));
         LOGGER.info("Created New collection: " + response);
       }
 
@@ -131,11 +132,11 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   private ZkStateReader getZkStateReader() {
-    return ((CloudSolrServer) getSolrServer()).getZkStateReader();
+    return ((CloudSolrServer) getSolrServer(null)).getZkStateReader();
   }
 
   @Override
-  public void reloadEngine() {
+  public void reloadEngine(Collection collection) {
     try {
 
       SolrZkClient zkServer = getZkStateReader().getZkClient();
@@ -150,7 +151,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
       }
 
       CollectionAdminResponse response = CollectionAdminRequest
-          .reloadCollection(collection.getName(), getSolrServer());
+          .reloadCollection(collection.getName(), getSolrServer(collection));
       LOGGER.info("Reloaded collection: " + response);
 
       wait = 0;
@@ -166,12 +167,11 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     }
   }
 
-  @Override
-  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+  protected boolean updateDataModel(Collection collection, Map<Field, Set<String>> copyFields) {
 
     try {
 
-      String baseUrl = this.getUrlBase();
+      String baseUrl = this.getUrlBase(collection);
 
       String schemaFieldURL = baseUrl + "/schema/fields";
       LOGGER.debug("Schema field url: {}", schemaFieldURL);
@@ -366,10 +366,10 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public String getUrlBase() {
+  public String getUrlBase(Collection collection) {
     String urlBase = null;
     try {
-      ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer())
+      ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer(collection))
           .getZkStateReader();
       java.util.Collection<Slice> slices = zkSateReader.getClusterState()
           .getActiveSlices(collection.getName());

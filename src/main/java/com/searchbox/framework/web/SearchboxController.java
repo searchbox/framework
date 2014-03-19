@@ -37,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.SearchCollector;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -212,12 +213,12 @@ public class SearchboxController {
 
     SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
         .getInstance();
-    searchEngine.setCollection(preset.getCollection().getInstance());
-
+    Collection collection = preset.getCollection().getInstance();
+    
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
 
     Set<SearchElement> resultElements = searchService.execute(searchEngine,
-        searchElements, fieldAttributes, conditions, collector);
+        collection, searchElements, fieldAttributes, conditions, collector);
 
     // Check if we have a retry clause
     // TODO put the rety in collector.
@@ -231,8 +232,8 @@ public class SearchboxController {
     }
 
     if (retry) {
-      resultElements = searchService.execute(searchEngine, searchElements,
-          fieldAttributes, conditions, collector);
+      resultElements = searchService.execute(searchEngine, collection,
+          searchElements, fieldAttributes, conditions, collector);
     }
     collector.getCollectedItems("test").add("Hello mademoiselle");
     return resultElements;

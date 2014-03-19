@@ -17,7 +17,6 @@ package com.searchbox.engine.solr;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,6 +37,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 
 public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
@@ -82,8 +82,8 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  protected SolrServer getSolrServer() {
-    return new EmbeddedSolrServer(coreContainer, this.collection.getName());
+  protected SolrServer getSolrServer(Collection collection) {
+    return new EmbeddedSolrServer(coreContainer, collection.getName());
   }
 
   public String getDataDir() {
@@ -103,22 +103,23 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  protected boolean updateDataModel(Map<Field, Set<String>> copyFields) {
+  protected boolean updateDataModel(Collection collection, Map<Field, Set<String>> copyFields) {
     for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
-      this.addCopyFields(copyField.getKey(), copyField.getValue());
+      this.addCopyFields(collection, copyField.getKey(), copyField.getValue());
     }
     return true;
   }
 
-  private boolean addCopyFields(Field field, Set<String> copyFields) {
-    SolrCore core = coreContainer.getCore(this.collection.getName());
+  private boolean addCopyFields(Collection collection, Field field, Set<String> copyFields) {
+    SolrCore core = coreContainer.getCore(collection.getName());
     IndexSchema schema = core.getLatestSchema();
 
     for (CopyField copyField : schema.getCopyFieldsList(field.getKey())) {
       copyFields.remove(copyField.getDestination().getName());
     }
 
-    Map<String, Collection<String>> copyFieldsMap = new HashMap<String, Collection<String>>();
+    Map<String, java.util.Collection<String>> copyFieldsMap =
+        new HashMap<String, java.util.Collection<String>>();
     copyFieldsMap.put(field.getKey(), copyFields);
     schema = schema.addCopyFields(copyFieldsMap);
 
@@ -128,16 +129,16 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
   }
 
   @Override
-  public void reloadEngine() {
+  public void reloadEngine(Collection collection) {
     try {
-      coreContainer.reload(this.collection.getName());
+      coreContainer.reload(collection.getName());
     } catch (Exception e) {
       LOGGER.warn(e.getMessage());
     }
   }
 
   @Override
-  public void register() {
+  public void register(Collection collection) {
 
     String coreInstanceDir = this.solrHome;
 
@@ -155,11 +156,11 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
       properties.setProperty("dataDir", this.dataDir);
     } else {
       properties.setProperty("dataDir",
-          coreInstanceDir + "/" + this.collection.getName() + "/data/");
+          coreInstanceDir + "/" + collection.getName() + "/data/");
     }
 
     CoreDescriptor dcore = new CoreDescriptor(coreContainer,
-        this.collection.getName(), coreInstanceDir, properties);
+        collection.getName(), coreInstanceDir, properties);
 
     try {
       SolrCore core = coreContainer.create(dcore);

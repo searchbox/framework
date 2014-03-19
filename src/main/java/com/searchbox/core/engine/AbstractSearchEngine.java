@@ -31,8 +31,6 @@ public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {
   private static final Logger LOGGER = LoggerFactory
       .getLogger(AbstractSearchEngine.class);
 
-  protected Collection collection;
-
   protected String name;
 
   protected String description;
@@ -63,7 +61,7 @@ public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {
   }
 
   @Override
-  public abstract Q newQuery();
+  public abstract Q newQuery(Collection collection);
 
   @Override
   public List<SearchElement> getSupportedElements() {
@@ -106,21 +104,5 @@ public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {
 
   protected void setResponseClass(Class<R> responseClass) {
     this.responseClass = responseClass;
-  }
-
-  /**
-   * @return the collection
-   */
-  public Collection getCollection() {
-    return collection;
-  }
-
-  /**
-   * @param collection
-   *          the collection to set
-   */
-  @Override
-  public void setCollection(Collection collection) {
-    this.collection = collection;
   }
 }

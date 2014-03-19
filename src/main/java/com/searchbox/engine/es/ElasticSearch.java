@@ -8,6 +8,7 @@ import java.util.Set;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 
+import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.core.engine.AbstractSearchEngine;
@@ -27,29 +28,11 @@ public class ElasticSearch extends
   }
 
   @Override
-  public MultiSearchResponse execute(SearchRequestBuilder query) {
+  public MultiSearchResponse execute(Collection collection, SearchRequestBuilder query) {
     // TODO Auto-generated method stub
     return null;
   }
-
-  @Override
-  public boolean indexFile(String collectionName, File file) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean indexMap(String collectionName, Map<String, Object> fields) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean updateDataModel(List<FieldAttribute> fieldAttributes) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
+  
   @Override
   public String getKeyForField(FieldAttribute fieldAttribute) {
     // TODO Auto-generated method stub
@@ -69,25 +52,44 @@ public class ElasticSearch extends
   }
 
   @Override
-  public void reloadEngine() {
+  public boolean indexFile(Collection collection, File file) {
     // TODO Auto-generated method stub
-
+    return false;
   }
 
   @Override
-  public void register() {
+  public boolean indexMap(Collection collection, Map<String, Object> fields) {
     // TODO Auto-generated method stub
-
+    return false;
   }
 
   @Override
-  public void reloadPlugins() {
+  public boolean updateDataModel(Collection collection,
+      List<FieldAttribute> fieldAttributes) {
     // TODO Auto-generated method stub
-
+    return false;
   }
 
   @Override
-  public SearchRequestBuilder newQuery() {
+  public void reloadEngine(Collection collection) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void register(Collection collection) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void reloadPlugins(Collection collection) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public SearchRequestBuilder newQuery(Collection collection) {
     // TODO Auto-generated method stub
     return null;
   }
