@@ -455,9 +455,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 
         LOGGER.info("Inserting call {} into topic {}", 
         		callFileName,topicFileName);
-        
-        LOGGER.info("Current doc has "+doc.size());
-        
+                
         doc.put("source", "H2020");
         doc.put("docType", "Funding");
         doc.put("programme", "H2020");
