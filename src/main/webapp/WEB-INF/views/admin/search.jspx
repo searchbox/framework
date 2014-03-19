@@ -135,7 +135,7 @@
        <div class="tab-content">
         <!-- Search results -->
         <div class="tab-pane active" id="view">
-         <sbx:doElement type="VIEW" admin="true" />
+         <sbx:doElement type="VIEW" admin="true" cssClass="result-list" />
 
         </div>
         <!-- Preset filters -->
