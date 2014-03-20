@@ -23,11 +23,12 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
-import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 import com.searchbox.core.search.UseCollector;
 
 @SearchComponent
-public class TemplateElement extends SearchElement implements UseCollector {
+public class TemplateElement extends SearchElementBean implements UseCollector {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(TemplateElement.class);
@@ -51,12 +52,12 @@ public class TemplateElement extends SearchElement implements UseCollector {
   String idField;
 
   public TemplateElement() {
-    super("Template Element", SearchElement.Type.VIEW);
-    this.fields = new TreeSet<String>();
+    this("Template Element");
   }
 
   public TemplateElement(String name) {
-    super(name, SearchElement.Type.VIEW);
+    this.setLabel(name);
+    this.setType(SearchElement.Type.VIEW);
     this.fields = new TreeSet<String>();
   }
 

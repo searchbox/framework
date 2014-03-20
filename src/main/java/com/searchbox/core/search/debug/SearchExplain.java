@@ -15,11 +15,13 @@
  ******************************************************************************/
 package com.searchbox.core.search.debug;
 
-import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 
-public class SearchExplain extends SearchElement {
+public class SearchExplain extends SearchElementBean {
 
   protected SearchExplain(String label) {
-    super(label, SearchElement.Type.DEBUG);
+    this.setLabel(label);
+    this.setType(SearchElement.Type.DEBUG);
   }
 }

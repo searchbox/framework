@@ -13,38 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.searchbox.core.engine;
+package com.searchbox.core;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+public interface SearchElement extends Comparable<SearchElement> {
 
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.dm.Collection;
-import com.searchbox.core.search.AbstractSearchCondition;
+  public final static String URL_PARAM = "xoxo";
 
-public interface SearchEngine<Q, R> {
+  public enum Type {
+    QUERY, FACET, FILTER, VIEW, ANALYTIC, SORT, STAT, DEBUG, UNKNOWN, INSPECT
+  }
 
-  String getName();
+  public String getLabel();
+  
+  public void setLabel(String label);
 
-  String getDescription();
+  public Integer getPosition();
+  
+  public void setPosition(Integer position);
 
-  Class<Q> getQueryClass();
+  public Type getType();
+  
+  public void setType(Type type);
 
-  Class<R> getResponseClass();
-
-  Q newQuery(Collection collection);
-
-  R execute(Collection collection, Q query);
-
-  boolean indexFile(Collection collection, File file);
-
-  boolean indexMap(Collection collection, Map<String, Object> fields);
-
-  List<SearchElement> getSupportedElements();
-
-  Boolean supportsElement(SearchElement element);
-
-  Boolean supportsCondition(AbstractSearchCondition condition);
+  public int compareTo(SearchElement searchElement);
 
 }

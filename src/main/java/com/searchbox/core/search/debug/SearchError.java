@@ -15,13 +15,16 @@
  ******************************************************************************/
 package com.searchbox.core.search.debug;
 
-import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 
-public class SearchError extends SearchElement {
+public class SearchError extends SearchElementBean {
 
-  Exception e;
+  Exception exception;
 
-  public SearchError(String errorMessage, Exception e) {
-    super(errorMessage, SearchElement.Type.DEBUG);
+  public SearchError(String errorMessage, Exception exception) {
+    this.exception = exception;
+    this.setLabel(errorMessage);
+    this.setType(SearchElement.Type.DEBUG);
   }
 }

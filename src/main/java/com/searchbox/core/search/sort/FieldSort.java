@@ -22,10 +22,10 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalValueElement;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.SearchElementWithConditionalValues;
 import com.searchbox.core.search.ValueElement;
 

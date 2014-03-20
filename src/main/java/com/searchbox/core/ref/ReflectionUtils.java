@@ -26,7 +26,7 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 
 import com.searchbox.core.SearchAttribute;
-import com.searchbox.framework.domain.UnknownAttributeDefinition;
+import com.searchbox.framework.domain.UnknownAttribute;
 
 public class ReflectionUtils {
 
@@ -49,11 +49,11 @@ public class ReflectionUtils {
   }
 
   public static void inspectAndSaveAttribute(Class<?> searchElement,
-      List<UnknownAttributeDefinition> attributes) {
+      List<UnknownAttribute> attributes) {
     if (searchElement != null) {
       for (Field field : searchElement.getDeclaredFields()) {
         if (field.isAnnotationPresent(SearchAttribute.class)) {
-          UnknownAttributeDefinition attrDef = new UnknownAttributeDefinition(
+          UnknownAttribute attrDef = new UnknownAttribute(
               field.getType(), field.getName());
           String value = field.getAnnotation(SearchAttribute.class).value();
           if (value != null && !value.isEmpty()) {

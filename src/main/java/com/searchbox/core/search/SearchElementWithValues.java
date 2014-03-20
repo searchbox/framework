@@ -19,11 +19,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
 public class SearchElementWithValues<K extends ValueElement> extends
-    SearchElement {
+  SearchElementBean {
 
   @SearchAttribute
   protected Order order;
@@ -34,12 +36,13 @@ public class SearchElementWithValues<K extends ValueElement> extends
   protected SortedSet<K> values;
 
   public SearchElementWithValues() {
-    super(null, SearchElement.Type.UNKNOWN);
+    this.setType(SearchElement.Type.UNKNOWN);
     values = new TreeSet<K>();
   }
 
   public SearchElementWithValues(String label, SearchElement.Type type) {
-    super(label, type);
+    this.setLabel(label);
+    this.setType(type);
     values = new TreeSet<K>();
   }
 

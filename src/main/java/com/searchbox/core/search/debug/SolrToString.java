@@ -24,14 +24,14 @@ import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.engine.solr.SolrSearchEngine;
-import com.searchbox.framework.web.SearchboxController;
 
 @SearchComponent
-public class SolrToString extends SearchElement {
+public class SolrToString extends SearchElementBean {
   
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SolrToString.class);
@@ -42,7 +42,8 @@ public class SolrToString extends SearchElement {
   private Collection collection;
 
   public SolrToString() {
-    super("Solr Debug", SearchElement.Type.DEBUG);
+    this.setLabel("Solr Debug");
+    this.setType(SearchElement.Type.DEBUG);
   }
 
   public Collection getCollection() {
