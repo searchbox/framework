@@ -17,7 +17,6 @@ package com.searchbox.collection.oppfin;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,8 +50,6 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
 
 @Configurable
-@Configuration
-@Component
 public class CordisCollection extends AbstractBatchCollection implements
     SynchronizedCollection, StandardCollection {
 

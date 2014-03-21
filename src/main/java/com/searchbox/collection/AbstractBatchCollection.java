@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.env.Environment;
 
-import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.dm.FieldMap;
 import com.searchbox.core.engine.ManagedSearchEngine;

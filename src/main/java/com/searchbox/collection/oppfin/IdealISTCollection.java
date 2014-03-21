@@ -58,7 +58,6 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
 
 @Configurable
-@Component
 public class IdealISTCollection extends AbstractBatchCollection implements
     SynchronizedCollection, StandardCollection, InitializingBean {
 
