@@ -17,9 +17,9 @@ package com.searchbox.framework.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.searchbox.framework.domain.User;
+import com.searchbox.framework.model.UserEntity;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-  public User findByEmail(String email);
+  public UserEntity findByEmail(String email);
 }

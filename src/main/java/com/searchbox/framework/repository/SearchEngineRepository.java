@@ -17,9 +17,9 @@ package com.searchbox.framework.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.searchbox.framework.domain.SearchEngineDefinition;
+import com.searchbox.framework.model.SearchEngineEntity;
 
 public interface SearchEngineRepository extends
-    CrudRepository<SearchEngineDefinition, Long> {
+    CrudRepository<SearchEngineEntity<?>, Long> {
 
 }
