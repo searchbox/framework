@@ -30,6 +30,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.dm.Preset;
+import com.searchbox.core.ref.Order;
+import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.debug.SolrToString;
+import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.paging.BasicPagination;
+import com.searchbox.core.search.query.EdismaxQuery;
+import com.searchbox.core.search.result.TemplateElement;
+import com.searchbox.core.search.stat.BasicSearchStats;
 
 @Entity
 public class PresetEntity extends BeanFactoryEntity<Long> implements
@@ -243,6 +251,69 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   public FieldAttributeEntity newFieldAttribute() {
     return new FieldAttributeEntity().setPreset(this);
   }
+  
+  public PresetEntity addQueryElement(){
+    this.searchElements.add(newSearchElement()
+        .setClazz(EdismaxQuery.class));
+    return this;
+  }
+  
+  public PresetEntity addPagingElement() {
+    this.searchElements.add(newSearchElement()
+        .setClazz(BasicPagination.class));
+    return this;
+  }
+  
+  
+  public PresetEntity addDebugElement() {
+    this.searchElements.add(newSearchElement()
+        .setClazz(SolrToString.class));
+    return this;    
+  }
+
+  public PresetEntity addStatElement() {
+    this.searchElements.add(newSearchElement()
+        .setClazz(BasicSearchStats.class));
+    return this;
+  }
+  
+  public PresetEntity addFieldFacet(String label, String key){
+    this.searchElements.add(newFieldFacet(label, key));
+    return this;
+  }
+  
+  public SearchElementEntity<?> newFieldFacet(String label, String key) {
+    return newSearchElement()
+        .setClazz(FieldFacet.class)
+        .setLabel(label)
+        .setAttribute("fieldName", key)
+        .setAttribute("order", Order.BY_VALUE)
+        .setAttribute("sort", Sort.DESC);
+  }
+  
+  public PresetEntity addTemplateElement(String titleFieldName, String templateFile) {
+    this.searchElements.add(newTemplateElement(titleFieldName, templateFile));
+    return this;
+  }
+
+  public SearchElementEntity<?> newTemplateElement(String titleFieldName, String templateFile) {
+    return newSearchElement()
+        .setClazz(TemplateElement.class)
+        .setAttribute("titleField", titleFieldName)
+        .setAttribute("templateFile", templateFile)
+        .setAttribute("idField", this.getCollection().getIdFieldName());
+  }
+
+  
+  public PresetEntity addSortableFieldAttribute(String label, FieldEntity field) {
+    this.fieldAttributes.add(newFieldAttribute(label, field).setSortable(true));
+    return this;    
+  }
+  
+  public FieldAttributeEntity newFieldAttribute(String label, FieldEntity field){
+    return new FieldAttributeEntity().setPreset(this)
+        .setField(field).setAttribute("label", label);
+  }
 
   public PresetEntity newFieldAttribute(FieldAttributeEntity attribute) {
     this.getFieldAttributes().add(attribute);
@@ -255,16 +326,10 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
         .setProcess(DEFAULT_PROCESS);
   }
 
-  public PresetEntity newSearchElement(SearchElementEntity<?> searchElement) {
-    this.getSearchElements().add(searchElement);
-    return this;
-  }
-
   public SearchboxEntity end() {
     this.searchbox.getPresets().add(this);
     return this.getSearchbox();
   }
-
   // public FieldAttributeDefinition getFieldAttributeByKey(String key) {
   // for (FieldAttributeDefinition adef : this.fieldAttributes) {
   // if (adef.getField().getKey().equals(key)) {

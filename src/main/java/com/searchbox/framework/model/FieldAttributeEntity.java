@@ -15,10 +15,11 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 
 @Entity
@@ -81,5 +82,47 @@ Comparable<FieldAttributeEntity> {
     FieldAttribute attribute = super.build(FieldAttribute.class);
     attribute.setField(this.getField().build());
     return attribute;
+  }
+  
+  public FieldAttributeEntity setSearchanble(Boolean searchable){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("searchable").setValue(searchable));
+    return this;
+  }
+  
+  public FieldAttributeEntity setSuggestion(Boolean suggestion){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("suggestion").setValue(suggestion));
+    return this;
+  }
+  
+  public FieldAttributeEntity setLanguages(List<String> lang){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("lang").setValue(lang));
+    return this;
+  }
+  
+  public FieldAttributeEntity setSpelling(Boolean spelling){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("spelling").setValue(spelling));
+    return this;
+  }
+  
+  public FieldAttributeEntity setHighlight(Boolean highlight){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("highlight").setValue(highlight));
+    return this;
+  }
+  
+  public FieldAttributeEntity setSortable(Boolean sortable){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("sortable").setValue(sortable));
+    return this;
+  }
+  
+  public FieldAttributeEntity setBoost(Float boost){
+    this.getAttributes().add(new AttributeEntity()
+      .setName("boost").setValue(boost));
+    return this;
   }
 }
