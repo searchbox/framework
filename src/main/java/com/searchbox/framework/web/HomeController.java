@@ -81,7 +81,6 @@ public class HomeController {
   
   @ModelAttribute("request")
   public HttpServletRequest getServletRequest(HttpServletRequest request){
-    request.get
     return request;
   }
 
