@@ -38,8 +38,6 @@ import com.searchbox.core.dm.Field;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-// @DiscriminatorColumn(name = "clazz", discriminatorType =
-// DiscriminatorType.STRING)
 public class CollectionEntity<K extends Collection> extends
     BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K> {
 
@@ -114,7 +112,9 @@ public class CollectionEntity<K extends Collection> extends
         for (Field field : fields) {
           FieldEntity fieldDef = new FieldEntity(field.getClazz(),
               field.getKey());
+          LOGGER.debug("Created FieldDef[{},{}]",field.getClazz().getSimpleName(), field.getKey());
           if (!this.fields.contains(fieldDef)) {
+            LOGGER.trace("Adding FieldDef[{},{}]",field.getClazz().getSimpleName(), field.getKey());
             this.fields.add(fieldDef);
           }
         }

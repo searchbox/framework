@@ -23,9 +23,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.SearchElementBean;
+import com.searchbox.core.ref.ReflectionUtils;
 
 @Entity
 public class SearchElementEntity<K extends SearchElementBean> extends
@@ -89,6 +88,7 @@ public class SearchElementEntity<K extends SearchElementBean> extends
 
   public SearchElementEntity<?> setClazz(Class<?> clazz) {
     this.clazz = clazz;
+    ReflectionUtils.inspectAndSaveAttribute(clazz, this.getAttributes());
     return this;
   }
 
@@ -110,15 +110,6 @@ public class SearchElementEntity<K extends SearchElementBean> extends
     return this;
   }
 
-//  public SearchElement.Type getType() {
-//    return (Type) super.getAttributeByName("type");
-//  }
-//
-//  public SearchElementEntity<K> setType(SearchElement.Type type) {
-//    this.setAttribute("type", type);
-//    return this;
-//  }
-
   @Override
   public int compareTo(SearchElementEntity<K> o) {
     return this.getPosition().compareTo(o.getPosition());
@@ -131,8 +122,8 @@ public class SearchElementEntity<K extends SearchElementBean> extends
   }
 
   public SearchElementEntity<K> setAttribute(String name, Object value) {
-    this.getAttributes().add(
-        new AttributeEntity().setName(name).setValue(value));
+    //TODO throw exception if attribute is NOT a @SearchAttribute
+    this.getAttributeByName(name).setValue(value).setType(value.getClass());
     return this;
   }
 }

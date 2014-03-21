@@ -43,7 +43,7 @@ public class SearchEngineEntity<K extends SearchEngine<?,?>>
     return clazz;
   }
 
-  public SearchEngineEntity<?> setClazz(Class<K> clazz) {
+  public SearchEngineEntity<?> setClazz(Class<?> clazz) {
     this.clazz = clazz;
     return this;
   }

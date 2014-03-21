@@ -74,7 +74,7 @@ public class AttributeEntity extends BaseEntity<Long>
 
   public AttributeEntity setValue(Object value) {
     if(value != null){
-      LOGGER.info("Adding object of type {}",value.getClass());
+      LOGGER.debug("Adding object of type {}",value.getClass());
       try {
         this.valueAsByteArray = SerializationUtils.serialize(value);
       } catch (Exception e) {
