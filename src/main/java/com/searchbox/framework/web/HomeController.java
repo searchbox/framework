@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
@@ -68,6 +69,21 @@ public class HomeController {
 
   @Autowired
   SearchEngineRepository searchEngineRepository;
+  
+  @Autowired
+  ServletContext servletContext;
+  
+  @ModelAttribute("context")
+  public ServletContext getServletContext(){
+    
+    return servletContext;
+  }
+  
+  @ModelAttribute("request")
+  public HttpServletRequest getServletRequest(HttpServletRequest request){
+    request.get
+    return request;
+  }
 
   @ModelAttribute("collections")
   public List<CollectionEntity<?>> getAllCollections() {
