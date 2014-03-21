@@ -12,7 +12,7 @@
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:directive.page pageEncoding="UTF-8" />
 
-
+${searchboxes }
  <sec:authorize access="isAnonymous()">
   <div class="page-header">
    <h1>
