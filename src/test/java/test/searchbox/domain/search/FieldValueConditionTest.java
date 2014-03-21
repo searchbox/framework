@@ -46,7 +46,7 @@ public class FieldValueConditionTest {
 
   @Test
   public void testLoopConverter() {
-    FieldFacet facet = new FieldFacet("test Facet", Field.stringField("athor"));
+    FieldFacet facet = new FieldFacet("test Facet", "athor");
 
     FieldFacet.Value value = facet.new Value("Stephane", "stephane", 3);
 
