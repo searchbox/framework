@@ -36,8 +36,8 @@ import org.springframework.stereotype.Service;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 
@@ -110,51 +110,51 @@ public class ApplicationConversionService extends
       }
     }
 
-    this.addConverter(new Converter<String, Searchbox>() {
+    this.addConverter(new Converter<String, SearchboxEntity>() {
       @Override
-      public Searchbox convert(String slug) {
+      public SearchboxEntity convert(String slug) {
         return searchboxRepository.findBySlug(slug);
       }
     });
 
-    this.addConverter(new Converter<Searchbox, String>() {
+    this.addConverter(new Converter<SearchboxEntity, String>() {
       @Override
-      public String convert(Searchbox searchbox) {
+      public String convert(SearchboxEntity searchbox) {
         return searchbox.getSlug();
       }
     });
 
-    this.addConverter(new Converter<Long, Searchbox>() {
+    this.addConverter(new Converter<Long, SearchboxEntity>() {
       @Override
-      public Searchbox convert(java.lang.Long id) {
+      public SearchboxEntity convert(java.lang.Long id) {
         return searchboxRepository.findOne(id);
       }
     });
 
-    this.addConverter(new Converter<Searchbox, Long>() {
+    this.addConverter(new Converter<SearchboxEntity, Long>() {
       @Override
-      public Long convert(Searchbox searchbox) {
+      public Long convert(SearchboxEntity searchbox) {
         return searchbox.getId();
       }
     });
 
-    this.addConverter(new Converter<String, PresetDefinition>() {
+    this.addConverter(new Converter<String, PresetEntity>() {
       @Override
-      public PresetDefinition convert(String slug) {
+      public PresetEntity convert(String slug) {
         return presetRepository.findPresetDefinitionBySlug(slug);
       }
     });
 
-    this.addConverter(new Converter<Long, PresetDefinition>() {
+    this.addConverter(new Converter<Long, PresetEntity>() {
       @Override
-      public PresetDefinition convert(java.lang.Long id) {
+      public PresetEntity convert(java.lang.Long id) {
         return presetRepository.findOne(id);
       }
     });
 
-    this.addConverter(new Converter<PresetDefinition, String>() {
+    this.addConverter(new Converter<PresetEntity, String>() {
       @Override
-      public String convert(PresetDefinition presetDefinition) {
+      public String convert(PresetEntity presetDefinition) {
         return new StringBuilder().append(presetDefinition.getSlug())
             .toString();
       }

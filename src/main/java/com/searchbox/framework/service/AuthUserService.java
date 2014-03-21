@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.searchbox.framework.domain.User;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 
 public class AuthUserService implements UserDetailsService {
@@ -36,7 +36,7 @@ public class AuthUserService implements UserDetailsService {
       throws UsernameNotFoundException {
     LOGGER.info("Loading user by username: {}", username);
 
-    User user = repository.findByEmail(username);
+    UserEntity user = repository.findByEmail(username);
     LOGGER.info("Found user: {}", user);
 
     if (user == null) {

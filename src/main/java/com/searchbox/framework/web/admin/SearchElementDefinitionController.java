@@ -45,9 +45,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.SearchElementDefinition;
-import com.searchbox.framework.domain.UnknownAttributeDefinition;
+import com.searchbox.framework.model.AttributeEntity;
+import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchElementEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchElementRepository;
 
@@ -78,9 +78,9 @@ public class SearchElementDefinitionController {
   }
 
   @ModelAttribute("presetdefinitions")
-  public List<PresetDefinition> getPresetDefinitions() {
-    ArrayList<PresetDefinition> presetDefinitions = new ArrayList<PresetDefinition>();
-    Iterator<PresetDefinition> presets = presetRepository.findAll().iterator();
+  public List<PresetEntity> getPresetDefinitions() {
+    ArrayList<PresetEntity> presetDefinitions = new ArrayList<PresetEntity>();
+    Iterator<PresetEntity> presets = presetRepository.findAll().iterator();
     while (presets.hasNext()) {
       presetDefinitions.add(presets.next());
     }
@@ -88,7 +88,7 @@ public class SearchElementDefinitionController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView update(@Valid SearchElementDefinition elementDefinition,
+  public ModelAndView update(@Valid SearchElementEntity elementDefinition,
       BindingResult bindingResult, HttpServletRequest httpServletRequest,
       ServerHttpResponse response) {
     LOGGER.info("Creating an filed element: "
@@ -125,7 +125,7 @@ public class SearchElementDefinitionController {
   @RequestMapping(value = "/{id}")
   public ModelAndView show(@PathVariable("id") Long id) {
     LOGGER.info("VIEW an filed element");
-    SearchElementDefinition elementDef = repository.findOne(id);
+    SearchElementEntity elementDef = repository.findOne(id);
     ModelAndView model = new ModelAndView(
         "admin/SearchElementDefinition/updateForm");
     model.addObject("searchElementDefinition", elementDef);
@@ -138,13 +138,13 @@ public class SearchElementDefinitionController {
 
       @Override
       public boolean supports(Class<?> clazz) {
-        return SearchElementDefinition.class.isAssignableFrom(clazz);
+        return SearchElementEntity.class.isAssignableFrom(clazz);
       }
 
       @Override
       public void validate(Object target, Errors errors) {
-        SearchElementDefinition element = (SearchElementDefinition) target;
-        for (UnknownAttributeDefinition attr : element.getAttributes()) {
+        SearchElementEntity<?> element = (SearchElementEntity<?>) target;
+        for (AttributeEntity attr : element.getAttributes()) {
           if (!attr.getType().getName()
               .equals(attr.getValue().getClass().getName())) {
             if (conversionService.canConvert(attr.getValue().getClass(),

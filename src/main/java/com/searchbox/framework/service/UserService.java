@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.framework.domain.User;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.web.user.RegistrationForm;
 
@@ -28,14 +28,14 @@ public class UserService {
     this.repository = repository;
   }
 
-  public User registerNewUserAccount(String email, String password) {
+  public UserEntity registerNewUserAccount(String email, String password) {
     RegistrationForm form = new RegistrationForm();
     form.setEmail(email);
     form.setPassword(password);
     return registerNewUserAccount(form);
   }
 
-  public User registerNewUserAccount(RegistrationForm userAccountData)
+  public UserEntity registerNewUserAccount(RegistrationForm userAccountData)
       throws RuntimeException {
     LOGGER.debug("Registering new user account with information: {}",
         userAccountData);
@@ -52,7 +52,7 @@ public class UserService {
 
     String encodedPassword = encodePassword(userAccountData);
 
-    User registered = new User();
+    UserEntity registered = new UserEntity();
     registered.setEmail(userAccountData.getEmail());
     registered.setPassword(encodedPassword);
 
@@ -77,7 +77,7 @@ public class UserService {
     LOGGER.debug("Checking if email {} is already found from the database.",
         email);
 
-    User user = repository.findByEmail(email);
+    UserEntity user = repository.findByEmail(email);
 
     if (user != null) {
       LOGGER.debug("User account: {} found with email: {}. Returning true.",

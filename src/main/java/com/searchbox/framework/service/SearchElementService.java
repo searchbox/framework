@@ -10,10 +10,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.ref.StringUtils;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.result.TemplateElement;
-import com.searchbox.framework.domain.SearchElementDefinition;
+import com.searchbox.framework.model.SearchElementEntity;
 
 @Service
 public class SearchElementService {
@@ -24,15 +24,14 @@ public class SearchElementService {
   @Autowired
   ApplicationContext context;
 
-  public SearchElement getSearchElement(SearchElementDefinition definition) {
+  public SearchElement getSearchElement(SearchElementEntity<?> definition) {
 
-    SearchElement element = (SearchElement) definition.toObject();
+    SearchElement element = (SearchElement) definition.build();
     element.setLabel(definition.getLabel());
     element.setPosition(definition.getPosition());
-    element.setDefinitionId(definition.getId());
-    if (definition.getType() != null) {
-      element.setType(definition.getType());
-    }
+//    if (definition.getType() != null) {
+//      element.setType(definition.getType());
+//    }
 
     // TODO should use an interface
     if (TemplateElement.class.isAssignableFrom(element.getClass())) {

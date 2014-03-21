@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright Searchbox - http://www.searchbox.com
+ * Copyright SearchboxEntity - http://www.searchbox.com
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,10 +45,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.searchbox.framework.domain.CollectionDefinition;
-import com.searchbox.framework.domain.SearchEngineDefinition;
-import com.searchbox.framework.domain.Searchbox;
-import com.searchbox.framework.domain.User;
+import com.searchbox.framework.model.CollectionEntity;
+import com.searchbox.framework.model.SearchEngineEntity;
+import com.searchbox.framework.model.SearchboxEntity;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -70,9 +70,9 @@ public class HomeController {
   SearchEngineRepository searchEngineRepository;
 
   @ModelAttribute("collections")
-  public List<CollectionDefinition> getAllCollections() {
-    ArrayList<CollectionDefinition> list = new ArrayList<CollectionDefinition>();
-    Iterator<CollectionDefinition> it = collectionRepository.findAll()
+  public List<CollectionEntity<?>> getAllCollections() {
+    ArrayList<CollectionEntity<?>> list = new ArrayList<CollectionEntity<?>>();
+    Iterator<CollectionEntity<?>> it = collectionRepository.findAll()
         .iterator();
     while (it.hasNext()) {
       list.add(it.next());
@@ -81,9 +81,9 @@ public class HomeController {
   }
 
   @ModelAttribute("searchengines")
-  public List<SearchEngineDefinition> getAllSearchEngines() {
-    ArrayList<SearchEngineDefinition> list = new ArrayList<SearchEngineDefinition>();
-    Iterator<SearchEngineDefinition> it = searchEngineRepository.findAll()
+  public List<SearchEngineEntity<?>> getAllSearchEngines() {
+    ArrayList<SearchEngineEntity<?>> list = new ArrayList<SearchEngineEntity<?>>();
+    Iterator<SearchEngineEntity<?>> it = searchEngineRepository.findAll()
         .iterator();
     while (it.hasNext()) {
       list.add(it.next());
@@ -92,9 +92,9 @@ public class HomeController {
   }
 
   @ModelAttribute("searchboxes")
-  public List<Searchbox> getAllSearchboxes() {
-    ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
-    Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
+  public List<SearchboxEntity> getAllSearchboxEntityes() {
+    ArrayList<SearchboxEntity> searchboxes = new ArrayList<SearchboxEntity>();
+    Iterator<SearchboxEntity> sbx = searchboxRepository.findAll().iterator();
     while (sbx.hasNext()) {
       searchboxes.add(sbx.next());
     }
@@ -297,7 +297,7 @@ public class HomeController {
   }
 
   @RequestMapping()
-  public ModelAndView home(@AuthenticationPrincipal User user,
+  public ModelAndView home(@AuthenticationPrincipal UserEntity user,
       HttpServletRequest request, ModelAndView model,
       RedirectAttributes redirectAttributes) {
 
