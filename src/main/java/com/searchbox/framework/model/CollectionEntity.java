@@ -15,9 +15,14 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
@@ -29,55 +34,69 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.Field;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "clazz", discriminatorType = DiscriminatorType.STRING)
-public class CollectionEntity<K extends Collection>
-  extends BeanFactoryEntity<Long>
-  implements ParametrizedBeanFactory<K>{
+// @DiscriminatorColumn(name = "clazz", discriminatorType =
+// DiscriminatorType.STRING)
+public class CollectionEntity<K extends Collection> extends
+    BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K> {
 
-  
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionEntity.class);
-  
+
   private Class<?> clazz;
 
   private String name;
 
   private String description;
-  
+
   private Boolean autoStart;
-  
+
   private String idFieldName;
-  
+
   @ManyToOne
   @LazyCollection(LazyCollectionOption.FALSE)
   private SearchEngineEntity<?> searchEngine;
-  
+
   @OneToMany
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<PresetEntity> presets;
-  
+
+  @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private Set<FieldEntity> fields;
+
+  public CollectionEntity() {
+    this.fields = new TreeSet<FieldEntity>();
+    this.presets = new TreeSet<PresetEntity>();
+    // TODO infer clazz thru reflection
+  }
+
   public String getName() {
     return name;
-  }
-  
-  public CollectionEntity(){
-    //TODO infer clazz thru reflection
   }
 
   public CollectionEntity<K> setName(String name) {
     this.name = name;
     return this;
-  }  
-  
+  }
+
+  public Set<FieldEntity> getFields() {
+    return fields;
+  }
+
+  public void setFields(Set<FieldEntity> fields) {
+    this.fields = fields;
+  }
+
   @SuppressWarnings("unchecked")
-  public K build(){
-    if(this.getClazz() == null){
+  public K build() {
+    if (this.getClazz() == null) {
       throw new MissingClassAttributeException();
     }
-    LOGGER.info("Building Class for {}",this.getClazz());
+    LOGGER.info("Building Class for {}", this.getClazz());
     return (K) super.build(this.getClazz());
   }
 
@@ -85,8 +104,24 @@ public class CollectionEntity<K extends Collection>
     return clazz;
   }
 
+  @SuppressWarnings("unchecked")
   public CollectionEntity<K> setClazz(Class<?> clazz) {
     this.clazz = clazz;
+    try {
+      Method method = clazz.getMethod("GET_FIELDS");
+      if (method != null) {
+        List<Field> fields = (List<Field>) method.invoke(null);
+        for (Field field : fields) {
+          FieldEntity fieldDef = new FieldEntity(field.getClazz(),
+              field.getKey());
+          if (!this.fields.contains(fieldDef)) {
+            this.fields.add(fieldDef);
+          }
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.warn("Could not use GET_FIELD method on collection: " + name, e);
+    }
     return this;
   }
 
@@ -100,7 +135,8 @@ public class CollectionEntity<K extends Collection>
   }
 
   public CollectionEntity<K> setAttribute(String name, Object value) {
-    this.getAttributes().add(new AttributeEntity().setName(name).setValue(value));
+    this.getAttributes().add(
+        new AttributeEntity().setName(name).setValue(value));
     return this;
   }
 
@@ -139,178 +175,13 @@ public class CollectionEntity<K extends Collection>
     this.presets = presetEntity;
     return this;
   }
-  
-  
- 
-  
-//  public static class CollectionBuilder {
-//    
-//    private CollectionBuilder(Class<?> clazz){
-//      
-//    }
-//    
-//    public static CollectionBuilder create(Class<?> clazz){
-//      return new CollectionBuilder(clazz);
-//    }
-//    
-//    public CollectionBuilder addParam(String name, Object value){
-//      return this;
-//    }
-//
-//    public CollectionBuilder setSearchEngine(Object object) {
-//      return this;
-//    }
-//
-//    public Collection build() {
-//      return new Collection();
-//    }
-//  }
 
-  // @ManyToOne
-  // private SearchEngineDefinition searchEngine;
-  //
-  // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  // @LazyCollection(LazyCollectionOption.FALSE)
-  // private Set<FieldDefinition> fields = new HashSet<FieldDefinition>();
-  //
-  // @OneToMany(mappedBy = "collection")
-  // @LazyCollection(LazyCollectionOption.FALSE)
-  // private Set<PresetDefinition> presets = new HashSet<PresetDefinition>();
-  //
-  // protected String description;
-  //
-  // @Column(nullable = false)
-  // protected String idFieldName;
-  //
-  // protected Boolean autoStart = false;
-  //
-  // public Collection(String name) {
-  // super(name);
-  // // TODO Auto-generated constructor stub
-  // }
-  //
-  // @SuppressWarnings("unchecked")
-  // public CollectionDefinition(Class<?> clazz, String name) {
-  // super(clazz);
-  // this.name = name;
-  // try {
-  // Method method = clazz.getMethod("GET_FIELDS");
-  // if (method != null) {
-  // List<Field> fields = (List<Field>) method.invoke(null);
-  // for (Field field : fields) {
-  // FieldDefinition fieldDef = new FieldDefinition(field.getClazz(),
-  // field.getKey());
-  // if (!this.fields.contains(fieldDef)) {
-  // this.fields.add(fieldDef);
-  // }
-  // }
-  // }
-  // } catch (Exception e) {
-  // LOGGER.warn("Could not use GET_FIELD method on collection: " + name, e);
-  // }
-  //
-  // }
-  //
-
-  //
-  // public Set<PresetDefinition> getPresets() {
-  // return presets;
-  // }
-  //
-  // public void setPresets(Set<PresetDefinition> presets) {
-  // this.presets = presets;
-  // }
-  //
-  // public SearchEngineDefinition getSearchEngine() {
-  // return searchEngine;
-  // }
-  //
-  // public void setSearchEngine(SearchEngineDefinition searchEngine) {
-  // this.searchEngine = searchEngine;
-  // }
-  //
-  // public SearchEngineDefinition getSearchEngineDefinition() {
-  // return searchEngine;
-  // }
-  //
-  // public void setSearchEngineDefinition(SearchEngineDefinition engine) {
-  // this.searchEngine = engine;
-  // }
-  //
-  // public Set<FieldDefinition> getFields() {
-  // return fields;
-  // }
-  //
-  // public void setFields(Set<FieldDefinition> fieldDefinitions) {
-  // this.fields = fieldDefinitions;
-  // }
-  //
-  // public String getName() {
-  // return name;
-  // }
-  //
-  // public void setName(String name) {
-  // this.name = name;
-  // }
-  //
-  // public Boolean getAutoStart() {
-  // return autoStart;
-  // }
-  //
-  // public void setAutoStart(Boolean autoStart) {
-  // this.autoStart = autoStart;
-  // }
-  //
-  // /**
-  // * @return the description
-  // */
-  // public String getDescription() {
-  // return description;
-  // }
-  //
-  // /**
-  // * @param description
-  // * the description to set
-  // */
-  // public void setDescription(String description) {
-  // this.description = description;
-  // }
-  //
-  // /**
-  // * @return the idFieldName
-  // */
-  // public String getIdFieldName() {
-  // return idFieldName;
-  // }
-  //
-  // /**
-  // * @param idFieldName
-  // * the idFieldName to set
-  // */
-  // public void setIdFieldName(String idFieldName) {
-  // this.idFieldName = idFieldName;
-  // }
-  //
-  // public FieldDefinition getFieldDefinition(String key) {
-  // for (FieldDefinition def : this.fields) {
-  // if (def.getKey().equals(key)) {
-  // return def;
-  // }
-  // }
-  // return null;
-  // }
-  //
-  // @Override
-  // public DefaultCollection getInstance() {
-  // DefaultCollection collection = (DefaultCollection) super.toObject();
-  // BeanUtils.copyProperties(this, collection);
-  // for (FieldDefinition fieldDef : this.fields) {
-  // collection.getFields().add(
-  // new Field(fieldDef.getClazz(), fieldDef.getKey()));
-  // }
-  // collection.setSearchEngine(searchEngine.getInstance());
-  // return collection;
-  // }
-  //
-  //
+  public FieldEntity getField(String key) {
+    for (FieldEntity field : this.getFields()) {
+      if (field.getKey().equals(key)) {
+        return field;
+      }
+    }
+    return null;
+  }
 }

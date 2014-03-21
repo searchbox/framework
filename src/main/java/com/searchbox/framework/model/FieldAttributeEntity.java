@@ -18,6 +18,7 @@ package com.searchbox.framework.model;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 
 @Entity
@@ -77,6 +78,8 @@ Comparable<FieldAttributeEntity> {
 
   @Override
   public FieldAttribute build() {
-    return super.build(FieldAttribute.class);
+    FieldAttribute attribute = super.build(FieldAttribute.class);
+    attribute.setField(this.getField().build());
+    return attribute;
   }
 }
