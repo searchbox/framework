@@ -122,8 +122,17 @@ public class SearchElementEntity<K extends SearchElementBean> extends
   }
 
   public SearchElementEntity<K> setAttribute(String name, Object value) {
-    //TODO throw exception if attribute is NOT a @SearchAttribute
-    this.getAttributeByName(name).setValue(value).setType(value.getClass());
+    LOGGER.debug("Seeting attr {}[{}] to value {}",name,
+        (value!=null)?value.getClass():"xoxo", value);
+    AttributeEntity attribute = this.getAttributeByName(name);
+    if(attribute == null){
+      LOGGER.warn("CAUTION! Setting an attribute ({}) that is not defined in {}",
+          name, this.getClazz());
+    } else {
+      attribute
+      .setValue(value)
+      .setType(value.getClass());
+    }
     return this;
   }
 }
