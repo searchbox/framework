@@ -413,7 +413,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   public String getUrlBase(Collection collection) {
     String urlBase = null;
     
-    LOGGER.info("Getting URL base for {}",collection);
+    LOGGER.debug("Getting URL base for {}",collection);
     
     try {
       ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer(null))

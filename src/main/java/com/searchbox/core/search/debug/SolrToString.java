@@ -98,7 +98,7 @@ public class SolrToString extends SearchElementBean {
     @SearchAdapterMethod(execute = Time.POST)
     public void getDebugInfo(SolrToString searchElement, Collection collection,
         SolrQuery query, QueryResponse response, SolrSearchEngine engine) {
-      LOGGER.info("Post SolrToString for collection {}",collection);
+      LOGGER.debug("Post SolrToString for collection {}",collection);
       searchElement.setRequest(query);
       searchElement.setResponse(response);
       searchElement.setEngine(engine);
