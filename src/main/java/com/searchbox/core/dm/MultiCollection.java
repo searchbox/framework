@@ -16,7 +16,6 @@
 package com.searchbox.core.dm;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
