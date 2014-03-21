@@ -163,7 +163,25 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public PresetEntity setCollection(CollectionEntity<?> collection) {
     this.collection = collection;
+    collection.getPresets().add(this);
+    // TODO might not want to do this when preset has an ID (existing preset)
+    for (FieldEntity field : collection.getFields()) {
+      if (getFieldAttributeByField(field) == null) {
+        FieldAttributeEntity fieldAttributeEntity = new FieldAttributeEntity()
+            .setField(field).setPreset(this);
+        this.getFieldAttributes().add(fieldAttributeEntity);
+      }
+    }
     return this;
+  }
+
+  public FieldAttributeEntity getFieldAttributeByField(FieldEntity field) {
+    for (FieldAttributeEntity fieldAttribute : this.getFieldAttributes()) {
+      if (fieldAttribute.getField().equals(field)) {
+        return fieldAttribute;
+      }
+    }
+    return null;
   }
 
   public Set<SearchElementEntity<?>> getSearchElements() {
@@ -239,17 +257,6 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public PresetEntity newSearchElement(SearchElementEntity<?> searchElement) {
     this.getSearchElements().add(searchElement);
-    return this;
-  }
-
-  public CollectionEntity<?> newCollection() {
-    CollectionEntity<?> collection = new CollectionEntity<>();
-    collection.getPresets().add(this);
-    return collection;
-  }
-
-  public PresetEntity newCollection(CollectionEntity<?> collection) {
-    this.setCollection(collection);
     return this;
   }
 
