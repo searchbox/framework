@@ -1,3 +1,5 @@
+package test.searchbox.engine.solr;
+
 //package com.searchbox.engine.solr;
 //
 //import org.junit.After;
@@ -65,4 +67,4 @@
 //
 //    engine.register(multiCollection);
 //  }
-//}
+// }

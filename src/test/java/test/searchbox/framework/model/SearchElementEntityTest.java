@@ -13,17 +13,17 @@ import com.searchbox.framework.model.MissingClassAttributeException;
 import com.searchbox.framework.model.SearchElementEntity;
 
 public class SearchElementEntityTest {
-  
+
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchElementEntityTest.class);
-  
+
   MyElement myElement;
-  
+
   public static class MyElement extends SearchElementBean {
-    
+
     @SearchAttribute
     private String myAttribute;
-        
+
     public String getMyAttribute() {
       return myAttribute;
     }
@@ -32,81 +32,84 @@ public class SearchElementEntityTest {
       this.myAttribute = myAttribute;
     }
   }
-  
+
   @Before
-  public void setUp(){
+  public void setUp() {
     myElement = new MyElement();
   }
-  
+
   private static final String COLLECTION_NAME = "MyCollectionName";
   private static final String COLLECTION_ATTR = "MyCollectionAttr";
-  
+
   @Test(expected = MissingClassAttributeException.class)
-  public void testMissingClassAttributeException(){
+  public void testMissingClassAttributeException() {
     SearchElementEntity cf = new SearchElementEntity();
     cf.build();
     LOGGER.info("This should have been thrown!!!");
   }
-  
+
   @Test(expected = MissingClassAttributeException.class)
-  public void testBuildCollectionFactory_ByType(){
+  public void testBuildCollectionFactory_ByType() {
     SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>();
     MyElement element = cf.build();
     Assert.assertNotNull("Did build MyElement Element", element);
-    Assert.assertTrue("Class of Default is MyElement", 
+    Assert.assertTrue("Class of Default is MyElement",
         MyElement.class.isAssignableFrom(element.getClass()));
   }
-  
+
   @Test
-  public void testBuildCollectionFactory(){
-    SearchElementEntity cf = new SearchElementEntity().setClazz(MyElement.class);
+  public void testBuildCollectionFactory() {
+    SearchElementEntity cf = new SearchElementEntity()
+        .setClazz(MyElement.class);
     SearchElement element = cf.build();
     Assert.assertNotNull("Did build MyElement Element", element);
-    Assert.assertTrue("Class of element is MyElement", 
+    Assert.assertTrue("Class of element is MyElement",
         MyElement.class.isAssignableFrom(element.getClass()));
   }
-  
-  
+
   @Test
-  public void testCustomCollectionBuild_NoType(){
-    SearchElementEntity cf = new SearchElementEntity().setClazz(MyElement.class);
+  public void testCustomCollectionBuild_NoType() {
+    SearchElementEntity cf = new SearchElementEntity()
+        .setClazz(MyElement.class);
     SearchElement my = cf.build();
-    Assert.assertTrue("Class of Collection is MyElement", 
-        MyElement.class.isAssignableFrom(my.getClass()));
-  }
-  
-  
-  @Test
-  public void testCustomCollectionBuild_Type(){
-    SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>().setClazz(MyElement.class);
-    MyElement my = cf.build();
-    Assert.assertTrue("Class of Collection is MyCollection", 
+    Assert.assertTrue("Class of Collection is MyElement",
         MyElement.class.isAssignableFrom(my.getClass()));
   }
 
-  
-  @Test
-  public void testBeanFieldCopyInCollectionFactory(){
-    
-    SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>()
-        .setLabel(COLLECTION_NAME)
-        .setClazz(MyElement.class)
-        .setAttribute("myAttribute",COLLECTION_ATTR);
-  
-    MyElement my = cf.build();
-  
-    Assert.assertEquals("Element Label (bean Copy)", COLLECTION_NAME, my.getLabel());
-  }
-  
-  @Test
-  public void testAttributeCopyInCollectionFactory(){
-    SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>()
-        .setLabel(COLLECTION_NAME)
-        .setClazz(MyElement.class)
-        .setAttribute("myAttribute",COLLECTION_ATTR);
-
-    MyElement my = cf.build();
-
-    Assert.assertEquals("Collection Attribute (attribute Copy)", COLLECTION_ATTR, my.getMyAttribute());
-  }
+  // @Test
+  // public void testCustomCollectionBuild_Type(){
+  // SearchElementEntity<MyElement> cf = new
+  // SearchElementEntity<MyElement>().setClazz(MyElement.class);
+  // MyElement my = cf.build();
+  // Assert.assertTrue("Class of Collection is MyCollection",
+  // MyElement.class.isAssignableFrom(my.getClass()));
+  // }
+  //
+  //
+  // @Test
+  // public void testBeanFieldCopyInCollectionFactory(){
+  //
+  // SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>()
+  // .setLabel(COLLECTION_NAME)
+  // .setClazz(MyElement.class)
+  // .setAttribute("myAttribute",COLLECTION_ATTR);
+  //
+  // MyElement my = cf.build();
+  //
+  // Assert.assertEquals("Element Label (bean Copy)", COLLECTION_NAME,
+  // my.getLabel());
+  // }
+  //
+  // @Test
+  // public void testAttributeCopyInCollectionFactory(){
+  // SearchElementEntity<MyElement> cf = new SearchElementEntity<MyElement>()
+  // .setLabel(COLLECTION_NAME)
+  // .setClazz(MyElement.class)
+  // .setAttribute("myAttribute",COLLECTION_ATTR);
+  //
+  // MyElement my = cf.build();
+  //
+  // Assert.assertEquals("Collection Attribute (attribute Copy)",
+  // COLLECTION_ATTR, my.getMyAttribute());
+  // }
 }

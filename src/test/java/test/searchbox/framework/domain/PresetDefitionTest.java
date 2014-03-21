@@ -1,4 +1,4 @@
-package com.searchbox.framework.domain;
+package test.searchbox.framework.domain;
 
 public class PresetDefitionTest {
 

@@ -1,4 +1,4 @@
-package com.searchbox.engine;
+package test.searchbox.engine;
 
 import org.springframework.context.annotation.Configuration;
 

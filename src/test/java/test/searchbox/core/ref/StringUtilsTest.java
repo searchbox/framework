@@ -1,4 +1,4 @@
-package com.searchbox.core.ref;
+package test.searchbox.core.ref;
 
 import java.util.Set;
 
@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.searchbox.core.ref.StringUtils;
 
 public class StringUtilsTest {
 

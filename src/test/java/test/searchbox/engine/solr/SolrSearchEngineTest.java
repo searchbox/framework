@@ -1,4 +1,4 @@
-package com.searchbox.engine.solr;
+package test.searchbox.engine.solr;
 
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +14,7 @@ import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
+import com.searchbox.engine.solr.SolrSearchEngine;
 
 public class SolrSearchEngineTest {
 
@@ -47,13 +48,13 @@ public class SolrSearchEngineTest {
       @Override
       public void reloadEngine(Collection collection) {
         // TODO Auto-generated method stub
-        
+
       }
 
       @Override
       public void register(Collection collection) {
         // TODO Auto-generated method stub
-        
+
       }
 
       @Override

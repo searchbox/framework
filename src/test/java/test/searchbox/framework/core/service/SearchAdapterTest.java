@@ -1,4 +1,4 @@
-package com.searchbox.framework.core.service;
+package test.searchbox.framework.core.service;
 
 import java.lang.reflect.Method;
 
