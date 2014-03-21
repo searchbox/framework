@@ -57,9 +57,11 @@ public class TemplateElementSolrAdapter {
     }
 
     Set<String> fields = searchElement.getRequiredFields();
+    LOGGER.debug("Required fields: {}", fields);
 
     if (fields.contains(attribute.getField().getKey())) {
       String key = engine.getKeyForField(attribute, USE.DEFAULT);
+      LOGGER.trace("Adding {} as fl for {}",key, attribute.getField().getKey());
       if (!query.getFields().contains(key)) {
         List<String> qfields = Lists.newArrayList();
         qfields.addAll(Arrays.asList(query.getFields().split(",")));
