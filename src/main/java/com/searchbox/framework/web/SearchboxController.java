@@ -196,7 +196,7 @@ public class SearchboxController {
     for (SearchElementEntity<?> elementEntity : elementEntities) {
       LOGGER.debug("Adding SearchElementDefinition: {}", elementEntity);
       try {
-        SearchElement searchElement = elementEntity.build();
+        SearchElement searchElement = elementService.getSearchElement(elementEntity);
         
         LOGGER.trace("Adding SearchElementDefinition: {}", searchElement);
         searchElements.add(searchElement);
