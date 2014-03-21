@@ -16,40 +16,61 @@
 package com.searchbox.framework.model;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
+import com.searchbox.core.SearchElementBean;
 
 @Entity
-public class SearchElementEntity<K extends SearchElement> extends
+public class SearchElementEntity<K extends SearchElementBean> extends
     BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
     Comparable<SearchElementEntity<K>> {
+  
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SearchElementEntity.class);
 
-  // @NotNull
-  // @ManyToOne(targetEntity = PresetDefinition.class)
-  // private PresetDefinition preset;
+  @ManyToOne(targetEntity = PresetEntity.class)
+  private PresetEntity preset;
 
-  private Class<K> clazz;
+  private Class<?> clazz;
 
   private String label;
 
   private Integer position;
-
-  private SearchElement.Type type;
 
   private String process;
 
   public SearchElementEntity() {
     // TODO infer class from generic Interface
   }
+  
+  public PresetEntity getPreset() {
+    return preset;
+  }
 
+  public SearchElementEntity<?> setPreset(PresetEntity preset) {
+    this.preset = preset;
+    return this;
+  }
+
+  public PresetEntity end(){
+    this.getPreset().getSearchElements().add(this);
+    return this.getPreset();
+  }
+  
   @Override
-  public K build() {
-    if (this.getClazz() == null) {
+  @SuppressWarnings("unchecked")
+  public K build(){
+    if(this.getClazz() == null){
       throw new MissingClassAttributeException();
     }
+    LOGGER.debug("Building Class for {}",this.getClazz());
     return (K) super.build(this.getClazz());
   }
 
@@ -57,23 +78,16 @@ public class SearchElementEntity<K extends SearchElement> extends
     return process;
   }
 
-  public void setProcess(String process) {
+  public SearchElementEntity<?> setProcess(String process) {
     this.process = process;
+    return this;
   }
 
-  // public PresetDefinition getPreset() {
-  // return preset;
-  // }
-  //
-  // public void setPreset(PresetDefinition preset) {
-  // this.preset = preset;
-  // }
-
-  public Class<K> getClazz() {
+  public Class<?> getClazz() {
     return clazz;
   }
 
-  public SearchElementEntity<K> setClazz(Class<K> clazz) {
+  public SearchElementEntity<?> setClazz(Class<?> clazz) {
     this.clazz = clazz;
     return this;
   }
@@ -96,14 +110,14 @@ public class SearchElementEntity<K extends SearchElement> extends
     return this;
   }
 
-  public SearchElement.Type getType() {
-    return type;
-  }
-
-  public SearchElementEntity<K> setType(SearchElement.Type type) {
-    this.type = type;
-    return this;
-  }
+//  public SearchElement.Type getType() {
+//    return (Type) super.getAttributeByName("type");
+//  }
+//
+//  public SearchElementEntity<K> setType(SearchElement.Type type) {
+//    this.setAttribute("type", type);
+//    return this;
+//  }
 
   @Override
   public int compareTo(SearchElementEntity<K> o) {

@@ -42,18 +42,33 @@ Comparable<FieldAttributeEntity> {
     return preset;
   }
 
-  public void setPreset(PresetEntity preset) {
+  public FieldAttributeEntity setPreset(PresetEntity preset) {
     this.preset = preset;
+    return this;
   }
 
   public FieldEntity getField() {
     return field;
   }
 
-  public void setField(FieldEntity field) {
+  public FieldAttributeEntity setField(FieldEntity field) {
     this.field = field;
+    return this;
   }
 
+  public FieldAttributeEntity setAttribute(String name, Object value) {
+    this.getAttributes().add(new AttributeEntity()
+      .setName(name)
+      .setValue(value)
+      .setType(value.getClass()));
+    return this;
+  }
+  
+  public PresetEntity end() {
+    this.preset.getFieldAttributes().add(this);
+    return this.getPreset();
+  }
+  
   @Override
   public int compareTo(FieldAttributeEntity o) {
     return this.getField().getKey()

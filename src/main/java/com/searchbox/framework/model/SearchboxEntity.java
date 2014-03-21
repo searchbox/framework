@@ -62,32 +62,36 @@ public class SearchboxEntity extends BaseEntity<Long>
     return slug;
   }
 
-  public void setSlug(String slug) {
+  public SearchboxEntity setSlug(String slug) {
     this.slug = slug;
+    return this;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  public SearchboxEntity setName(String name) {
     this.name = name;
+    return this;
   }
 
   public String getAlias() {
     return alias;
   }
 
-  public void setAlias(String alias) {
+  public SearchboxEntity setAlias(String alias) {
     this.alias = alias;
+    return this;
   }
 
   public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
+  public SearchboxEntity setDescription(String description) {
     this.description = description;
+    return this;
   }
 
   public List<PresetEntity> getPresets() {
@@ -106,15 +110,12 @@ public class SearchboxEntity extends BaseEntity<Long>
     this.userRoles = userRoles;
   }
 
-//  public void addPresetDefinition(PresetEntity preset) {
-//    preset.setSearchbox(this);
-//    this.presets.add(preset);
-//  }
-//
-//  public void addUserRole(UserRole userRole) {
-//    userRole.setSearchbox(this);
-//    this.userRoles.put(userRole.getUser(), userRole);
-//  }
+
+  public SearchboxEntity addUserRole(UserRole userRole) {
+    userRole.setSearchbox(this);
+    this.userRoles.put(userRole.getUser(), userRole);
+    return this;
+  }
   
   @Override
   public int compareTo(SearchboxEntity o) {
@@ -126,5 +127,11 @@ public class SearchboxEntity extends BaseEntity<Long>
     //FIXME. Do not reflection on toString (breaks Lazy INiti)
     return ReflectionToStringBuilder.toString(this,
         ToStringStyle.SHORT_PREFIX_STYLE);
+  }
+
+  public PresetEntity newPreset() {
+    return new PresetEntity()
+      .setSearchbox(this)
+      .setPosition(this.getPresets().size()+1);
   }
 }

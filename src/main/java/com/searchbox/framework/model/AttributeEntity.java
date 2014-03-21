@@ -73,11 +73,13 @@ public class AttributeEntity extends BaseEntity<Long>
   }
 
   public AttributeEntity setValue(Object value) {
-    LOGGER.info("Adding object of type {}",value.getClass());
-    try {
-      this.valueAsByteArray = SerializationUtils.serialize(value);
-    } catch (Exception e) {
-      LOGGER.error("Could not serialize value: " + this, e);
+    if(value != null){
+      LOGGER.info("Adding object of type {}",value.getClass());
+      try {
+        this.valueAsByteArray = SerializationUtils.serialize(value);
+      } catch (Exception e) {
+        LOGGER.error("Could not serialize value: " + this, e);
+      }
     }
     return this;
   }

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
@@ -21,7 +22,10 @@ public abstract class BeanFactoryEntity<K extends Serializable>
   private static final Logger LOGGER = LoggerFactory
       .getLogger(BeanFactoryEntity.class);
 
-  @OneToMany(orphanRemoval=true, targetEntity=AttributeEntity.class, cascade=CascadeType.ALL)
+  @OneToMany(orphanRemoval=true, 
+      fetch=FetchType.EAGER, 
+      targetEntity=AttributeEntity.class, 
+      cascade=CascadeType.ALL)
   @Type(type="com.searchbox.framework.model.AttributeEntity")
   private Set<AttributeEntity> attributes;
   
@@ -32,13 +36,22 @@ public abstract class BeanFactoryEntity<K extends Serializable>
   public Set<AttributeEntity> getAttributes() {
     return attributes;
   }
-
+  
+  public Object getAttributeByName(String name){
+    for(AttributeEntity attribute:this.getAttributes()){
+      if(attribute.getName().equalsIgnoreCase(name)){
+        return attribute.getValue();
+      }
+    }
+    return null;
+  }
+  
   public void setAttributes(Set<AttributeEntity> attributes) {
     this.attributes = attributes;
   }
 
   public <T> T build(Class<T> clazz) {
-    LOGGER.info("BeanFactory for {}",clazz);
+    LOGGER.debug("BeanFactory for {}",clazz);
     try {
       T target =  (T) clazz.newInstance();
       BeanUtils.copyProperties(this, target);
@@ -56,7 +69,6 @@ public abstract class BeanFactoryEntity<K extends Serializable>
     } catch (Exception exception) {
       LOGGER.error("Could not build Bean for class {}",clazz);
       LOGGER.error("Error: {}", exception.getMessage());
-      exception.printStackTrace();
     }
     return null;
   }

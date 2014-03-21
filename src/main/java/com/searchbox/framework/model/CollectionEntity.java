@@ -15,10 +15,13 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -46,9 +49,15 @@ public class CollectionEntity<K extends Collection>
   
   private Boolean autoStart;
   
+  private String idFieldName;
+  
   @ManyToOne
   @LazyCollection(LazyCollectionOption.FALSE)
   private SearchEngineEntity<?> searchEngine;
+  
+  @OneToMany
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private Set<PresetEntity> presets;
   
   public String getName() {
     return name;
@@ -99,17 +108,40 @@ public class CollectionEntity<K extends Collection>
     return autoStart;
   }
 
-  public void setAutoStart(Boolean autoStart) {
+  public CollectionEntity<?> setAutoStart(Boolean autoStart) {
     this.autoStart = autoStart;
+    return this;
   }
 
   public SearchEngineEntity<?> getSearchEngine() {
     return searchEngine;
   }
 
-  public void setSearchEngine(SearchEngineEntity<?> searchEngine) {
+  public CollectionEntity<?> setSearchEngine(SearchEngineEntity<?> searchEngine) {
     this.searchEngine = searchEngine;
+    return this;
   }
+
+  public String getIdFieldName() {
+    return idFieldName;
+  }
+
+  public CollectionEntity<?> setIdFieldName(String idFieldName) {
+    this.idFieldName = idFieldName;
+    return this;
+  }
+
+  public Set<PresetEntity> getPresets() {
+    return presets;
+  }
+
+  public CollectionEntity<?> setPresets(Set<PresetEntity> presetEntity) {
+    this.presets = presetEntity;
+    return this;
+  }
+  
+  
+ 
   
 //  public static class CollectionBuilder {
 //    

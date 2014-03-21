@@ -17,14 +17,16 @@ package com.searchbox.framework.model;
 
 import javax.persistence.Entity;
 
+import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.engine.solr.SolrCloud;
 
 @Entity
-public class SearchEngineEntity<K extends SearchEngine> extends
-BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
-Comparable<SearchEngineEntity<K>> {
+public class SearchEngineEntity<K extends SearchEngine<?,?>> 
+  extends BeanFactoryEntity<Long> 
+  implements ParametrizedBeanFactory<K>, Comparable<SearchEngineEntity<K>> {
 
-  private Class<K> clazz;
+  private Class<?> clazz;
   
   protected String name;
 
@@ -32,28 +34,39 @@ Comparable<SearchEngineEntity<K>> {
     return name;
   }
 
-  public void setName(String name) {
+  public SearchEngineEntity<?> setName(String name) {
     this.name = name;
+    return this;
   }
 
-  public Class<K> getClazz() {
+  public Class<?> getClazz() {
     return clazz;
   }
 
-  public void setClazz(Class<K> clazz) {
+  public SearchEngineEntity<?> setClazz(Class<K> clazz) {
     this.clazz = clazz;
+    return this;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public K build() {
     if (this.getClazz() == null) {
       throw new MissingClassAttributeException();
     }
-    return super.build(this.getClazz());
+    return (K) super.build(this.getClazz());
   }
 
   @Override
   public int compareTo(SearchEngineEntity<K> o) {
     return this.getName().compareTo(o.getName());
+  }
+  
+  public SearchEngineEntity<?> setAttribute(String name, Object value) {
+    this.getAttributes().add(new AttributeEntity()
+      .setName(name)
+      .setValue(value)
+      .setType(value.getClass()));
+    return this;
   }
 }
