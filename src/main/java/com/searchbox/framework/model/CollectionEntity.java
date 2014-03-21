@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.SearchableCollection;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -95,7 +96,12 @@ public class CollectionEntity<K extends Collection> extends
       throw new MissingClassAttributeException();
     }
     LOGGER.info("Building Class for {}", this.getClazz());
-    return (K) super.build(this.getClazz());
+    K collection = (K) super.build(this.getClazz());
+    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
+      ((SearchableCollection)collection).setSearchEngine(
+          this.searchEngine.build());
+    }
+    return collection;
   }
 
   public Class<?> getClazz() {

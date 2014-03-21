@@ -20,6 +20,4 @@ public interface Collection {
    */
   public abstract String getIdFieldName();
 
-  public abstract SearchEngine<?, ?> getSearchEngine();
-
 }

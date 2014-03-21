@@ -92,7 +92,8 @@ public class MultiCollection implements Collection, SearchableCollection {
     return searchEngine;
   }
 
-  public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+  public SearchableCollection setSearchEngine(SearchEngine<?, ?> searchEngine) {
     this.searchEngine = searchEngine;
+    return this;
   }
 }

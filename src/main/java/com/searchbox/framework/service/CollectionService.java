@@ -53,7 +53,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectiondef.build();
     if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
-      SearchEngine<?, ?> engine = collection.getSearchEngine();
       LOGGER.info("Starting Data synchronization for \"" + collection.getName()
           + "\"");
       try {
@@ -75,9 +74,8 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectionEntity.build();
-    SearchEngineEntity<?> searchEngineEntity = collectionEntity.getSearchEngine();
-    if(searchEngineEntity != null){
-      SearchEngine<?, ?> engine = searchEngineEntity.build();
+    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
+      SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
       if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
         LOGGER.info("Register Searchengine Configuration for \""
             + collection.getName() + "\"");

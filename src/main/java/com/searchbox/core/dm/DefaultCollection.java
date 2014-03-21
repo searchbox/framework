@@ -98,8 +98,9 @@ public class DefaultCollection
     return searchEngine;
   }
 
-  public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+  public SearchableCollection setSearchEngine(SearchEngine<?, ?> searchEngine) {
     this.searchEngine = searchEngine;
+    return this;
   }
 
   /* (non-Javadoc)
