@@ -86,8 +86,11 @@
        </div>
        <sbx:doElement label="body" />
 
-       <sbx:doElement type="DEBUG" />
-
+       <c:if test="${not empty param.debug}">
+        <sbx:doElement type="DEBUG" />
+        ${collector }
+       </c:if>
+       
       </div>
 
       <div class="col-md-2" id="main-col-right">
