@@ -15,20 +15,43 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
-import javax.persistence.Entity;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.searchbox.core.dm.DefaultCollection;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.engine.solr.SolrCloud;
 
 @Entity
 public class SearchEngineEntity<K extends SearchEngine<?,?>> 
   extends BeanFactoryEntity<Long> 
   implements ParametrizedBeanFactory<K>, Comparable<SearchEngineEntity<K>> {
-
+  
+  @OneToMany(mappedBy = "searchEngine", orphanRemoval = true, 
+      cascade ={CascadeType.MERGE, CascadeType.REFRESH})
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private Set<CollectionEntity<?>> collections; 
+  
   private Class<?> clazz;
   
   protected String name;
+  
+  public SearchEngineEntity(){
+    this.collections = new TreeSet<>();
+  }
+
+  public Set<CollectionEntity<?>> getCollections() {
+    return collections;
+  }
+
+  public void setCollections(Set<CollectionEntity<?>> collections) {
+    this.collections = collections;
+  }
 
   public String getName() {
     return name;

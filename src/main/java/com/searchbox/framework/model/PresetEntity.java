@@ -60,7 +60,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @LazyCollection(LazyCollectionOption.FALSE)
   Set<PresetEntity> children;
 
-  @ManyToOne
+  @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
   @LazyCollection(LazyCollectionOption.FALSE)
   private CollectionEntity<?> collection;
 

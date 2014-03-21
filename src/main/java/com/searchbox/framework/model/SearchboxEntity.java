@@ -36,9 +36,20 @@ import com.searchbox.framework.domain.UserRole;
 @Entity
 public class SearchboxEntity extends BaseEntity<Long> 
   implements Comparable<SearchboxEntity>{
+  
+  enum Privacy {
+    PUBLIC("public"), 
+    PRIVATE("private"),
+    SOCIAL("registration");
+    private final String stringValue;
+    private Privacy(final String s) { stringValue = s; }
+    public String toString() { return stringValue; }
+  }
 
   @Column(unique = true)
   private String slug;
+  
+  private Privacy privacy= Privacy.PUBLIC;
 
   private String name;
 
@@ -56,6 +67,14 @@ public class SearchboxEntity extends BaseEntity<Long>
   private Map<UserEntity, UserRole> userRoles = new HashMap<UserEntity, UserRole>();
 
   public SearchboxEntity() {
+  }
+
+  public Privacy getPrivacy() {
+    return privacy;
+  }
+
+  public void setPrivacy(Privacy privacy) {
+    this.privacy = privacy;
   }
 
   public String getSlug() {

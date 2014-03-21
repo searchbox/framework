@@ -39,8 +39,9 @@ import com.searchbox.core.dm.SearchableCollection;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class CollectionEntity<K extends Collection> extends
-    BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K> {
+public class CollectionEntity<K extends Collection> 
+  extends BeanFactoryEntity<Long> 
+  implements ParametrizedBeanFactory<K>, Comparable<CollectionEntity<K>> {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionEntity.class);
@@ -59,7 +60,7 @@ public class CollectionEntity<K extends Collection> extends
   @LazyCollection(LazyCollectionOption.FALSE)
   private SearchEngineEntity<?> searchEngine;
 
-  @OneToMany
+  @OneToMany(mappedBy="collection", cascade=CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<PresetEntity> presets;
 
@@ -161,6 +162,7 @@ public class CollectionEntity<K extends Collection> extends
 
   public CollectionEntity<?> setSearchEngine(SearchEngineEntity<?> searchEngine) {
     this.searchEngine = searchEngine;
+    searchEngine.getCollections().add(this);
     return this;
   }
 
@@ -189,5 +191,11 @@ public class CollectionEntity<K extends Collection> extends
       }
     }
     return null;
+  }
+
+  @Override
+  public int compareTo(CollectionEntity<K> o) {
+    return this.getName().compareTo(
+        o.getName());
   }
 }
