@@ -7,7 +7,7 @@
   <sbx:title hit="${hit}"
    link="http://www.ncbi.nlm.nih.gov/pubmed/${hit.getId()}" />
  </h4>
-  <p><sbx:snippet hit="${hit}" field="article-abstract" /></p>
+  <p><sbx:snippet hit="${hit}" field="article_abstract" /></p>
   <sbx:tagAttribute filter="author" limit="5" label="Author(s)"
    values="${hit.fieldValues['author']}" />
  </div>

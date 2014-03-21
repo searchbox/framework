@@ -54,21 +54,21 @@ public class PubmedCollection extends AbstractBatchCollection implements
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
     fields.add(new Field(String.class, "id"));
-    fields.add(new Field(Date.class, "article-creation-date"));
-    fields.add(new Field(Integer.class, "article-year"));
-    fields.add(new Field(Date.class, "article-completion-date"));
-    fields.add(new Field(Date.class, "article-revision-date"));
-    fields.add(new Field(String.class, "article-pubmodel"));
-    fields.add(new Field(String.class, "journal-title"));
-    fields.add(new Field(String.class, "journal-title-abrv"));
-    fields.add(new Field(String.class, "article-title"));
-    fields.add(new Field(String.class, "article-abstract"));
+    fields.add(new Field(Date.class, "article_creation_date"));
+    fields.add(new Field(Integer.class, "article_year"));
+    fields.add(new Field(Date.class, "article_completion_date"));
+    fields.add(new Field(Date.class, "article_revision_date"));
+    fields.add(new Field(String.class, "article_pubmodel"));
+    fields.add(new Field(String.class, "journal_title"));
+    fields.add(new Field(String.class, "journal_title_abrv"));
+    fields.add(new Field(String.class, "article_title"));
+    fields.add(new Field(String.class, "article_abstract"));
     fields.add(new Field(String.class, "author"));
-    fields.add(new Field(String.class, "article-lang"));
-    fields.add(new Field(String.class, "publication-type"));
-    fields.add(new Field(String.class, "substance-name"));
-    fields.add(new Field(String.class, "article-descriptor"));
-    fields.add(new Field(String.class, "article-qualifier"));
+    fields.add(new Field(String.class, "article_lang"));
+    fields.add(new Field(String.class, "publication_type"));
+    fields.add(new Field(String.class, "substance_name"));
+    fields.add(new Field(String.class, "article_descriptor"));
+    fields.add(new Field(String.class, "article_qualifier"));
     return fields;
   }
 
