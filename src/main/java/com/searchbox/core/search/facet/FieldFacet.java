@@ -32,7 +32,7 @@ public class FieldFacet extends
     SearchElementWithConditionalValues<FieldFacet.Value, FieldValueCondition> {
 
   @SearchAttribute
-  private Field field;
+  private String fieldName;
 
   @SearchAttribute
   private Boolean sticky = true;
@@ -47,23 +47,20 @@ public class FieldFacet extends
     this("",null);
   }
 
-  public FieldFacet(String label, Field field) {
+  public FieldFacet(String label, String fieldName) {
     super(label, SearchElement.Type.FACET);
-    this.field = field;
+    this.fieldName = fieldName;
   }
 
   public String getFieldName() {
-    return field.getKey();
+    return fieldName;
   }
 
-  public void setField(Field field) {
-    this.field = field;
+  public FieldFacet setFieldName(String fieldName) {
+    this.fieldName = fieldName;
+    return this;
   }
-
-  public Field getField() {
-    return this.field;
-  }
-
+  
   public Integer getMinCount() {
     return minCount;
   }
@@ -134,7 +131,7 @@ public class FieldFacet extends
 
     @Override
     public FieldValueCondition getSearchCondition() {
-      return new FieldValueCondition(field.getKey(), this.value, sticky);
+      return new FieldValueCondition(fieldName, this.value, sticky);
     }
 
     @Override

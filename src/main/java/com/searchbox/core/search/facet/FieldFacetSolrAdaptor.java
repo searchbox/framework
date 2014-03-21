@@ -54,13 +54,13 @@ public class FieldFacetSolrAdaptor {
   public void getFacetValues(SolrSearchEngine engine, FieldFacet fieldFacet,
       QueryResponse response, FieldAttribute attribute) {
 
-    if (!attribute.getField().getKey().equals(fieldFacet.getFieldName())) {
+    if (fieldFacet.getFieldName() == null) {
+      LOGGER.error("FieldFacet \"" + fieldFacet.getLabel()
+          + "\" has no field!!!");
       return;
     }
 
-    if (fieldFacet.getField() == null) {
-      LOGGER.error("FieldFacet \"" + fieldFacet.getLabel()
-          + "\" has no field!!!");
+    if (!attribute.getField().getKey().equals(fieldFacet.getFieldName())) {
       return;
     }
 
