@@ -17,6 +17,7 @@ package com.searchbox.core.ref;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 
 import com.searchbox.core.SearchAttribute;
-import com.searchbox.framework.domain.UnknownAttribute;
+import com.searchbox.framework.model.AttributeEntity;
 
 public class ReflectionUtils {
 
@@ -49,12 +50,13 @@ public class ReflectionUtils {
   }
 
   public static void inspectAndSaveAttribute(Class<?> searchElement,
-      List<UnknownAttribute> attributes) {
+      Collection<AttributeEntity> attributes) {
     if (searchElement != null) {
       for (Field field : searchElement.getDeclaredFields()) {
         if (field.isAnnotationPresent(SearchAttribute.class)) {
-          UnknownAttribute attrDef = new UnknownAttribute(
-              field.getType(), field.getName());
+          AttributeEntity attrDef = new AttributeEntity()
+          .setName(field.getName())
+          .setType(field.getType());
           String value = field.getAnnotation(SearchAttribute.class).value();
           if (value != null && !value.isEmpty()) {
             try {
