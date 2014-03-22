@@ -317,8 +317,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setIdFieldName("uid");
       idealistCollection = collectionRepository.save(idealistCollection);
       
-      
-      
       searchbox.newPreset()
         .setCollection(collectionRepository.save(
             new CollectionEntity<>()
@@ -334,7 +332,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setLabel("Cooperations")
         .addQueryElement()
         .addStatElement()
-        .addFieldFacet("Source", "docSource")
+        .addFieldFacet("Cooperation Source", "docSource")
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setLabel("MergedTemplate")
@@ -421,7 +419,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
               })))
           .end()
         
-          .addFieldFacet("Cooperation Source", "docSource")
           .addFieldFacet("EEN Type", "eenReferenceType")
           .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
           .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
