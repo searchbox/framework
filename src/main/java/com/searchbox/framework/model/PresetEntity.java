@@ -183,6 +183,15 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return this;
   }
 
+  public FieldAttributeEntity getFieldAttributeByKey(String key) {
+    for (FieldAttributeEntity fieldAttribute : this.getFieldAttributes()) {
+      if (fieldAttribute.getField().getKey().equals(key)) {
+        return fieldAttribute;
+      }
+    }
+    return null;
+  }
+  
   public FieldAttributeEntity getFieldAttributeByField(FieldEntity field) {
     for (FieldAttributeEntity fieldAttribute : this.getFieldAttributes()) {
       if (fieldAttribute.getField().equals(field)) {
@@ -300,25 +309,35 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return newSearchElement()
         .setClazz(TemplateElement.class)
         .setAttribute("titleField", titleFieldName)
-        .setAttribute("templateFile", templateFile)
-        .setAttribute("idField", this.getCollection().getIdFieldName());
+        .setAttribute("templateFile", templateFile);
   }
 
   
-  public PresetEntity addSortableFieldAttribute(String label, FieldEntity field) {
+  public PresetEntity addSortableFieldAttribute(String label, String field) {
     this.fieldAttributes.add(newFieldAttribute(label, field).setSortable(true));
     return this;    
   }
   
-  public FieldAttributeEntity newFieldAttribute(String label, FieldEntity field){
-    return new FieldAttributeEntity().setPreset(this)
-        .setField(field).setAttribute("label", label);
+  public FieldAttributeEntity newFieldAttribute(String key){
+    return newFieldAttribute("", key);
+  }
+  
+  public FieldAttributeEntity newFieldAttribute(String label, String key){
+    FieldAttributeEntity attribute = this.getFieldAttributeByKey(key);
+    if(attribute==null){
+      LOGGER.warn("MISSING FieldAttribute for {}. Is collection properly set?",key);
+      return new FieldAttributeEntity().setPreset(this)
+          .setField(this.getCollection().getField(key))
+          .setAttribute("label", label);
+    } else {
+      return attribute.setAttribute("label", label);
+    }
   }
 
-  public PresetEntity newFieldAttribute(FieldAttributeEntity attribute) {
-    this.getFieldAttributes().add(attribute);
-    return this;
-  }
+//  public PresetEntity newFieldAttribute(FieldAttributeEntity attribute) {
+//    this.getFieldAttributes().add(attribute);
+//    return this;
+//  }
 
   public SearchElementEntity<?> newSearchElement() {
     return new SearchElementEntity<>()
@@ -330,24 +349,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     this.searchbox.getPresets().add(this);
     return this.getSearchbox();
   }
-  // public FieldAttributeDefinition getFieldAttributeByKey(String key) {
-  // for (FieldAttributeDefinition adef : this.fieldAttributes) {
-  // if (adef.getField().getKey().equals(key)) {
-  // return adef;
-  // }
-  // }
-  // return null;
-  // }
-  //
-  // public FieldAttributeDefinition getFieldAttributeByField(FieldDefinition
-  // field) {
-  // for (FieldAttributeDefinition adef : this.fieldAttributes) {
-  // if (adef.getField().equals(field)) {
-  // return adef;
-  // }
-  // }
-  // return null;
-  // }
+
 
   // @PrePersist
   // public void checkPresetAttributes() {
