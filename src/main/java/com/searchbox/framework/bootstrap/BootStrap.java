@@ -146,7 +146,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /** 
        * 
-       * The Topic Preset
+       * Oppfin Collections
        *  
        */
       LOGGER.info("++ Creating oppfin Topic Collection");
@@ -158,8 +158,67 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setSearchEngine(engine);
       topicsCollection = collectionRepository.save(topicsCollection);
       
+      
+      LOGGER.info("++ Creating oppfin EEN Collection");
+      CollectionEntity<?> eenCollection = new CollectionEntity<>()
+          .setClazz(EENCollection.class)
+          .setName("eenCooperations")
+          .setAutoStart(false)
+          .setIdFieldName("eenReferenceExternal")
+          .setSearchEngine(engine);
+      eenCollection = collectionRepository.save(eenCollection);
+      
+      /** The base collection for idealist */
+      LOGGER.info("++ Creating oppfin IDEALIST Collection");
+      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
+          .setClazz(IdealISTCollection.class)
+          .setName("idealistCooperations")
+          .setSearchEngine(engine)
+          .setAutoStart(false)
+          .setIdFieldName("uid");
+      idealistCollection = collectionRepository.save(idealistCollection);
+      
+      
+      LOGGER.info("++ Creating oppfin CORDIS Collection");
+      CollectionEntity<?> cordisCollection = new CollectionEntity<>()
+        .setClazz(CordisCollection.class)
+        .setIdFieldName("cordisId")
+        .setName("fundedProjects")
+        .setAutoStart(false)
+        .setSearchEngine(engine);
+      cordisCollection = collectionRepository.save(cordisCollection);
+      
+      
+      searchbox.newPreset().setLabel("Search All")
+      .setDescription("All Collections")
+      .setSlug("all")
+      .setCollection(collectionRepository.save(
+            new CollectionEntity<>()
+            .setClazz(MultiCollection.class)
+            .setName("all")
+            .setSearchEngine(engine)
+            .setAttribute("collections", 
+                Arrays.asList(new String[]{
+                    topicsCollection.getName(),
+                    eenCollection.getName(),
+                    idealistCollection.getName(),
+                    cordisCollection.getName()
+                }))))      
+            .addQueryElement()
+            .addFieldFacet("Source", "docSource")
+            .addStatElement()
+            .addPagingElement()
+            .addDebugElement()
+   
+            
+      /** 
+       * 
+       * Topic Preset
+       *  
+       */
       //Create a new preset in searchbox
-      searchbox.newPreset().setLabel("Project Funding")
+            .newChildPreset(true, TemplateElement.class)
+            .setLabel("Project Funding")
         .setDescription("Project Funding (open calls)")
         .setSlug("topic")
         
@@ -288,7 +347,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        .newSearchElement()
          .setClazz(BasicPagination.class)
          .end()
-       .end();
+       .endChild()
        
        
        
@@ -302,26 +361,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * 
        */
       
-      LOGGER.info("++ Creating oppfin EEN Collection");
-      CollectionEntity<?> eenCollection = new CollectionEntity<>()
-          .setClazz(EENCollection.class)
-          .setName("eenCooperations")
-          .setAutoStart(false)
-          .setIdFieldName("eenReferenceExternal")
-          .setSearchEngine(engine);
-      eenCollection = collectionRepository.save(eenCollection);
+   
       
-      /** The base collection for idealist */
-      LOGGER.info("++ Creating oppfin IDEALIST Collection");
-      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
-          .setClazz(IdealISTCollection.class)
-          .setName("idealistCooperations")
-          .setSearchEngine(engine)
-          .setAutoStart(false)
-          .setIdFieldName("uid");
-      idealistCollection = collectionRepository.save(idealistCollection);
-      
-      searchbox.newPreset()
+      .newChildPreset(true, TemplateElement.class)
         .setCollection(collectionRepository.save(
             new CollectionEntity<>()
             .setClazz(MultiCollection.class)
@@ -485,7 +527,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addPagingElement()
         .addDebugElement()
         .endChild()
-       .end();
+       .endChild()
           
       /**
        * 
@@ -494,18 +536,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * 
        */
      
-      LOGGER.info("++ Creating oppfin CORDIS Collection");
-      CollectionEntity<?> cordisCollection = new CollectionEntity<>()
-        .setClazz(CordisCollection.class)
-        .setIdFieldName("cordisId")
-        .setName("fundedProjects")
-        .setAutoStart(false)
-        .setSearchEngine(engine);
-      cordisCollection = collectionRepository.save(cordisCollection);
 
-      LOGGER.info("++ Creating CORDIS preset");
+      //LOGGER.info("++ Creating CORDIS preset");
       
-      searchbox.newPreset()
+       .newChildPreset(true, TemplateElement.class)
         .setLabel("Funded Projects")
         .setDescription("Funded projects")
         .setSlug("funded")
@@ -548,7 +582,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addPagingElement()
         .addDebugElement()
-        .end();
+        .endChild()
+       .end();
       
       /**
        * Users preset
