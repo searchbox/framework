@@ -45,9 +45,11 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -56,6 +58,7 @@ import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
+import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
 public class IdealISTCollection extends AbstractBatchCollection implements
@@ -255,7 +258,19 @@ public class IdealISTCollection extends AbstractBatchCollection implements
           document, XPathConstants.NODESET);
 
       for (int i = 0; i < nodeList.getLength(); i++) {
-        String value = nodeList.item(i).getNodeValue();
+        
+        StringBuilder textBuilder = new StringBuilder();
+        for (int j = 0; j < nodeList.item(i).getChildNodes().getLength(); j++) {
+            Node textNode = nodeList.item(i).getChildNodes().item(j);
+            if (textNode.getNodeType() == Node.TEXT_NODE
+                || textNode.getNodeType() == Node.CDATA_SECTION_NODE) {
+                textBuilder.append(textNode.getNodeValue());
+            }
+        }
+        String value = textBuilder.toString();
+        
+        LOGGER.debug("value for key {} is {}",
+            key, value);
         if(value.isEmpty()){
           continue;
         }
@@ -270,7 +285,8 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             date = dfmt.parse(value);
             fields.put(fieldName, date);
           } catch (ParseException e) {
-            LOGGER.warn("Could not parse date for for key {} in document {}", key, uid);
+            LOGGER.warn("Could not parse date({}) for for key {} in document {}",
+                value, key, uid);
           }
         }
       }
@@ -355,14 +371,14 @@ public class IdealISTCollection extends AbstractBatchCollection implements
       JobInstanceAlreadyCompleteException, JobParametersInvalidException,
       SAXException, IOException {
 
-    // AnnotationConfigApplicationContext context = new
-    // AnnotationConfigApplicationContext(
-    // RootConfiguration.class);
-    //
-    // IdealISTCollection collection = context
-    // .getBean(IdealISTCollection.class);
-    //
-    // collection.synchronize();
+     AnnotationConfigApplicationContext context = new
+     AnnotationConfigApplicationContext(
+     RootConfiguration.class);
+    
+     IdealISTCollection collection = context
+         .getAutowireCapableBeanFactory().createBean(IdealISTCollection.class);
+    
+     collection.synchronize();
 
   }
 }
