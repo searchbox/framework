@@ -38,6 +38,8 @@ import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import test.searchbox.core.search.SearchElementTest;
+
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.Preset;
@@ -254,8 +256,19 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
       }
     }
     return definitions;
-
   }
+  
+//  public Set<SearchElementEntity<?>> getSearchElements(SearchElement.Type type, 
+//      String process) {
+//    Set<SearchElementEntity<?>> definitions = new TreeSet<SearchElementEntity<?>>();
+//    for (SearchElementEntity<?> definition : this.searchElements) {
+//      if (definition.getType().equals(type) &&
+//          definition.getProcess().equals(process)) {
+//        definitions.add(definition);
+//      }
+//    }
+//    return definitions;
+//  }
 
   public PresetEntity setSearchElements(
       Set<SearchElementEntity<?>> searchElements) {

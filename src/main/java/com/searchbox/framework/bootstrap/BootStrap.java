@@ -339,7 +339,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setClazz(TemplateElement.class)
           .setLabel("MergedTemplate")
           .end()
-        .addDebugElement()
  
         
 

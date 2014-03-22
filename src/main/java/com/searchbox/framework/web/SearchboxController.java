@@ -38,8 +38,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.SearchCollector;
 import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.RetryElement;
@@ -179,33 +181,8 @@ public class SearchboxController {
 
     return model;
   }
-
-  protected Set<SearchElement> executeRequest(SearchboxEntity searchbox,
-      PresetEntity preset, String process,
-      Set<AbstractSearchCondition> conditions, SearchCollector collector) {
-
-    Set<SearchElementEntity<?>> elementEntities = new TreeSet<SearchElementEntity<?>>();
-    elementEntities.addAll(preset
-        .getSearchElements(PresetEntity.DEFAULT_PROCESS));
-    elementEntities.addAll(preset.getSearchElements(process));
-
-    // Build the Preset DTO with dependancies
-    Set<SearchElement> searchElements = new TreeSet<SearchElement>();
-
-    // Filter on the elements that we want for the process
-    for (SearchElementEntity<?> elementEntity : elementEntities) {
-      LOGGER.debug("Adding SearchElementDefinition: {}", elementEntity);
-      try {
-        SearchElement searchElement = elementService.getSearchElement(elementEntity);
-        
-        LOGGER.trace("Adding SearchElementDefinition: {}", searchElement);
-        searchElements.add(searchElement);
-      } catch (Exception e) {
-        LOGGER
-            .error("Could not get SearchElement for: {}",elementEntity, e);
-      }
-    }
-
+  
+  private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
     Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
     for (FieldAttributeEntity def : preset.getFieldAttributes()) {
       fieldAttributes.add(def.build());
@@ -219,19 +196,36 @@ public class SearchboxController {
         } 
       }
     }
+    return fieldAttributes;
+  }
 
-    SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
-        .build();
+  protected Set<SearchElement> executeRequest(SearchboxEntity searchbox,
+      PresetEntity preset, String process,
+      Set<AbstractSearchCondition> conditions, SearchCollector collector) {
+
+    Set<SearchElement> searchElements = elementService.getSearchElements(preset, process);
+    LOGGER.info("Required Search elements are {}", searchElements);
+    
+    Set<FieldAttribute> fieldAttributes = getAllFieldAttribute(preset);
+    
     Collection collection = preset.getCollection().build();
     
+    if(!(SearchableCollection.class.isAssignableFrom(collection.getClass()))){
+      LOGGER.error("Collection {} does NOT implement SearchableCollection!!!",
+          collection.getName());
+    }
+    
+    SearchEngine<?, ?> searchEngine = ((SearchableCollection)collection).getSearchEngine();
+    
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
-    LOGGER.info("Current Collection: {}", collection);
+    LOGGER.debug("Current Collection: {}", collection);
 
     Set<SearchElement> resultElements = searchService.execute(searchEngine,
         collection, searchElements, fieldAttributes, conditions, collector);
 
+    LOGGER.info("Resulting SearchElements are {}",resultElements);
+    
     // Check if we have a retry clause
-    // TODO put the rety in collector.
     boolean retry = false;
     for (SearchElement element : resultElements) {
       if (RetryElement.class.isAssignableFrom(element.getClass())) {

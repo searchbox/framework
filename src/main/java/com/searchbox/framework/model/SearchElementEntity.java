@@ -23,6 +23,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.SearchElementBean;
 import com.searchbox.core.ref.ReflectionUtils;
 
@@ -135,4 +137,10 @@ public class SearchElementEntity<K extends SearchElementBean> extends
     }
     return this;
   }
+
+//  public SearchElement.Type getType() {
+//    return (Type) ((this.getAttributeByName("type")!=null)?
+//        this.getAttributeByName("type").getValue():
+//          SearchElement.Type.UNKNOWN);
+//  }
 }
