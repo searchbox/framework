@@ -7,7 +7,7 @@
  <jsp:output omit-xml-declaration="yes" />
 
  <c:forEach
-  items="${element.getHits()}"
+  items="${collector.getCollectedItems(element.getCollectorKey())}"
   var="hit">
   <c:set var="displayTemplate" value="${hit.getDisplayTemplate()}" />
   <c:catch var="includeException">

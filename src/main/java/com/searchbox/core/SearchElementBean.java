@@ -49,7 +49,8 @@ public class SearchElementBean implements SearchElement {
 
   @Override
   public int compareTo(SearchElement searchElement) {
-    return this.getPosition().compareTo(searchElement.getPosition());
+    return new Integer(this.getPosition()*10).compareTo(
+        new Integer(searchElement.getPosition()*10+1));
   }
   
   @Override

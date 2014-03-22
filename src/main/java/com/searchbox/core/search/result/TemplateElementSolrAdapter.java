@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.SearchCollector;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
@@ -51,11 +52,10 @@ public class TemplateElementSolrAdapter {
   public void setRequieredFieldsForTemplate(SolrSearchEngine engine, Collection collection,
       TemplateElement searchElement, SolrQuery query, FieldAttribute attribute) {
     
-    searchElement.setIdField(collection.getIdFieldName());
 
     // TODO check if template has a template. if not ask for all fields.
     if (query.getFields() == null) {
-      query.setFields("score", "[shard]",collection.getIdFieldName());
+      query.setFields("score", "[shard]",searchElement.getIdField());
     }
 
     Set<String> fields = searchElement.getRequiredFields();
@@ -75,7 +75,8 @@ public class TemplateElementSolrAdapter {
 
   @SearchAdapterMethod(execute = Time.POST)
   public void generateHitElementsForTemplate(TemplateElement element,
-      QueryResponse response, FieldAttribute attribute, Collection collection) {
+      QueryResponse response, FieldAttribute attribute, Collection collection,
+      SearchCollector collector) {
 
     LOGGER.debug("Search for ID Attribute. {} Got: {} Needed: {}", (!attribute
         .getField().getKey().equalsIgnoreCase(element.getIdField())), attribute
@@ -120,10 +121,10 @@ public class TemplateElementSolrAdapter {
       }
 
       // And we collect the hit for future use :)
-      //collector.getCollectedItems(element.getCollectorKey()).add(hit);
-      if(!element.getHits().contains(hit)){
-        element.getHits().add(hit);
-      }
+      collector.getCollectedItems(element.getCollectorKey()).add(hit);
+//      if(!element.getHits().contains(hit)){
+//        element.getHits().add(hit);
+//      }
     }
   }
 }

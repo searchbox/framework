@@ -87,9 +87,8 @@ public class SearchElementService {
           .getSearchElements(PresetEntity.DEFAULT_PROCESS));
       elementEntities.addAll(child.getSearchElements(process));
       for (SearchElementEntity<?> elementEntity : elementEntities) {
-        SearchElement searchElement = this.getSearchElement(elementEntity);
-        if (preset.getInheritedTypes().contains(searchElement.getType())) {
-          searchElements.add(searchElement);
+        if (preset.getInheritedTypes().contains(elementEntity.getClazz())) {
+          searchElements.add(this.getSearchElement(elementEntity));
         }
       }
     }

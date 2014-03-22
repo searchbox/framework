@@ -216,6 +216,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicHit.jspx")
           .setProcess("search")
           .end()
@@ -225,6 +226,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setLabel("leftCol")
           .setProcess("view")
           .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicViewMeta.jspx")
 	  .end()
 	  
@@ -233,6 +235,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setLabel("body")
           .setProcess("view")
           .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicView.jspx")
           .end()
           
@@ -354,7 +357,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
    
       //LOGGER.info("++ Creating Cooperation preset");
       //searchbox.newPreset()
-      .newChildPreset(true, SearchElement.Type.FACET)
+      .newChildPreset(true, FieldFacet.class, TemplateElement.class)
         .setCollection(eenCollection)
         .setDescription("EEN cooperations")
         .setLabel("EEN")
@@ -436,7 +439,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * 
        */
       
-      .newChildPreset(true, Type.FACET)
+      .newChildPreset(true,  FieldFacet.class, TemplateElement.class)
         .setCollection(idealistCollection)
         .setSlug("idealist")
         .setLabel("Ideal-IST")

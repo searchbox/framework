@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +37,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.SearchCollector;
 import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.SearchableCollection;
@@ -47,7 +45,6 @@ import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.RetryElement;
 import com.searchbox.framework.model.FieldAttributeEntity;
 import com.searchbox.framework.model.PresetEntity;
-import com.searchbox.framework.model.SearchElementEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -223,7 +220,7 @@ public class SearchboxController {
     Set<SearchElement> resultElements = searchService.execute(searchEngine,
         collection, searchElements, fieldAttributes, conditions, collector);
 
-    LOGGER.info("Resulting SearchElements are {}",resultElements);
+    LOGGER.debug("Resulting SearchElements are {}",resultElements);
     
     // Check if we have a retry clause
     boolean retry = false;

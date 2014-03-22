@@ -38,10 +38,6 @@ import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import test.searchbox.core.search.SearchElementTest;
-
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -82,9 +78,8 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<SearchElementEntity<?>> searchElements;
   
-  @Enumerated(EnumType.STRING)
-  @ElementCollection(fetch=FetchType.EAGER, targetClass=SearchElement.Type.class)
-  private List<SearchElement.Type> inheritedTypes;
+  @ElementCollection(fetch=FetchType.EAGER)
+  private List<Class<?>> inheritedTypes;
   
   private Boolean inheritFieldAttributes;
 
@@ -119,11 +114,11 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   // }
   // }
 
-  public List<SearchElement.Type> getInheritedTypes() {
+  public List<Class<?>> getInheritedTypes() {
     return inheritedTypes;
   }
 
-  public PresetEntity setInheritedTypes(List<SearchElement.Type> inheritedTypes) {
+  public PresetEntity setInheritedTypes(List<Class<?>> inheritedTypes) {
     this.inheritedTypes = inheritedTypes;
     return this;
   }
@@ -363,6 +358,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return newSearchElement()
         .setClazz(TemplateElement.class)
         .setAttribute("titleField", titleFieldName)
+        .setAttribute("idField", collection.getIdFieldName())
         .setAttribute("templateFile", templateFile);
   }
 
@@ -411,7 +407,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return this.getSearchbox();
   }
 
-  public PresetEntity newChildPreset(boolean inheritFieldAttributes, Type... inheritedTypes) {
+  public PresetEntity newChildPreset(boolean inheritFieldAttributes, Class<?>... inheritedTypes) {
     this.setInheritFieldAttributes(inheritFieldAttributes);
     this.setInheritedTypes(Arrays.asList(inheritedTypes));
     return new PresetEntity()
