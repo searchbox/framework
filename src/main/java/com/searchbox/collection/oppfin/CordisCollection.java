@@ -149,8 +149,7 @@ public class CordisCollection extends AbstractBatchCollection implements
         LOGGER.info("Processing cordis {}", item.get("id"));
         FieldMap doc = new FieldMap();
         
-        doc.put("docSource", "cordis");
-        doc.put("docSource_ss", "Cordis");
+        doc.put("docSource", "Cordis");
         doc.put("docType", "Cordis");
         doc.put("programme", item.get("program"));
 
