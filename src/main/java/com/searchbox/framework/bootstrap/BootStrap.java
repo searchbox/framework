@@ -37,6 +37,7 @@ import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
 import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -337,6 +338,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setClazz(TemplateElement.class)
           .setLabel("MergedTemplate")
           .end()
+        .addPagingElement()
  
         
 
@@ -426,7 +428,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addPagingElement()
         .addDebugElement()
         .endChild()
-      .end();
          
 
       /**
@@ -435,7 +436,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * 
        */
       
-      searchbox.newPreset()
+      .newChildPreset(true, Type.FACET)
         .setCollection(idealistCollection)
         .setSlug("idealist")
         .setLabel("Ideal-IST")
@@ -485,7 +486,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           
         .addPagingElement()
         .addDebugElement()
-        .end();
+        .endChild()
+       .end();
           
       /**
        * 
