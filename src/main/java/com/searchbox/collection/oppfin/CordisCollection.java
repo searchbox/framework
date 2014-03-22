@@ -66,6 +66,7 @@ public class CordisCollection extends AbstractBatchCollection implements
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
+    fields.add(new Field(String.class, "docSource"));
     fields.add(new Field(String.class, "cordisId"));
     fields.add(new Field(String.class, "cordisTag"));
     fields.add(new Field(Integer.class, "cordisStartYear"));
@@ -149,6 +150,7 @@ public class CordisCollection extends AbstractBatchCollection implements
         FieldMap doc = new FieldMap();
         
         doc.put("docSource", "cordis");
+        doc.put("docSource_ss", "Cordis");
         doc.put("docType", "Cordis");
         doc.put("programme", item.get("program"));
 
