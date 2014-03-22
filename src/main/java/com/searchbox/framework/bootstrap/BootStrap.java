@@ -36,6 +36,7 @@ import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -333,12 +334,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setLabel("Cooperations")
         .addQueryElement()
         .addStatElement()
+        .addFieldFacet("Source", "docSource")
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setLabel("MergedTemplate")
           .end()
         .addDebugElement()
-        .end();
+ 
         
 
       
@@ -351,8 +353,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        */
      
    
-      LOGGER.info("++ Creating Cooperation preset");
-      searchbox.newPreset()
+      //LOGGER.info("++ Creating Cooperation preset");
+      //searchbox.newPreset()
+      .newChildPreset(true, SearchElement.Type.FACET)
         .setCollection(eenCollection)
         .setDescription("EEN cooperations")
         .setLabel("EEN")
@@ -426,7 +429,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           
         .addPagingElement()
         .addDebugElement()
-        .end();
+        .endChild()
+      .end();
          
 
       /**
@@ -465,8 +469,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
 
-//
-//      
 //      /** Facets for the presetIdealist. */
 //     /**
 //      * - Cooperation Source

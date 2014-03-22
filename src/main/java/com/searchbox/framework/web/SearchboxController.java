@@ -210,6 +210,15 @@ public class SearchboxController {
     for (FieldAttributeEntity def : preset.getFieldAttributes()) {
       fieldAttributes.add(def.build());
     }
+    
+    //Inheritence of FieldAttribute for children
+    if(!preset.getChildren().isEmpty() && preset.getInheritFieldAttributes()){
+      for(PresetEntity child:preset.getChildren()){
+        for (FieldAttributeEntity def : child.getFieldAttributes()) {
+          fieldAttributes.add(def.build());
+        } 
+      }
+    }
 
     SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
         .build();

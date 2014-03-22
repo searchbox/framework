@@ -15,20 +15,31 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.Preset;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -52,13 +63,14 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @ManyToOne
   private SearchboxEntity searchbox;
 
-  @ManyToOne
+  @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   @LazyCollection(LazyCollectionOption.FALSE)
   private PresetEntity parent;
 
   @OneToMany(targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
-  Set<PresetEntity> children;
+  @SortNatural
+  private SortedSet<PresetEntity> children;
 
   @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
   @LazyCollection(LazyCollectionOption.FALSE)
@@ -67,6 +79,12 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @OneToMany(targetEntity = SearchElementEntity.class, mappedBy = "preset", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<SearchElementEntity<?>> searchElements;
+  
+  @Enumerated(EnumType.STRING)
+  @ElementCollection(fetch=FetchType.EAGER, targetClass=SearchElement.Type.class)
+  private List<SearchElement.Type> inheritedTypes;
+  
+  private Boolean inheritFieldAttributes;
 
   private String slug;
 
@@ -83,9 +101,12 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   private Set<FieldAttributeEntity> fieldAttributes;
 
   public PresetEntity() {
-    searchElements = new TreeSet<SearchElementEntity<?>>();
-    fieldAttributes = new HashSet<FieldAttributeEntity>();
+    this.searchElements = new TreeSet<>();
+    this.fieldAttributes = new HashSet<>();
+    this.children = new TreeSet<>();
+    this.inheritedTypes = new ArrayList<>();
   }
+  
 
   // @PostLoad
   // public void postLoad() {
@@ -95,6 +116,25 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   // }
   // }
   // }
+
+  public List<SearchElement.Type> getInheritedTypes() {
+    return inheritedTypes;
+  }
+
+  public PresetEntity setInheritedTypes(List<SearchElement.Type> inheritedTypes) {
+    this.inheritedTypes = inheritedTypes;
+    return this;
+  }
+
+  public Boolean getInheritFieldAttributes() {
+    return inheritFieldAttributes;
+  }
+
+  public PresetEntity setInheritFieldAttributes(Boolean inheritFieldAttributes) {
+    this.inheritFieldAttributes = inheritFieldAttributes;
+    return this;
+  }
+
 
   public String getDefaultProcess() {
     return defaultProcess;
@@ -153,15 +193,16 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return parent;
   }
 
-  public void setParent(PresetEntity parent) {
+  public PresetEntity setParent(PresetEntity parent) {
     this.parent = parent;
+    return this;
   }
 
-  public Set<PresetEntity> getChildren() {
+  public SortedSet<PresetEntity> getChildren() {
     return children;
   }
 
-  public void setChildren(Set<PresetEntity> children) {
+  public void setChildren(SortedSet<PresetEntity> children) {
     this.children = children;
   }
 
@@ -345,9 +386,26 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
         .setProcess(DEFAULT_PROCESS);
   }
 
+  
+  public PresetEntity endChild(){
+    this.searchbox.getPresets().add(this);
+    this.getParent().getChildren().add(this);
+    return this.getParent();
+  }
+  
   public SearchboxEntity end() {
     this.searchbox.getPresets().add(this);
     return this.getSearchbox();
+  }
+
+  public PresetEntity newChildPreset(boolean inheritFieldAttributes, Type... inheritedTypes) {
+    this.setInheritFieldAttributes(inheritFieldAttributes);
+    this.setInheritedTypes(Arrays.asList(inheritedTypes));
+    return new PresetEntity()
+      .setParent(this)
+      .setSearchbox(this.getSearchbox())
+      //Position the preset per parent.
+      .setPosition(this.getPosition()*10+(this.getChildren().size()+1));
   }
 
 
