@@ -68,7 +68,7 @@ public class SearchElementService {
 
     // Filter on the elements that we want for the process
     for (SearchElementEntity<?> elementEntity : elementEntities) {
-      LOGGER.info("Adding SearchElementDefinition: {}", elementEntity);
+      LOGGER.debug("Adding SearchElementDefinition: {}", elementEntity);
       try {
         SearchElement searchElement = this.getSearchElement(elementEntity);
 
