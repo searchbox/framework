@@ -6,9 +6,13 @@
 
  <jsp:output omit-xml-declaration="yes" />
 
- <c:forEach
-  items="${collector.getCollectedItems(element.getCollectorKey())}"
-  var="hit">
+<c:if test="${not empty collector.getCollectedItems(element.getCollectorKey())}">
+<c:forEach begin="0" 
+  end="${collector.getCollectedItems(element.getCollectorKey()).size()-1}" 
+  varStatus="loop">
+
+  <c:set var="hit" value="${collector.getCollectedItems(element.getCollectorKey()).poll()}"/>
+  
   <c:set var="displayTemplate" value="${hit.getDisplayTemplate()}" />
   <c:catch var="includeException">
    <c:set scope="request" var="hit" value="${hit }" />
@@ -37,6 +41,7 @@
    </div>
   </c:if>
  </c:forEach>
+</c:if>
 
 
 </jsp:root>
