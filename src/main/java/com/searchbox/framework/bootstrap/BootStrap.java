@@ -335,15 +335,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setSlug("cooperations")
         .setLabel("Cooperations")
         .addQueryElement()
+        .addDebugElement()
         .addStatElement()
         .addFieldFacet("Cooperation Source", "docSource")
-        .newSearchElement()
-          .setClazz(TemplateElement.class)
-          .setLabel("MergedTemplate")
-          .end()
         .addPagingElement()
- 
-        
 
       
          
