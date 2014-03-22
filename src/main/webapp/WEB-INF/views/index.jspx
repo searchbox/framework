@@ -274,9 +274,9 @@
            <tr>
             <th></th>
             <th>description</th>
+            <th>Impl</th>
             <th>searchEngine</th>
             <th>presets</th>
-            <th>options</th>
            </tr>
           </thead>
           <tbody>
@@ -285,6 +285,7 @@
             <tr>
              <td>${item.count }</td>
              <td>${collection.name }</td>
+             <td>${collection.getClazz().getSimpleName() }</td>
              <td>${collection.searchEngine.name }</td>
              <c:forEach items="${collection.presets }" var="cpreset">
               <spring:url
@@ -292,7 +293,6 @@
                var="plink" />
               <td><a href="${plink}">${cpreset.label }</a></td>
              </c:forEach>
-             <td>options here</td>
             </tr>
            </c:forEach>
           </tbody>
