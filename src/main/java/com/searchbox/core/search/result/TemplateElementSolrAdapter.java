@@ -91,6 +91,12 @@ public class TemplateElementSolrAdapter {
     Iterator<SolrDocument> documents = response.getResults().iterator();
     while (documents.hasNext()) {
       SolrDocument document = documents.next();
+      
+      //This says it is not ours to handle! 
+      if(document.getFirstValue(element.getIdField()) == null){
+        continue;
+      }
+      
       Hit hit = new Hit((Float) document.get("score"));
 
       // Set fields per element configuration
