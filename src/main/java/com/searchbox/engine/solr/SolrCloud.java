@@ -412,14 +412,16 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   @Override
   public String getUrlBase(Collection collection) {
     String urlBase = null;
-    
+    String collectionName = collection.getName();
     LOGGER.debug("Getting URL base for {}",collection);
-    
+    if(MultiCollection.class.isAssignableFrom(collection.getClass())){
+      collectionName = ((MultiCollection)collection).getCollections().get(0);
+    }
     try {
       ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer(null))
           .getZkStateReader();
       java.util.Collection<Slice> slices = zkSateReader.getClusterState()
-          .getActiveSlices(collection.getName());
+          .getActiveSlices(collectionName);
 
       String baseUrl = "";
       for (Slice slice : slices) {
@@ -429,7 +431,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
         LOGGER.debug("Leader's node name: {}", nodeName);
         LOGGER.debug("Base URL for node: {}", baseUrl);
       }
-      urlBase += "/" + collection.getName();
+      urlBase += "/" + collectionName;
     } catch (Exception e) {
       LOGGER.error("Could not read from ZK to get urlBase", e);
     }
