@@ -133,7 +133,7 @@ public class SearchboxController {
     model.setViewName(this.getViewFolder() + "/home");
 
     // TODO when security is true, check LoggedIn
-    PresetEntity preset = searchbox.getPresets().get(0);
+    PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
         + searchbox.getSlug() + "/" + preset.getSlug(), true));

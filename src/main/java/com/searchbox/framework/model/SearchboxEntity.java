@@ -15,10 +15,11 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.SortNatural;
 
 import com.searchbox.framework.domain.UserRole;
 
@@ -59,14 +61,17 @@ public class SearchboxEntity extends BaseEntity<Long>
 
   @OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
-  private List<PresetEntity> presets = new ArrayList<PresetEntity>();
+  @SortNatural
+  private SortedSet<PresetEntity> presets;
 
   @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
   @MapKey(name = "user")
-  private Map<UserEntity, UserRole> userRoles = new HashMap<UserEntity, UserRole>();
+  private Map<UserEntity, UserRole> userRoles; 
 
   public SearchboxEntity() {
+    this.presets = new TreeSet<>();
+    this.userRoles = new HashMap<>();
   }
 
   public Privacy getPrivacy() {
@@ -113,11 +118,11 @@ public class SearchboxEntity extends BaseEntity<Long>
     return this;
   }
 
-  public List<PresetEntity> getPresets() {
+  public SortedSet<PresetEntity> getPresets() {
     return presets;
   }
 
-  public void setPresets(List<PresetEntity> presets) {
+  public void setPresets(SortedSet<PresetEntity> presets) {
     this.presets = presets;
   }
 
