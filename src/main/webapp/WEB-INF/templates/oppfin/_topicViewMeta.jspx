@@ -38,7 +38,4 @@
   <sbx:tagAttribute limit="1" label="Call Budget"
     values="${hit.fieldValues['callTotalBudget']}" />
 
- <sbx:tagAttribute limit="1" label="Call Description"
-    values="${hit.fieldValues['callDescriptionRaw']}" />
-
 </jsp:root>
