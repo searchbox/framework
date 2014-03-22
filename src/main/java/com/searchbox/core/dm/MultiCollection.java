@@ -33,7 +33,7 @@ public class MultiCollection implements Collection, SearchableCollection {
   protected String description;
 
   @SearchAttribute
-  protected List<Collection> collections = new ArrayList<Collection>();
+  protected List<String> collections = new ArrayList<>();
 
   @SearchAttribute
   protected String idFieldName;
@@ -71,11 +71,11 @@ public class MultiCollection implements Collection, SearchableCollection {
     this.description = description;
   }
 
-  public List<Collection> getCollections() {
+  public List<String> getCollections() {
     return collections;
   }
 
-  public void setCollections(List<Collection> collections) {
+  public void setCollections(List<String> collections) {
     this.collections = collections;
   }
 

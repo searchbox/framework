@@ -111,8 +111,8 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     String adminUrl = getAdminURL();
     LOGGER.info("Using Solr Base URL: {}", adminUrl);
     Set<String> collectionList = new TreeSet<String>();
-    for(Collection coll:collection.getCollections()){
-      collectionList.add(coll.getName());
+    for(String alias:collection.getCollections()){
+      collectionList.add(alias);
     }
     String createAlias = adminUrl+"/collections"
         +"?action=CREATEALIAS&name="+collection.getName()

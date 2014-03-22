@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
@@ -36,7 +37,6 @@ import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
 import com.searchbox.framework.model.FieldAttributeEntity;
 import com.searchbox.framework.model.PresetEntity;
-import com.searchbox.framework.model.SearchEngineEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
@@ -72,14 +72,20 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   }
 
   public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
+    
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectionEntity.build();
+    
     if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
       SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
+      
       if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
         LOGGER.info("Register Searchengine Configuration for \""
             + collection.getName() + "\"");
         ((ManagedSearchEngine) engine).register(collection);
+      }
+      
+      if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
         LOGGER.info("Starting DM synchronization for \"" + collection.getName()
             + "\"");
         for (PresetEntity presetDef : collectionEntity.getPresets()) {
@@ -90,7 +96,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
           }
           ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
         }
-      }
+      } 
     }
     return result;
   }

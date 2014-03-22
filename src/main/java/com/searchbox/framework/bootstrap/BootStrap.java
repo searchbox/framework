@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.hibernate.persister.walking.spi.CollectionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.debug.SolrToString;
@@ -51,7 +51,6 @@ import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
-import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.model.SearchEngineEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.model.UserEntity;
@@ -288,15 +287,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        
        
        
-       
       
-         
+      
+      
       /**
        * 
-       * EEN preset
+       * Cooperation preset
        * 
        * 
        */
+      
       LOGGER.info("++ Creating oppfin EEN Collection");
       CollectionEntity<?> eenCollection = new CollectionEntity<>()
           .setClazz(EENCollection.class)
@@ -305,6 +305,51 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setIdFieldName("eenReferenceExternal")
           .setSearchEngine(engine);
       eenCollection = collectionRepository.save(eenCollection);
+      
+      /** The base collection for idealist */
+      LOGGER.info("++ Creating oppfin IDEALIST Collection");
+      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
+          .setClazz(IdealISTCollection.class)
+          .setName("idealistCooperations")
+          .setSearchEngine(engine)
+          .setAutoStart(false)
+          .setIdFieldName("uid");
+      idealistCollection = collectionRepository.save(idealistCollection);
+      
+      
+      
+      searchbox.newPreset()
+        .setCollection(collectionRepository.save(
+            new CollectionEntity<>()
+            .setClazz(MultiCollection.class)
+            .setName("cooperations")
+            .setSearchEngine(engine)
+            .setAttribute("collections", 
+                Arrays.asList(new String[]{
+                    eenCollection.getName(),
+                    idealistCollection.getName()
+                }))))
+        .setSlug("cooperations")
+        .setLabel("Cooperations")
+        .addQueryElement()
+        .addStatElement()
+        .newSearchElement()
+          .setClazz(TemplateElement.class)
+          .setLabel("MergedTemplate")
+          .end()
+        .addDebugElement()
+        .end();
+        
+
+      
+         
+      /**
+       * 
+       * EEN preset
+       * 
+       * 
+       */
+     
    
       LOGGER.info("++ Creating Cooperation preset");
       searchbox.newPreset()
@@ -390,17 +435,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * 
        */
       
-      
-      /** The base collection for idealist */
-      LOGGER.info("++ Creating oppfin IDEALIST Collection");
-      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
-          .setClazz(IdealISTCollection.class)
-          .setName("idealistCooperations")
-          .setSearchEngine(engine)
-          .setAutoStart(false)
-          .setIdFieldName("uid");
-      idealistCollection = collectionRepository.save(idealistCollection);
-      
       searchbox.newPreset()
         .setCollection(idealistCollection)
         .setSlug("idealist")
@@ -440,6 +474,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //      */
 
         .addQueryElement()
+        .addStatElement()
         .addTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
         .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistView.jspx")
           .setLabel("body")

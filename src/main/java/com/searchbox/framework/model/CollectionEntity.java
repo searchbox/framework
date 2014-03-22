@@ -35,13 +35,14 @@ import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.dm.SearchableCollection;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class CollectionEntity<K extends Collection> 
-  extends BeanFactoryEntity<Long> 
-  implements ParametrizedBeanFactory<K>, Comparable<CollectionEntity<K>> {
+public class CollectionEntity<K extends Collection> extends
+    BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
+    Comparable<CollectionEntity<K>> {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionEntity.class);
@@ -52,7 +53,7 @@ public class CollectionEntity<K extends Collection>
 
   private String description;
 
-  private Boolean autoStart;
+  private Boolean autoStart = false;
 
   private String idFieldName;
 
@@ -60,11 +61,11 @@ public class CollectionEntity<K extends Collection>
   @LazyCollection(LazyCollectionOption.FALSE)
   private SearchEngineEntity<?> searchEngine;
 
-  @OneToMany(mappedBy="collection", cascade=CascadeType.ALL)
+  @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<PresetEntity> presets;
 
-  @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @LazyCollection(LazyCollectionOption.FALSE)
   private Set<FieldEntity> fields;
 
@@ -98,9 +99,9 @@ public class CollectionEntity<K extends Collection>
     }
     LOGGER.info("Building Class for {}", this.getClazz());
     K collection = (K) super.build(this.getClazz());
-    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
-      ((SearchableCollection)collection).setSearchEngine(
-          this.searchEngine.build());
+    if (SearchableCollection.class.isAssignableFrom(collection.getClass())) {
+      ((SearchableCollection) collection).setSearchEngine(this.searchEngine
+          .build());
     }
     return collection;
   }
@@ -112,22 +113,25 @@ public class CollectionEntity<K extends Collection>
   @SuppressWarnings("unchecked")
   public CollectionEntity<K> setClazz(Class<?> clazz) {
     this.clazz = clazz;
-    try {
-      Method method = clazz.getMethod("GET_FIELDS");
-      if (method != null) {
-        List<Field> fields = (List<Field>) method.invoke(null);
-        for (Field field : fields) {
-          FieldEntity fieldDef = new FieldEntity(field.getClazz(),
-              field.getKey());
-          LOGGER.debug("Created FieldDef[{},{}]",field.getClazz().getSimpleName(), field.getKey());
-          if (!this.fields.contains(fieldDef)) {
-            LOGGER.trace("Adding FieldDef[{},{}]",field.getClazz().getSimpleName(), field.getKey());
-            this.fields.add(fieldDef);
+    if (!MultiCollection.class.isAssignableFrom(clazz)) {
+      try {
+        Method method = clazz.getMethod("GET_FIELDS");
+        if (method != null) {
+          for (Field field :  (List<Field>) method.invoke(null)) {
+            FieldEntity fieldDef = new FieldEntity(field.getClazz(),
+                field.getKey());
+            LOGGER.debug("Created FieldDef[{},{}]", field.getClazz()
+                .getSimpleName(), field.getKey());
+            if (!this.fields.contains(fieldDef)) {
+              LOGGER.trace("Adding FieldDef[{},{}]", field.getClazz()
+                  .getSimpleName(), field.getKey());
+              this.fields.add(fieldDef);
+            }
           }
         }
+      } catch (Exception e) {
+        LOGGER.warn("Could not use GET_FIELD method on collection: {}", name);
       }
-    } catch (Exception e) {
-      LOGGER.warn("Could not use GET_FIELD method on collection: " + name, e);
     }
     return this;
   }
@@ -195,7 +199,6 @@ public class CollectionEntity<K extends Collection>
 
   @Override
   public int compareTo(CollectionEntity<K> o) {
-    return this.getName().compareTo(
-        o.getName());
+    return this.getName().compareTo(o.getName());
   }
 }

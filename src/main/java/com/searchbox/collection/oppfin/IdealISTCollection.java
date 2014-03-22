@@ -255,7 +255,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
           document, XPathConstants.NODESET);
 
       for (int i = 0; i < nodeList.getLength(); i++) {
-        String value = nodeList.item(i).getTextContent();
+        String value = nodeList.item(i).getNodeValue();
         if(value.isEmpty()){
           continue;
         }

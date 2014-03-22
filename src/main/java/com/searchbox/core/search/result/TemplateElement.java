@@ -16,6 +16,7 @@
 package com.searchbox.core.search.result;
 
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ public class TemplateElement extends SearchElementBean implements UseCollector {
 
   private static final String COLLECTOR_KEY = "hits";
   private static final String DEFAUTL_TEMPLATE = "/WEB-INF/templates/_defaultHitView.jspx";
+  
+  private SortedSet<Hit> hits;
 
   @SearchAttribute
   protected Set<String> fields;
@@ -53,12 +56,14 @@ public class TemplateElement extends SearchElementBean implements UseCollector {
 
   public TemplateElement() {
     this("Template Element");
+    this.hits = new TreeSet<>();
   }
 
   public TemplateElement(String name) {
     this.setLabel(name);
     this.setType(SearchElement.Type.VIEW);
-    this.fields = new TreeSet<String>();
+    this.fields = new TreeSet<>();
+    this.hits = new TreeSet<>();
   }
 
   public boolean hasTempalte() {
@@ -77,6 +82,14 @@ public class TemplateElement extends SearchElementBean implements UseCollector {
       fields.add(urlField);
     }
     return fields;
+  }
+
+  public SortedSet<Hit> getHits() {
+    return hits;
+  }
+
+  public void setHits(SortedSet<Hit> hits) {
+    this.hits = hits;
   }
 
   public void setTemplateFile(String templateFile) {
