@@ -236,7 +236,6 @@ public class SearchboxController {
       resultElements = searchService.execute(searchEngine, collection,
           searchElements, fieldAttributes, conditions, collector);
     }
-    collector.getCollectedItems("test").add("Hello mademoiselle");
     return resultElements;
   }
 }
