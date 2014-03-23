@@ -6,15 +6,12 @@
 
  <jsp:output omit-xml-declaration="yes" />
 
- <c:set var="jqueryVersion" value="2.0.3" />
  <c:set var="jqueryUIVersion" value="1.10.4" />
 
   <sb:twitter-bootstrap />
 
 
- <spring:url
-  value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
-  var="jquery_url" />
+
  <spring:url
   value="http://ajax.googleapis.com/ajax/libs/jqueryui/${jqueryUIVersion }/jquery-ui.min.js"
   var="jqueryui_js_url" />
@@ -48,7 +45,6 @@
 	</c:set>
 	-->
 
- <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
  <script src="${jqueryui_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
  <script src="${jquery_purl}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
  <script src="${searchbox_js_url }" type="text/javascript"><!-- /required for FF3 and Opera --></script>
