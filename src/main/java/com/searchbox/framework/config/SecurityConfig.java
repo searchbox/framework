@@ -64,9 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       http
       // Configures form login
       .formLogin()
-          .loginPage("/")
+          .loginPage("/login")
           .loginProcessingUrl("/login/authenticate")
-          .failureUrl("/?error=bad_credentials")
+          .failureUrl("/login?error=bad_credentials")
           // Configures the logout function
           .and()
           .logout()
@@ -77,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .and()
           .authorizeRequests()
           // Anyone can access the urls
-          .antMatchers("/", "/auth/**", "/login/**", "/signin/**",
+          .antMatchers("/*","/auth/**", "/login/**", "/signin/**",
               "/signup/**", "/user/register/**").permitAll()
           // The admin part is protected
-          .antMatchers("/system/**").hasAnyRole("SYSTEM")
+          .antMatchers("/", "/system/**").hasAnyRole("SYSTEM")
           // The admin part is protected
           .antMatchers("/*/admin/**").hasAnyRole("SYSTEM", "ADMIN")
           // The rest of the our application is protected.

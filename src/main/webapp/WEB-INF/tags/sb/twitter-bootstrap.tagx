@@ -1,0 +1,35 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  xmlns:spring="http://www.springframework.org/tags" version="2.0">
+
+  <jsp:output omit-xml-declaration="yes" />
+
+  <c:set var="bootstrapVersion" value="3.1.1" />
+  <c:set var="jqueryVersion" value="2.0.3" />
+  
+
+  <spring:url
+    value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap.min.css"
+    var="bootstrap_css_url" />
+
+  <spring:url
+    value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/css/bootstrap-theme.min.css"
+    var="bootstrap_theme_css_url" />
+
+  <spring:url
+    value="http://ajax.googleapis.com/ajax/libs/jquery/${jqueryVersion }/jquery.min.js"
+    var="jquery_url" />
+
+  <spring:url
+    value="http://netdna.bootstrapcdn.com/bootstrap/${bootstrapVersion }/js/bootstrap.js"
+    var="bootstrap_js_url" />
+
+  <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+  <link rel="stylesheet" type="text/css"
+    href="${bootstrap_theme_css_url}" />
+
+  <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${bootstrap_js_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
+
+</jsp:root>

@@ -67,7 +67,7 @@ body #main-content {
 }
 
 @media ( max-width : 768px) {
- #result-list .label-tag {
+ .result-list .label-tag {
   display: list-item;
   margin-bottom: 5px;
  }
@@ -196,8 +196,6 @@ input:focus,textarea:focus {
  padding-right: 0px;
  padding-bottom: 40px;
  border-bottom: 1px solid #BCBCBC;
- /*background: url("/img/texture-white.png") repeat scroll 0 0
-		rgba(0, 0, 0, 0);*/
  background-color: #f5f5f5;
 }
 
