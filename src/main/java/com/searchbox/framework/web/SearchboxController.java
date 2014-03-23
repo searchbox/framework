@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,16 +36,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.SearchCollector;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.RetryElement;
-import com.searchbox.core.search.SearchElement;
-import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.SearchElementDefinition;
-import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.model.FieldAttributeEntity;
+import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchElementService;
@@ -82,9 +81,9 @@ public class SearchboxController {
   }
 
   @ModelAttribute("searchboxes")
-  public List<Searchbox> getAllSearchboxes() {
-    ArrayList<Searchbox> searchboxes = new ArrayList<Searchbox>();
-    Iterator<Searchbox> sbx = searchboxRepository.findAll().iterator();
+  public List<SearchboxEntity> getAllSearchboxes() {
+    ArrayList<SearchboxEntity> searchboxes = new ArrayList<SearchboxEntity>();
+    Iterator<SearchboxEntity> sbx = searchboxRepository.findAll().iterator();
     while (sbx.hasNext()) {
       searchboxes.add(sbx.next());
     }
@@ -92,7 +91,7 @@ public class SearchboxController {
   }
 
   @ModelAttribute("presets")
-  public List<PresetDefinition> getAllPresets(@PathVariable Searchbox searchbox) {
+  public List<PresetEntity> getAllPresets(@PathVariable SearchboxEntity searchbox) {
     return presetRepository.findAllBySearchbox(searchbox);
   }
 
@@ -127,24 +126,22 @@ public class SearchboxController {
 
   @RequestMapping(value = { "", "/" })
   @ResponseBody
-  public ModelAndView getHome(@PathVariable Searchbox searchbox,
+  public ModelAndView getHome(@PathVariable SearchboxEntity searchbox,
       HttpServletRequest request, ModelAndView model,
       RedirectAttributes redirectAttributes) {
     model.setViewName(this.getViewFolder() + "/home");
 
-    
-    return model;
     // TODO when security is true, check LoggedIn
-    /*PresetDefinition preset = searchbox.getPresets().get(0);
+    PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
         + searchbox.getSlug() + "/" + preset.getSlug(), true));
-    return redirect;*/
+    return redirect;
   }
 
   @RequestMapping(value = { "/{preset}", "/{preset}/" })
-  public ModelAndView getDefaultPreset(@PathVariable Searchbox searchbox,
-      HttpServletRequest request, @PathVariable PresetDefinition preset,
+  public ModelAndView getDefaultPreset(@PathVariable SearchboxEntity searchbox,
+      HttpServletRequest request, @PathVariable PresetEntity preset,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
     String process = preset.getDefaultProcess();
@@ -159,8 +156,8 @@ public class SearchboxController {
 
   @RequestMapping(value = { "/{preset}/{process}", "/{preset}/{process}/" })
   public ModelAndView executeSearch(@PathVariable String process,
-      @ModelAttribute("searchboxes") List<Searchbox> searchboxes,
-      @PathVariable Searchbox searchbox, @PathVariable PresetDefinition preset,
+      @ModelAttribute("searchboxes") List<SearchboxEntity> searchboxes,
+      @PathVariable SearchboxEntity searchbox, @PathVariable PresetEntity preset,
       @ModelAttribute("collector") SearchCollector collector,
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
       ModelAndView model, RedirectAttributes redirectAttributes) {
@@ -181,50 +178,51 @@ public class SearchboxController {
 
     return model;
   }
-
-  protected Set<SearchElement> executeRequest(Searchbox searchbox,
-      PresetDefinition preset, String process,
-      Set<AbstractSearchCondition> conditions, SearchCollector collector) {
-
-    Set<SearchElementDefinition> searchElementDefinitions = new TreeSet<SearchElementDefinition>();
-    searchElementDefinitions.addAll(preset
-        .getSearchElements(PresetDefinition.DEFAULT_PROCESS));
-    searchElementDefinitions.addAll(preset.getSearchElements(process));
-
-    // Build the Preset DTO with dependancies
-    Set<SearchElement> searchElements = new TreeSet<SearchElement>();
-
-    // Filter on the elements that we want for the process
-    for (SearchElementDefinition elementdefinition : searchElementDefinitions) {
-      LOGGER.debug("Adding SearchElementDefinition: {}", elementdefinition);
-      try {
-        SearchElement searchElement = elementService
-            .getSearchElement(elementdefinition);
-        LOGGER.trace("Adding SearchElementDefinition: {}", searchElement);
-        searchElements.add(searchElement);
-      } catch (Exception e) {
-        LOGGER
-            .error("Could not get SearchElement for: " + elementdefinition, e);
+  
+  private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
+    Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
+    for (FieldAttributeEntity def : preset.getFieldAttributes()) {
+      fieldAttributes.add(def.build());
+    }
+    
+    //Inheritence of FieldAttribute for children
+    if(!preset.getChildren().isEmpty() && preset.getInheritFieldAttributes()){
+      for(PresetEntity child:preset.getChildren()){
+        for (FieldAttributeEntity def : child.getFieldAttributes()) {
+          fieldAttributes.add(def.build());
+        } 
       }
     }
+    return fieldAttributes;
+  }
 
-    Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-    for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
-      fieldAttributes.add(def.getInstance());
+  protected Set<SearchElement> executeRequest(SearchboxEntity searchbox,
+      PresetEntity preset, String process,
+      Set<AbstractSearchCondition> conditions, SearchCollector collector) {
+
+    Set<SearchElement> searchElements = elementService.getSearchElements(preset, process);
+    LOGGER.info("Required Search elements are {}", searchElements);
+    
+    Set<FieldAttribute> fieldAttributes = getAllFieldAttribute(preset);
+    
+    Collection collection = preset.getCollection().build();
+    
+    if(!(SearchableCollection.class.isAssignableFrom(collection.getClass()))){
+      LOGGER.error("Collection {} does NOT implement SearchableCollection!!!",
+          collection.getName());
     }
-
-    SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
-        .getInstance();
-    Collection collection = preset.getCollection().getInstance();
+    
+    SearchEngine<?, ?> searchEngine = ((SearchableCollection)collection).getSearchEngine();
     
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
-    LOGGER.info("Current Collection: {}", collection);
+    LOGGER.debug("Current Collection: {}", collection);
 
     Set<SearchElement> resultElements = searchService.execute(searchEngine,
         collection, searchElements, fieldAttributes, conditions, collector);
 
+    LOGGER.debug("Resulting SearchElements are {}",resultElements);
+    
     // Check if we have a retry clause
-    // TODO put the rety in collector.
     boolean retry = false;
     for (SearchElement element : resultElements) {
       if (RetryElement.class.isAssignableFrom(element.getClass())) {
@@ -238,7 +236,6 @@ public class SearchboxController {
       resultElements = searchService.execute(searchEngine, collection,
           searchElements, fieldAttributes, conditions, collector);
     }
-    collector.getCollectedItems("test").add("Hello mademoiselle");
     return resultElements;
   }
 }

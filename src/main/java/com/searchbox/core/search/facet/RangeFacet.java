@@ -17,9 +17,9 @@ package com.searchbox.core.search.facet;
 
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElementWithValues;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.ValueElement;
 
 @SearchComponent

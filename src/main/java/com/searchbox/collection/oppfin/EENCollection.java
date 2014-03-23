@@ -38,7 +38,6 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 
 import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.collection.ExpiringDocuments;

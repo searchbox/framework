@@ -16,9 +16,9 @@
 package com.searchbox.framework.bootstrap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -37,6 +36,9 @@ import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElement.Type;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.debug.SolrToString;
@@ -47,17 +49,13 @@ import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.SolrCloud;
-import com.searchbox.framework.config.RootConfiguration;
-import com.searchbox.framework.domain.CollectionDefinition;
-import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.SearchElementDefinition;
-import com.searchbox.framework.domain.SearchEngineDefinition;
-import com.searchbox.framework.domain.Searchbox;
-import com.searchbox.framework.domain.User;
 import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.event.SearchboxReady;
+import com.searchbox.framework.model.CollectionEntity;
+import com.searchbox.framework.model.SearchEngineEntity;
+import com.searchbox.framework.model.SearchboxEntity;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -107,25 +105,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     BOOTSTRAPED = true;
 
     if (defaultData) {
-
-      LOGGER.info("Creating Default Users...");
-      User system = userService.registerNewUserAccount("system", "password");
-      User admin = userService.registerNewUserAccount("admin", "password");
-      User user = userService.registerNewUserAccount("user", "password");
-
-      LOGGER.info("Bootstraping application with oppfin data...");
-
-      /** The base Searchbox. */
-      LOGGER.info("++ Creating oppfin searchbox");
-      Searchbox searchbox = new Searchbox("oppfin",
-          "Opportunity Finder Searchbox");
-
-      /** The embedded Solr SearchEngine */
+      
+      /** 
+       * The embedded Solr SearchEngine
+       */
       LOGGER.info("++ Creating Embedded Solr Engine");
-      SearchEngineDefinition engine = null;
+      SearchEngineEntity<?> engine = null;
       try {
-        engine = new SearchEngineDefinition(SolrCloud.class, "Local SolrCloud");
-        engine.setAttributeValue("zkHost", "localhost:9983");
+        engine = new SearchEngineEntity<>()
+          .setClazz(SolrCloud.class)
+          .setName("Local SolrCloud")
+          .setAttribute("zkHost", "localhost:9983");
 
         // engine = new
         // SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
@@ -135,644 +125,474 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         LOGGER.error("Could not set definition for SolrEmbededServer", e);
       }
 
-      /**
-       * - Search All - Project Funding (Topics) - Cooperations - Funded
-       * projects (Mêmes données qu'avant, même layout)
-       * 
-       * 
-       * 
-       * Search All - Facets - Programme (H2020, ...) - Opportunity Type
-       * (docType) - Hitlist - Filtres: All but funded projects - Pas besoin de
-       * mettre "Contact information" - Normalement on a plus de mouse over
-       * 
-       * 
-       * Project Funding (Topics) - Facets - Call Identifier - Deadline (list of
-       * months) - Flags
-       * 
-       * - Hitlist - Filtres: docType=topic & callDeadline >= NOW - HitList -
-       * Title - Description - Tags: callDeadline, callIdentifier, callBudget (à
-       * confirmer par Francesco) - DetailView - Title - FullDescription (HTML
-       * si possible) - Left panel - Topic Identifier: topicIdentifier - Call
-       * Identifier: callIdentifier - Call Deadline: callDeadline (MMM DD, YYYY)
-       * - Further information: - Call (link CallIdentifier) - Topic (link
-       * topicIdentifier)
-       * 
-       * Cooperations (EEN connector / même layout, même template) - Mettre
-       * crawler à jour et faire layout en fonction
-       */
+      LOGGER.info("Creating Default Users...");
+      UserEntity system = userService.registerNewUserAccount("system", "password");
+      UserEntity admin = userService.registerNewUserAccount("admin", "password");
+      UserEntity user = userService.registerNewUserAccount("user", "password");
 
-      /**
-       * Topic preset
+      LOGGER.info("Bootstraping application with oppfin data...");
+
+      /** 
+       * The base Searchbox.
        */
+      LOGGER.info("++ Creating oppfin searchbox");
+      SearchboxEntity searchbox = new SearchboxEntity()
+        .setSlug("oppfin")
+        .setName("Opportunity Finder Searchbox");
+
 
       List<String> lang = new ArrayList<String>();
       lang.add("en");
 
-      /** The base collection for searchbox */
-      LOGGER.info("++ Creating oppfin Topic Collection");
-      CollectionDefinition topicsCollection = new CollectionDefinition(
-          TopicCollection.class, "H2020Topics");
-      topicsCollection.setIdFieldName("topicIdentifier");
-      topicsCollection.setAutoStart(false);
-      topicsCollection.setSearchEngine(engine);
-      topicsCollection = collectionRepository.save(topicsCollection);
-
-      LOGGER.info("++ Creating Topic preset");
-      PresetDefinition presetTopic = new PresetDefinition(topicsCollection);
-      presetTopic.setLabel("Project Funding");
-      presetTopic.setDescription("Project Funding (open calls)");
-      presetTopic.setSlug("topic");
-
-      FieldAttributeDefinition topicIdentifier = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("topicIdentifier"));
-      topicIdentifier.setAttributeValue("searchable", true);
-      topicIdentifier.setAttributeValue("spelling", true);
-      topicIdentifier.setAttributeValue("suggestion", true);
-      topicIdentifier.setAttributeValue("label", "Topic ID");
-      presetTopic.addFieldAttribute(topicIdentifier);
-      
-      FieldAttributeDefinition topicFileName = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("topicFileName"));
-      topicIdentifier.setAttributeValue("searchable", false);
-      topicIdentifier.setAttributeValue("spelling", false);
-      topicIdentifier.setAttributeValue("suggestion", false);
-      presetTopic.addFieldAttribute(topicFileName);
-          
-      FieldAttributeDefinition callIdentifier = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("callIdentifier"));
-      callIdentifier.setAttributeValue("searchable", true);
-      callIdentifier.setAttributeValue("spelling", true);
-      callIdentifier.setAttributeValue("suggestion", true);
-      callIdentifier.setAttributeValue("label", "Call ID");
-      presetTopic.addFieldAttribute(callIdentifier);
-
-      FieldAttributeDefinition fieldAttr = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("topicTitle"));
-      fieldAttr.setAttributeValue("searchable", true);
-      fieldAttr.setAttributeValue("highlight", true);
-      fieldAttr.setAttributeValue("spelling", true);
-      fieldAttr.setAttributeValue("label", "title");
-      fieldAttr.setAttributeValue("lang", lang);
-      presetTopic.addFieldAttribute(fieldAttr);
-
-      FieldAttributeDefinition fieldAttr2 = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("topicDescriptionRaw"));
-      fieldAttr2.setAttributeValue("searchable", true);
-      fieldAttr2.setAttributeValue("highlight", true);
-      fieldAttr2.setAttributeValue("spelling", true);
-      fieldAttr2.setAttributeValue("label", "description");
-      fieldAttr2.setAttributeValue("lang", lang);
-      presetTopic.addFieldAttribute(fieldAttr2);
-
-      FieldAttributeDefinition fieldAttr3 = new FieldAttributeDefinition(
-          topicsCollection.getFieldDefinition("callDeadline"));
-      fieldAttr3.setAttributeValue("sortable", true);
-      presetTopic.addFieldAttribute(fieldAttr3);
-
-      /** Create & add a querydebug SearchComponent to the preset; */
-      SearchElementDefinition querydebug = new SearchElementDefinition(
-          SolrToString.class);
-      presetTopic.addSearchElement(querydebug);
-
-      /** Create & add a query SearchComponent to the preset; */
-      SearchElementDefinition query = new SearchElementDefinition(
-          EdismaxQuery.class);
-      presetTopic.addSearchElement(query);
-
-      /** Create & add a TemplateElement SearchComponent to the preset; */
-      SearchElementDefinition TemplateElement = new SearchElementDefinition(
-          TemplateElement.class);
-      TemplateElement.setAttributeValue("titleField", "topicTitle");
-      TemplateElement.setAttributeValue("idField", "topicIdentifier");
-      TemplateElement.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_topicHit.jspx");
-      presetTopic.addSearchElement(TemplateElement, "search");
-          
-
-      /**
-       * Create & add another TemplateElement SearchComponent to the preset;
-       * SearchElementType can be overriden
+      /** 
+       * 
+       * Oppfin Collections
+       *  
        */
+      LOGGER.info("++ Creating oppfin Topic Collection");
+      CollectionEntity<?> topicsCollection = new CollectionEntity<>()
+        .setClazz(TopicCollection.class)
+        .setName("H2020Topics")
+        .setAutoStart(false)
+        .setIdFieldName("topicIdentifier")
+        .setSearchEngine(engine);
+      topicsCollection = collectionRepository.save(topicsCollection);
       
-      SearchElementDefinition topicViewHitMeta = new SearchElementDefinition(
-              TemplateElement.class);
-      topicViewHitMeta.setLabel("leftCol");
-      topicViewHitMeta.setAttributeValue("titleField", "topicTitle");
-      topicViewHitMeta.setAttributeValue("idField", "topicIdentifier");
-      topicViewHitMeta.setAttributeValue("templateFile",
-	      "/WEB-INF/templates/oppfin/_topicViewMeta.jspx");
-	  presetTopic.addSearchElement(topicViewHitMeta, "view");
+      
+      LOGGER.info("++ Creating oppfin EEN Collection");
+      CollectionEntity<?> eenCollection = new CollectionEntity<>()
+          .setClazz(EENCollection.class)
+          .setName("eenCooperations")
+          .setAutoStart(false)
+          .setIdFieldName("eenReferenceExternal")
+          .setSearchEngine(engine);
+      eenCollection = collectionRepository.save(eenCollection);
+      
+      /** The base collection for idealist */
+      LOGGER.info("++ Creating oppfin IDEALIST Collection");
+      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
+          .setClazz(IdealISTCollection.class)
+          .setName("idealistCooperations")
+          .setSearchEngine(engine)
+          .setAutoStart(false)
+          .setIdFieldName("uid");
+      idealistCollection = collectionRepository.save(idealistCollection);
+      
+      
+      LOGGER.info("++ Creating oppfin CORDIS Collection");
+      CollectionEntity<?> cordisCollection = new CollectionEntity<>()
+        .setClazz(CordisCollection.class)
+        .setIdFieldName("cordisId")
+        .setName("fundedProjects")
+        .setAutoStart(false)
+        .setSearchEngine(engine);
+      cordisCollection = collectionRepository.save(cordisCollection);
+      
+      
+      searchbox.newPreset().setLabel("Search All")
+      .setDescription("All Collections")
+      .setSlug("all")
+      .setCollection(collectionRepository.save(
+            new CollectionEntity<>()
+            .setClazz(MultiCollection.class)
+            .setName("all")
+            .setSearchEngine(engine)
+            .setAttribute("collections", 
+                Arrays.asList(new String[]{
+                    topicsCollection.getName(),
+                    eenCollection.getName(),
+                    idealistCollection.getName(),
+                    cordisCollection.getName()
+                }))))      
+            .addQueryElement()
+            .addFieldFacet("Source", "docSource")
+            .addStatElement()
+            .addPagingElement()
+            .addDebugElement()
+   
+            
+      /** 
+       * 
+       * Topic Preset
+       *  
+       */
+      //Create a new preset in searchbox
+            .newChildPreset(true, TemplateElement.class)
+            .setLabel("Project Funding")
+        .setDescription("Project Funding (open calls)")
+        .setSlug("topic")
+        
+        .setCollection(topicsCollection)
+      
+        /**
+         * Setting up fieldAttributes for preset
+         */
+        .newFieldAttribute("topicIdentifier")
+          .setAttribute("searchable", true)
+          .setAttribute("spelling", true)
+          .setAttribute("suggestion", true)
+          .setAttribute("label", "Topic ID")
+          .end()
           
-      SearchElementDefinition viewHit = new SearchElementDefinition(
-          TemplateElement.class);
-      viewHit.setLabel("body");
-      viewHit.setAttributeValue("titleField", "topicTitle");
-      viewHit.setAttributeValue("idField", "topicIdentifier");
-      viewHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_topicView.jspx");
-      presetTopic.addSearchElement(viewHit, "view");
+        .newFieldAttribute("callIdentifier")
+          .setAttribute("searchable", true)
+          .setAttribute("spelling", true)
+          .setAttribute("suggestion", true)
+          .setAttribute("label", "Call ID")
+          .end()
+          
+        .newFieldAttribute("topicTitle")
+          .setAttribute("searchable", true)
+          .setAttribute("spelling", true)
+          .setAttribute("suggestion", true)
+          .setAttribute("highlight", true)
+          .setAttribute("label", "title")
+          .setAttribute("lang", lang)
+          .end()
+          
+        .newFieldAttribute("description","topicDescriptionRaw")
+          .setAttribute("searchable", true)
+          .setAttribute("spelling", true)
+          .setAttribute("suggestion", true)
+          .setAttribute("highlight", true)
+          .setAttribute("label", "description")
+          .setAttribute("lang", lang)
+          .end()
+          
+        .newFieldAttribute("callDeadline")
+          .setAttribute("sortable", true)
+          .end()
+          
+        /**
+         *  Creating the SearchElements for preset 
+         */
+        .newSearchElement()
+          .setClazz(SolrToString.class).end()
+          
+        .newSearchElement()
+          .setClazz(EdismaxQuery.class).end()
+          
+        .newSearchElement()
+          .setClazz(TemplateElement.class)
+          .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
+          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicHit.jspx")
+          .setProcess("search")
+          .end()
+          
+        .newSearchElement()
+          .setClazz(TemplateElement.class)
+          .setLabel("leftCol")
+          .setProcess("view")
+          .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
+          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicViewMeta.jspx")
+	  .end()
+	  
+	.newSearchElement()
+	  .setClazz(TemplateElement.class)
+          .setLabel("body")
+          .setProcess("view")
+          .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
+          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicView.jspx")
+          .end()
+          
+        .newSearchElement()
+          .setClazz(FieldSort.class)
+          .setAttribute("values",  new TreeSet<FieldSort.Value>(
+              Arrays.asList(new FieldSort.Value[]{
+                FieldSort.getRelevancySort(),
+                new FieldSort.Value(
+                  "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
+                  "callDeadline", Sort.ASC)
+                }
+              )))
+          .end()
+        
+       .newSearchElement()
+         .setClazz(BasicSearchStats.class)
+         .setLabel("Basic Stats")
+         .setProcess("search")
+         .end()
 
-      /** Create & add a FieldSort SearchComponent to the preset; */
-      SearchElementDefinition fieldSort = new SearchElementDefinition(
-          FieldSort.class);
-      SortedSet<FieldSort.Value> sortFields = new TreeSet<FieldSort.Value>();
-      sortFields.add(FieldSort.getRelevancySort());
-      sortFields
-          .add(new FieldSort.Value(
-              "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
-              "callDeadline", Sort.ASC));
-      fieldSort.setAttributeValue("values", sortFields);
-      presetTopic.addSearchElement(fieldSort, "search");
-
-      /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition basicStatus = new SearchElementDefinition(
-          BasicSearchStats.class);
-      presetTopic.addSearchElement(basicStatus, "search");
-
-      /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition callFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      callFacet.setAttributeValue("field",
-          topicsCollection.getFieldDefinition("callIdentifier").getInstance());
-      callFacet.setLabel("Call");
-      callFacet.setAttributeValue("order", Order.BY_VALUE);
-      callFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(callFacet, "search");
+       .newSearchElement()
+         .setClazz(FieldFacet.class)
+         .setLabel("Call")
+         .setAttribute("fieldName", "callIdentifier")
+         .setAttribute("order", Order.BY_VALUE)
+         .setAttribute("sort", Sort.DESC)
+         .end()
 
       /**
        * Ideally this is a range facet. We agreed that for now it will be a list
        * of months For instance(March 14, April 14, May 14, June 14, ...)
        */
-      SearchElementDefinition deadlineFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      deadlineFacet.setAttributeValue("field",
-          topicsCollection.getFieldDefinition("callDeadline").getInstance());
-      deadlineFacet.setLabel("Deadline");
-      deadlineFacet.setAttributeValue("order", Order.BY_VALUE);
-      deadlineFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(deadlineFacet, "search");
-
-      SearchElementDefinition flagFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      flagFacet.setAttributeValue("field",
-          topicsCollection.getFieldDefinition("topicFlags").getInstance());
-      flagFacet.setLabel("Flags");
-      flagFacet.setAttributeValue("order", Order.BY_VALUE);
-      flagFacet.setAttributeValue("sort", Sort.DESC);
-      presetTopic.addSearchElement(flagFacet, "search");
-
-      SearchElementDefinition pagination = new SearchElementDefinition(
-          BasicPagination.class);
-      presetTopic.addSearchElement(pagination, "search");
-
-      searchbox.addPresetDefinition(presetTopic);
-
+       .newSearchElement()
+         .setClazz(FieldFacet.class)
+         .setLabel("Deadline")
+         .setAttribute("fieldName","callDeadline")
+         .setAttribute("order", Order.BY_VALUE)
+         .setAttribute("sort", Sort.DESC)
+         .end()
+         
+       .newSearchElement()
+         .setClazz(FieldFacet.class)
+         .setAttribute("fieldName", "topicFlags")
+         .setLabel("Flags")
+         .setAttribute("order", Order.BY_VALUE)
+         .setAttribute("sort", Sort.DESC)
+         .end()
+         
+       .newSearchElement()
+         .setClazz(BasicPagination.class)
+         .end()
+       .endChild()
+       
+       
+       
+      
+      
+      
       /**
+       * 
        * Cooperation preset
+       * 
+       * 
        */
+      
+   
+      
+      .newChildPreset(true, TemplateElement.class)
+        .setCollection(collectionRepository.save(
+            new CollectionEntity<>()
+            .setClazz(MultiCollection.class)
+            .setName("cooperations")
+            .setSearchEngine(engine)
+            .setAttribute("collections", 
+                Arrays.asList(new String[]{
+                    eenCollection.getName(),
+                    idealistCollection.getName()
+                }))))
+        .setSlug("cooperations")
+        .setLabel("Cooperations")
+        .addQueryElement()
+        .addDebugElement()
+        .addStatElement()
+        .addFieldFacet("Cooperation Source", "docSource")
+        .addPagingElement()
 
-      /** The base collection for een */
-      LOGGER.info("++ Creating oppfin EEN Collection");
-      CollectionDefinition eenCollection = new CollectionDefinition(
-          EENCollection.class, "eenCooperations");
-      eenCollection.setIdFieldName("eenReferenceExternal");
-      eenCollection.setAutoStart(false);
-      eenCollection.setSearchEngine(engine);
-      eenCollection = collectionRepository.save(eenCollection);
+      
+         
+      /**
+       * 
+       * EEN preset
+       * 
+       * 
+       */
+     
+   
+      //LOGGER.info("++ Creating Cooperation preset");
+      //searchbox.newPreset()
+      .newChildPreset(true, FieldFacet.class, TemplateElement.class)
+        .setCollection(eenCollection)
+        .setDescription("EEN cooperations")
+        .setLabel("EEN")
+        .setSlug("een")
+         
+        .addSortableFieldAttribute("Published", "eenDatumSubmit")
+        .addSortableFieldAttribute("Updated", "eenDatumUpdate")
+        .addSortableFieldAttribute("Deadline", "eenDatumDeadline")
 
-      LOGGER.info("++ Creating Cooperation preset");
-      PresetDefinition presetEEN = new PresetDefinition(eenCollection);
-      presetEEN.setLabel("EEN");
-      presetEEN.setDescription("EEN cooperations");
-      presetEEN.setSlug("een");
-      presetEEN.setCollection(eenCollection);
-      searchbox.addPresetDefinition(presetEEN);
+        .newFieldAttribute("Title","eenContentTitle")
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .setLanguages(lang)
+          .end()
+          
+        .newFieldAttribute("Summary","eenContentSummary")
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .setLanguages(lang)
+          .end()
+          
+        .newFieldAttribute("Keyword","eenKeywordTechnologiesLabel")
+          .setSearchanble(true)
+          .setSpelling(true)
+          .setHighlight(true)
+          .setLanguages(lang)
+          .end()
+          
+        .newFieldAttribute("Description","eenContentDescription")
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .setLanguages(lang)
+          .end()    
 
-      FieldAttributeDefinition eenSubmitField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenDatumSubmit"));
-      eenSubmitField.setAttributeValue("label", "Published");
-      eenSubmitField.setAttributeValue("sortable", true);
-      presetEEN.addFieldAttribute(eenSubmitField);
+        .addQueryElement()
+        .newSearchElement().setClazz(BasicSearchStats.class)
+          .setProcess("search")
+          .end()
+          
+        .addTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
+        
+        .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenViewMeta.jspx")
+          .setLabel("leftCol")
+          .setProcess("view")
+          .end()
+          
+        .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenView.jspx")
+          .setLabel("body")
+          .setProcess("view")
+          .end()
 
-      FieldAttributeDefinition eenUpdateField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenDatumUpdate"));
-      eenUpdateField.setAttributeValue("label", "update");
-      eenUpdateField.setAttributeValue("sortable", true);
-      presetEEN.addFieldAttribute(eenUpdateField);
-
-      FieldAttributeDefinition eenDeadlineField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenDatumDeadline"));
-      eenDeadlineField.setAttributeValue("label", "Deadline");
-      eenDeadlineField.setAttributeValue("sortable", true);
-      presetEEN.addFieldAttribute(eenDeadlineField);
-
-      FieldAttributeDefinition eenTitleField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenContentTitle"));
-      eenTitleField.setAttributeValue("searchable", true);
-      eenTitleField.setAttributeValue("highlight", true);
-      eenTitleField.setAttributeValue("spelling", true);
-      eenTitleField.setAttributeValue("suggestion", true);
-      eenTitleField.setAttributeValue("label", "Title");
-      eenTitleField.setAttributeValue("lang", lang);
-      presetEEN.addFieldAttribute(eenTitleField);
-
-      FieldAttributeDefinition eenSummaryField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenContentSummary"));
-      eenSummaryField.setAttributeValue("searchable", true);
-      eenSummaryField.setAttributeValue("highlight", true);
-      eenSummaryField.setAttributeValue("spelling", true);
-      eenSummaryField.setAttributeValue("suggestion", true);
-      eenSummaryField.setAttributeValue("label", "Summary");
-      eenSummaryField.setAttributeValue("lang", lang);
-      presetEEN.addFieldAttribute(eenSummaryField);
-
-      FieldAttributeDefinition eenKeywordField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel"));
-      eenKeywordField.setAttributeValue("searchable", true);
-      eenKeywordField.setAttributeValue("spelling", true);
-      eenKeywordField.setAttributeValue("suggestion", true);
-      eenKeywordField.setAttributeValue("label", "Keyword");
-      eenKeywordField.setAttributeValue("lang", lang);
-      presetEEN.addFieldAttribute(eenKeywordField);
-
-      FieldAttributeDefinition eenDescriptionField = new FieldAttributeDefinition(
-          eenCollection.getFieldDefinition("eenContentDescription"));
-      eenDescriptionField.setAttributeValue("searchable", true);
-      eenDescriptionField.setAttributeValue("highlight", true);
-      eenDescriptionField.setAttributeValue("spelling", true);
-      eenDescriptionField.setAttributeValue("suggestion", true);
-      eenDescriptionField.setAttributeValue("label", "Description");
-      eenDescriptionField.setAttributeValue("lang", lang);
-      presetEEN.addFieldAttribute(eenDescriptionField);
-
-      /** Create & add a query SearchComponent to the preset; */
-      SearchElementDefinition eenQuery = new SearchElementDefinition(
-          EdismaxQuery.class);
-      presetEEN.addSearchElement(eenQuery);
-
-      /** Create & add a TemplateElement SearchComponent to the preset; */
-      SearchElementDefinition eenTemplateElement = new SearchElementDefinition(
-          TemplateElement.class);
-      eenTemplateElement.setAttributeValue("titleField", "eenContentTitle");
-      eenTemplateElement.setAttributeValue("idField", "eenReferenceExternal");
-      eenTemplateElement.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_eenHit.jspx");
-      presetEEN.addSearchElement(eenTemplateElement, "search");
-
-      SearchElementDefinition eenViewHitMeta = new SearchElementDefinition(
-          TemplateElement.class);
-      eenViewHitMeta.setLabel("leftCol");
-      eenViewHitMeta.setAttributeValue("titleField", "eenContentTitle");
-      eenViewHitMeta.setAttributeValue("idField", "eenReferenceExternal");
-      eenViewHitMeta.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_eenViewMeta.jspx");
-      presetEEN.addSearchElement(eenViewHitMeta, "view");
-
-      SearchElementDefinition eenViewHit = new SearchElementDefinition(
-          TemplateElement.class);
-      eenViewHit.setLabel("body");
-      eenViewHit.setAttributeValue("titleField", "eenContentTitle");
-      eenViewHit.setAttributeValue("idField", "eenReferenceExternal");
-      eenViewHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_eenView.jspx");
-      presetEEN.addSearchElement(eenViewHit, "view");
-
-      /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition eenBasicStatus = new SearchElementDefinition(
-          BasicSearchStats.class);
-      presetEEN.addSearchElement(eenBasicStatus);
-
-      SearchElementDefinition eenPagination = new SearchElementDefinition(
-          BasicPagination.class);
-      presetEEN.addSearchElement(eenPagination);
-
-      /** Create & add a FieldSort SearchComponent to the preset; */
-      SearchElementDefinition eenFieldSort = new SearchElementDefinition(
-          FieldSort.class);
-      SortedSet<FieldSort.Value> eenSortFields = new TreeSet<FieldSort.Value>();
-      eenSortFields.add(FieldSort.getRelevancySort());
-      eenSortFields.add(new FieldSort.Value("Newest first", "eenDatumUpdate",
-          Sort.DESC));
-      eenFieldSort.setAttributeValue("values", eenSortFields);
-      presetEEN.addSearchElement(eenFieldSort);
-
-      /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenDocSource = new SearchElementDefinition(
-          FieldFacet.class);
-      eenDocSource.setAttributeValue("field",
-          eenCollection.getFieldDefinition("docSource").getInstance());
-      eenDocSource.setLabel("Cooperation Source");
-      eenDocSource.setAttributeValue("order", Order.BY_VALUE);
-      eenDocSource.setAttributeValue("sort", Sort.DESC);
-      presetEEN.addSearchElement(eenDocSource);
-
-      /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenReferenceTypeFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      eenReferenceTypeFacet.setAttributeValue("field", eenCollection
-          .getFieldDefinition("eenReferenceType").getInstance());
-      eenReferenceTypeFacet.setLabel("EEN Type");
-      eenReferenceTypeFacet.setAttributeValue("order", Order.BY_VALUE);
-      eenReferenceTypeFacet.setAttributeValue("sort", Sort.DESC);
-      presetEEN.addSearchElement(eenReferenceTypeFacet);
-
-      /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenKeyword = new SearchElementDefinition(
-          FieldFacet.class);
-      eenKeyword.setAttributeValue("field",
-          eenCollection.getFieldDefinition("eenKeywordTechnologiesLabel")
-              .getInstance());
-      eenKeyword.setLabel("Keyword");
-      eenKeyword.setAttributeValue("order", Order.BY_VALUE);
-      eenKeyword.setAttributeValue("sort", Sort.DESC);
-      presetEEN.addSearchElement(eenKeyword);
-
-      /** Create & add a facet to the presetTopic. */
-      SearchElementDefinition eenCompanyCountry = new SearchElementDefinition(
-          FieldFacet.class);
-      eenCompanyCountry.setAttributeValue("field", eenCollection
-          .getFieldDefinition("eenCompanyCountryLabel").getInstance());
-      eenCompanyCountry.setLabel("Partner Country");
-      eenCompanyCountry.setAttributeValue("order", Order.BY_VALUE);
-      eenCompanyCountry.setAttributeValue("sort", Sort.DESC);
-      presetEEN.addSearchElement(eenCompanyCountry);
-
-      SearchElementDefinition eenQueryDebug = new SearchElementDefinition(
-          SolrToString.class);
-      presetEEN.addSearchElement(eenQueryDebug);
+        .newSearchElement()
+          .setClazz(FieldSort.class)
+          .setAttribute("values", new TreeSet<FieldSort.Value>(
+              Arrays.asList(new FieldSort.Value[]{
+                  FieldSort.getRelevancySort(),
+                  new FieldSort.Value("Newest first", "eenDatumUpdate", Sort.DESC)
+              })))
+          .end()
+        
+          .addFieldFacet("EEN Type", "eenReferenceType")
+          .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
+          .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
+          
+        .addPagingElement()
+        .addDebugElement()
+        .endChild()
+         
 
       /**
        * IDEALIST PRESET
        * 
        * 
-       * 
-       * 
-       * 
        */
-      /** The base collection for idealist */
-      LOGGER.info("++ Creating oppfin IDEALIST Collection");
-      CollectionDefinition idealistCollection = new CollectionDefinition(
-          IdealISTCollection.class, "idealistCooperations");
-      idealistCollection.setIdFieldName("uid");
-      idealistCollection.setAutoStart(false);
-      idealistCollection.setSearchEngine(engine);
-      idealistCollection = collectionRepository.save(idealistCollection);
-
-      LOGGER.info("++ Creating Cooperation preset");
-      PresetDefinition presetIDEALIST = new PresetDefinition(idealistCollection);
-      presetIDEALIST.setLabel("Ideal-IST");
-      presetIDEALIST.setDescription("IDEALIST cooperations");
-      presetIDEALIST.setSlug("idealist");
-      presetIDEALIST.setCollection(idealistCollection);
-      searchbox.addPresetDefinition(presetIDEALIST);
-
-      FieldAttributeDefinition idealistTitleField = new FieldAttributeDefinition(
-          idealistCollection.getFieldDefinition("idealistTitle"));
-      idealistTitleField.setAttributeValue("searchable", true);
-      idealistTitleField.setAttributeValue("highlight", true);
-      idealistTitleField.setAttributeValue("spelling", true);
-      idealistTitleField.setAttributeValue("suggestion", true);
-      idealistTitleField.setAttributeValue("label", "Title");
-      idealistTitleField.setAttributeValue("lang", lang);
-      presetIDEALIST.addFieldAttribute(idealistTitleField);
-
-      FieldAttributeDefinition idealistSummaryField = new FieldAttributeDefinition(
-          idealistCollection.getFieldDefinition("idealistOutline"));
-      idealistSummaryField.setAttributeValue("searchable", true);
-      idealistSummaryField.setAttributeValue("highlight", true);
-      idealistSummaryField.setAttributeValue("spelling", true);
-      idealistSummaryField.setAttributeValue("suggestion", true);
-      idealistSummaryField.setAttributeValue("label", "Summary");
-      idealistSummaryField.setAttributeValue("lang", lang);
-      presetIDEALIST.addFieldAttribute(idealistSummaryField);
-
-      FieldAttributeDefinition idealistBodyField = new FieldAttributeDefinition(
-          idealistCollection.getFieldDefinition("idealistBody"));
-      idealistBodyField.setAttributeValue("searchable", true);
-      idealistBodyField.setAttributeValue("highlight", true);
-      idealistBodyField.setAttributeValue("spelling", true);
-      idealistBodyField.setAttributeValue("suggestion", true);
-      idealistBodyField.setAttributeValue("label", "Summary");
-      idealistBodyField.setAttributeValue("lang", lang);
-      presetIDEALIST.addFieldAttribute(idealistBodyField);
-
       
-      /** Facets for the presetIdealist. */
-     /**
-      * - Cooperation Source
-      * - Partner Country
-      */
-      
-      /** Create & add a query SearchComponent to the preset; */
-      SearchElementDefinition idealistQuery = new SearchElementDefinition(
-          EdismaxQuery.class);
-      presetIDEALIST.addSearchElement(idealistQuery);     
-
-      /** Create & add a TemplateElement SearchComponent to the preset; */
-      SearchElementDefinition idealistTmpHit = new SearchElementDefinition(
-          TemplateElement.class);
-      idealistTmpHit.setAttributeValue("titleField", "idealistTitle");
-      idealistTmpHit.setAttributeValue("idField", idealistCollection.getIdFieldName());
-      idealistTmpHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_idealistHit.jspx");
-      presetIDEALIST.addSearchElement(idealistTmpHit);
-
-
-      /** Create view page **/
-      SearchElementDefinition idealistViewHitMeta = new SearchElementDefinition(
-              TemplateElement.class);
-      idealistViewHitMeta.setLabel("leftCol");
-      idealistViewHitMeta.setAttributeValue("titleField", "idealistTitle");
-      idealistViewHitMeta.setAttributeValue("idField", idealistCollection.getIdFieldName());
-      idealistViewHitMeta.setAttributeValue("templateFile",
-              "/WEB-INF/templates/oppfin/_idealistViewMeta.jspx");
-      presetIDEALIST.addSearchElement(idealistViewHitMeta, "view");
-
-      SearchElementDefinition idealistViewHit = new SearchElementDefinition(
-          TemplateElement.class);
-      idealistViewHit.setLabel("body");
-      idealistViewHit.setAttributeValue("titleField", "idealistTitle");
-      idealistViewHit.setAttributeValue("idField", idealistCollection.getIdFieldName());
-      idealistViewHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_idealistView.jspx");
-      presetIDEALIST.addSearchElement(idealistViewHit, "view");
+      .newChildPreset(true,  FieldFacet.class, TemplateElement.class)
+        .setCollection(idealistCollection)
+        .setSlug("idealist")
+        .setLabel("Ideal-IST")
+        .setDescription("IDEALIST cooperations")
+        
+        .newFieldAttribute("Title","idealistTitle")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+        
+        .newFieldAttribute("Summary","idealistOutline")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
           
-      
-      /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition idealistBasicStatus = new SearchElementDefinition(
-          BasicSearchStats.class);
-      presetIDEALIST.addSearchElement(idealistBasicStatus);
+        .newFieldAttribute("Summary","idealistBody")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
 
-      SearchElementDefinition idealistPagination = new SearchElementDefinition(
-          BasicPagination.class);
-      presetIDEALIST.addSearchElement(idealistPagination);
+//      /** Facets for the presetIdealist. */
+//     /**
+//      * - Cooperation Source
+//      * - Partner Country
+//      */
 
-      SearchElementDefinition idealistDebug = new SearchElementDefinition(
-          SolrToString.class);
-      presetIDEALIST.addSearchElement(idealistDebug);
-      
+        .addQueryElement()
+        .addStatElement()
+        .addTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
+        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistView.jspx")
+          .setLabel("body")
+          .setProcess("view")
+          .end()
+        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistViewMeta.jspx")
+          .setLabel("leftCol")
+          .setProcess("view")
+          .end()
+          
+        .addPagingElement()
+        .addDebugElement()
+        .endChild()
+       .endChild()
+          
       /**
+       * 
        * Cordis Preset
+       * 
+       * 
        */
      
-      LOGGER.info("++ Creating oppfin CORDIS Collection");
-      CollectionDefinition cordisCollection = new CollectionDefinition(
-          CordisCollection.class, "fundedProjects");
-      cordisCollection.setIdFieldName("cordisId");
-      cordisCollection.setAutoStart(false);
-      cordisCollection.setSearchEngine(engine);
-      cordisCollection = collectionRepository.save(cordisCollection);
 
-      LOGGER.info("++ Creating CORDIS preset");
-      PresetDefinition presetCordis = new PresetDefinition(cordisCollection);
-      presetCordis.setLabel("Funded Projects");
-      presetCordis.setDescription("Funded projects");
-      presetCordis.setSlug("funded");
-      presetCordis.setCollection(cordisCollection);
-      searchbox.addPresetDefinition(presetCordis);
-
-      FieldAttributeDefinition cordisTitleField = new FieldAttributeDefinition(
-    		  cordisCollection.getFieldDefinition("cordisTitle"));
-      cordisTitleField.setAttributeValue("searchable", true);
-      cordisTitleField.setAttributeValue("highlight", true);
-      cordisTitleField.setAttributeValue("spelling", true);
-      cordisTitleField.setAttributeValue("suggestion", true);
-      cordisTitleField.setAttributeValue("label", "Title");
-      cordisTitleField.setAttributeValue("lang", lang);
-      presetCordis.addFieldAttribute(cordisTitleField);
-
-      FieldAttributeDefinition cordisBodyField = new FieldAttributeDefinition(
-    		  cordisCollection.getFieldDefinition("cordisSnippet"));
-      cordisBodyField.setAttributeValue("searchable", true);
-      cordisBodyField.setAttributeValue("highlight", true);
-      cordisBodyField.setAttributeValue("spelling", true);
-      cordisBodyField.setAttributeValue("suggestion", true);
-      cordisBodyField.setAttributeValue("label", "Summary");
-      cordisBodyField.setAttributeValue("lang", lang);
-      presetCordis.addFieldAttribute(cordisBodyField);
+      //LOGGER.info("++ Creating CORDIS preset");
       
-      
-
-      
-
-      /** Create & add a query SearchComponent to the preset; */
-      SearchElementDefinition cordisQuery = new SearchElementDefinition(
-          EdismaxQuery.class);
-      presetCordis.addSearchElement(cordisQuery);
-
-      /** Create & add Year facet. */
-      SearchElementDefinition yearFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      yearFacet.setAttributeValue("field",
-          cordisCollection.getFieldDefinition("cordisStartYear").getInstance());
-      yearFacet.setLabel("Year");
-      yearFacet.setAttributeValue("order", Order.BY_KEY);
-      yearFacet.setAttributeValue("sort", Sort.DESC);
-      presetCordis.addSearchElement(yearFacet, "search");
-      
-      /** Create & add Area facet. */
-      SearchElementDefinition areaFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      areaFacet.setAttributeValue("field",
-          cordisCollection.getFieldDefinition("cordisArea").getInstance());
-      areaFacet.setLabel("Area");
-      areaFacet.setAttributeValue("order", Order.BY_VALUE);
-      areaFacet.setAttributeValue("sort", Sort.DESC);
-      presetCordis.addSearchElement(areaFacet, "search");
-      
-      /** Create & add Area facet. */
-      SearchElementDefinition categoryFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      categoryFacet.setAttributeValue("field",
-          cordisCollection.getFieldDefinition("cordisCategory").getInstance());
-      categoryFacet.setLabel("Category");
-      categoryFacet.setAttributeValue("order", Order.BY_VALUE);
-      categoryFacet.setAttributeValue("sort", Sort.DESC);
-      presetCordis.addSearchElement(categoryFacet, "search");
-      
-      /** Create & add Tag facet. */
-      SearchElementDefinition tagFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      tagFacet.setAttributeValue("field",
-          cordisCollection.getFieldDefinition("cordisTag").getInstance());
-      tagFacet.setLabel("Tag");
-      tagFacet.setAttributeValue("order", Order.BY_VALUE);
-      tagFacet.setAttributeValue("sort", Sort.DESC);
-      presetCordis.addSearchElement(tagFacet, "search");
-      
-      /** Create & add Tag facet. */
-      SearchElementDefinition statusFacet = new SearchElementDefinition(
-          FieldFacet.class);
-      statusFacet.setAttributeValue("field",
-          cordisCollection.getFieldDefinition("cordisProjectStatus").getInstance());
-      statusFacet.setLabel("Status");
-      statusFacet.setAttributeValue("order", Order.BY_VALUE);
-      statusFacet.setAttributeValue("sort", Sort.DESC);
-      presetCordis.addSearchElement(statusFacet, "search");
-      
-      /** Create & add a TemplateElement SearchComponent to the preset; */
-      SearchElementDefinition cordisTmpHit = new SearchElementDefinition(
-          TemplateElement.class);
-      cordisTmpHit.setAttributeValue("titleField", "cordisTitle");
-      cordisTmpHit.setAttributeValue("idField", cordisCollection.getIdFieldName());
-      cordisTmpHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_cordisHit.jspx");
-      presetCordis.addSearchElement(cordisTmpHit);
+       .newChildPreset(true, TemplateElement.class)
+        .setLabel("Funded Projects")
+        .setDescription("Funded projects")
+        .setSlug("funded")
+        .setCollection(cordisCollection)
+        
+        .newFieldAttribute("Title","cordisTitle")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
           
+        .newFieldAttribute("Summary", "cordisSnippet")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
           
-      /** Create view page **/
-      SearchElementDefinition cordisViewHitMeta = new SearchElementDefinition(
-              TemplateElement.class);
-      cordisViewHitMeta.setLabel("leftCol");
-      cordisViewHitMeta.setAttributeValue("titleField", "cordisTitle");
-      cordisViewHitMeta.setAttributeValue("idField", cordisCollection.getIdFieldName());
-      cordisViewHitMeta.setAttributeValue("templateFile",
-              "/WEB-INF/templates/oppfin/_cordisViewMeta.jspx");
-      presetCordis.addSearchElement(cordisViewHitMeta, "view");
+        .addQueryElement()
+        .addStatElement()
+        
+        .addFieldFacet("Year", "cordisStartYear")
+        .addFieldFacet("Area", "cordisArea")
+        .addFieldFacet("Category", "cordisCategory")
+        .addFieldFacet("Tag", "cordisTag")
+        .addFieldFacet("Status", "cordisProjectStatus")
+        
+        .addTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisView.jspx")
+          .setLabel("body")
+          .setProcess("view")
+          .end()
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisViewMeta.jspx")
+          .setLabel("leftCol")
+          .setProcess("view")
+          .end()
 
-      SearchElementDefinition cordisViewHit = new SearchElementDefinition(
-          TemplateElement.class);
-      cordisViewHit.setLabel("body");
-      cordisViewHit.setAttributeValue("titleField", "cordisTitle");
-      cordisViewHit.setAttributeValue("idField", cordisCollection.getIdFieldName());
-      cordisViewHit.setAttributeValue("templateFile",
-          "/WEB-INF/templates/oppfin/_cordisView.jspx");
-      presetCordis.addSearchElement(cordisViewHit, "view");
+        .addPagingElement()
+        .addDebugElement()
+        .endChild()
+       .end();
       
-      
-      
-      /** Create & add a basicSearchStat SearchComponent to the preset; */
-      SearchElementDefinition cordisBasicStatus = new SearchElementDefinition(
-          BasicSearchStats.class);
-      presetCordis.addSearchElement(cordisBasicStatus);
-
-      SearchElementDefinition cordisPagination = new SearchElementDefinition(
-          BasicPagination.class);
-      presetCordis.addSearchElement(cordisPagination);
-
-      SearchElementDefinition cordisDeb = new SearchElementDefinition(
-          SolrToString.class);
-      presetCordis.addSearchElement(cordisDeb);
-
-      /** Create & add a FieldSort SearchComponent to the preset; */
-      // SearchElementDefinition idealistFieldSort = new
-      // SearchElementDefinition(
-      // FieldSort.class);
-      // SortedSet<FieldSort.Value> idealistSortFields = new
-      // TreeSet<FieldSort.Value>();
-      // idealistSortFields.add(FieldSort.getRelevancySort());
-      // idealistSortFields.add(new FieldSort.Value("Newest first",
-      // "idealistDatumUpdate", Sort.DESC));
-      // idealistFieldSort.setAttributeValue("values", idealistSortFields);
-      // presetIDEALIST.addSearchElement(idealistFieldSort);
-
       /**
        * Users preset
        */
 
-      searchbox.addUserRole(new UserRole(system, Role.SYSTEM));
-      searchbox.addUserRole(new UserRole(admin, Role.ADMIN));
-      searchbox.addUserRole(new UserRole(user, Role.USER));
+      searchbox.addUserRole(new UserRole(system, Role.SYSTEM))
+        .addUserRole(new UserRole(admin, Role.ADMIN))
+        .addUserRole(new UserRole(user, Role.USER));
+      
       repository.save(searchbox);
 
       LOGGER.info("Bootstraping application with oppfin data... done");
@@ -780,13 +600,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     LOGGER.info("Starting all your engine");
-    Iterator<SearchEngineDefinition> engineDefinitions = engineRepository
+    Iterator<SearchEngineEntity<?>> searchEngines = engineRepository
         .findAll().iterator();
 
-    while (engineDefinitions.hasNext()) {
-      SearchEngineDefinition engineDefinition = engineDefinitions.next();
-      LOGGER.info("++ Starting SearchEngine: " + engineDefinition.getName());
-      engineDefinition.getInstance();
+    while (searchEngines.hasNext()) {
+      SearchEngineEntity<?> searchEngine = searchEngines.next();
+      LOGGER.info("++ Starting SearchEngine: " + searchEngine.getName());
+      searchEngine.build();
     }
 
     LOGGER.info("****************************************************");
@@ -795,9 +615,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     LOGGER.info("*                                                  *");
     LOGGER.info("*                             __ _                 *");
     LOGGER.info("*           ___  _ __  _ __  / _(_)_ __            *");
-    LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\       *");
+    LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\           *");
     LOGGER.info("*         | (_) | |_) | |_) |  _| | | | |          *");
-    LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|         *");
+    LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|          *");
     LOGGER.info("*               |_|   |_|                          *");
     LOGGER.info("*                                                  *");
     LOGGER.info("****************************************************");
@@ -815,12 +635,5 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
     publisher.publishEvent(new SearchboxReady(this));
 
-  }
-
-  public static void main(String... args) {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-        RootConfiguration.class, BootStrap.class);
-
-    // context.getBeanFactory().createBean(BootStrap.class).doBootStrap();
   }
 }

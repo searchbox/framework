@@ -16,13 +16,16 @@
 package com.searchbox.core.search;
 
 import com.searchbox.core.SearchCondition;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 
 public abstract class ConditionalSearchElement<K extends AbstractSearchCondition>
-    extends SearchElement implements GenerateSearchCondition<K>,
+    extends SearchElementBean implements GenerateSearchCondition<K>,
     SearchConditionToElementMerger {
 
   public ConditionalSearchElement(String label, SearchElement.Type type) {
-    super(label, type);
+    this.setLabel(label);
+    this.setType(type);
   }
 
   public ConditionalSearchElement() {

@@ -29,13 +29,14 @@ import org.springframework.stereotype.Service;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.framework.domain.CollectionDefinition;
-import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.PresetDefinition;
 import com.searchbox.framework.event.SearchboxReady;
+import com.searchbox.framework.model.CollectionEntity;
+import com.searchbox.framework.model.FieldAttributeEntity;
+import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
@@ -47,12 +48,11 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   @Autowired
   CollectionRepository repository;
 
-  public Map<String, String> synchronizeData(CollectionDefinition collectiondef) {
+  public Map<String, String> synchronizeData(CollectionEntity<?> collectiondef) {
 
     Map<String, String> result = new HashMap<String, String>();
-    com.searchbox.core.dm.DefaultCollection collection = collectiondef.getInstance();
+    Collection collection = collectiondef.build();
     if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
-      SearchEngine<?, ?> engine = collection.getSearchEngine();
       LOGGER.info("Starting Data synchronization for \"" + collection.getName()
           + "\"");
       try {
@@ -71,26 +71,32 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
     return result;
   }
 
-  public Map<String, String> synchronizeDm(CollectionDefinition collectiondef) {
+  public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
+    
     Map<String, String> result = new HashMap<String, String>();
-    Collection collection = collectiondef.getInstance();
+    Collection collection = collectionEntity.build();
+    
     if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
       SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
+      
       if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
         LOGGER.info("Register Searchengine Configuration for \""
             + collection.getName() + "\"");
         ((ManagedSearchEngine) engine).register(collection);
+      }
+      
+      if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
         LOGGER.info("Starting DM synchronization for \"" + collection.getName()
             + "\"");
-        for (PresetDefinition presetDef : collectiondef.getPresets()) {
+        for (PresetEntity presetDef : collectionEntity.getPresets()) {
           List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
-          for (FieldAttributeDefinition fieldAttr : presetDef
+          for (FieldAttributeEntity fieldAttr : presetDef
               .getFieldAttributes()) {
-            fieldAttributes.add(fieldAttr.getInstance());
+            fieldAttributes.add(fieldAttr.build());
           }
           ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
         }
-      }
+      } 
     }
     return result;
   }
@@ -100,8 +106,8 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 
     LOGGER.info("Searchbox is ready. Loading autoStart collections");
 
-    Iterable<CollectionDefinition> collectionDefs = repository.findAll();
-    for (CollectionDefinition collectionDef : collectionDefs) {
+    Iterable<CollectionEntity<?>> collectionDefs = repository.findAll();
+    for (CollectionEntity<?> collectionDef : collectionDefs) {
       synchronizeDm(collectionDef);
       if (collectionDef.getAutoStart()) {
         synchronizeData(collectionDef);

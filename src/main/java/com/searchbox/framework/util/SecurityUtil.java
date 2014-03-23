@@ -6,14 +6,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.searchbox.framework.domain.User;
+import com.searchbox.framework.model.UserEntity;
 
 public class SecurityUtil {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SecurityUtil.class);
 
-  public static void logInUser(User user) {
+  public static void logInUser(UserEntity user) {
     LOGGER.info("Logging in user: {}", user);
 
     LOGGER.debug("Logging in principal: {}", user);

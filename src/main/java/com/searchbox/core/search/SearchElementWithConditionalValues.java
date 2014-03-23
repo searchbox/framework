@@ -19,11 +19,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.searchbox.core.SearchAttribute;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
 public abstract class SearchElementWithConditionalValues<K extends ConditionalValueElement<T>, T extends AbstractSearchCondition>
-    extends SearchElement implements SearchConditionToElementMerger {
+    extends SearchElementBean implements SearchConditionToElementMerger {
 
   @SearchAttribute
   protected Order order = Order.BY_VALUE;
@@ -37,13 +39,14 @@ public abstract class SearchElementWithConditionalValues<K extends ConditionalVa
   public abstract void mergeSearchCondition(AbstractSearchCondition condition);
 
   public SearchElementWithConditionalValues() {
-    super(null, SearchElement.Type.UNKNOWN);
+    this.setType(SearchElement.Type.UNKNOWN);
     values = new TreeSet<K>();
   }
 
   public SearchElementWithConditionalValues(String label,
       SearchElement.Type type) {
-    super(label, type);
+    this.setLabel(label);
+    this.setType(type);
     values = new TreeSet<K>();
   }
 

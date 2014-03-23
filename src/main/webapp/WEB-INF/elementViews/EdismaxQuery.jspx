@@ -6,7 +6,7 @@
  <jsp:output omit-xml-declaration="yes" />
 
  <spring:url var="asynchElementUrl"
-  value="/asynch/${searchbox.getSlug() }/${preset.getSlug() }/element/${element.definitionId}" />
+  value="/asynch/${searchbox.getSlug() }/${preset.getSlug() }/element/${element.id}" />
 
  <div>
   <div class="input-group input-group">

@@ -134,6 +134,38 @@ public class Hit implements Comparable<Hit> {
   }
 
   @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result
+        + ((idFieldName == null) ? 0 : idFieldName.hashCode());
+    result = prime * result + ((score == null) ? 0 : score.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Hit other = (Hit) obj;
+    if (idFieldName == null) {
+      if (other.idFieldName != null)
+        return false;
+    } else if (!idFieldName.equals(other.idFieldName))
+      return false;
+    if (score == null) {
+      if (other.score != null)
+        return false;
+    } else if (!score.equals(other.score))
+      return false;
+    return true;
+  }
+
+  @Override
   public int compareTo(Hit other) {
     return score.compareTo(other.getScore() + 0.001f) * -1;
   }

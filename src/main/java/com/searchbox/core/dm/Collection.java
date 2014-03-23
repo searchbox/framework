@@ -1,8 +1,7 @@
 package com.searchbox.core.dm;
 
-import java.util.List;
-
 import com.searchbox.core.engine.SearchEngine;
+
 
 public interface Collection {
 

@@ -19,11 +19,11 @@ import java.util.Set;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.PresetDefinition;
+import com.searchbox.framework.model.FieldAttributeEntity;
+import com.searchbox.framework.model.PresetEntity;
 
 public interface FieldAttributeRepository extends
-    CrudRepository<FieldAttributeDefinition, Long> {
+    CrudRepository<FieldAttributeEntity, Long> {
 
-  public Set<FieldAttributeDefinition> findAllByPreset(PresetDefinition p);
+  public Set<FieldAttributeEntity> findAllByPreset(PresetEntity p);
 }

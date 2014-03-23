@@ -19,17 +19,17 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchboxEntity;
 
 public interface PresetRepository extends
-    CrudRepository<PresetDefinition, Long> {
+    CrudRepository<PresetEntity, Long> {
 
-  public PresetDefinition findPresetDefinitionBySearchboxAndSlug(
-      Searchbox searchbox, String slug);
+  public PresetEntity findPresetDefinitionBySearchboxAndSlug(
+      SearchboxEntity searchbox, String slug);
 
-  public List<PresetDefinition> findAllBySearchbox(Searchbox searchbox);
+  public List<PresetEntity> findAllBySearchbox(SearchboxEntity searchbox);
 
-  public PresetDefinition findPresetDefinitionBySlug(String slug);
+  public PresetEntity findPresetDefinitionBySlug(String slug);
 
 }

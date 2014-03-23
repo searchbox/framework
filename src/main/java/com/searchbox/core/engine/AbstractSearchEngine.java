@@ -21,9 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.core.search.SearchElement;
 
 @Configurable
 public abstract class AbstractSearchEngine<Q, R> implements SearchEngine<Q, R> {

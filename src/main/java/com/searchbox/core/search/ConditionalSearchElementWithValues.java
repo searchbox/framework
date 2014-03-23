@@ -16,6 +16,7 @@
 package com.searchbox.core.search;
 
 import com.searchbox.core.SearchCondition;
+import com.searchbox.core.SearchElement;
 
 public abstract class ConditionalSearchElementWithValues<K extends ValueElement, T extends AbstractSearchCondition>
     extends SearchElementWithValues<K> implements GenerateSearchCondition<T>,

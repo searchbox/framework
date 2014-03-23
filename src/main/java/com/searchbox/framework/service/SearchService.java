@@ -27,13 +27,13 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchCollector;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
-import com.searchbox.core.search.SearchElement;
 import com.searchbox.core.search.debug.SearchError;
 
 @Service

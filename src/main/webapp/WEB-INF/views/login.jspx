@@ -11,96 +11,7 @@
 
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:directive.page pageEncoding="UTF-8" />
- 
- 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
- 
- 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Application Name - Admin Login</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
- 
-<!-- StyleSheet -->
-<sb:base-scripts />
-</head>
- 
-<body>
 
-<style>
-body{background-color: #F7F7F6;}
-.login{padding-top: 65px;}
-.center{float: none; margin-left: auto; margin-right: auto;}
-</style>
-
- 
-<!-- Main Container -->
-<section>
-<div class="container login">
-    <div class="row ">
-        <div class="center col-md-4 well">
-            <legend>Please Sign In</legend>
-            <div class="alert alert-danger">
-                <a class="close" data-dismiss="alert" href="#">×</a>Incorrect Username or Password!
-            </div>
-            <form method="POST" action="" accept-charset="UTF-8">
-            <div class="row">
-                        <input type="text" id="username" class="col-md-12" name="username" placeholder="Username" />
-            
-            </div>
-            <div class="row">
-                        <input type="password" id="password" class="col-md-12" name="password" placeholder="Password" />
-            
-            </div>
-            
-            <div class="row">
-            <label class="checkbox">
-                <input type="checkbox" name="remember" value="1" /> Remember Me
-            </label>
-            </div>
-            
-            <div class="row">
-                        <button type="submit" name="submit" class="btn btn-primary btn-block">Sign in</button>
-            
-            </div>
-            
-            </form>
-        </div>
-    </div>
-</div>
-<p class="text-center muted ">Copyright 2014 - Searchbox</p>
-</section>
-<!-- Main Container Ends -->
- 
-<!-- Forgot Password Model Box -->
-<div id="forgot" class="modal hide fade in" style="display: none; ">
-<div class="modal-header">
-<a class="close" data-dismiss="modal">×</a>
-<h3>Forgot Password</h3>
-</div>
-<div class="modal-body">
-<p>Enter your username to reset the password</p>
-<form>
-      <div class="controls row">
-          <input id="name" name="name" type="text" class="col-md-3" placeholder="Name" />
-      </div>
- 
-</form>
-</div>
-<div class="modal-footer">
-<a href="#" class="btn btn-primary">Submit</a>
-<a href="#" class="btn" data-dismiss="modal">Close</a>
-</div>
-</div>
- 
-
- 
-</body>
-</html>
-
-<!-- 
-dfsdfsfdsfds
-${preset}
  <sec:authorize access="isAnonymous()">
   <div class="page-header">
    <h1>
@@ -191,5 +102,5 @@ ${preset}
   </c:forEach>
   <spring:url value="/logout" var="logoutUrl" />
   <a href="${logoutUrl }">logout</a>
- </sec:authorize> -->
+ </sec:authorize>
 </jsp:root>

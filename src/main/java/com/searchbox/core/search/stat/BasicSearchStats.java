@@ -22,10 +22,11 @@ import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
-import com.searchbox.core.search.SearchElement;
+import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchElementBean;
 
 @SearchComponent
-public class BasicSearchStats extends SearchElement {
+public class BasicSearchStats extends SearchElementBean {
 
   private Long hitCount = 0l;
   private Long searchTime = 0l;
@@ -69,11 +70,12 @@ public class BasicSearchStats extends SearchElement {
   }
 
   public BasicSearchStats() {
-    super(null, SearchElement.Type.STAT);
+    this("basic stats");
   }
 
   public BasicSearchStats(String label) {
-    super(label, SearchElement.Type.STAT);
+    this.setLabel(label);
+    this.setType(SearchElement.Type.STAT);
   }
 }
 

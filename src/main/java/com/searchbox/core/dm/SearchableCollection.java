@@ -8,4 +8,7 @@ public interface SearchableCollection {
    * @return the SearchEngine used for this collection
    */
   public SearchEngine<?, ?> getSearchEngine();
+
+  public SearchableCollection setSearchEngine(SearchEngine<?,?> searchEngine);
+
 }

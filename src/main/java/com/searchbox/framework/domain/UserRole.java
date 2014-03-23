@@ -27,13 +27,12 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.core.GrantedAuthority;
 
+import com.searchbox.framework.model.SearchboxEntity;
+import com.searchbox.framework.model.UserEntity;
+
+@SuppressWarnings("serial")
 @Entity
 public class UserRole implements GrantedAuthority {
-
-  /**
-	 * 
-	 */
-  private static final long serialVersionUID = 9173416138785318191L;
 
   public enum Role {
     SYSTEM, ADMIN, USER
@@ -48,10 +47,10 @@ public class UserRole implements GrantedAuthority {
   private long version;
 
   @ManyToOne
-  private Searchbox searchbox;
+  private SearchboxEntity searchbox;
 
   @ManyToOne
-  private User user;
+  private UserEntity user;
 
   private Role role;
 
@@ -59,7 +58,7 @@ public class UserRole implements GrantedAuthority {
     this.role = role;
   }
 
-  public UserRole(User user, Role role) {
+  public UserRole(UserEntity user, Role role) {
     this.user = user;
     this.role = role;
   }
@@ -84,11 +83,11 @@ public class UserRole implements GrantedAuthority {
     this.version = version;
   }
 
-  public Searchbox getSearchbox() {
+  public SearchboxEntity getSearchbox() {
     return searchbox;
   }
 
-  public void setSearchbox(Searchbox searchbox) {
+  public void setSearchbox(SearchboxEntity searchbox) {
     this.searchbox = searchbox;
   }
 
@@ -100,11 +99,11 @@ public class UserRole implements GrantedAuthority {
     this.role = role;
   }
 
-  public User getUser() {
+  public UserEntity getUser() {
     return user;
   }
 
-  public void setUser(User user) {
+  public void setUser(UserEntity user) {
     this.user = user;
   }
 

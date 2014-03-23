@@ -2,6 +2,7 @@ package com.searchbox.framework.web.admin;
 
 import java.util.Map;
 
+import org.hibernate.persister.walking.spi.CollectionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.explore.JobExplorer;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.searchbox.framework.domain.CollectionDefinition;
+import com.searchbox.framework.model.CollectionEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.service.CollectionService;
 
@@ -36,7 +37,7 @@ public class CollectionDefinitionController {
 
   @RequestMapping(value = "/{id}")
   public ModelAndView show(@PathVariable("id") Long id) {
-    CollectionDefinition collectiondef = repository.findOne(id);
+    CollectionEntity collectiondef = repository.findOne(id);
     ModelAndView model = new ModelAndView(
         "admin/CollectionDefinition/updateForm");
     model.addObject("collectionDefinition", collectiondef);
@@ -48,14 +49,14 @@ public class CollectionDefinitionController {
   @RequestMapping(value = { "/{id}/synchronize", "/{id}/synchronize/" }, method = RequestMethod.POST)
   @ResponseBody
   public Map<String, String> synchronizeData(@PathVariable("id") Long id) {
-    CollectionDefinition collectiondef = repository.findOne(id);
+    CollectionEntity collectiondef = repository.findOne(id);
     return service.synchronizeData(collectiondef);
   }
 
   @RequestMapping(value = { "/{id}/merge", "/{id}/merge/" }, method = RequestMethod.POST)
   @ResponseBody
   public Map<String, String> synchronizeDm(@PathVariable("id") Long id) {
-    CollectionDefinition collectiondef = repository.findOne(id);
+    CollectionEntity collectiondef = repository.findOne(id);
     return service.synchronizeDm(collectiondef);
   }
 

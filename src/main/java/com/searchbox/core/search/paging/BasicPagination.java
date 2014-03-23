@@ -19,9 +19,9 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
-import com.searchbox.core.search.SearchElement;
 
 @SearchComponent
 public class BasicPagination extends
@@ -37,7 +37,7 @@ public class BasicPagination extends
 
   public BasicPagination() {
     super();
-    this.type = SearchElement.Type.VIEW;
+    this.setType(SearchElement.Type.VIEW);
   }
 
   public Integer getMaxPage() {

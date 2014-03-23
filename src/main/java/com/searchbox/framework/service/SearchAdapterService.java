@@ -240,7 +240,7 @@ public class SearchAdapterService implements InitializingBean {
       LOGGER.error("Method name: " + method.getName());
       for (Object object : arguments) {
         LOGGER.error("\t Param: " + object.getClass().getSimpleName() + "\t"
-            + object.toString());
+            + object.toString().replace("\n", " "));
       }
       LOGGER.error("Could not invoke method " + method.getName() + " on: "
           + caller.getClass().getSimpleName(), e);

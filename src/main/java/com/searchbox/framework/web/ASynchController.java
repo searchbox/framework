@@ -18,15 +18,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.core.search.SearchElement;
-import com.searchbox.framework.domain.FieldAttributeDefinition;
-import com.searchbox.framework.domain.PresetDefinition;
-import com.searchbox.framework.domain.SearchElementDefinition;
-import com.searchbox.framework.domain.Searchbox;
+import com.searchbox.framework.model.FieldAttributeEntity;
+import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchElementEntity;
+import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.SearchElementRepository;
 import com.searchbox.framework.service.SearchAdapterService;
 import com.searchbox.framework.service.SearchElementService;
@@ -56,8 +56,8 @@ public class ASynchController {
   @RequestMapping(value = { "/{preset}/element/{id}", "/{preset}/element/{id}/" })
   @ResponseBody
   public Map<String, Object> executeAsynchElement(
-      @PathVariable Searchbox searchbox, @PathVariable Long id,
-      @PathVariable PresetDefinition preset, HttpServletRequest request,
+      @PathVariable SearchboxEntity searchbox, @PathVariable Long id,
+      @PathVariable PresetEntity preset, HttpServletRequest request,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
     // Fetch all search Conditions within HTTP params
@@ -81,17 +81,17 @@ public class ASynchController {
 
     LOGGER.debug("Assynch conditions: {}", conditions);
 
-    SearchElementDefinition elementDefinition = elementRepository.findOne(id);
+    SearchElementEntity elementDefinition = elementRepository.findOne(id);
     SearchElement element = elementService.getSearchElement(elementDefinition);
 
     Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-    for (FieldAttributeDefinition def : preset.getFieldAttributes()) {
-      fieldAttributes.add(def.getInstance());
+    for (FieldAttributeEntity def : preset.getFieldAttributes()) {
+      fieldAttributes.add(def.build());
     }
 
     SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
-        .getInstance();
-    Collection collection = preset.getCollection().getInstance();
+        .build();
+    Collection collection = preset.getCollection().build();
     
     Map<String, Object> results = new HashMap<String, Object>();
 

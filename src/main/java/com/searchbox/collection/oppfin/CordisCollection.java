@@ -17,7 +17,6 @@ package com.searchbox.collection.oppfin;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,8 +50,6 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
 
 @Configurable
-@Configuration
-@Component
 public class CordisCollection extends AbstractBatchCollection implements
     SynchronizedCollection, StandardCollection {
 
@@ -69,6 +66,7 @@ public class CordisCollection extends AbstractBatchCollection implements
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
+    fields.add(new Field(String.class, "docSource"));
     fields.add(new Field(String.class, "cordisId"));
     fields.add(new Field(String.class, "cordisTag"));
     fields.add(new Field(Integer.class, "cordisStartYear"));
@@ -151,7 +149,7 @@ public class CordisCollection extends AbstractBatchCollection implements
         LOGGER.info("Processing cordis {}", item.get("id"));
         FieldMap doc = new FieldMap();
         
-        doc.put("docSource", "cordis");
+        doc.put("docSource", "Cordis");
         doc.put("docType", "Cordis");
         doc.put("programme", item.get("program"));
 

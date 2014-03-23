@@ -36,7 +36,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Collection;
@@ -44,16 +43,12 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
-@Configurable
 public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     AccessibleSearchEngine, DisposableBean {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrCloud.class);
   
   private static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
-
-  @Autowired
-  ApplicationContext context;
 
   @SearchAttribute
   // FIXME this is null when not set like this when using afterProperties
@@ -116,8 +111,8 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     String adminUrl = getAdminURL();
     LOGGER.info("Using Solr Base URL: {}", adminUrl);
     Set<String> collectionList = new TreeSet<String>();
-    for(Collection coll:collection.getCollections()){
-      collectionList.add(coll.getName());
+    for(String alias:collection.getCollections()){
+      collectionList.add(alias);
     }
     String createAlias = adminUrl+"/collections"
         +"?action=CREATEALIAS&name="+collection.getName()
@@ -127,17 +122,24 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     this.httpGET(createAlias);
     
   }
+  
+  private CloudSolrServer getCloudServer(){
+    return (CloudSolrServer) this.getSolrServer(null);
+  }
+  
+  private File getConfiguration(){
+    String dir = this.getClass().getResource("/solr/conf").getFile();
+    LOGGER.info("Path: {}", dir);
+    return new File(dir);
+  }
     
   private void registerCollection(Collection collection){
 
     try {
-      SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
+      SolrZkClient zkServer = getCloudServer().getZkStateReader().getZkClient();
 
       LOGGER.info("Creating configuration for: " + collection.getName());
-      LOGGER.debug("Path: {}", context.getResource("classpath:solr/conf")
-          .getFile());
-      uploadToZK(zkServer,
-          context.getResource("classpath:solr/conf").getFile(),
+      uploadToZK(zkServer, getConfiguration(),
           ZK_CORE_CONFIG_PATH + "/" + collection.getName());
 
       if (coreExists(zkServer, collection.getName())) {
@@ -162,7 +164,8 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
       }
 
     } catch (Exception e) {
-      LOGGER.error("Could not register colleciton: " + collection.getName());
+      LOGGER.error("Could not register collection: " + collection.getName());
+      e.printStackTrace();
     }
 
   }
@@ -409,14 +412,16 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
   @Override
   public String getUrlBase(Collection collection) {
     String urlBase = null;
-    
-    LOGGER.info("Getting URL base for {}",collection);
-    
+    String collectionName = collection.getName();
+    LOGGER.debug("Getting URL base for {}",collection);
+    if(MultiCollection.class.isAssignableFrom(collection.getClass())){
+      collectionName = ((MultiCollection)collection).getCollections().get(0);
+    }
     try {
       ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer(null))
           .getZkStateReader();
       java.util.Collection<Slice> slices = zkSateReader.getClusterState()
-          .getActiveSlices(collection.getName());
+          .getActiveSlices(collectionName);
 
       String baseUrl = "";
       for (Slice slice : slices) {
@@ -426,7 +431,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
         LOGGER.debug("Leader's node name: {}", nodeName);
         LOGGER.debug("Base URL for node: {}", baseUrl);
       }
-      urlBase += "/" + collection.getName();
+      urlBase += "/" + collectionName;
     } catch (Exception e) {
       LOGGER.error("Could not read from ZK to get urlBase", e);
     }

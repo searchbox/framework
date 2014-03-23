@@ -16,7 +16,6 @@
 package com.searchbox.core.dm;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -34,7 +33,7 @@ public class MultiCollection implements Collection, SearchableCollection {
   protected String description;
 
   @SearchAttribute
-  protected List<Collection> collections = new ArrayList<Collection>();
+  protected List<String> collections = new ArrayList<>();
 
   @SearchAttribute
   protected String idFieldName;
@@ -72,11 +71,11 @@ public class MultiCollection implements Collection, SearchableCollection {
     this.description = description;
   }
 
-  public List<Collection> getCollections() {
+  public List<String> getCollections() {
     return collections;
   }
 
-  public void setCollections(List<Collection> collections) {
+  public void setCollections(List<String> collections) {
     this.collections = collections;
   }
 
@@ -93,7 +92,8 @@ public class MultiCollection implements Collection, SearchableCollection {
     return searchEngine;
   }
 
-  public void setSearchEngine(SearchEngine<?, ?> searchEngine) {
+  public SearchableCollection setSearchEngine(SearchEngine<?, ?> searchEngine) {
     this.searchEngine = searchEngine;
+    return this;
   }
 }

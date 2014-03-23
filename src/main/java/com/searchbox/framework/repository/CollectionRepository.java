@@ -19,11 +19,11 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.searchbox.framework.domain.CollectionDefinition;
+import com.searchbox.framework.model.CollectionEntity;
 
 public interface CollectionRepository extends
-    CrudRepository<CollectionDefinition, Long> {
+    CrudRepository<CollectionEntity<?>, Long> {
 
-  public List<CollectionDefinition> findAllByAutoStart(Boolean autoStart);
+  public List<CollectionEntity<?>> findAllByAutoStart(Boolean autoStart);
 
 }
