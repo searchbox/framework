@@ -33,8 +33,9 @@
   <div class="container">
   <sec:authorize access="isAnonymous()">
     <div class="omb_login">
+      <c:url value="/user/register" var="registerUrl" />
       <h3 class="omb_authTitle">
-        Login or <a href="/user/register"><spring:message code="label.navigation.registration.link" /></a>
+        Login or <a href="${registerUrl }"><spring:message code="label.navigation.registration.link" /></a>
       </h3>
       <div class="row omb_row-sm-offset-3 omb_socialButtons">
         <div class="col-xs-4 col-sm-2">
