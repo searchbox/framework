@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .formLogin()
           .loginPage("/login")
           .loginProcessingUrl("/login/authenticate")
-          .failureUrl("/?error=bad_credentials")
+          .failureUrl("/login?error=bad_credentials")
           // Configures the logout function
           .and()
           .logout()

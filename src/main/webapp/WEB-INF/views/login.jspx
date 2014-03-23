@@ -177,8 +177,15 @@
                 class="form-control" name="password"
                 placeholder="Password" />
             </div>
-            <span class="help-block">Password error</span>
-
+            
+            
+            <span class="help-block">
+                <!-- blah -->
+                <c:if test="${param.error eq 'bad_credentials'}">
+                  <spring:message code="text.login.page.login.failed.error" />
+                </c:if>
+            </span>
+    
             <button class="btn btn-lg btn-primary btn-block" type="submit">
               <spring:message code="label.user.login.submit.button" />
             </button>
