@@ -72,7 +72,9 @@ public class SearchElementEntity<K extends SearchElementBean> extends
       throw new MissingClassAttributeException();
     }
     LOGGER.debug("Building Class for {}",this.getClazz());
-    return (K) super.build(this.getClazz());
+    SearchElementBean element = (K) super.build(this.getClazz());
+    element.setId(this.getId());
+    return (K) element;
   }
 
   public String getProcess() {

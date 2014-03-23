@@ -15,11 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+import com.searchbox.core.SearchElement;
 import com.searchbox.framework.util.ContextUtil;
 
 @MappedSuperclass
 public abstract class BeanFactoryEntity<K extends Serializable> extends
-    BaseEntity<K> implements BeanFactory {
+    BaseEntity<K> {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(BeanFactoryEntity.class);
@@ -55,7 +56,7 @@ public abstract class BeanFactoryEntity<K extends Serializable> extends
       //T target = (T) clazz.newInstance();
       //FIXME this will only work in Spring! 
       T target = ContextUtil.context.getAutowireCapableBeanFactory().createBean(clazz);
-      
+      SearchElement t;
       BeanUtils.copyProperties(this, target);
       for (AttributeEntity attribute : this.attributes) {
         if (attribute.getValue() != null) {
