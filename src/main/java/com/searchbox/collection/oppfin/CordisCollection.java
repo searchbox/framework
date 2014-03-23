@@ -54,177 +54,184 @@ import com.searchbox.core.dm.FieldMap;
 @Configuration
 @Component
 public class CordisCollection extends AbstractBatchCollection implements
-		SynchronizedCollection, StandardCollection {
+    SynchronizedCollection, StandardCollection {
 
-	@Autowired
-	ApplicationContext context;
+  @Autowired
+  ApplicationContext context;
 
-	@Autowired
-	StepBuilderFactory stepBuilderFactory;
+  @Autowired
+  StepBuilderFactory stepBuilderFactory;
 
-	DateFormat df;
+  DateFormat df;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(CordisCollection.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(CordisCollection.class);
 
-	public static List<Field> GET_FIELDS() {
-		List<Field> fields = new ArrayList<Field>();
-		fields.add(new Field(String.class, "cordisId"));
-		fields.add(new Field(String.class, "cordisTag"));
-		fields.add(new Field(Integer.class, "cordisStartYear"));
-		fields.add(new Field(Date.class, "cordisProjectStartDate"));
-		fields.add(new Field(Integer.class, "cordisProjectFunding"));
-		fields.add(new Field(String.class, "cordisContractType"));
+  public static List<Field> GET_FIELDS() {
+    List<Field> fields = new ArrayList<Field>();
+    fields.add(new Field(String.class, "cordisId"));
+    fields.add(new Field(String.class, "cordisTag"));
+    fields.add(new Field(Integer.class, "cordisStartYear"));
+    fields.add(new Field(Date.class, "cordisProjectStartDate"));
+    fields.add(new Field(Integer.class, "cordisProjectFunding"));
+    fields.add(new Field(String.class, "cordisContractType"));
 
-		fields.add(new Field(String.class, "cordisProjectStatus"));
-		fields.add(new Field(String.class, "cordisUrl"));
-		fields.add(new Field(String.class, "cordisCategory"));
-		fields.add(new Field(String.class, "cordisProgram"));
-		fields.add(new Field(String.class, "cordisProjectCost"));
-		fields.add(new Field(Date.class, "cordisProjectEndDate"));
+    fields.add(new Field(String.class, "cordisProjectStatus"));
+    fields.add(new Field(String.class, "cordisUrl"));
+    fields.add(new Field(String.class, "cordisCategory"));
+    fields.add(new Field(String.class, "cordisProgram"));
+    fields.add(new Field(String.class, "cordisProjectCost"));
+    fields.add(new Field(Date.class, "cordisProjectEndDate"));
 
-		fields.add(new Field(Integer.class, "cordisProjectDuration"));
-		fields.add(new Field(String.class, "cordisAcronymDescription"));
-		fields.add(new Field(String.class, "cordisSnippet"));
-		fields.add(new Field(String.class, "cordisSubProgrammArea"));
-		fields.add(new Field(String.class, "cordisCallIdentifier"));
-		fields.add(new Field(String.class, "cordisTitle"));
-		fields.add(new Field(String.class, "cordisCountryCode"));
-		fields.add(new Field(String.class, "cordisArea"));
-		fields.add(new Field(String.class, "cordisSubjectIndexCode"));
-		fields.add(new Field(String.class, "cordisLanguage"));
-		return fields;
-	}
+    fields.add(new Field(Integer.class, "cordisProjectDuration"));
+    fields.add(new Field(String.class, "cordisAcronymDescription"));
+    fields.add(new Field(String.class, "cordisSnippet"));
+    fields.add(new Field(String.class, "cordisSubProgrammArea"));
+    fields.add(new Field(String.class, "cordisCallIdentifier"));
+    fields.add(new Field(String.class, "cordisTitle"));
+    fields.add(new Field(String.class, "cordisCountryCode"));
+    fields.add(new Field(String.class, "cordisArea"));
+    fields.add(new Field(String.class, "cordisSubjectIndexCode"));
+    fields.add(new Field(String.class, "cordisLanguage"));
+    return fields;
+  }
 
-	public CordisCollection() {
-		this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-	    this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
+  public CordisCollection() {
+    this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-	}
+  }
 
-	public CordisCollection(String name) {
-		super(name);
-	}
+  public CordisCollection(String name) {
+    super(name);
+  }
 
-	public ItemReader<JSONObject> reader() throws IOException {
-		
-		return new ItemReader<JSONObject>() {
-			
-			JSONArray cordisData;
-			Iterator iterator;
+  public ItemReader<JSONObject> reader() throws IOException {
 
-			{
-				LOGGER.info("Starting collection / ItemReader");
-				String jsonData = FileUtils.readFileToString(context
-						.getResource("classpath:data/cordis.json").getFile());
+    return new ItemReader<JSONObject>() {
 
-				LOGGER.info("Finished reading cordis.json. File is {}", jsonData.length());
+      JSONArray cordisData;
+      Iterator iterator;
 
-				Object obj = JSONValue.parse(jsonData);
-				LOGGER.info("Cordis data is loaded {}", obj!=null);
+      {
+        LOGGER.info("Starting collection / ItemReader");
+        String jsonData = FileUtils.readFileToString(context.getResource(
+            "classpath:data/cordis.json").getFile());
 
-				jsonData = null;
-				cordisData = (JSONArray) obj;
-				LOGGER.info("Cordis data is parsed {}", cordisData.size());
+        LOGGER.info("Finished reading cordis.json. File is {}",
+            jsonData.length());
 
-				iterator = cordisData.iterator();
-			}
+        Object obj = JSONValue.parse(jsonData);
+        LOGGER.info("Cordis data is loaded {}", obj != null);
 
-			@Override
-			public JSONObject read() {
-				if (iterator.hasNext()) {
-					return (JSONObject) iterator.next();
-				}
-				return null;
-			}
-		};
-	}
+        jsonData = null;
+        cordisData = (JSONArray) obj;
+        LOGGER.info("Cordis data is parsed {}", cordisData.size());
 
-	public ItemProcessor<JSONObject, FieldMap> itemProcessor() {
-		return new ItemProcessor<JSONObject, FieldMap>() {
-			@Override
-			public FieldMap process(JSONObject item) throws IOException {
-			    DateFormat dfSource = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+        iterator = cordisData.iterator();
+      }
 
-				LOGGER.info("Processing cordis {}", item.get("id"));
-				FieldMap doc = new FieldMap();
-				doc.put("cordisId", item.get("id"));
-				doc.put("cordisTag", item.get("tag"));
-				doc.put("cordisStartYear", item.get("start_year"));
-				doc.put("cordisProjectFunding", item.get("projectfunding"));
-				doc.put("cordisContractType", item.get("contract_type"));
-				doc.put("cordisProjectStatus", item.get("project_status"));
-				doc.put("cordisUrl", item.get("url"));
-				doc.put("cordisCategory", item.get("category"));
-				doc.put("cordisProgram", item.get("program"));
-				doc.put("cordisProjectCost", item.get("projectcost"));
-				doc.put("cordisProjectDuration", item.get("projectduration"));
-				doc.put("cordisAcronymDescription",
-						item.get("acronym_description"));
-				doc.put("cordisSnippet", item.get("snippet"));
-				doc.put("cordisSubProgrammArea", item.get("subprogrammearea"));
-				doc.put("cordisCallIdentifier", item.get("call_identifier"));
-				doc.put("cordisTitle", item.get("title"));
-				doc.put("cordisCountryCode", item.get("country_code"));
-				doc.put("cordisArea", item.get("aera"));
-				doc.put("cordisSubjectIndexCode", item.get("subjectindexcode"));
-				doc.put("cordisLanguage", item.get("language"));
-				
-				try {
-					doc.put("cordisProjectStartDate", dfSource.parse((String)item.get("projectstartdate")));
-				} catch (Exception e) {
-					LOGGER.error("Cannot parse date",e);
-				}
-				
-				try {
-					doc.put("cordisProjectEndDate", dfSource.parse((String)item.get("projectenddate")));
-				} catch (Exception e) {
-					LOGGER.error("Cannot parse date",e);
-				}
+      @Override
+      public JSONObject read() {
+        if (iterator.hasNext()) {
+          return (JSONObject) iterator.next();
+        }
+        return null;
+      }
+    };
+  }
 
-				return doc;
-			}
-		};
-	}
+  public ItemProcessor<JSONObject, FieldMap> itemProcessor() {
+    return new ItemProcessor<JSONObject, FieldMap>() {
+      @Override
+      public FieldMap process(JSONObject item) throws IOException {
+        DateFormat dfSource = new SimpleDateFormat(
+            "EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
 
-	@Override
-	public String getIdValue(FieldMap fields) {
-		return (String) fields.get("cordisId").get(0);
-	}
+        LOGGER.info("Processing cordis {}", item.get("id"));
+        FieldMap doc = new FieldMap();
+        
+        doc.put("docSource", "cordis");
+        doc.put("docType", "Cordis");
+        doc.put("programme", item.get("program"));
 
-	@Override
-	public String getTitleValue(FieldMap fields) {
-		return (String) fields.get("cordisTitle").get(0);
-	}
+        doc.put("cordisId", item.get("id"));
+        doc.put("cordisTag", item.get("tag"));
+        doc.put("cordisStartYear", item.get("start_year"));
+        doc.put("cordisProjectFunding", item.get("projectfunding"));
+        doc.put("cordisContractType", item.get("contract_type"));
+        doc.put("cordisProjectStatus", item.get("project_status"));
+        doc.put("cordisUrl", item.get("url"));
+        doc.put("cordisCategory", item.get("category"));
+        doc.put("cordisProgram", item.get("program"));
+        doc.put("cordisProjectCost", item.get("projectcost"));
+        doc.put("cordisProjectDuration", item.get("projectduration"));
+        doc.put("cordisAcronymDescription", item.get("acronym_description"));
+        doc.put("cordisSnippet", item.get("snippet"));
+        doc.put("cordisSubProgrammArea", item.get("subprogrammearea"));
+        doc.put("cordisCallIdentifier", item.get("call_identifier"));
+        doc.put("cordisTitle", item.get("title"));
+        doc.put("cordisCountryCode", item.get("country_code"));
+        doc.put("cordisArea", item.get("aera"));
+        doc.put("cordisSubjectIndexCode", item.get("subjectindexcode"));
+        doc.put("cordisLanguage", item.get("language"));
 
-	@Override
-	public String getBodyValue(FieldMap fields) {
-		return null;//(String) fields.get("cordisSnippet").get(0);
-	}
+        try {
+          doc.put("cordisProjectStartDate",
+              dfSource.parse((String) item.get("projectstartdate")));
+        } catch (Exception e) {
+          LOGGER.error("Cannot parse date", e);
+        }
 
-	@Override
-	public Date getPublishedValue(FieldMap fields) {
-		return null;
-	}
+        try {
+          doc.put("cordisProjectEndDate",
+              dfSource.parse((String) item.get("projectenddate")));
+        } catch (Exception e) {
+          LOGGER.error("Cannot parse date", e);
+        }
 
-	@Override
-	public Date getUpdateValue(FieldMap fields) {
-		return null;
-	}
-	
-	@Override
-	protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+        return doc;
+      }
+    };
+  }
 
-		Step step = null;
-		try {
-			step = stepBuilderFactory.get("getFile")
-					.<JSONObject, FieldMap> chunk(500).reader(reader())
-					.processor(itemProcessor()).writer(fieldMapWriter())
-					.build();
-		} catch (IOException e) {
-			LOGGER.error("Could not build step.", e);
-		}
-		return builder.flow(step).end();
-	}
+  @Override
+  public String getIdValue(FieldMap fields) {
+    return (String) fields.get("cordisId").get(0);
+  }
+
+  @Override
+  public String getTitleValue(FieldMap fields) {
+    return (String) fields.get("cordisTitle").get(0);
+  }
+
+  @Override
+  public String getBodyValue(FieldMap fields) {
+    return null;// (String) fields.get("cordisSnippet").get(0);
+  }
+
+  @Override
+  public Date getPublishedValue(FieldMap fields) {
+    return null;
+  }
+
+  @Override
+  public Date getUpdateValue(FieldMap fields) {
+    return null;
+  }
+
+  @Override
+  protected FlowJobBuilder getJobFlow(JobBuilder builder) {
+
+    Step step = null;
+    try {
+      step = stepBuilderFactory.get("getFile")
+          .<JSONObject, FieldMap> chunk(500).reader(reader())
+          .processor(itemProcessor()).writer(fieldMapWriter()).build();
+    } catch (IOException e) {
+      LOGGER.error("Could not build step.", e);
+    }
+    return builder.flow(step).end();
+  }
 
 }

@@ -16,12 +16,6 @@ public interface Collection {
    */
   public abstract String getDescription();
 
-
-  /**
-   * @return the SearchEngine used for this collection
-   */
-  public abstract SearchEngine<?, ?> getSearchEngine();
-
   /**
    * @return the idFieldName
    */

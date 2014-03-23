@@ -47,6 +47,15 @@ public class PresetDefinition extends UnknownClassDefinition implements
 
   @ManyToOne
   private Searchbox searchbox;
+  
+  @ManyToOne
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private PresetDefinition parent;
+  
+  @OneToMany(targetEntity = PresetDefinition.class, mappedBy = "parent", cascade = CascadeType.ALL)
+  @LazyCollection(LazyCollectionOption.FALSE)
+
+  Set<PresetDefinition> children;
 
   @ManyToOne
   @LazyCollection(LazyCollectionOption.FALSE)

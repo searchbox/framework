@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
+import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.framework.domain.CollectionDefinition;
@@ -73,20 +74,22 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   public Map<String, String> synchronizeDm(CollectionDefinition collectiondef) {
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectiondef.getInstance();
-    SearchEngine<?, ?> engine = collection.getSearchEngine();
-    if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
-      LOGGER.info("Register Searchengine Configuration for \""
-          + collection.getName() + "\"");
-      ((ManagedSearchEngine) engine).register(collection);
-      LOGGER.info("Starting DM synchronization for \"" + collection.getName()
-          + "\"");
-      for (PresetDefinition presetDef : collectiondef.getPresets()) {
-        List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
-        for (FieldAttributeDefinition fieldAttr : presetDef
-            .getFieldAttributes()) {
-          fieldAttributes.add(fieldAttr.getInstance());
+    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
+      SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
+      if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
+        LOGGER.info("Register Searchengine Configuration for \""
+            + collection.getName() + "\"");
+        ((ManagedSearchEngine) engine).register(collection);
+        LOGGER.info("Starting DM synchronization for \"" + collection.getName()
+            + "\"");
+        for (PresetDefinition presetDef : collectiondef.getPresets()) {
+          List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
+          for (FieldAttributeDefinition fieldAttr : presetDef
+              .getFieldAttributes()) {
+            fieldAttributes.add(fieldAttr.getInstance());
+          }
+          ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
         }
-        ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
       }
     }
     return result;

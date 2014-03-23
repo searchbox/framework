@@ -8,7 +8,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -32,17 +34,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
+import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
+@Configurable
 public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     AccessibleSearchEngine, DisposableBean {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrCloud.class);
+  
+  private static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 
   @Autowired
   ApplicationContext context;
@@ -85,14 +93,42 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
   @Override
   protected SolrServer getSolrServer(Collection collection) {
+    LOGGER.trace("Getting Solr Server for collection {}", collection);
     if (solrServer == null) {
+      LOGGER.debug("Solr Server does not exists, creating it for collection {}", collection);
       initServer();
     }
+    LOGGER.debug("Solr Server is {}", solrServer);
     return solrServer;
   }
 
   @Override
   public void register(Collection collection) {
+    if(MultiCollection.class.isAssignableFrom(collection.getClass())){
+      registerAlias((MultiCollection) collection);
+    } else {
+      registerCollection(collection);
+    }
+  }
+  
+  private void registerAlias(MultiCollection collection){
+    LOGGER.info("Registering multiCollection as alias {}",collection.getName());
+    String adminUrl = getAdminURL();
+    LOGGER.info("Using Solr Base URL: {}", adminUrl);
+    Set<String> collectionList = new TreeSet<String>();
+    for(Collection coll:collection.getCollections()){
+      collectionList.add(coll.getName());
+    }
+    String createAlias = adminUrl+"/collections"
+        +"?action=CREATEALIAS&name="+collection.getName()
+        +"&collections="+StringUtils.join(collectionList, ",");
+    
+    LOGGER.info("CreateAlias REST url: {}",createAlias);
+    this.httpGET(createAlias);
+    
+  }
+    
+  private void registerCollection(Collection collection){
 
     try {
       SolrZkClient zkServer = solrServer.getZkStateReader().getZkClient();
@@ -363,6 +399,11 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
       LOGGER.error("Could not post JSON to {}", url, e);
     }
     return response;
+  }
+  
+  private String getAdminURL() {
+    //TODO Actually resolve to an URL instead of default
+    return DEFAULT_SOLR_URL+"/admin";
   }
 
   @Override

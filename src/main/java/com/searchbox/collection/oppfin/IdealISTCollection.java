@@ -259,6 +259,9 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
       for (int i = 0; i < nodeList.getLength(); i++) {
         String value = nodeList.item(i).getTextContent();
+        if(value.isEmpty()){
+          continue;
+        }
         if (String.class.isAssignableFrom(clazz)) {
           String content = new HtmlToPlainText().getPlainText(Jsoup
               .parse(value));
@@ -270,7 +273,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             date = dfmt.parse(value);
             fields.put(fieldName, date);
           } catch (ParseException e) {
-            LOGGER.warn("Could not parse date", e);
+            LOGGER.warn("Could not parse date for for key {} in document {}", key, uid);
           }
         }
       }

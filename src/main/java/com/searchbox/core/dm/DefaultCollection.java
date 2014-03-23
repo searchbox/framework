@@ -24,7 +24,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.engine.SearchEngine;
 
-public class DefaultCollection implements Collection, CollectionWithFields {
+public class DefaultCollection 
+  implements Collection, CollectionWithFields, SearchableCollection {
 
   @SearchAttribute
   protected String name;

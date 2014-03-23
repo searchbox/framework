@@ -132,12 +132,14 @@ public class SearchboxController {
       RedirectAttributes redirectAttributes) {
     model.setViewName(this.getViewFolder() + "/home");
 
+    
+    return model;
     // TODO when security is true, check LoggedIn
-    PresetDefinition preset = searchbox.getPresets().get(0);
+    /*PresetDefinition preset = searchbox.getPresets().get(0);
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
         + searchbox.getSlug() + "/" + preset.getSlug(), true));
-    return redirect;
+    return redirect;*/
   }
 
   @RequestMapping(value = { "/{preset}", "/{preset}/" })

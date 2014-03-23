@@ -19,8 +19,8 @@
   </c:if>
 
   <sbx:tagAttribute limit="1" label="Source"
-   values="${hit.fieldValues['source']}"
-   cssClass="${hit.fieldValues['source']}" />
+   values="${hit.fieldValues['docSource']}"
+   cssClass="${hit.fieldValues['docSource']}" />
 
   <sbx:tagAttribute limit="1" label="Call" filter="callIdentifier"
    values="${hit.fieldValues['callIdentifier']}" />
