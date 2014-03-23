@@ -216,7 +216,10 @@
 
      <div class="row col-md-7">
       <div class="col-md-12">
-       <jsp:include page="/WEB-INF/views/login.jspx" />
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body"> <jsp:include page="/WEB-INF/views/login.jspx" /></div>
+        </div>
       </div>
      </div>
 
