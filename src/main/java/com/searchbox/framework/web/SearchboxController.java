@@ -131,6 +131,11 @@ public class SearchboxController {
       RedirectAttributes redirectAttributes) {
     model.setViewName(this.getViewFolder() + "/home");
 
+    if(searchbox == null){
+    	LOGGER.error("Searchbox {} not found!",searchbox);
+    	return new ModelAndView(new RedirectView("/", true));
+    }
+    
     // TODO when security is true, check LoggedIn
     PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
@@ -144,6 +149,11 @@ public class SearchboxController {
       HttpServletRequest request, @PathVariable PresetEntity preset,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
+	  if(preset == null){
+		  LOGGER.error("Preset {} not found!",preset);
+		  return getHome(searchbox, request, model, redirectAttributes);
+		  
+	  }
     String process = preset.getDefaultProcess();
     LOGGER.info(
         "Missing process. Redirecting to default process of preset: {}",
