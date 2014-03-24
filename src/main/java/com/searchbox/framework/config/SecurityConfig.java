@@ -62,32 +62,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     if (env.getProperty(USE_SECURITY, Boolean.class, false)) {
       http
+      
       // Configures form login
       .formLogin()
-          .loginPage("/login")
+          .loginPage("/")
           .loginProcessingUrl("/login/authenticate")
-          .failureUrl("/login?error=bad_credentials")
-          // Configures the logout function
+          .failureUrl("/?error=bad_credentials")
           .and()
-          .logout()
+
+      // Configures the logout function
+      .logout()
           .deleteCookies("JSESSIONID")
           .logoutUrl("/logout")
           .logoutSuccessUrl("/")
-          // Configures url based authorization
           .and()
-          .authorizeRequests()
+          
+      // Configures url based authorization
+      .authorizeRequests()
           // Anyone can access the urls
-          .antMatchers("/*","/auth/**", "/login/**", "/signin/**",
+          .antMatchers("/","/*","/auth/**", "/login/**", "/signin/**",
               "/signup/**", "/user/register/**").permitAll()
+          // The system part is protected
+          .antMatchers("/system/**").hasAnyRole("SYSTEM")
           // The admin part is protected
-          .antMatchers("/", "/system/**").hasAnyRole("SYSTEM")
-          // The admin part is protected
-          .antMatchers("/*/admin/**").hasAnyRole("SYSTEM", "ADMIN")
+          .antMatchers("/admin/**").hasAnyRole("SYSTEM", "ADMIN")
           // The rest of the our application is protected.
           .antMatchers("/**").hasAnyRole("SYSTEM", "ADMIN", "USER")
-          // Adds the SocialAuthenticationFilter to Spring Security's
-          // filter chain.
-          .and().apply(new SpringSocialConfigurer());
+          .and()
+          
+      // Adds the SocialAuthenticationFilter to Spring Security's
+      // filter chain.
+      .apply(new SpringSocialConfigurer())
+          .and();
+//      .openidLogin()
+//          .and();
     }
   }
 

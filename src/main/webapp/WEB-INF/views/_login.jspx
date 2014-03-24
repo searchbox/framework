@@ -2,7 +2,6 @@
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:spring="http://www.springframework.org/tags"
   xmlns:form="http://www.springframework.org/tags/form"
-  xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
   xmlns:sec="http://www.springframework.org/security/tags">
 
   <jsp:output omit-xml-declaration="yes" />
@@ -12,25 +11,7 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:directive.page pageEncoding="UTF-8" />
 
-  <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Searchbox - Login page</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  
-  <!-- StyleSheet -->
-  <sb:twitter-bootstrap />
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-  <spring:url value="/assets/css/searchbox-login.css" var="searchbox_login" />
-  <link rel="stylesheet" type="text/css" href="${searchbox_login }" />
-
-
-</head>
-
-<body>
-  <div class="container">
   <sec:authorize access="isAnonymous()">
     <div class="omb_login">
       <c:url value="/user/register" var="registerUrl" />
@@ -127,8 +108,4 @@
     <spring:url value="/logout" var="logoutUrl" />
     <a href="${logoutUrl }">logout</a>
   </sec:authorize>
-    </div>
-  
-</body>
-  </html>
-</jsp:root>
+   </jsp:root>

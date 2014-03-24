@@ -15,4 +15,5 @@
    </a>
   </p>
  </div>
+ <jsp:include page="_google-analytics.jspx"/>
 </footer>

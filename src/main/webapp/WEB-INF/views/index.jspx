@@ -4,7 +4,6 @@
  xmlns:spring="http://www.springframework.org/tags"
  xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
  xmlns:form="http://www.springframework.org/tags/form"
- xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb"
  xmlns:helper="http://www.searchbox.com/helper">
 
  <jsp:output omit-xml-declaration="yes" />
@@ -15,15 +14,11 @@
  <jsp:directive.page pageEncoding="UTF-8" />
 
  <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
+ 
+ <head>
+ <jsp:include page="/WEB-INF/views/common/_head.jspx" />
+ </head>
 
-<sb:base-scripts />
-
-<title>${title}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
 <body>
  <div id="wrap">
 
@@ -218,7 +213,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">Login</div>
-          <div class="panel-body"> <jsp:include page="/WEB-INF/views/login.jspx" /></div>
+          <div class="panel-body"> <jsp:include page="/WEB-INF/views/_login.jspx" /></div>
         </div>
       </div>
      </div>
