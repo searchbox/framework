@@ -106,6 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .openidLogin()
         .loginPage("/")
         .loginProcessingUrl("/login/openid")
+        .failureUrl("/?error=openid_fail")
         .permitAll()
         .authenticationUserDetailsService(openIdUserDetailsService())
         .attributeExchange("https://www.google.com/.*")
