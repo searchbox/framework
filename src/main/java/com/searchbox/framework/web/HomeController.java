@@ -40,9 +40,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -319,5 +321,13 @@ public class HomeController {
     ModelAndView mav = new ModelAndView("index");
     mav.addObject("user", user);
     return mav;
+  }
+  
+  @RequestMapping("/auth/openid")
+  public ModelAndView home(@RequestParam(required=true) String url, 
+      HttpServletRequest request, ModelAndView model){
+    model.setViewName("util/autologin");
+    model.addObject("openid_identifier", url);
+    return model;
   }
 }
