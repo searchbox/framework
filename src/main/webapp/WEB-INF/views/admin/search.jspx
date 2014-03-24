@@ -12,19 +12,11 @@
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:directive.page pageEncoding="UTF-8" />
 
- <html>
+  <html>
+ <head>
+ <jsp:include page="/WEB-INF/views/common/_head.jspx" />
+ </head>
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
-
-<sb:base-scripts />
-<sb:admin-scripts />
-
-<title>${title ? title : "Searchbox search page"}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-</head>
 <body>
  <div id="wrap">
 
