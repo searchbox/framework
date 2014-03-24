@@ -59,12 +59,13 @@
           <span class="omb_spanOr">or</span>
         </div>
       </div>
-
       <div class="row omb_row-sm-offset-3">
         <div class="col-xs-12 col-sm-6">
           <spring:url value="/user/register" var="registerAction" />
-          <form class="omb_loginForm" action="${registerAction }"
-            autocomplete="off" method="post">
+
+            
+            <form:form method="post" commandName="user" cssClass="omb_loginForm">
+            
             <input type="hidden" name="${_csrf.parameterName}"
               value="${_csrf.token}" />
 
@@ -76,9 +77,9 @@
                 <span class="input-group-addon"><i
                   class="fa fa-user">
                     <!-- blah -->
-                </i></span> <input type="text" class="form-control"
-                  name="formattedName" placeholder="${springFirstName }" />
+                </i></span> <form:input path="firstName"  cssClass="form-control" placeholder="${springFirstName }"/>
                 </div>
+                <span class="help-block"><form:errors path="firstName" cssClass="error" /></span>
               </div>
               
               <spring:message var="springLastName" code="label.user.lastName" />
@@ -87,28 +88,23 @@
                   <span class="input-group-addon"><i
                     class="fa fa-user">
                       <!-- blah -->
-                  </i></span> <input type="text" class="form-control"
-                  name="formattedName" placeholder="${springLastName }" />
+                  </i></span> <form:input path="lastName"  cssClass="form-control" placeholder="${springLastName }"/> 
                 </div>
+                <span class="help-block"><form:errors path="lastName" cssClass="error" /></span>
               </div>
-              
             </div>
             
-            <span class="help-block">
-              <!-- help -->
-            </span>
 
             <spring:message var="springUserEmail" code="label.user.emailAddress" />
             <div class="input-group">
               <span class="input-group-addon"><i
                 class="fa fa-envelope">
                   <!-- blah -->
-              </i></span> <input type="email" class="form-control" name="email"
-                placeholder="${springUserEmail }" />
+              </i></span> 
+              <form:input path="email"  cssClass="form-control" placeholder="${springUserEmail}"/> 
             </div>
-            <span class="help-block">
-              <!-- help -->
-            </span>
+            <span class="help-block"><form:errors path="email" cssClass="error" /></span>
+
 
             <div class="row">
               <div class="col-sm-6 col-xs-6">
@@ -117,9 +113,10 @@
                   <span class="input-group-addon"><i
                     class="fa fa-lock">
                       <!-- blah -->
-                  </i></span> <input type="password" class="form-control"
-                    name="password" placeholder="${springPassword}" />
+                  </i></span> 
+                  <form:password path="password"  cssClass="form-control" placeholder="${springPassword}"/> 
                 </div>
+                <span class="help-block"><form:errors path="password" cssClass="error" /></span>
               </div>
               <spring:message var="springConfirmPassword" code="label.user.confirmPassword" />
               <div class="col-sm-6 col-xs-6">
@@ -127,11 +124,10 @@
                   <span class="input-group-addon"><i
                     class="fa fa-lock">
                       <!-- blah -->
-                  </i></span> <input type="password" class="form-control"
-                    name="passwordVerification" placeholder="${springConfirmPassword }" />
+                  </i></span> 
+                  <form:password path="passwordVerification" cssClass="form-control" placeholder="${springConfirmPassword}"/> 
                 </div>
               </div>
-
             </div>
 
 
@@ -148,7 +144,7 @@
               type="submit">
               <spring:message code="label.user.registration.submit.button" />
             </button>
-          </form>
+          </form:form>
         </div>
       </div>
     </div>
