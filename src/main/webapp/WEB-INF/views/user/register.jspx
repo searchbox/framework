@@ -62,20 +62,38 @@
 
       <div class="row omb_row-sm-offset-3">
         <div class="col-xs-12 col-sm-6">
-          <spring:url value="/login/authenticate" var="loginAction" />
-          <form class="omb_loginForm" action="${loginAction }"
+          <spring:url value="/user/register" var="registerAction" />
+          <form class="omb_loginForm" action="${registerAction }"
             autocomplete="off" method="post">
             <input type="hidden" name="${_csrf.parameterName}"
               value="${_csrf.token}" />
 
-            <spring:message var="springFormattedName" code="label.user.formattedName" />
-            <div class="input-group">
-              <span class="input-group-addon"><i
-                class="fa fa-user">
-                  <!-- blah -->
-              </i></span> <input type="text" class="form-control"
-                name="formatted_name" placeholder="${springFormattedName }" />
+            <spring:message var="springFirstName" code="label.user.firstName" />
+            
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <div class="input-group">
+                <span class="input-group-addon"><i
+                  class="fa fa-user">
+                    <!-- blah -->
+                </i></span> <input type="text" class="form-control"
+                  name="formattedName" placeholder="${springFirstName }" />
+                </div>
+              </div>
+              
+              <spring:message var="springLastName" code="label.user.lastName" />
+              <div class="col-sm-6 col-xs-6">
+                <div class="input-group">
+                  <span class="input-group-addon"><i
+                    class="fa fa-user">
+                      <!-- blah -->
+                  </i></span> <input type="text" class="form-control"
+                  name="formattedName" placeholder="${springLastName }" />
+                </div>
+              </div>
+              
             </div>
+            
             <span class="help-block">
               <!-- help -->
             </span>
@@ -83,9 +101,9 @@
             <spring:message var="springUserEmail" code="label.user.emailAddress" />
             <div class="input-group">
               <span class="input-group-addon"><i
-                class="fa fa-user">
+                class="fa fa-envelope">
                   <!-- blah -->
-              </i></span> <input type="text" class="form-control" name="username"
+              </i></span> <input type="email" class="form-control" name="email"
                 placeholder="${springUserEmail }" />
             </div>
             <span class="help-block">
@@ -100,7 +118,7 @@
                     class="fa fa-lock">
                       <!-- blah -->
                   </i></span> <input type="password" class="form-control"
-                    name="password1" placeholder="${springPassword}" />
+                    name="password" placeholder="${springPassword}" />
                 </div>
               </div>
               <spring:message var="springConfirmPassword" code="label.user.confirmPassword" />
@@ -110,7 +128,7 @@
                     class="fa fa-lock">
                       <!-- blah -->
                   </i></span> <input type="password" class="form-control"
-                    name="password2" placeholder="${springConfirmPassword }" />
+                    name="passwordVerification" placeholder="${springConfirmPassword }" />
                 </div>
               </div>
 

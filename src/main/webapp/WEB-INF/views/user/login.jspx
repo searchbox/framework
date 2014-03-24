@@ -58,7 +58,7 @@
             <spring:message var="springUserEmail" code="label.user.emailAddress" /> 
             <div class="input-group">
               <span class="input-group-addon"><i
-                class="fa fa-user"><!-- blah --></i></span> <input type="text"
+                class="fa fa-envelope"><!-- blah --></i></span> <input type="text"
                 class="form-control" name="username"
                 placeholder="${springUserEmail }" />
             </div>
