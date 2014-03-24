@@ -50,6 +50,11 @@
                 $('.collection-synchronize').click(function(e) {
                   e.preventDefault()
                   var loadurl = "${synchCollection}";
+                  data._csrf = '${_csrf.token}';
+                  console.log("${_csrf.token}");
+                  console.log("${_csrf.parameterName}"); 
+       
+                  
                   $.post(loadurl, function(data) {
                     console.log(data);
                     $.bootstrapGrowl(data.message, {
