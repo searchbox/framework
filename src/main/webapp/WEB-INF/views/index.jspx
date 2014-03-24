@@ -243,7 +243,7 @@
              <spring:url value="/${searchbox.slug }" var="searchboxUrl" />
              <td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
              <td>${searchbox.privacy }</td>
-             <td>${searchbox.userRoles.keySet().size() }</td>
+             <td>XXX</td>
              <td>
               <div class="btn-group btn-group-sm">
                <spring:url var="adminUrl"

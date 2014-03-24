@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -32,7 +33,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.security.SocialUserDetails;
 
-import com.searchbox.framework.domain.UserRole;
+import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.web.user.SocialMediaService;
 
 @Entity
@@ -54,14 +55,13 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
 
   private SocialMediaService SignInProvider;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+  @ElementCollection
+  @Enumerated(EnumType.STRING)
   @LazyCollection(LazyCollectionOption.FALSE)
-  List<UserRole> roles = new ArrayList<UserRole>();
-
-  // private Map<Searchbox, UserRole> roles = new
-  // HashMap<Searchbox,UserRole>();
+  List<Role> roles;
 
   public UserEntity() {
+    this.roles = new ArrayList<>();
   }
 
   public UserEntity(String email, String password) {
@@ -102,11 +102,11 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
     this.password = password;
   }
 
-  public List<UserRole> getRoles() {
+  public List<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(List<UserRole> roles) {
+  public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
 

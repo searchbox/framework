@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.openid.OpenIDAttribute;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
+import com.searchbox.framework.domain.Role;
+import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 
@@ -56,6 +58,8 @@ public class OpenIdUserDetailsService implements
       user.setEmail(attributes.get("email"));
       user.setFirstName(attributes.get("firstname"));
       user.setFirstName(attributes.get("lastname"));
+      user.getRoles().add(Role.USER);
+      
       user = repository.save(user);
     } 
     
