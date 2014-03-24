@@ -49,8 +49,8 @@ import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.SolrCloud;
+import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.domain.UserRole;
-import com.searchbox.framework.domain.UserRole.Role;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
 import com.searchbox.framework.model.SearchEngineEntity;
@@ -129,6 +129,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       UserEntity system = userService.registerNewUserAccount("system@searchbox.com", "password");
       UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
       UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
+      
+      system.getRoles().add(Role.SYSTEM);
+      admin.getRoles().add(Role.ADMIN);
+      user.getRoles().add(Role.USER);
 
       LOGGER.info("Bootstraping application with oppfin data...");
 
@@ -591,9 +595,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        * Users preset
        */
 
-      searchbox.addUserRole(new UserRole(system, Role.SYSTEM))
-        .addUserRole(new UserRole(admin, Role.ADMIN))
-        .addUserRole(new UserRole(user, Role.USER));
+//      searchbox.addUserRole(new UserRole(system, Role.SYSTEM))
+//        .addUserRole(new UserRole(admin, Role.ADMIN))
+//        .addUserRole(new UserRole(user, Role.USER));
       
       repository.save(searchbox);
 

@@ -15,16 +15,12 @@
  ******************************************************************************/
 package com.searchbox.framework.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -32,8 +28,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.SortNatural;
-
-import com.searchbox.framework.domain.UserRole;
 
 @Entity
 public class SearchboxEntity extends BaseEntity<Long> 
@@ -64,14 +58,14 @@ public class SearchboxEntity extends BaseEntity<Long>
   @SortNatural
   private SortedSet<PresetEntity> presets;
 
-  @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @MapKey(name = "user")
-  private Map<UserEntity, UserRole> userRoles; 
+//  @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
+//  @LazyCollection(LazyCollectionOption.FALSE)
+//  @MapKey(name = "user")
+//  private Map<UserEntity, UserRole> userRoles; 
 
   public SearchboxEntity() {
     this.presets = new TreeSet<>();
-    this.userRoles = new HashMap<>();
+//    this.userRoles = new HashMap<>();
   }
 
   public Privacy getPrivacy() {
@@ -126,20 +120,20 @@ public class SearchboxEntity extends BaseEntity<Long>
     this.presets = presets;
   }
 
-  public Map<UserEntity, UserRole> getUserRoles() {
-    return userRoles;
-  }
-
-  public void setUserRoles(Map<UserEntity, UserRole> userRoles) {
-    this.userRoles = userRoles;
-  }
-
-
-  public SearchboxEntity addUserRole(UserRole userRole) {
-    userRole.setSearchbox(this);
-    this.userRoles.put(userRole.getUser(), userRole);
-    return this;
-  }
+//  public Map<UserEntity, UserRole> getUserRoles() {
+//    return userRoles;
+//  }
+//
+//  public void setUserRoles(Map<UserEntity, UserRole> userRoles) {
+//    this.userRoles = userRoles;
+//  }
+//
+//
+//  public SearchboxEntity addUserRole(UserRole userRole) {
+//    userRole.setSearchbox(this);
+//    this.userRoles.put(userRole.getUser(), userRole);
+//    return this;
+//  }
   
   @Override
   public int compareTo(SearchboxEntity o) {

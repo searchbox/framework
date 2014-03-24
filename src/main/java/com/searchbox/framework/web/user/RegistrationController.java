@@ -108,8 +108,8 @@ public class RegistrationController {
         LOGGER.info("Registered user account with information: {}", registered);
 
         //Logs the user in.
-        //SecurityUtil.logInUser(registered);
-        LOGGER.info("User {} has been signed in");
+        SecurityUtil.logInUser(registered);
+        LOGGER.info("User {} has been signed in", registered);
         //If the user is signing in by using a social provider, this method call stores
         //the connection to the UserConnection table. Otherwise, this method does not
         //do anything.

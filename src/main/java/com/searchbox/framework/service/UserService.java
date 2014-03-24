@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.framework.domain.Role;
+import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.web.user.RegistrationForm;
@@ -58,6 +60,9 @@ public class UserService {
     UserEntity registered = new UserEntity();
     registered.setEmail(userAccountData.getEmail());
     registered.setPassword(encodedPassword);
+    registered.setFirstName(userAccountData.getFirstName());
+    registered.setLastName(userAccountData.getLastName());
+    registered.getRoles().add(Role.USER);
 
     // User.Builder user =
     // User.getBuilder().email(userAccountData.getEmail())
