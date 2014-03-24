@@ -45,11 +45,18 @@
           </a>
         </div>
         <div class="col-xs-4 col-sm-2">
-          <a href="#" class="btn btn-lg btn-block omb_btn-google"> <i
-            class="fa fa-google-plus visible-xs">
-              <!-- blah -->
-          </i> <span class="hidden-xs">Google+</span>
+         <spring:url var="openIdLoginURL" value="/login/openid" />
+         <form action="${openIdLoginURL }" name="openIdGoogle" id="googleOpenId" method="get"
+          target="_top">
+          <input type="hidden" name="${_csrf.parameterName}"
+           value="${_csrf.token}" /> <input id="openid_identifier"
+           name="openid_identifier" type="hidden"
+           value="https://www.google.com/accounts/o8/id" /> 
+           <a onClick="javascript:document.openIdGoogle.submit();" href="#" class="btn btn-lg btn-block omb_btn-google"> 
+           <i class="fa fa-google-plus visible-xs"><!-- blah --></i> 
+          <span class="hidden-xs">Google</span>
           </a>
+         </form>
         </div>
       </div>
 
