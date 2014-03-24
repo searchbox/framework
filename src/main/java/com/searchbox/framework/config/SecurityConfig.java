@@ -16,6 +16,7 @@
 package com.searchbox.framework.config;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,11 +30,16 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.AuthUserService;
+import com.searchbox.framework.service.OpenIdUserDetailsService;
 import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 
 @Configuration
@@ -41,6 +47,9 @@ import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   protected static final String USE_SECURITY = "use.security";
+  
+  @Autowired
+  private DataSource dataSource;
 
   @Autowired
   private UserRepository userRepository;
@@ -93,9 +102,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // Adds the SocialAuthenticationFilter to Spring Security's
       // filter chain.
       .apply(new SpringSocialConfigurer())
-          .and();
-//      .openidLogin()
-//          .and();
+          .and()
+      .openidLogin()
+        .loginPage("/")
+        .loginProcessingUrl("/login/openid")
+        .permitAll()
+        .authenticationUserDetailsService(openIdUserDetailsService())
+        .attributeExchange("https://www.google.com/.*")
+            .attribute("email")
+                .type("http://axschema.org/contact/email")
+                .required(true)
+                .and()
+            .attribute("firstname")
+                .type("http://axschema.org/namePerson/first")
+                .required(true)
+                .and()
+            .attribute("lastname")
+                .type("http://axschema.org/namePerson/last")
+                .required(true)
+                .and()
+            .and()
+        .attributeExchange(".*yahoo.com.*")
+            .attribute("email")
+                .type("http://axschema.org/contact/email")
+                .required(true)
+                .and()
+            .attribute("fullname")
+                .type("http://axschema.org/namePerson")
+                .required(true)
+                .and()
+            .and()
+        .attributeExchange(".*myopenid.com.*")
+            .attribute("email")
+                .type("http://schema.openid.net/contact/email")
+                .required(true)
+                .and()
+            .attribute("fullname")
+                .type("http://schema.openid.net/namePerson")
+                .required(true);
     }
   }
 
@@ -116,13 +160,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder(10);
   }
+  
+  @Bean
+  public OpenIdUserDetailsService openIdUserDetailsService() {
+    return new OpenIdUserDetailsService(userRepository);
+  }
 
   /**
    * This bean is used to load the user specific data when social sign in is
    * used.
    */
   @Bean
-  public SocialUserDetailsService socialUserDetailsService() {
+  public SocialUserDetailsService simpleSocialUserDetails() {
     return new SimpleSocialUserDetailsService(userDetailsService());
   }
 
@@ -133,5 +182,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public UserDetailsService userDetailsService() {
     return new AuthUserService(userRepository);
+  }
+  
+  
+  @Bean
+  public PersistentTokenRepository persistentTokenRepository() {
+      JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+      tokenRepository.setDataSource(dataSource);
+      return tokenRepository;
+  }
+  
+  @Bean
+  public RememberMeServices rememberMeServices() {
+      PersistentTokenBasedRememberMeServices rememberMeServices = new PersistentTokenBasedRememberMeServices(
+              "uniqueSecret",
+              userDetailsService(),
+              persistentTokenRepository()
+      );
+      rememberMeServices.setAlwaysRemember(true);
+      return rememberMeServices;
   }
 }

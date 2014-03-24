@@ -15,14 +15,24 @@
  ******************************************************************************/
 package com.searchbox.framework.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.social.security.SocialUserDetails;
 import org.springframework.social.security.SocialUserDetailsService;
 
-public class SimpleSocialUserDetailsService implements SocialUserDetailsService {
+public class SimpleSocialUserDetailsService 
+  implements SocialUserDetailsService {
+  
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(SimpleSocialUserDetailsService.class);
 
   private UserDetailsService userDetailsService;
 

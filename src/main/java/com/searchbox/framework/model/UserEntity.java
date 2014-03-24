@@ -36,8 +36,8 @@ import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.web.user.SocialMediaService;
 
 @Entity
-public class UserEntity extends BaseEntity<Long>
-  implements SocialUserDetails, UserDetails, Comparable<UserEntity> {
+public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
+    UserDetails, Comparable<UserEntity> {
 
   @Column(nullable = false, unique = true)
   private String email;
@@ -109,8 +109,8 @@ public class UserEntity extends BaseEntity<Long>
     return this.email;
   }
 
-  public String setUsername() {
-    return this.email;
+  public void setUsername(String userName) {
+    this.setEmail(userName);
   }
 
   @Override
@@ -148,7 +148,6 @@ public class UserEntity extends BaseEntity<Long>
 
   @Override
   public int compareTo(UserEntity o) {
-    return this.getEmail()
-        .compareTo(o.getEmail());
+    return this.getEmail().compareTo(o.getEmail());
   }
 }

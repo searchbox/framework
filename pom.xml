@@ -64,8 +64,8 @@
   <slf4j.version>1.7.5</slf4j.version>
   <spring.version>4.0.2.RELEASE</spring.version>
   <spring-batch.version>2.2.5.RELEASE</spring-batch.version>
-  <spring-security.version>3.2.0.RELEASE</spring-security.version>
-  <spring-social.version>1.1.0.BUILD-SNAPSHOT</spring-social.version>
+  <spring-security.version>3.2.1.RELEASE</spring-security.version>
+  <spring-social.version>1.1.0.RC1</spring-social.version>
   <spring-data.version></spring-data.version>
   <jetty.version>8.1.5.v20120716</jetty.version>
   <lucene.version>4.7.0</lucene.version>
@@ -343,6 +343,12 @@
    <artifactId>spring-security-config</artifactId>
    <version>${spring-security.version}</version>
   </dependency>
+  <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-openid</artifactId>
+      <version>${spring-security.version}</version>
+      <scope>compile</scope>
+    </dependency>
   <dependency>
    <groupId>org.springframework.security</groupId>
    <artifactId>spring-security-taglibs</artifactId>
