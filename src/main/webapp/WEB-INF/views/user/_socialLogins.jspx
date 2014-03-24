@@ -5,70 +5,62 @@
  xmlns:sec="http://www.springframework.org/security/tags">
 
 
- <div class="row omb_row-sm-offset-3 omb_socialButtons">
-  <div class="col-xs-4 col-sm-3">
-   <c:url value="/auth/openid" var="facebookAuth" />
-   <a href="#" data-target="#myOpenId" data-toggle="modal"
-    class="btn btn-lg btn-block omb_btn-openid"> <i
-    class="fa fa-openid visible-xs"> <!-- blah -->
-   </i> <span class="hidden-xs">OpenId</span>
-   </a>
-  </div>
+<div class="row omb_row-sm-offset-3 omb_socialButtons">
+    <div class="col-xs-6 col-sm-3">
+     <c:url value="/auth/openid" var="facebookAuth" />
+     <a href="#" data-target="#myOpenId" data-toggle="modal"
+      class="btn btn-lg btn-block omb_btn-openid"> <i
+      class="fa fa-openid visible-xs">OpenId
+       <!-- blah -->
+     </i> <span class="hidden-xs">OpenId</span>
+     </a>
+    </div>
+    
+    <div class="modal fade bs-modal-sm" id="myOpenId" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+            <h4 class="modal-title" id="myModalLabel">Login with Open Id</h4>
+          </div>
+          <div class="modal-body">
+            <spring:url var="openIdLoginURL" value="/login/openid" />
+            <form action="${openIdLoginURL }" name="openId" id="openId" method="get">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+               <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-user"><!-- close --></i>
+                  </span>
+                  <input placeholder="OpenID Identifier (url / email)" name="openid_identifier" class="form-control" type="text"/>
+                </div>
+              <span class="help-block"><!-- help --></span>  
+              <input type="submit" class="btn btn-lg btn-block omb_btn-openid" value="Login with OpenId"/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div class="modal fade bs-modal-sm" id="myOpenId" tabindex="-1"
-   role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-    <div class="modal-content">
-     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal"
-       aria-hidden="true">X</button>
-      <h4 class="modal-title" id="myModalLabel">Login with Open Id</h4>
-     </div>
-     <div class="modal-body">
-      <spring:url var="openIdLoginURL" value="/login/openid" />
-      <form action="${openIdLoginURL }" name="openId" id="openId"
-       method="get">
-       <input type="hidden" name="${_csrf.parameterName}"
-        value="${_csrf.token}" />
-       <div class="input-group">
-        <span class="input-group-addon"> <i class="fa fa-user">
-          <!-- close -->
-        </i>
-        </span> <input placeholder="OpenID Identifier (url / email)"
-         value="${openid_identifier }" name="openid_identifier"
-         class="form-control" type="text" />
-       </div>
-       <span class="help-block"> <!-- help -->
-       </span> <input type="submit" class="btn btn-lg btn-block omb_btn-openid"
-        value="Login with OpenId" />
-      </form>
-     </div>
+
+    <div class="col-xs-6 col-sm-3">
+     <spring:url var="openIdLoginURL" value="/login/openid" />
+       <form action="${openIdLoginURL }" name="openIdGoogle" id="googleOpenId" method="get"
+        target="_top">
+        <input type="hidden" name="${_csrf.parameterName}"
+         value="${_csrf.token}" /> <input id="openid_identifier"
+         name="openid_identifier" type="hidden"
+         value="https://www.google.com/accounts/o8/id" /> 
+         <a onClick="javascript:document.openIdGoogle.submit();" href="#" class="btn btn-lg btn-block omb_btn-google"> 
+         <i class="fa fa-google-plus visible-xs"><!-- blah --></i> 
+        <span class="hidden-xs">Google</span>
+        </a>
+       </form>
     </div>
    </div>
-  </div>
-
-
-  <div class="col-xs-4 col-sm-3">
-   <spring:url var="openIdLoginURL" value="/login/openid" />
-   <form action="${openIdLoginURL }" name="openIdGoogle"
-    id="googleOpenId" method="get" target="_top">
-    <input type="hidden" name="${_csrf.parameterName}"
-     value="${_csrf.token}" /> <input id="openid_identifier"
-     name="openid_identifier" type="hidden"
-     value="https://www.google.com/accounts/o8/id" /> <a
-     onClick="javascript:document.openIdGoogle.submit();" href="#"
-     class="btn btn-lg btn-block omb_btn-google"> <i
-     class="fa fa-google-plus visible-xs"> <!-- blah -->
-    </i> <span class="hidden-xs">Google</span>
-    </a>
-   </form>
-  </div>
- </div>
-
- <c:if test="${param.error eq 'openid_fail'}">
-  <span class="help-block openid-error"><spring:message
-    code="text.login.page.openidlogin.failed.error" /> </span>
- </c:if>
-
-
-</jsp:root>
+   
+   <c:if test="${param.error eq 'openid_fail'}">
+    <span class="help-block openid-error"><spring:message code="text.login.page.openidlogin.failed.error" /> </span>
+   </c:if>
+     
+   
+  </jsp:root>
