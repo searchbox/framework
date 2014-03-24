@@ -116,7 +116,8 @@ public class SearchElementEntity<K extends SearchElementBean> extends
 
   @Override
   public int compareTo(SearchElementEntity<K> o) {
-    return this.getPosition().compareTo(o.getPosition());
+    return new Integer(this.getPosition()*10)
+      .compareTo(new Integer(o.getPosition()*10+1));
   }
 
   @Override
