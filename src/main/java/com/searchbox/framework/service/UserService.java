@@ -1,5 +1,7 @@
 package com.searchbox.framework.service;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,8 +133,8 @@ public class UserService {
     mailSender.send(msg);
   }
 
-  public UserEntity addRole(UserEntity user, Role role) {
-    user.getRoles().add(role);
+  public UserEntity addRole(UserEntity user, Role... role) {
+    user.getRoles().addAll(Arrays.asList(role));
     return repository.save(user);
   }
 }

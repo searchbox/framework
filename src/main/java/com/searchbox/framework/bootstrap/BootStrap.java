@@ -130,8 +130,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
       UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
       
-      system = userService.addRole(system, Role.SYSTEM);
-      admin = userService.addRole(admin, Role.ADMIN);
+      system = userService.addRole(system, Role.SYSTEM, Role.ADMIN, Role.USER);
+      admin = userService.addRole(admin, Role.ADMIN, Role.USER);
       user = userService.addRole(user, Role.USER);
     
 

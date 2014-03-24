@@ -25,7 +25,9 @@
     <spring:url var="home" value="/${searchbox.getSlug() }/" />
     <spring:url var="admin" value="/admin/${searchbox.getSlug() }/${preset.getSlug() }/${process }" />
     <li><a href="${home }">Home</a></li>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
     <li><a href="${admin }">Admin</a></li>
+     </sec:authorize>
     <li class="divider">
      <!-- divider -->
     </li>
