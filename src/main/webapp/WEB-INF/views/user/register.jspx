@@ -3,8 +3,148 @@
   xmlns:spring="http://www.springframework.org/tags"
   xmlns:form="http://www.springframework.org/tags/form"
   xmlns:sec="http://www.springframework.org/security/tags">
-  
-  Hello world. Tryin gto register a User;
-  
-  
-  </jsp:root>
+
+  <jsp:output omit-xml-declaration="yes" />
+  <jsp:output doctype-root-element="HTML"
+    doctype-system="about:legacy-compat" />
+
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:directive.page pageEncoding="UTF-8" />
+
+  <html>
+<head>
+<jsp:include page="/WEB-INF/views/common/_head.jspx" />
+</head>
+
+<body>
+  <sec:authorize access="isAnonymous()">
+    <div class="omb_login">
+      <c:url value="/user/register" var="registerUrl" />
+      <h3 class="omb_authTitle">
+        <spring:message code="label.navigation.registration.link" />
+        or Login
+      </h3>
+      <div class="row omb_row-sm-offset-3 omb_socialButtons">
+        <div class="col-xs-4 col-sm-2">
+          <c:url value="/auth/facebook" var="facebookAuth" />
+          <a href="${facebookAuth }"
+            class="btn btn-lg btn-block omb_btn-facebook"> <i
+            class="fa fa-facebook visible-xs">
+              <!-- blah -->
+          </i> <span class="hidden-xs">Facebook</span>
+          </a>
+        </div>
+        <div class="col-xs-4 col-sm-2">
+          <c:url value="/auth/twitter" var="twitterAuth" />
+
+          <a href="${twitterAuth }"
+            class="btn btn-lg btn-block omb_btn-twitter"> <i
+            class="fa fa-twitter visible-xs">
+              <!-- blah -->
+          </i> <span class="hidden-xs">Twitter</span>
+          </a>
+        </div>
+        <div class="col-xs-4 col-sm-2">
+          <a href="#" class="btn btn-lg btn-block omb_btn-google"> <i
+            class="fa fa-google-plus visible-xs">
+              <!-- blah -->
+          </i> <span class="hidden-xs">Google+</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="row omb_row-sm-offset-3 omb_loginOr">
+        <div class="col-xs-12 col-sm-6">
+          <!--  <hr class="omb_hrOr"/> -->
+          <span class="omb_spanOr">or</span>
+        </div>
+      </div>
+
+      <div class="row omb_row-sm-offset-3">
+        <div class="col-xs-12 col-sm-6">
+          <spring:url value="/login/authenticate" var="loginAction" />
+          <form class="omb_loginForm" action="${loginAction }"
+            autocomplete="off" method="post">
+            <input type="hidden" name="${_csrf.parameterName}"
+              value="${_csrf.token}" />
+
+            <spring:message var="springFormattedName" code="label.user.formattedName" />
+            <div class="input-group">
+              <span class="input-group-addon"><i
+                class="fa fa-user">
+                  <!-- blah -->
+              </i></span> <input type="text" class="form-control"
+                name="formatted_name" placeholder="${springFormattedName }" />
+            </div>
+            <span class="help-block">
+              <!-- help -->
+            </span>
+
+            <spring:message var="springUserEmail" code="label.user.emailAddress" />
+            <div class="input-group">
+              <span class="input-group-addon"><i
+                class="fa fa-user">
+                  <!-- blah -->
+              </i></span> <input type="text" class="form-control" name="username"
+                placeholder="${springUserEmail }" />
+            </div>
+            <span class="help-block">
+              <!-- help -->
+            </span>
+
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <spring:message var="springPassword" code="label.user.password" />
+                <div class="input-group">
+                  <span class="input-group-addon"><i
+                    class="fa fa-lock">
+                      <!-- blah -->
+                  </i></span> <input type="password" class="form-control"
+                    name="password1" placeholder="${springPassword}" />
+                </div>
+              </div>
+              <spring:message var="springConfirmPassword" code="label.user.confirmPassword" />
+              <div class="col-sm-6 col-xs-6">
+                <div class="input-group">
+                  <span class="input-group-addon"><i
+                    class="fa fa-lock">
+                      <!-- blah -->
+                  </i></span> <input type="password" class="form-control"
+                    name="password2" placeholder="${springConfirmPassword }" />
+                </div>
+              </div>
+
+            </div>
+
+
+            <span class="help-block">
+              <!-- help -->
+            </span> <span class="help-block"> <!-- blah --> <c:if
+                test="${param.error eq 'bad_credentials'}">
+                <spring:message
+                  code="text.login.page.login.failed.error" />
+              </c:if>
+            </span>
+
+            <button class="btn btn-lg btn-primary btn-block"
+              type="submit">
+              <spring:message code="label.user.registration.submit.button" />
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </sec:authorize>
+  <sec:authorize access="isAuthenticated()">
+    <p>
+      <spring:message code="text.login.page.authenticated.user.help" />
+    </p>
+    <c:forEach var="role" items="${user.getAuthorities() }">
+      <p>tata: ${role.getAuthority() }</p>
+    </c:forEach>
+    <spring:url value="/logout" var="logoutUrl" />
+    <a href="${logoutUrl }">logout</a>
+  </sec:authorize>
+</body>
+  </html>
+</jsp:root>

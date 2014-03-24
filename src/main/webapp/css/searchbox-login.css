@@ -6,6 +6,9 @@ Login component
   width:100%;
 }
 
+body > div.omb_login div div.row .col-sm-6{
+  margin-left:0;
+}
 @media ( min-width : 768px) {
   .omb_row-sm-offset-3 div:first-child[class*="col-"] {
     margin-left: 25%;
