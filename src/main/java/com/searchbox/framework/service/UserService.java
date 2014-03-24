@@ -99,15 +99,18 @@ public class UserService {
     return false;
   }
 
-  public void sendPasswordRestoreMail(String email, String serverPath){
-	  
-	  /*String passwordRestoreUrl = serverPath + FlowsConstatns.RESTORE_PASSWORD_ENDPOINT +
-				"?" + 
-//				"a=" + FlowsConstatns.MailMessage.OAUTH_ACTIVATE_ACCOUNT + "&" + 
-				"uts=" + cryptoService.createEncodedContent( new Date(System.currentTimeMillis()), email);*/
-	  
+  public void sendPasswordRestoreMail(String email, String serverPath) {
+
+    /*
+     * String passwordRestoreUrl = serverPath +
+     * FlowsConstatns.RESTORE_PASSWORD_ENDPOINT + "?" + // "a=" +
+     * FlowsConstatns.MailMessage.OAUTH_ACTIVATE_ACCOUNT + "&" + "uts=" +
+     * cryptoService.createEncodedContent( new Date(System.currentTimeMillis()),
+     * email);
+     */
+
   }
-  
+
   private String encodePassword(RegistrationForm dto) {
     String encodedPassword = null;
 
@@ -118,15 +121,15 @@ public class UserService {
 
     return encodedPassword;
   }
-  
+
   private void sendMail(String email, String mailSubject, String mailBody) {
-	  	MailSender mailSender = new JavaMailSenderImpl();
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(email);
-		msg.setSubject(mailSubject);
-		msg.setText(mailBody);
-		mailSender.send(msg);
-	}
+    MailSender mailSender = new JavaMailSenderImpl();
+    SimpleMailMessage msg = new SimpleMailMessage();
+    msg.setTo(email);
+    msg.setSubject(mailSubject);
+    msg.setText(mailBody);
+    mailSender.send(msg);
+  }
 
   public UserEntity addRole(UserEntity user, Role role) {
     user.getRoles().add(role);
