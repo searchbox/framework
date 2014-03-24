@@ -127,9 +127,7 @@
                   </i></span> 
                   <form:password path="passwordVerification" cssClass="form-control" placeholder="${springConfirmPassword}"/> 
                 </div>
-                <span class="help-block"><form:errors path="passwordVerification" cssClass="error" /></span>
               </div>
-
             </div>
 
 

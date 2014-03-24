@@ -6,6 +6,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.searchbox.framework.web.util.FieldMatch;
+
+@FieldMatch.List({
+    @FieldMatch(first = "password", second = "passwordVerification", message = "The password fields must match"),
+})
 public class RegistrationForm {
 
   public static final String FIELD_NAME_EMAIL = "email";
@@ -23,8 +28,12 @@ public class RegistrationForm {
   @Size(max = 100)
   private String lastName;
 
+  @NotEmpty
+  @Size(min = 7, max = 100)
   private String password;
 
+  @NotEmpty
+  @Size(min = 7, max = 100)
   private String passwordVerification;
 
   private SocialMediaService signInProvider;
