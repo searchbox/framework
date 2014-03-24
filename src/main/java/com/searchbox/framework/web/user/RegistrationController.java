@@ -89,9 +89,9 @@ public class RegistrationController {
     public String registerUserAccount(@Valid @ModelAttribute("user") RegistrationForm userAccountData,
                                       BindingResult result,
                                       WebRequest request) throws DataException {
-        LOGGER.info("Registering user account with information: {}", userAccountData);
+        LOGGER.debug("Registering user account with information: {}", userAccountData);
         if (result.hasErrors()) {
-            LOGGER.info("Validation errors found. Rendering form view.");
+            LOGGER.debug("Validation errors found. Rendering form view.");
             return VIEW_NAME_REGISTRATION_PAGE;
         }
 
@@ -113,7 +113,7 @@ public class RegistrationController {
         //If the user is signing in by using a social provider, this method call stores
         //the connection to the UserConnection table. Otherwise, this method does not
         //do anything.
-        //ProviderSignInUtils.handlePostSignUp(registered.getEmail(), request);
+        ProviderSignInUtils.handlePostSignUp(registered.getEmail(), request);
 
         return "redirect:/";
     }

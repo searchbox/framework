@@ -126,9 +126,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       }
 
       LOGGER.info("Creating Default Users...");
-      UserEntity system = userService.registerNewUserAccount("system", "password");
-      UserEntity admin = userService.registerNewUserAccount("admin", "password");
-      UserEntity user = userService.registerNewUserAccount("user", "password");
+      UserEntity system = userService.registerNewUserAccount("system@searchbox.com", "password");
+      UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
+      UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
 
       LOGGER.info("Bootstraping application with oppfin data...");
 
