@@ -19,51 +19,9 @@
     Login or <a href="${registerUrl }"><spring:message
       code="label.navigation.registration.link" /></a>
    </h3>
-   <div class="row omb_row-sm-offset-3 omb_socialButtons">
-    <div class="col-xs-4 col-sm-2">
-     <c:url value="/auth/facebook" var="facebookAuth" />
-     <a href="${facebookAuth }"
-      class="btn btn-lg btn-block omb_btn-facebook"> <i
-      class="fa fa-facebook visible-xs">
-       <!-- blah -->
-     </i> <span class="hidden-xs">Facebook</span>
-     </a>
-    </div>
-    <div class="col-xs-4 col-sm-2">
-     <c:url value="/auth/twitter" var="twitterAuth" />
-
-     <a href="${twitterAuth }"
-      class="btn btn-lg btn-block omb_btn-twitter"> <i
-      class="fa fa-twitter visible-xs">
-       <!-- blah -->
-     </i> <span class="hidden-xs">Twitter</span>
-     </a>
-    </div>
-    <div class="col-xs-4 col-sm-2">
-     <spring:url var="openIdLoginURL" value="/login/openid" />
-       <form action="${openIdLoginURL }" name="openIdGoogle" id="googleOpenId" method="get"
-        target="_top">
-        <input type="hidden" name="${_csrf.parameterName}"
-         value="${_csrf.token}" /> <input id="openid_identifier"
-         name="openid_identifier" type="hidden"
-         value="https://www.google.com/accounts/o8/id" /> 
-         <a onClick="javascript:document.openIdGoogle.submit();" href="#" class="btn btn-lg btn-block omb_btn-google"> 
-         <i class="fa fa-google-plus visible-xs"><!-- blah --></i> 
-        <span class="hidden-xs">Google</span>
-        </a>
-       </form>
-    </div>
-   </div>
-
-       <form action="${openIdLoginURL }" name="openId" id="openId" method="get">
-<input type="hidden" name="${_csrf.parameterName}"
-         value="${_csrf.token}" />
-   <input id="openid_identifier"
-         name="openid_identifier" type="text"/>
-         <input type="submit"  />
-         
-         </form>
-
+   
+    <jsp:include page="_socialLogins.jspx" />
+ 
    <div class="row omb_row-sm-offset-3 omb_loginOr">
     <div class="col-xs-12 col-sm-6">
      <!--  <hr class="omb_hrOr"/> -->
@@ -87,9 +45,7 @@
        </i></span> <input type="text" class="form-control" name="username"
         placeholder="${springUserEmail }" />
       </div>
-      <span class="help-block">
-       <!-- help -->
-      </span>
+      <span class="help-block"><!-- help --></span>
 
       <spring:message var="springPassword" code="label.user.password" />
       <div class="input-group">

@@ -33,6 +33,11 @@ body > div.omb_login div div.row .col-sm-6{
   background: #3b5998;
 }
 
+.omb_login .omb_socialButtons .omb_btn-openid {
+  color: #fafafa;
+  background:#e16309;
+}
+
 .omb_login .omb_socialButtons .omb_btn-twitter {
   background: #00aced;
 }
