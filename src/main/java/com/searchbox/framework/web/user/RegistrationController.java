@@ -89,31 +89,31 @@ public class RegistrationController {
     public String registerUserAccount(@Valid @ModelAttribute("user") RegistrationForm userAccountData,
                                       BindingResult result,
                                       WebRequest request) throws DataException {
-        LOGGER.debug("Registering user account with information: {}", userAccountData);
+        LOGGER.info("Registering user account with information: {}", userAccountData);
         if (result.hasErrors()) {
-            LOGGER.debug("Validation errors found. Rendering form view.");
+            LOGGER.info("Validation errors found. Rendering form view.");
             return VIEW_NAME_REGISTRATION_PAGE;
         }
 
-        LOGGER.debug("No validation errors found. Continuing registration process.");
+        LOGGER.info("No validation errors found. Continuing registration process.");
 
         UserEntity registered = createUserAccount(userAccountData, result);
 
         //If email address was already found from the database, render the form view.
         if (registered == null) {
-            LOGGER.debug("An email address was found from the database. Rendering form view.");
+            LOGGER.info("An email address was found from the database. Rendering form view.");
             return VIEW_NAME_REGISTRATION_PAGE;
         }
 
-        LOGGER.debug("Registered user account with information: {}", registered);
+        LOGGER.info("Registered user account with information: {}", registered);
 
         //Logs the user in.
-        SecurityUtil.logInUser(registered);
-        LOGGER.debug("User {} has been signed in");
+        //SecurityUtil.logInUser(registered);
+        LOGGER.info("User {} has been signed in");
         //If the user is signing in by using a social provider, this method call stores
         //the connection to the UserConnection table. Otherwise, this method does not
         //do anything.
-        ProviderSignInUtils.handlePostSignUp(registered.getEmail(), request);
+        //ProviderSignInUtils.handlePostSignUp(registered.getEmail(), request);
 
         return "redirect:/";
     }
