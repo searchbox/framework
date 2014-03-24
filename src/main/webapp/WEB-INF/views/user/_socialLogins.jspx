@@ -57,4 +57,10 @@
        </form>
     </div>
    </div>
+   
+   <c:if test="${param.error eq 'openid_fail'}">
+    <span class="help-block openid-error"><spring:message code="text.login.page.openidlogin.failed.error" /> </span>
+   </c:if>
+     
+   
   </jsp:root>

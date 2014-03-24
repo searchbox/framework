@@ -82,6 +82,14 @@ body > div.omb_login div div.row .col-sm-6{
   color: red;
 }
 
+.openid-error {
+  text-align: center;
+  color: red;
+}
+.omb_forgotPwd{
+  margin-top:10px;
+}
+
 @media ( min-width : 768px) {
   .omb_login .omb_forgotPwd {
     text-align: right;
