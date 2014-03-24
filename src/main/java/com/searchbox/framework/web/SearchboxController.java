@@ -192,19 +192,12 @@ public class SearchboxController {
   }
   
   private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
+    
     Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
-    for (FieldAttributeEntity def : preset.getFieldAttributes()) {
+    for (FieldAttributeEntity def : preset.getFieldAttributes(true)) {
       fieldAttributes.add(def.build());
     }
     
-    //Inheritence of FieldAttribute for children
-    if(!preset.getChildren().isEmpty() && preset.getInheritFieldAttributes()){
-      for(PresetEntity child:preset.getChildren()){
-        for (FieldAttributeEntity def : child.getFieldAttributes()) {
-          fieldAttributes.add(def.build());
-        } 
-      }
-    }
     return fieldAttributes;
   }
 

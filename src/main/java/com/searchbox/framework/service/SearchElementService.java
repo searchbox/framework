@@ -61,7 +61,7 @@ public class SearchElementService {
 
     elementEntities.addAll(preset
         .getSearchElements(PresetEntity.DEFAULT_PROCESS));
-    elementEntities.addAll(preset.getSearchElements(process));
+    elementEntities.addAll(preset.getSearchElements(true, process));
 
     // Build the Preset DTO with dependancies
     Set<SearchElement> searchElements = new TreeSet<SearchElement>();
@@ -78,20 +78,7 @@ public class SearchElementService {
         LOGGER.error("Could not get SearchElement for: {}", elementEntity, e);
       }
     }
-
-    // Get the required SearchElement from childrens
-    // TODO should be generaly done for all getters of SearchElement
-    for (PresetEntity child : preset.getChildren()) {
-      elementEntities = new TreeSet<SearchElementEntity<?>>();
-      elementEntities.addAll(child
-          .getSearchElements(PresetEntity.DEFAULT_PROCESS));
-      elementEntities.addAll(child.getSearchElements(process));
-      for (SearchElementEntity<?> elementEntity : elementEntities) {
-        if (preset.getInheritedTypes().contains(elementEntity.getClazz())) {
-          searchElements.add(this.getSearchElement(elementEntity));
-        }
-      }
-    }
+    
     return searchElements;
   }
 

@@ -446,7 +446,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setProcess("search")
           .end()
           
-        .addTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
+        .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
+          .setProcess("search")
+          .end()
         
         .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenViewMeta.jspx")
           .setLabel("leftCol")
@@ -521,7 +523,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addQueryElement()
         .addStatElement()
-        .addTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
+        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
+          .setProcess("search")
+          .end()
         .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistView.jspx")
           .setLabel("body")
           .setProcess("view")
@@ -577,7 +581,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("Tag", "cordisTag")
         .addFieldFacet("Status", "cordisProjectStatus")
         
-        .addTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
+          .setProcess("search")
+          .end()
         .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisView.jspx")
           .setLabel("body")
           .setProcess("view")

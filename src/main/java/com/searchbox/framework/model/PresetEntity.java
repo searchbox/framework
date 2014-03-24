@@ -81,7 +81,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @ElementCollection(fetch=FetchType.EAGER)
   private List<Class<?>> inheritedTypes;
   
-  private Boolean inheritFieldAttributes;
+  private Boolean inheritFieldAttributes = true;
 
   private String slug;
 
@@ -137,14 +137,13 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public Boolean getInheritFieldAttributes() {
     return inheritFieldAttributes;
-  }
+  }  
 
   public PresetEntity setInheritFieldAttributes(Boolean inheritFieldAttributes) {
     this.inheritFieldAttributes = inheritFieldAttributes;
     return this;
   }
-
-
+  
   public String getDefaultProcess() {
     return defaultProcess;
   }
@@ -255,6 +254,36 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return searchElements;
   }
 
+  public Set<SearchElementEntity<?>> getSearchElements(List<Class<?>> types, Boolean inherited, String process) {
+    if(!inherited){
+      return getSearchElements(process);
+    } else {
+      Set<SearchElementEntity<?>> definitions = new TreeSet<>();
+      for(SearchElementEntity<?> element:getSearchElements(process)){
+        if(types.contains(element.getClazz())){
+          definitions.add(element);
+        }
+      }
+      for(PresetEntity child:this.getChildren()){
+        definitions.addAll(child.getSearchElements(types, inherited, process));
+      }
+      return definitions;
+    }
+  }
+  
+  public Set<SearchElementEntity<?>> getSearchElements(Boolean inherited, String process) {
+    if(!inherited){
+      return getSearchElements(process);
+    } else {
+      Set<SearchElementEntity<?>> definitions = getSearchElements(process);
+      for(PresetEntity child:this.getChildren()){
+        definitions.addAll(child.getSearchElements(this.getInheritedTypes(), 
+            inherited, process));
+      }
+      return definitions;
+    }
+  }
+  
   public Set<SearchElementEntity<?>> getSearchElements(String process) {
     Set<SearchElementEntity<?>> definitions = new TreeSet<SearchElementEntity<?>>();
     for (SearchElementEntity<?> definition : this.searchElements) {
@@ -285,6 +314,20 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public Set<FieldAttributeEntity> getFieldAttributes() {
     return fieldAttributes;
+  }
+  
+  public Set<FieldAttributeEntity> getFieldAttributes(Boolean inherited) {
+    if(inherited && this.inheritFieldAttributes) {
+      Set<FieldAttributeEntity> attributes = this.getFieldAttributes();
+      for(PresetEntity child:this.getChildren()){
+        if(this.inheritFieldAttributes){
+          attributes.addAll(child.getFieldAttributes(true));
+        }
+      }
+      return attributes;
+    } else {
+      return this.getFieldAttributes();
+    }
   }
 
   public PresetEntity setFieldAttributes(
