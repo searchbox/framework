@@ -127,4 +127,9 @@ public class UserService {
 		msg.setText(mailBody);
 		mailSender.send(msg);
 	}
+
+  public UserEntity addRole(UserEntity user, Role role) {
+    user.getRoles().add(role);
+    return repository.save(user);
+  }
 }

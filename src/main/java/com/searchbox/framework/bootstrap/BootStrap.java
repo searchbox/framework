@@ -130,9 +130,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
       UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
       
-      system.getRoles().add(Role.SYSTEM);
-      admin.getRoles().add(Role.ADMIN);
-      user.getRoles().add(Role.USER);
+      system = userService.addRole(system, Role.SYSTEM);
+      admin = userService.addRole(admin, Role.ADMIN);
+      user = userService.addRole(user, Role.USER);
+    
 
       LOGGER.info("Bootstraping application with oppfin data...");
 
