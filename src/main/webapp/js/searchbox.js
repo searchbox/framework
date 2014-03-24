@@ -53,11 +53,10 @@ var bindClickableTagsEvents = function() {
         var tag = $(this);
         if ($(this).hasClass("selected")) {
           submitForm($(this).attr("data-condition"), "", $(this).attr(
-          "data-condition-value"));
+              "data-condition-value"));
         } else {
           submitForm($(this).attr("data-condition"), $(this).attr(
-              "data-condition-value"), $(this).attr(
-              "data-condition-value"));
+              "data-condition-value"), $(this).attr("data-condition-value"));
         }
         return false;
       });
@@ -192,15 +191,16 @@ var bindResultPageEvents = function() {
 
 var submitForm = function(paramName, paramValue, multi) {
   // remove any paramName that might be in page already
-  console.log(" Removing already present input for " + paramName + " and value: " + multi);
+  console.log(" Removing already present input for " + paramName
+      + " and value: " + multi);
   $('input[name=' + paramName + ']').each(function() {
     if ($(this).val() == multi) {
       $(this).val("");
-    } else if(!multi) {
+    } else if (!multi) {
       $(this).val("");
     }
   });
-    
+
   console.log("Adding input " + paramName + "=" + paramValue);
   var input = $("<input type='hidden'/>");
   input.attr("name", paramName);
@@ -229,5 +229,11 @@ $(document).ready(function() {
 
     });
     $(this).tab('show')
+  });
+
+  var token = $("meta[name='_csrf']").attr("content");
+  var header = $("meta[name='_csrf_header']").attr("content");
+  $(document).ajaxSend(function(e, xhr, options) {
+      xhr.setRequestHeader(header, token);
   });
 });

@@ -6,16 +6,23 @@
  <jsp:output omit-xml-declaration="yes" />
 
 
-  <title>${title }</title>
-  
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <jsp:include page="_twitter-bootstrap.jspx" />
-  <jsp:include page="_base-scripts.jspx" />
-  
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-  <spring:url value="/assets/css/searchbox-login.css" var="searchbox_login" />
-  <link rel="stylesheet" type="text/css" href="${searchbox_login }" />
-  
+ <title>${title }</title>
+
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+ <jsp:include page="_twitter-bootstrap.jspx" />
+ <jsp:include page="_base-scripts.jspx" />
+
+ <link
+  href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+  rel="stylesheet" />
+ <spring:url value="/assets/css/searchbox-login.css"
+  var="searchbox_login" />
+ <link rel="stylesheet" type="text/css" href="${searchbox_login }" />
+
+
+ <meta name="_csrf" content="${_csrf.token}" />
+ <meta name="_csrf_header" content="${_csrf.headerName}" />
+
 </jsp:root>

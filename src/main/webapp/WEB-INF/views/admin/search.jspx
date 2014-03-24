@@ -15,6 +15,7 @@
   <html>
  <head>
  <jsp:include page="/WEB-INF/views/common/_head.jspx" />
+ <jsp:include page="/WEB-INF/views/common/_admin-scripts.jspx" />
  </head>
 
 <body>
