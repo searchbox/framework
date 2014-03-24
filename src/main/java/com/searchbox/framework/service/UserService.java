@@ -3,6 +3,9 @@ package com.searchbox.framework.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +94,15 @@ public class UserService {
     return false;
   }
 
+  public void sendPasswordRestoreMail(String email, String serverPath){
+	  
+	  /*String passwordRestoreUrl = serverPath + FlowsConstatns.RESTORE_PASSWORD_ENDPOINT +
+				"?" + 
+//				"a=" + FlowsConstatns.MailMessage.OAUTH_ACTIVATE_ACCOUNT + "&" + 
+				"uts=" + cryptoService.createEncodedContent( new Date(System.currentTimeMillis()), email);*/
+	  
+  }
+  
   private String encodePassword(RegistrationForm dto) {
     String encodedPassword = null;
 
@@ -101,4 +113,13 @@ public class UserService {
 
     return encodedPassword;
   }
+  
+  private void sendMail(String email, String mailSubject, String mailBody) {
+	  	MailSender mailSender = new JavaMailSenderImpl();
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(email);
+		msg.setSubject(mailSubject);
+		msg.setText(mailBody);
+		mailSender.send(msg);
+	}
 }
