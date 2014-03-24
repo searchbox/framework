@@ -38,7 +38,7 @@ public class OpenIdUserDetailsService implements
         
     UserEntity user = null;
     for(OpenIDAttribute attribute:token.getAttributes()){
-      attributes.put(attribute.getName(), StringUtils.join(attribute.getValues(), " "));
+      attributes.put(attribute.getName().toLowerCase(), StringUtils.join(attribute.getValues(), " "));
       if(attribute.getName().equalsIgnoreCase("email")){
         for(String attributeValue:attribute.getValues()){
           user = repository.findByEmail(attributeValue);
@@ -53,9 +53,12 @@ public class OpenIdUserDetailsService implements
     if(user == null){
       user = new UserEntity();
       user.setUsername(attributes.get("email"));
-      
-      user.setEmail(email);
+      user.setEmail(attributes.get("email"));
+      user.setFirstName(attributes.get("firstname"));
+      user.setFirstName(attributes.get("lastname"));
+      user = repository.save(user);
     } 
+    
     return user;
   }
 }

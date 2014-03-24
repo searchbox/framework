@@ -42,6 +42,9 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
   @Column(nullable = false, unique = true)
   private String email;
 
+  private String firstName;
+  private String lastName;
+  
   private String password;
 
   private boolean accountNonExpired = true;
@@ -64,6 +67,22 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
   public UserEntity(String email, String password) {
     this.email = email;
     this.password = password;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public String getEmail() {
