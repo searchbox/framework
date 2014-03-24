@@ -29,7 +29,11 @@ public interface PresetRepository extends
       SearchboxEntity searchbox, String slug);
 
   public List<PresetEntity> findAllBySearchbox(SearchboxEntity searchbox);
+  
+  public List<PresetEntity> findAllBySearchboxAndVisible(
+      SearchboxEntity searchbox, Boolean visible);
 
   public PresetEntity findPresetDefinitionBySlug(String slug);
+  
 
 }

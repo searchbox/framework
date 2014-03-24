@@ -92,7 +92,7 @@ public class SearchboxController {
 
   @ModelAttribute("presets")
   public List<PresetEntity> getAllPresets(@PathVariable SearchboxEntity searchbox) {
-    return presetRepository.findAllBySearchbox(searchbox);
+    return presetRepository.findAllBySearchboxAndVisible(searchbox, true);
   }
 
   @ModelAttribute("conditions")

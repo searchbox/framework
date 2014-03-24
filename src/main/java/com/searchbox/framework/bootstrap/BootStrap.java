@@ -399,6 +399,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setDescription("EEN cooperations")
         .setLabel("EEN")
         .setSlug("een")
+        .setVisible(false)
          
         .addSortableFieldAttribute("Published", "eenDatumSubmit")
         .addSortableFieldAttribute("Updated", "eenDatumUpdate")
@@ -480,6 +481,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setCollection(idealistCollection)
         .setSlug("idealist")
         .setLabel("Ideal-IST")
+        .setVisible(false)
         .setDescription("IDEALIST cooperations")
         
         .newFieldAttribute("Title","idealistTitle")

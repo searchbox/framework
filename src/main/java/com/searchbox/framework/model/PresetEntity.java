@@ -86,6 +86,8 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   private String slug;
 
   private String label;
+  
+  private Boolean visible = true;
 
   private String description;
 
@@ -104,6 +106,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     this.inheritedTypes = new ArrayList<>();
   }
   
+  
 
   // @PostLoad
   // public void postLoad() {
@@ -113,6 +116,15 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   // }
   // }
   // }
+
+  public Boolean getVisible() {
+    return visible;
+  }
+
+  public PresetEntity setVisible(Boolean visible) {
+    this.visible = visible;
+    return this;
+  }
 
   public List<Class<?>> getInheritedTypes() {
     return inheritedTypes;
