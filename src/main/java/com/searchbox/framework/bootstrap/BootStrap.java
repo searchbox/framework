@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
 import com.searchbox.core.dm.MultiCollection;
+import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.debug.SolrToString;
@@ -46,7 +50,7 @@ import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
-import com.searchbox.engine.solr.SolrCloud;
+import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
@@ -65,6 +69,9 @@ import com.searchbox.framework.service.UserService;
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BootStrap.class);
+  
+  @Resource
+  Environment env;
 
   @Autowired
   private ApplicationContext context;
@@ -109,14 +116,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       LOGGER.info("++ Creating Embedded Solr Engine");
       SearchEngineEntity<?> engine = null;
       try {
+        
+        String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
+        Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
         engine = new SearchEngineEntity<>()
-          .setClazz(SolrCloud.class)
-          .setName("Local SolrCloud")
-          .setAttribute("zkHost", "localhost:9983");
+            .setClazz(clazz)
+            .setAttribute(env.getProperty("searchengine.prop","solrHome"),
+                env.getProperty("searchengine.prop.value",
+                    context.getResource("classpath:solr/").getURL().getPath()));
 
-        // engine = new
-        // SearchEngineDefinition(EmbeddedSolr.class,"embedded Solr");
-        // engine.setAttributeValue("solrHome",context.getResource("classpath:solr/").getURL().getPath());
         engine = engineRepository.save(engine);
       } catch (Exception e) {
         LOGGER.error("Could not set definition for SolrEmbededServer", e);

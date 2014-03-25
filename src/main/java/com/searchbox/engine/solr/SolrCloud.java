@@ -31,11 +31,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Collection;
@@ -44,27 +40,20 @@ import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
 public class SolrCloud extends SolrSearchEngine implements InitializingBean,
-    AccessibleSearchEngine, DisposableBean {
+    AccessibleSearchEngine {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrCloud.class);
   
   private static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 
   @SearchAttribute
-  // FIXME this is null when not set like this when using afterProperties
-  private String zkHost = "localhost:9983";
+  private String zkHost = "";
 
   private static final String ZK_CORE_CONFIG_PATH = "/configs";
   private static final String ZK_COLLECTION_PATH = "/collections";
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    initServer();
-  }
-
-  @Override
-  public void destroy() throws Exception {
-    getSolrServer(null).shutdown();
   }
 
   private static CloudSolrServer solrServer;
