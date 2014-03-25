@@ -61,16 +61,16 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @ManyToOne
   private SearchboxEntity searchbox;
 
-  @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   @LazyCollection(LazyCollectionOption.TRUE)
   private PresetEntity parent;
 
-  @OneToMany(targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
+  @OneToMany(fetch=FetchType.LAZY, targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<PresetEntity> children;
 
-  @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.REFRESH})
   @LazyCollection(LazyCollectionOption.TRUE)
   private CollectionEntity<?> collection;
 
