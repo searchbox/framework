@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
@@ -32,9 +33,9 @@ public class SearchEngineEntity<K extends SearchEngine<?,?>>
   extends BeanFactoryEntity<Long> 
   implements ParametrizedBeanFactory<K>, Comparable<SearchEngineEntity<K>> {
   
-  @OneToMany(mappedBy = "searchEngine", orphanRemoval = true, 
+  @OneToMany(fetch=FetchType.LAZY, mappedBy = "searchEngine", orphanRemoval = true, 
       cascade ={CascadeType.MERGE, CascadeType.REFRESH})
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private Set<CollectionEntity<?>> collections; 
   
   private Class<?> clazz;

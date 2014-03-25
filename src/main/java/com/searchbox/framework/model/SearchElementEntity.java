@@ -16,6 +16,7 @@
 package com.searchbox.framework.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -36,7 +37,7 @@ public class SearchElementEntity<K extends SearchElementBean> extends
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchElementEntity.class);
 
-  @ManyToOne(targetEntity = PresetEntity.class)
+  @ManyToOne(fetch=FetchType.LAZY, targetEntity = PresetEntity.class)
   private PresetEntity preset;
 
   private Class<?> clazz;

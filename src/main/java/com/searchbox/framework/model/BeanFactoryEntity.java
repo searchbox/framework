@@ -25,7 +25,7 @@ public abstract class BeanFactoryEntity<K extends Serializable> extends
   private static final Logger LOGGER = LoggerFactory
       .getLogger(BeanFactoryEntity.class);
 
-  @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, targetEntity = AttributeEntity.class, cascade = CascadeType.ALL)
+  @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, targetEntity = AttributeEntity.class, cascade = CascadeType.ALL)
   @Type(type = "com.searchbox.framework.model.AttributeEntity")
   private Set<AttributeEntity> attributes;
 

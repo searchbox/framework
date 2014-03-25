@@ -57,16 +57,16 @@ public class CollectionEntity<K extends Collection> extends
 
   private String idFieldName;
 
-  @ManyToOne
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @ManyToOne(fetch=FetchType.LAZY)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private SearchEngineEntity<?> searchEngine;
 
-  @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(fetch=FetchType.LAZY, mappedBy = "collection", cascade = CascadeType.ALL)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private Set<PresetEntity> presets;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private Set<FieldEntity> fields;
 
   public CollectionEntity() {
