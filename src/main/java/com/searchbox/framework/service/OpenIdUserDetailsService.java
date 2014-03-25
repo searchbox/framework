@@ -56,8 +56,8 @@ public class OpenIdUserDetailsService implements
       user = new UserEntity();
       user.setUsername(attributes.get("email"));
       user.setEmail(attributes.get("email"));
-      user.setFirstName(attributes.get("firstname"));
-      user.setFirstName(attributes.get("lastname"));
+//      user.setFirstName(attributes.get("firstname"));
+//      user.setFirstName(attributes.get("lastname"));
       user.getRoles().add(Role.USER);
       
       user = repository.save(user);

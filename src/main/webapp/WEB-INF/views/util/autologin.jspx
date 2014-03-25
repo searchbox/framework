@@ -19,7 +19,10 @@
 </head>
 
 <body>
+  <div style="display:none">
  <jsp:include page="/WEB-INF/views/user/login.jspx" />
+ </div>
+ <h4>You are being logged in, please wait...</h4>
 </body>
 <script>
 $( document ).ready(function() {

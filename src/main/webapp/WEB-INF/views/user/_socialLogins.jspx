@@ -31,7 +31,9 @@
                   <span class="input-group-addon">
                     <i class="fa fa-user"><!-- close --></i>
                   </span>
-                  <input placeholder="OpenID Identifier (url / email)" name="openid_identifier" class="form-control" type="text"/>
+                  <input placeholder="OpenID Identifier (url / email)" 
+                    value="${openid_identifier }"
+                    name="openid_identifier" class="form-control" type="text"/>
                 </div>
               <span class="help-block"><!-- help --></span>  
               <input type="submit" class="btn btn-lg btn-block omb_btn-openid" value="Login with OpenId"/>
