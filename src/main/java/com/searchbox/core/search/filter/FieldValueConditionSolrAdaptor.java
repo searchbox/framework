@@ -25,7 +25,7 @@ public class FieldValueConditionSolrAdaptor {
   public void createFilterQueries(SolrSearchEngine engine,
       FieldAttribute attribute, FieldValueCondition condition, SolrQuery query) {
 
-    LOGGER.info("Adapting fieldValueCondition {}",condition);
+    LOGGER.debug("Adapting fieldValueCondition {}",condition);
 
     if (!attribute.getField().getKey().equals(condition.getFieldName())) {
       return;
