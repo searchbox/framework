@@ -20,12 +20,14 @@ import java.util.List;
 
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.web.SearchboxController;
 
 @Controller
@@ -34,6 +36,12 @@ public class AdminSearchController extends SearchboxController {
 
   @Autowired
   JobExplorer jobExplorer;
+  
+  @ModelAttribute("user")
+  public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
+    return user;
+  }
+
 
   @ModelAttribute("OrderEnum")
   public List<Order> getReferenceOrder() {

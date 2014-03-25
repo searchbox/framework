@@ -8,7 +8,14 @@
 
  <ul class="nav navbar-nav navbar-right">
   <li class="dropdown"><a href="#" class="dropdown-toggle"
-   data-toggle="dropdown">Options <b class="caret"> <!-- Caret -->
+   data-toggle="dropdown">
+    <sec:authorize access="isAuthenticated()">
+         ${user.getEmail() }
+   </sec:authorize>
+   <sec:authorize access="isAnonymous()">
+         Options
+   </sec:authorize>
+   <b class="caret"> <!-- Caret -->
    </b></a>
    <ul class="dropdown-menu">
     <sec:authorize access="isAnonymous()">
@@ -24,9 +31,13 @@
     
     <spring:url var="home" value="/${searchbox.getSlug() }/" />
     <spring:url var="admin" value="/admin/${searchbox.getSlug() }/${preset.getSlug() }/${process }" />
+    <spring:url var="system" value="/system" />
     <li><a href="${home }">Home</a></li>
     <sec:authorize access="hasRole('ROLE_ADMIN')">
     <li><a href="${admin }">Admin</a></li>
+     </sec:authorize>
+         <sec:authorize access="hasRole('ROLE_SYSTEM')">
+    <li><a href="${system }">System</a></li>
      </sec:authorize>
     <li class="divider">
      <!-- divider -->

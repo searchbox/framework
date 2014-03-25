@@ -1,0 +1,374 @@
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:helper="http://www.searchbox.com/helper">
+
+ <jsp:output omit-xml-declaration="yes" />
+ <jsp:output doctype-root-element="HTML"
+  doctype-system="about:legacy-compat" />
+
+ <jsp:directive.page contentType="text/html;charset=UTF-8" />
+ <jsp:directive.page pageEncoding="UTF-8" />
+
+ <html>
+ 
+ <head>
+ <jsp:include page="/WEB-INF/views/common/_head.jspx" />
+ </head>
+
+<body>
+ <div id="wrap">
+
+  <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
+
+  <div id="main-content" role="main">
+
+   <div class="row" id="main-search-content">
+
+    <div class="row" id="search-bar" style="margin-bottom: 25px;">
+
+     <div class="col-md-3 col-sm-5 col-left">
+
+      <div class="media">
+       <spring:url value="/" var="home_url" />
+       <a class="pull-left" href="${home_url}"> <spring:url
+         value="/assets/images/searchbox-logo-big.png"
+         var="searchbox_logo" /> <img src='${searchbox_logo}'
+        class="media-object" alt="Searchbox" id="logo-image" />
+       </a>
+      </div>
+     </div>
+
+    </div>
+
+    <div class="row" id="info">
+     <div class="col-md-3">
+
+      <div class="block" id="instance">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         <b>Server</b>
+        </div>
+        <div class="panel-body">
+         <div class="content">
+          <ul class="data">
+           <li><dl>
+             <dt>Uptime</dt>
+             <dd>
+              <c:choose>
+               <c:when test="${jvmInfo.jmx.upTimeMS > 60000}">
+                <fmt:formatNumber var="diffTimeFormatted"
+                 value="${(jvmInfo.jmx.upTimeMS/60000)}"
+                 maxFractionDigits="2" />
+                ${diffTimeFormatted } min
+              </c:when>
+               <c:when test="${jvmInfo.jmx.upTimeMS > 1000}">
+                ${jvmInfo.jmx.upTimeMS/1000 } sec
+              </c:when>
+               <c:otherwise>
+                ${jvmInfo.jmx.upTimeMS } ms
+              </c:otherwise>
+              </c:choose>
+             </dd>
+            </dl></li>
+
+           <li><dl>
+             <dt>Server</dt>
+             <dd>${context.serverInfo }</dd>
+            </dl></li>
+           <li><dl>
+             <dt>Host</dt>
+             <dd>${request.serverName }</dd>
+            </dl></li>
+           <li><dl>
+             <dt>Servlet</dt>
+             <dd>${context.majorVersion }.${context.minorVersion }</dd>
+            </dl></li>
+           <li><dl>
+             <dt>Context</dt>
+             <dd>${context.contextPath }</dd>
+            </dl></li>
+           <li><dl>
+             <dt>
+              <span>searchbox</span>
+             </dt>
+             <dd class="version">1.0-SNAPSHOT-SEARCHBOX</dd>
+            </dl></li>
+          </ul>
+         </div>
+        </div>
+       </div>
+
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         <b>${systemInfo.name}</b> ${systemInfo.version}<span
+          class="pull-right">load avg: <fmt:formatNumber
+           type="number" maxFractionDigits="2"
+           value="${systemInfo.systemLoadAverage}" /></span>
+        </div>
+        <div class="panel-body">
+         <c:set var="usedMemory"
+          value="${systemInfo.totalPhysicalMemorySize-systemInfo.freePhysicalMemorySize}" />
+         <h5>
+          Physical Memory <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(usedMemory/systemInfo.totalPhysicalMemorySize)*100}" />%
+           of
+           ${helper:readableSize(systemInfo["totalPhysicalMemorySize"])
+           }</span>
+         </h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.totalPhysicalMemorySize}"
+           style="width: ${(usedMemory/systemInfo.totalPhysicalMemorySize)*100}%;">${helper:readableSize(usedMemory) }</div>
+         </div>
+
+         <c:set var="usedMemory"
+          value="${systemInfo.totalSwapSpaceSize-systemInfo.freeSwapSpaceSize}" />
+         <h5>
+          Swap Space <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(usedMemory/systemInfo.totalSwapSpaceSize)*100}" />%
+           of ${helper:readableSize(systemInfo.totalSwapSpaceSize) }</span>
+         </h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.totalSwapSpaceSize}"
+           style="width: ${(usedMemory/systemInfo.totalSwapSpaceSize)*100}%;">${helper:readableSize(usedMemory) }</div>
+         </div>
+
+         <h5>
+          File Descriptors <span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="0" type="number"
+            value="${(systemInfo.openFileDescriptorCount/systemInfo.maxFileDescriptorCount)*100}" />%
+           of ${helper:readableSize(systemInfo.maxFileDescriptorCount) }</span>
+         </h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="$usedMemory" aria-valuemin="0"
+           aria-valuemax="${systemInfo.maxFileDescriptorCount}"
+           style="width: ${(systemInfo.openFileDescriptorCount/systemInfo.maxFileDescriptorCount)*100}%;">${systemInfo.openFileDescriptorCount}</div>
+         </div>
+        </div>
+       </div>
+
+       <div class="panel panel-default">
+        <div class="panel-heading">JVM - ${jvmInfo.spec.version}</div>
+        <div class="panel-body">
+         <div class="content">
+          <ul class="data">
+           <li><dl>
+             <dt>Vendor</dt>
+             <dd>${jvmInfo.spec.vendor}</dd>
+            </dl></li>
+           <li><dl>
+             <dt>Version</dt>
+             <dd>${jvmInfo.jre.version}</dd>
+            </dl></li>
+           <li><dl>
+             <dt>VM</dt>
+             <dd>${jvmInfo.vm.name}</dd>
+            </dl></li>
+          </ul>
+          <div class="clearfix"><!-- sup --></div>
+          </div>
+                   <div class="content">
+          
+        <c:set var="usedMemory"
+          value="${systemInfo.totalSwapSpaceSize-systemInfo.freeSwapSpaceSize}" />
+         <h5>
+          JVM Heap<span class="pull-right"><fmt:formatNumber
+            maxFractionDigits="1" type="number"
+            value="${(jvmInfo.memory.raw.total/jvmInfo.memory.raw.max)*100}" />%
+           of ${helper:readableSize(jvmInfo.memory.raw.max) }</span>
+         </h5>
+         <div class="progress">
+          <div class="progress-bar" role="progressbar"
+           aria-valuenow="${jvmInfo.memory.raw.total }" aria-valuemin="0"
+           aria-valuemax="${jvmInfo.memory.raw.max}"
+           style="width: ${(jvmInfo.memory.raw.total/jvmInfo.memory.raw.max)*100}%;">${helper:readableSize(jvmInfo.memory.raw.total)}</div>
+         </div>
+          <h5>Arguments</h5>
+          <ul>
+           <c:forEach items="${jvmInfo.jmx.commandLineArgs}" var="arg">
+            <li>${arg }</li>
+           </c:forEach>
+          </ul>
+         </div>
+        </div>
+       </div>
+
+
+      </div>
+
+
+     </div>
+
+     <div class="row col-md-7">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body"> <jsp:include page="/WEB-INF/views/user/login.jspx" /></div>
+        </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7">
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available Searchbox on server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>slug</th>
+            <th>privacy</th>
+            <th>#users</th>
+            <th>options</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${searchboxes }" var="searchbox"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${searchbox.name }</td>
+             <spring:url value="/${searchbox.slug }" var="searchboxUrl" />
+             <td><a href="${searchboxUrl}">${searchbox.slug }</a></td>
+             <td>${searchbox.privacy }</td>
+             <td>XXX</td>
+             <td>
+              <div class="btn-group btn-group-sm">
+               <spring:url var="adminUrl"
+                value="/admin/${searchbox.slug }" />
+               <a href="${adminUrl }" class="btn btn-default"> <span
+                class="glyphicon glyphicon-cog"></span>
+               </a>
+              </div>
+             </td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7" id="collections">
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available Collections on server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>description</th>
+            <th>Impl</th>
+            <th>searchEngine</th>
+            <th>presets</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${collections }" var="collection"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${collection.name }</td>
+             <td>${collection.getClazz().getSimpleName() }</td>
+             <td>${collection.searchEngine.name }</td>
+             <c:forEach items="${collection.presets }" var="cpreset">
+              <spring:url
+               value="${cpreset.searchbox.slug}/${cpreset.slug}"
+               var="plink" />
+              <td><a href="${plink}">${cpreset.label }</a></td>
+             </c:forEach>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="row col-md-7" id="searchengines">
+
+      <div class="col-md-12">
+       <div class="panel panel-default">
+        <div class="panel-heading">Available SearchEngines on
+         server</div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>Impl</th>
+            <th>#Collections</th>
+            <th>options</th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${searchengines }" var="searchengine"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${searchengine.name }</td>
+             <td>${searchengine.clazz.getSimpleName() }</td>
+             <td>${searchengine.collections.size()}</td>
+             <td>options here</td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+
+    </div>
+
+   </div>
+  </div>
+ </div>
+
+ <style>
+ul.data {
+ list-style: none;
+ padding-left: 5px;
+}
+
+ul.data dl {
+ margin-bottom: 5px;
+ float: left;
+ width: 100%;
+ clear: both;
+}
+
+ul.data li dt {
+ float: left;
+ white-space: nowrap;
+ width: 20%;
+ min-width: 90px;
+}
+
+ul.data li dd {
+ float: left;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
+ max-width: 60%;
+}
+</style>
+</body>
+ </html>
+</jsp:root>

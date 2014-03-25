@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ import com.searchbox.framework.model.FieldAttributeEntity;
 import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.model.SearchConditionEntity;
 import com.searchbox.framework.model.SearchboxEntity;
+import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchElementService;
@@ -62,6 +64,12 @@ public class SearchboxController {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchboxController.class);
+  
+  @ModelAttribute("user")
+  public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
+    return user;
+  }
+
 
   @Autowired
   ApplicationConversionService conversionService;
