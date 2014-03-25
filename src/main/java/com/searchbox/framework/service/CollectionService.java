@@ -20,12 +20,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.collection.SynchronizedCollection;
@@ -41,13 +44,33 @@ import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
-public class CollectionService implements ApplicationListener<SearchboxReady> {
+public class CollectionService implements ApplicationListener<SearchboxReady>, InitializingBean{
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionService.class);
+  
+  public static final String UPDATE_DM_ON_START = "searchbox.dm.update.onstart";
+  public static final Boolean UPDATE_DM_ON_START_DEFAULT = false;
 
   @Autowired
   CollectionRepository repository;
+  
+  @Resource
+  Environment env;
+  
+  private Boolean updateDmOnStart;
+  
+  
+  public CollectionService(){
+    updateDmOnStart = false;
+  }
+  
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    this.updateDmOnStart = env.getProperty(UPDATE_DM_ON_START, Boolean.class,
+        UPDATE_DM_ON_START_DEFAULT);
+  }
+  
 
   public Map<String, String> synchronizeData(CollectionEntity<?> collectiondef) {
     Map<String, String> result = new HashMap<String, String>();
@@ -110,9 +133,11 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
 
     Iterable<CollectionEntity<?>> collectionDefs = repository.findAll();
     for (CollectionEntity<?> collectionDef : collectionDefs) {
-      synchronizeDm(collectionDef);
-      if (collectionDef.getAutoStart()) {
-        synchronizeData(collectionDef);
+      if(this.updateDmOnStart){
+        synchronizeDm(collectionDef);
+        if (collectionDef.getAutoStart()) {
+          synchronizeData(collectionDef);
+        }
       }
     }
   }
