@@ -20,6 +20,7 @@ import javax.servlet.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -59,9 +60,12 @@ public class SearchboxWebApplicationInitializer extends
 
   @Override
   protected Filter[] getServletFilters() {
-
+    CharacterEncodingFilter charFilter = new CharacterEncodingFilter();
+    charFilter.setEncoding("UTF-8");
+    charFilter.setForceEncoding(true);
     return new Filter[] { new HiddenHttpMethodFilter(),
-        new OpenEntityManagerInViewFilter() };
+        new OpenEntityManagerInViewFilter(), 
+        charFilter};
   }
 
   /**
