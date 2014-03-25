@@ -57,10 +57,7 @@ public class DataConfiguration {
   public ResourceDatabasePopulator initDatabase(DataSource dataSource)
       throws Exception {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-    populator.addScript(new ClassPathResource("data/searchbox.sql"));
-    populator.addScript(new ClassPathResource(
-        "org/springframework/batch/core/schema-h2.sql"));
-
+    populator.addScript(new ClassPathResource("data/oppfinUsers.sql"));
     populator.populate(dataSource.getConnection());
     return populator;
   }

@@ -50,8 +50,6 @@ public class BatchConfiguration extends SimpleBatchConfiguration {
   @Bean
   public JobExplorerFactoryBean jobExplorerFactoryBean(DataSource datasource)
       throws Exception {
-
-    System.out.println("Data source is: " + datasource);
     JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
     factory.setDataSource(datasource);
     return factory;

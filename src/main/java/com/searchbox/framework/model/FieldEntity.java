@@ -17,6 +17,7 @@ package com.searchbox.framework.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.searchbox.core.dm.Field;
@@ -28,6 +29,7 @@ Comparable<FieldEntity> {
 
   private Class<?> clazz;
 
+  @Column(name="fkey")
   private String key;
 
   public FieldEntity() {
