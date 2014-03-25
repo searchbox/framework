@@ -84,7 +84,9 @@ public class SearchAdapterService implements InitializingBean {
       Object... objects) {
     ArrayList<Object> arguments = new ArrayList<Object>();
     arguments.addAll(Arrays.asList(objects));
+    Long start = System.currentTimeMillis();
     this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
+    LOGGER.info("DoAdapt[{}] done in {}ms",time, (System.currentTimeMillis()-start));
   }
 
   private void doAdapt(Class<?> requiredArg, Map<Method, Object> methods,
@@ -124,15 +126,8 @@ public class SearchAdapterService implements InitializingBean {
       LOGGER.debug("Got a matching method: " + method.getName());
       int x = 0;
       for (Class<?> paramType : paramTypes) {
-
-        // LOGGER.debug("Checking for parameter of param: " + (x) +
-        // " as " + paramType.getSimpleName());
         List<Object> currentparamters = new ArrayList<Object>();
         for (Entry<Class<?>, List<Object>> entry : arguments.entrySet()) {
-          // LOGGER.debug("\t is " +
-          // paramType.isAssignableFrom(entry.getKey()) + " class: " +
-          // entry.getKey().getSimpleName() + " should be list: "
-          // +entry.getValue().getClass());
           if (paramType.isAssignableFrom(entry.getKey())) {
             for (Object goodparam : entry.getValue()) {
               currentparamters.add(goodparam);
@@ -143,15 +138,14 @@ public class SearchAdapterService implements InitializingBean {
         x++;
       }
 
-      LOGGER.debug("We'll need " + paramTypes.length + " params");
+      LOGGER.debug("We'll need {} params",paramTypes.length);
       LOGGER.debug("Method bag is: ");
       for (int i = 0; i < paramTypes.length; i++) {
-        LOGGER.debug("Bag for param: " + paramTypes[i].getSimpleName()
-            + " is this bag a list? "
-            + parameters[i].getClass().getSimpleName());
+        LOGGER.debug("Bag for param: {} is this bag a list? {}",
+            paramTypes[i].getSimpleName(),
+            parameters[i].getClass().getSimpleName());
         for (Object obj : parameters[i]) {
-          LOGGER.debug("\tin bag: " + obj.getClass().getSimpleName() + "\t"
-              + obj.toString());
+          LOGGER.debug("\tin bag: {}", obj.getClass().getSimpleName());
         }
       }
 
@@ -159,11 +153,9 @@ public class SearchAdapterService implements InitializingBean {
       List<Object[]> argumentBags = ReflectionUtils
           .findAllArgumentPermutations(parameters);
       for (Object[] argumentsInBag : argumentBags) {
-        LOGGER.trace("Found a working permutation for method: "
-            + method.getName());
+        LOGGER.trace("Found a working permutation for method: {} ", method.getName());
         for (Object obj : argumentsInBag) {
-          LOGGER.trace("\t" + obj.getClass().getSimpleName() + ", "
-              + obj.toString());
+          LOGGER.trace("\t{}",obj.getClass().getSimpleName());
         }
         this.executeMethod(methods.get(method), method, argumentsInBag);
       }
@@ -198,18 +190,16 @@ public class SearchAdapterService implements InitializingBean {
     boolean hasRequiredClass = (requiredClass == null) ? true : false;
     for (Method method : methods) {
       LOGGER.trace("~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~~+");
-      LOGGER.trace("Mathing Method: " + method.getName());
+      LOGGER.trace("Mathing Method: {}", method.getName());
       int match = 0;
       Class<?>[] paramTypes = method.getParameterTypes();
       for (Class<?> paramType : paramTypes) {
         for (Class<?> clazz : classSet) {
-          LOGGER.trace("\tclass: "
-              + clazz.getSimpleName()
-              + "\tparamType: "
-              + paramType.getSimpleName()
-              + "\t"
-              + paramType.isAssignableFrom(clazz)
-              + ((requiredClass == null) ? "" : "\trequired:"
+          LOGGER.trace("\tclass:{} \tparamType: {} \t{}{}",
+              clazz.getSimpleName(),
+              paramType.getSimpleName(),
+              paramType.isAssignableFrom(clazz),
+              ((requiredClass == null) ? "" : "\trequired:"
                   + requiredClass.isAssignableFrom(paramType)));
           if (paramType.isAssignableFrom(clazz)) {
             match++;
@@ -233,8 +223,10 @@ public class SearchAdapterService implements InitializingBean {
 
   private void executeMethod(Object caller, Method method, Object... arguments) {
     try {
+      Long start = System.currentTimeMillis();
       method.setAccessible(true);
       method.invoke(caller, arguments);
+      LOGGER.trace("Addapted with {} in {}ms",method.getName(), (System.currentTimeMillis()-start));
     } catch (IllegalAccessException | IllegalArgumentException
         | InvocationTargetException e) {
       LOGGER.error("Method name: " + method.getName());

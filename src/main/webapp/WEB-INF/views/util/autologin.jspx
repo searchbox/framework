@@ -16,15 +16,15 @@
 
 <head>
 <jsp:include page="/WEB-INF/views/common/_head.jspx" />
-<script>
-$( document ).ready(function() {
-    $('form#openId').submit();
-});
-</script>
 </head>
 
 <body>
  <jsp:include page="/WEB-INF/views/user/login.jspx" />
 </body>
+<script>
+$( document ).ready(function() {
+    $('form#openId').submit();
+});
+</script>
  </html>
 </jsp:root>

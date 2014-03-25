@@ -150,10 +150,6 @@
    <version>${hibernate.version}</version>
    <exclusions>
     <exclusion>
-     <groupId>cglib</groupId>
-     <artifactId>cglib</artifactId>
-    </exclusion>
-    <exclusion>
      <groupId>dom4j</groupId>
      <artifactId>dom4j</artifactId>
     </exclusion>

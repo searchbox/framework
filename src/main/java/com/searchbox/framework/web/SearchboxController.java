@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ import com.searchbox.framework.service.SearchService;
 @Controller
 @RequestMapping("/{searchbox}")
 @Order(value=10000000)
+@Transactional
 public class SearchboxController {
 
   private static final Logger LOGGER = LoggerFactory

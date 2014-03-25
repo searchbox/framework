@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,6 @@ import org.springframework.stereotype.Service;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
-import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.dm.SearchableCollection;
 import com.searchbox.core.engine.ManagedSearchEngine;
 import com.searchbox.core.engine.SearchEngine;
@@ -49,7 +50,6 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   CollectionRepository repository;
 
   public Map<String, String> synchronizeData(CollectionEntity<?> collectiondef) {
-
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectiondef.build();
     if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
@@ -71,6 +71,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
     return result;
   }
 
+  @Transactional
   public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
     
     Map<String, String> result = new HashMap<String, String>();
@@ -102,6 +103,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady> {
   }
 
   @Override
+  @Transactional
   public void onApplicationEvent(SearchboxReady event) {
 
     LOGGER.info("Searchbox is ready. Loading autoStart collections");

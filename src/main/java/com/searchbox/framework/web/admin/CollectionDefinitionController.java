@@ -2,12 +2,14 @@ package com.searchbox.framework.web.admin;
 
 import java.util.Map;
 
-import org.hibernate.persister.walking.spi.CollectionDefinition;
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,12 +34,12 @@ public class CollectionDefinitionController {
   @Autowired
   JobExplorer jobExplorer;
 
-  @Autowired
+  @Resource(name="collectionService")
   CollectionService service;
 
   @RequestMapping(value = "/{id}")
   public ModelAndView show(@PathVariable("id") Long id) {
-    CollectionEntity collectiondef = repository.findOne(id);
+    CollectionEntity<?> collectiondef = repository.findOne(id);
     ModelAndView model = new ModelAndView(
         "admin/CollectionDefinition/updateForm");
     model.addObject("collectionDefinition", collectiondef);
@@ -49,14 +51,14 @@ public class CollectionDefinitionController {
   @RequestMapping(value = { "/{id}/synchronize", "/{id}/synchronize/" }, method = RequestMethod.POST)
   @ResponseBody
   public Map<String, String> synchronizeData(@PathVariable("id") Long id) {
-    CollectionEntity collectiondef = repository.findOne(id);
+    CollectionEntity<?> collectiondef = repository.findOne(id);
     return service.synchronizeData(collectiondef);
   }
 
   @RequestMapping(value = { "/{id}/merge", "/{id}/merge/" }, method = RequestMethod.POST)
   @ResponseBody
   public Map<String, String> synchronizeDm(@PathVariable("id") Long id) {
-    CollectionEntity collectiondef = repository.findOne(id);
+    CollectionEntity<?> collectiondef = repository.findOne(id);
     return service.synchronizeDm(collectiondef);
   }
 

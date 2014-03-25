@@ -21,6 +21,7 @@ import java.util.TreeSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -53,8 +54,11 @@ public class SearchboxEntity extends BaseEntity<Long>
 
   private String description;
 
-  @OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "searchbox",
+      orphanRemoval = true,
+      cascade = CascadeType.ALL,
+      fetch=FetchType.LAZY)
+  @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<PresetEntity> presets;
 

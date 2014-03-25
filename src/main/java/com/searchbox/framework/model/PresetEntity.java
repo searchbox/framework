@@ -62,20 +62,20 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   private SearchboxEntity searchbox;
 
   @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private PresetEntity parent;
 
   @OneToMany(targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<PresetEntity> children;
 
   @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH})
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private CollectionEntity<?> collection;
 
   @OneToMany(targetEntity = SearchElementEntity.class, mappedBy = "preset", cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private Set<SearchElementEntity<?>> searchElements;
   
   @ElementCollection(fetch=FetchType.EAGER)
@@ -96,7 +96,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   private String defaultProcess = "search";
 
   @OneToMany(targetEntity = FieldAttributeEntity.class, cascade = CascadeType.ALL)
-  @LazyCollection(LazyCollectionOption.FALSE)
+  @LazyCollection(LazyCollectionOption.TRUE)
   private Set<FieldAttributeEntity> fieldAttributes;
 
   public PresetEntity() {

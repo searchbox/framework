@@ -36,8 +36,6 @@ import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
@@ -50,7 +48,6 @@ import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.SolrCloud;
 import com.searchbox.framework.domain.Role;
-import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
 import com.searchbox.framework.model.SearchEngineEntity;
@@ -64,6 +61,7 @@ import com.searchbox.framework.service.UserService;
 @Component
 @Configuration
 @org.springframework.core.annotation.Order(value = 10000)
+@Transactional
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BootStrap.class);
@@ -91,7 +89,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
   private static boolean defaultData = true;
 
   @Override
-  @Transactional
   synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
     doBootStrap();
   }
