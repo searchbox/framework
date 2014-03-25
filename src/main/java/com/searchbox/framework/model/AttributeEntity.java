@@ -91,4 +91,9 @@ public class AttributeEntity extends BaseEntity<Long>
   public int compareTo(AttributeEntity o) {
     return this.getName().compareTo(o.getName());
   }
+
+  @Override
+  public String toString() {
+    return "AttributeEntity [type=" + type + ", name=" + name + "]";
+  }
 }

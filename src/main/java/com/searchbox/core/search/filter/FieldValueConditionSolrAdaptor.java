@@ -19,16 +19,19 @@ public class FieldValueConditionSolrAdaptor {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(FieldValueConditionSolrAdaptor.class);
+  
 
   @SearchAdapterMethod(execute = Time.PRE)
   public void createFilterQueries(SolrSearchEngine engine,
       FieldAttribute attribute, FieldValueCondition condition, SolrQuery query) {
 
+    LOGGER.info("Adapting fieldValueCondition {}",condition);
+
     if (!attribute.getField().getKey().equals(condition.getFieldName())) {
       return;
     }
 
-    String conditionValue = ClientUtils.escapeQueryChars(condition.getValue());
+    String conditionValue = condition.getValue();
     String facetKey = engine.getKeyForField(attribute);
 
     boolean isnew = true;

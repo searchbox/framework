@@ -93,4 +93,11 @@ public class SearchEngineEntity<K extends SearchEngine<?,?>>
       .setType(value.getClass()));
     return this;
   }
+
+  @Override
+  public String toString() {
+    return "SearchEngineEntity [clazz=" + clazz + ", name=" + name + "]";
+  }
+  
+  
 }

@@ -113,4 +113,9 @@ Comparable<FieldEntity> {
   public Field build() {
     return super.build(Field.class);
   }
+
+  @Override
+  public String toString() {
+    return "FieldEntity [clazz=" + clazz + ", key=" + key + "]";
+  }
 }

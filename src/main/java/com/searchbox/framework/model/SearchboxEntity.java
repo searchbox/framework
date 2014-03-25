@@ -143,17 +143,15 @@ public class SearchboxEntity extends BaseEntity<Long>
   public int compareTo(SearchboxEntity o) {
     return this.getName().compareTo(o.getName());
   }
-  
-  @Override
-  public String toString() {
-    //FIXME. Do not reflection on toString (breaks Lazy INiti)
-    return ReflectionToStringBuilder.toString(this,
-        ToStringStyle.SHORT_PREFIX_STYLE);
-  }
 
   public PresetEntity newPreset() {
     return new PresetEntity()
       .setSearchbox(this)
       .setPosition(this.getPresets().size()+1);
+  }
+
+  @Override
+  public String toString() {
+    return "SearchboxEntity [slug=" + slug + ", name=" + name + "]";
   }
 }

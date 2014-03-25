@@ -47,6 +47,7 @@ import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.RetryElement;
 import com.searchbox.framework.model.FieldAttributeEntity;
 import com.searchbox.framework.model.PresetEntity;
+import com.searchbox.framework.model.SearchConditionEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -140,7 +141,6 @@ public class SearchboxController {
     	return new ModelAndView(new RedirectView("/", true));
     }
     
-    // TODO when security is true, check LoggedIn
     PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
@@ -195,11 +195,21 @@ public class SearchboxController {
   
   private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
     
-    Set<FieldAttribute> fieldAttributes = new HashSet<FieldAttribute>();
+    Set<FieldAttribute> fieldAttributes = new HashSet<>();
     for (FieldAttributeEntity def : preset.getFieldAttributes(true)) {
       fieldAttributes.add(def.build());
     }
     
+    return fieldAttributes;
+  }
+  
+  private Set<AbstractSearchCondition> getAllSearchConditions(
+      PresetEntity preset) {
+    Set<AbstractSearchCondition> fieldAttributes = new HashSet<>();
+    for (SearchConditionEntity<?> def : preset.getSearchConditions(true)) {
+      LOGGER.info("Got Search Condition entity: {}", def);
+      fieldAttributes.add(def.build());
+    }
     return fieldAttributes;
   }
 
@@ -208,10 +218,13 @@ public class SearchboxController {
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
     Set<SearchElement> searchElements = elementService.getSearchElements(preset, process);
-    LOGGER.info("Required Search elements are {}", searchElements);
+    LOGGER.debug("Required Search elements are {}", searchElements);
     
     Set<FieldAttribute> fieldAttributes = getAllFieldAttribute(preset);
     
+    Set<AbstractSearchCondition> presetConditions = getAllSearchConditions(preset);
+    LOGGER.info("Required preset Conditions are {}", presetConditions);
+
     Collection collection = preset.getCollection().build();
     
     if(!(SearchableCollection.class.isAssignableFrom(collection.getClass()))){
@@ -224,8 +237,11 @@ public class SearchboxController {
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
     LOGGER.debug("Current Collection: {}", collection);
 
-    Set<SearchElement> resultElements = searchService.execute(searchEngine,
-        collection, searchElements, fieldAttributes, conditions, collector);
+    Set<SearchElement> resultElements = null;
+    
+    resultElements = searchService.execute(searchEngine,
+        collection, searchElements, fieldAttributes,
+        presetConditions, conditions, collector);
 
     LOGGER.debug("Resulting SearchElements are {}",resultElements);
     
@@ -241,7 +257,7 @@ public class SearchboxController {
 
     if (retry) {
       resultElements = searchService.execute(searchEngine, collection,
-          searchElements, fieldAttributes, conditions, collector);
+          searchElements, fieldAttributes, presetConditions, conditions, collector);
     }
     return resultElements;
   }

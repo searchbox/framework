@@ -201,4 +201,10 @@ public class CollectionEntity<K extends Collection> extends
   public int compareTo(CollectionEntity<K> o) {
     return this.getName().compareTo(o.getName());
   }
+  
+  @Override
+  public String toString() {
+    return "CollectionEntity [clazz=" + clazz + ", name=" + name
+        + ", autoStart=" + autoStart + ", idFieldName=" + idFieldName + "]";
+  }
 }

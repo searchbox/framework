@@ -496,6 +496,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setVisible(false)
         .setDescription("IDEALIST cooperations")
         
+        .addFieldCondition("Open Opportunities Only", "idealistStatus","(NOT Closed)")
+        .addFieldFacet("Status", "idealistStatus")
+        
         .newFieldAttribute("Title","idealistTitle")
           .setLanguages(lang)
           .setSearchanble(true)

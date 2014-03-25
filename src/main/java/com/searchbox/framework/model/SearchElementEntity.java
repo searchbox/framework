@@ -121,12 +121,6 @@ public class SearchElementEntity<K extends SearchElementBean> extends
       .compareTo(new Integer(o.getPosition()*10+1));
   }
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this,
-        ToStringStyle.SHORT_PREFIX_STYLE);
-  }
-
   public SearchElementEntity<K> setAttribute(String name, Object value) {
     LOGGER.debug("Seeting attr {}[{}] to value {}",name,
         (value!=null)?value.getClass():"xoxo", value);
@@ -142,9 +136,11 @@ public class SearchElementEntity<K extends SearchElementBean> extends
     return this;
   }
 
-//  public SearchElement.Type getType() {
-//    return (Type) ((this.getAttributeByName("type")!=null)?
-//        this.getAttributeByName("type").getValue():
-//          SearchElement.Type.UNKNOWN);
-//  }
+  @Override
+  public String toString() {
+    return "SearchElementEntity [clazz=" + clazz + ", label=" + label
+        + ", position=" + position + "]";
+  }
+
+  
 }

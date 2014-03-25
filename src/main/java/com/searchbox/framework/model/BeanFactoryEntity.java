@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,5 +83,10 @@ public abstract class BeanFactoryEntity<K extends Serializable> extends
       LOGGER.error("Error: {}", exception.getMessage());
     }
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return "BeanFactoryEntity [attributes=" + attributes + "]";
   }
 }

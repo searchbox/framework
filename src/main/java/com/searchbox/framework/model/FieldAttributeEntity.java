@@ -125,4 +125,9 @@ Comparable<FieldAttributeEntity> {
       .setName("boost").setValue(boost));
     return this;
   }
+  
+  @Override
+  public String toString() {
+    return "FieldAttributeEntity [field=" + field + "]";
+  }
 }

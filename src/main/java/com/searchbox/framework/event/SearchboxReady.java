@@ -7,10 +7,4 @@ public class SearchboxReady extends ApplicationEvent {
   public SearchboxReady(Object source) {
     super(source);
   }
-
-  /**
-	 * 
-	 */
-  private static final long serialVersionUID = 1749059285386449000L;
-
 }

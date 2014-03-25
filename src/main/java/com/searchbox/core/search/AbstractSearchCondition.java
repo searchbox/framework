@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.lucene.search.BooleanClause;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,5 +129,10 @@ public abstract class AbstractSearchCondition {
   }
   
   public abstract String getParamValue();
-  
+
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this,
+        ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 }

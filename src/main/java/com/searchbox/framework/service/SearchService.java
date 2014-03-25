@@ -51,23 +51,15 @@ public class SearchService {
   @SuppressWarnings("rawtypes")
   public Set<SearchElement> execute(SearchEngine searchEngine, Collection collection,
       Set<SearchElement> searchElements, Set<FieldAttribute> fieldAttributes,
+      Set<AbstractSearchCondition> presetConditions,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
     Object query = searchEngine.newQuery(collection);
 
-    Set<AbstractSearchCondition> presetConditions = new TreeSet<AbstractSearchCondition>();
 
     // Weave in all SearchElement in Query
     adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine, collection, query,
         fieldAttributes, searchElements, collector);
-
-    for (SearchElement element : searchElements) {
-      if (element.getClass().isAssignableFrom(GenerateSearchCondition.class)) {
-        LOGGER.debug("This is a filter right here.");
-        presetConditions.add(((GenerateSearchCondition<?>) element)
-            .getSearchCondition());
-      }
-    }
 
     // Weave in all UI Conditions in query
     LOGGER.debug("Adapting condition from UI: " + conditions);
