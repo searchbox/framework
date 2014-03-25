@@ -120,10 +120,12 @@
    <artifactId>h2</artifactId>
    <version>1.3.172</version>
   </dependency>
-    <!-- MySQL JDBC connector -->
-  <!-- If you want to use MySQL, uncomment this dependency declation. -->
-  <!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
-   <version>${mysql.connector.version}</version> </dependency> -->
+  <!-- MySQL JDBC connector -->
+  <dependency>
+   <groupId>mysql</groupId>
+   <artifactId>mysql-connector-java</artifactId>
+   <version>5.1.29</version>
+  </dependency>
   <!-- PostgreSQL JDBC 4 -->
   <!-- If you don't want to use PostgreSQL, uncomment this dependency declaration. -->
   <!-- <dependency> <groupId>postgresql</groupId> <artifactId>postgresql</artifactId> 
@@ -278,9 +280,9 @@
    <version>${spring.version}</version>
   </dependency>
   <dependency>
-  	<groupId>org.springframework</groupId>
-  	<artifactId>spring-context-support</artifactId>
-  	<version>${spring.version}</version>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context-support</artifactId>
+   <version>${spring.version}</version>
   </dependency>
   <dependency>
    <groupId>org.springframework</groupId>
@@ -345,11 +347,11 @@
    <version>${spring-security.version}</version>
   </dependency>
   <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-openid</artifactId>
-      <version>${spring-security.version}</version>
-      <scope>compile</scope>
-    </dependency>
+   <groupId>org.springframework.security</groupId>
+   <artifactId>spring-security-openid</artifactId>
+   <version>${spring-security.version}</version>
+   <scope>compile</scope>
+  </dependency>
   <dependency>
    <groupId>org.springframework.security</groupId>
    <artifactId>spring-security-taglibs</artifactId>
