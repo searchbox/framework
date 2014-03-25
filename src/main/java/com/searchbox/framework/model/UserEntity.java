@@ -73,24 +73,27 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
     return firstName;
   }
 
-  public void setFirstName(String firstName) {
+  public UserEntity setFirstName(String firstName) {
     this.firstName = firstName;
+    return this;
   }
 
   public String getLastName() {
     return lastName;
   }
 
-  public void setLastName(String lastName) {
+  public UserEntity setLastName(String lastName) {
     this.lastName = lastName;
+    return this;
   }
 
   public String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  public UserEntity setEmail(String email) {
     this.email = email;
+    return this;
   }
 
   @Override
@@ -98,16 +101,18 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
     return password;
   }
 
-  public void setPassword(String password) {
+  public UserEntity setPassword(String password) {
     this.password = password;
+    return this;
   }
 
   public List<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(List<Role> roles) {
+  public UserEntity setRoles(List<Role> roles) {
     this.roles = roles;
+    return this;
   }
 
   public SocialMediaService getSignInProvider() {

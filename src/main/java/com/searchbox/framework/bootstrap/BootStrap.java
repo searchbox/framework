@@ -60,6 +60,7 @@ import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
+import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.UserService;
 
 @Component
@@ -87,6 +88,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   @Autowired
   UserService userService;
+  
+  @Autowired
+  UserRepository userRepository;
 
   @Autowired
   ApplicationEventPublisher publisher;
@@ -138,7 +142,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       system = userService.addRole(system, Role.SYSTEM, Role.ADMIN, Role.USER);
       admin = userService.addRole(admin, Role.ADMIN, Role.USER);
       user = userService.addRole(user, Role.USER);
-    
+      
+      
+      userRepository.save(
+          new UserEntity()
+            .setEmail("jonathan@xtremsoft.com")
+            .setFirstName("Jonathan")
+            .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
+      
+      userRepository.save(
+          new UserEntity()
+            .setEmail("stephane@gamard.net")
+            .setFirstName("stephane")
+            .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
+      
 
       LOGGER.info("Bootstraping application with oppfin data...");
 
