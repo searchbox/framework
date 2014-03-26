@@ -410,6 +410,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("EEN Type", "eenReferenceType")
         .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
         .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
+        
+        //TODO Steph: Check why this is failing.
+        /*.addSortableFieldAttribute("Published", "eenDatumSubmit")
+        .addSortableFieldAttribute("Updated", "eenDatumUpdate")
+        .addSortableFieldAttribute("Deadline", "eenDatumDeadline")*/
+        
         .addPagingElement()
         .addDebugElement()
          
