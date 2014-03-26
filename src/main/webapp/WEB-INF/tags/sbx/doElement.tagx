@@ -6,7 +6,6 @@
  xmlns:str="http://jakarta.apache.org/taglibs/string-1.1"
  xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
 
-
  <jsp:output omit-xml-declaration="yes" />
 
 
@@ -27,7 +26,8 @@
  <c:if test="${not empty param.debug}">
   <c:set var="debug" value="true" />
  </c:if>
- <c:forEach items="${elements}" var="currentElement">
+ <c:forEach items="${elements}" var="currentElement" varStatus="status">
+ 
   <c:set var="element" />
   <c:choose>
    <c:when
@@ -100,16 +100,16 @@
            <c:out value="${fn:replace(element,',',', ') }" />
           </c:set>
           <button type="button" class="btn btn-default"
-           id="debug_${element.getClass().getSimpleName()}"
+           id="debug_${element.getClass().getSimpleName()}_${status.count}"
            data-toggle="popover" title="Element data"
            data-placement="auto" data-content="${debugContent }">
            <span class="glyphicon glyphicon-search"> <!-- search -->
            </span>
           </button>
-          <script>
-                      $('#debug_${element.getClass().getSimpleName()}')
-                          .popover()
-                    </script>
+          <script type="text/javascript">
+            $('#debug_${element.getClass().getSimpleName()}_${status.count}')
+                .popover()
+          </script>
          </c:if>
          <c:if test="${admin }">
           <button type="button" class="btn btn-default"
