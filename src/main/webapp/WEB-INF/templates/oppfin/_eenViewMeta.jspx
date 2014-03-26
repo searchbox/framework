@@ -38,9 +38,9 @@
  
  <sbx:tagAttribute limit="1"
     values="${hit.fieldValues['eenContactOrganizationcountry']} 
-    ${hit.fieldValues['eenContactFullname']}
-    ${hit.fieldValues['eenContactPhone']}
-    ${hit.fieldValues['eenContactEmail']}
+    ${(hit.fieldValues['eenContactFullname'].size() > 0 ? hit.fieldValues['eenContactFullname'][0] :'')}
+    ${(hit.fieldValues['eenContactPhone'].size() > 0 ? hit.fieldValues['eenContactPhone'][0] :'')}
+    ${(hit.fieldValues['eenContactEmail'].size() > 0 ? hit.fieldValues['eenContactEmail'][0] :'')}
     " />
 
   <sbx:tagAttribute limit="1" label="Submit Date"
