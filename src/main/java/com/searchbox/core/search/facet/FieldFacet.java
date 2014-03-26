@@ -15,12 +15,9 @@
  ******************************************************************************/
 package com.searchbox.core.search.facet;
 
-import org.apache.solr.client.solrj.util.ClientUtils;
-
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchElement;
-import com.searchbox.core.dm.Field;
 import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -133,8 +130,7 @@ public class FieldFacet extends
 
     @Override
     public FieldValueCondition getSearchCondition() {
-      return new FieldValueCondition(fieldName, 
-          ClientUtils.escapeQueryChars(this.value), sticky);
+      return new FieldValueCondition(fieldName, this.value, sticky);
     }
 
     @Override

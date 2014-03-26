@@ -41,6 +41,7 @@
   <div class="panel-body">
    <ul class="list-group facet-list">
     <c:forEach items="${element.values}" var="facetValue" varStatus="i">
+    
     <c:set var="facetValueLabel" value=""/>
      <c:catch>
       <spring:message var="facetValueLabel"
