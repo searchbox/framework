@@ -354,7 +354,16 @@ public class IdealISTCollection extends AbstractBatchCollection implements
           }
         }
 
-        return fields;
+        //Filtering invalid ideal-ist, skip records where status is not open.
+        if(fields.get("idealistStatus").toString().equals("[Open]")){
+          LOGGER.info("Found a ideal-ist with open status.");
+          return fields;
+        } else {
+          LOGGER.info("The document has the following status {}", 
+              fields.get("idealistStatus").toString()
+             );
+          return null;
+        }
       }
     };
   }
