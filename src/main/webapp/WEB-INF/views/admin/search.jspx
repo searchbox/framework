@@ -11,7 +11,8 @@
 
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:directive.page pageEncoding="UTF-8" />
-
+ <c:set scope="request" var="adminView" value="true"/>
+ 
   <html>
  <head>
  <jsp:include page="/WEB-INF/views/common/_head.jspx" />
