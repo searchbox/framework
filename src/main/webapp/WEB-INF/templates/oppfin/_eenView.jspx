@@ -9,9 +9,10 @@
  <hr />
  
  <h3>Related R&amp;D Fundings</h3>
- 
+  <sbx:relatedContent preset="funding" id="eenReferenceExternal[20120402026]"></sbx:relatedContent>
  
  <hr />
  <h3>Related Cooperations</h3>
 
+  <sbx:relatedContent preset="cooperations" id="eenReferenceExternal[20120402026]"></sbx:relatedContent>
 </jsp:root>

@@ -247,7 +247,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             .newChildPreset(true, TemplateElement.class)
             .setLabel("Project Funding")
         .setDescription("Project Funding (open calls)")
-        .setSlug("topic")
+        .setSlug("funding")
         
         .setCollection(topicsCollection)
       

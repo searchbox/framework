@@ -189,6 +189,31 @@ var bindResultPageEvents = function() {
   bindClickableTagsEvents();
 };
 
+var loadRelatedContent = function(selector, baseUrl, queryString) {
+
+    console.log("elem "+ selector);
+    console.log("BaseUrl "+ baseUrl);
+    console.log("QueryString "+queryString);
+    
+  // var params = $.url(window.location.href).param();
+  if (jQuery('#' + selector).length) {
+    $.ajax({
+      type : 'GET',
+      data : queryString,
+      url : baseUrl,
+      dataType : "jsonp",
+      success : function(data, textStatus) {
+        jQuery('#' + selector).html(data.html);
+      },
+      error : function(XMLHttpRequest, textStatus, errorThrown) {
+        if (textStatus) {
+          jQuery('#' + selector).html("No related content");
+        }
+      }
+    });
+  }
+};
+
 var submitForm = function(paramName, paramValue, multi) {
   // remove any paramName that might be in page already
   console.log(" Removing already present input for " + paramName
