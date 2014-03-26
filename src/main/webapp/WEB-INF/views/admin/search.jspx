@@ -35,30 +35,7 @@
       <input type="hidden" name="searchbox" value="${param.searchbox }" />
      </c:if>
 
-     <div class="row" id="search-bar">
-
-      <div class="col-md-3 col-left">
-
-       <div class="media">
-        <spring:url value="/admin/${searchbox.getSlug()}/search"
-         var="home_url" />
-        <a class="pull-left" href="${home_url}"> <spring:url
-          value="${searchbox.getLogo()}"
-          var="logo" /> <img src='${logo}'
-         class="media-object" alt="Searchbox" id="logo-image" />
-        </a>
-       </div>
-      </div>
-
-      <div class="clearfix visible-xs" style="margin-bottom: 10px">
-       <!-- clear -->
-      </div>
-
-      <div class="col-md-7 col-sm-7">
-       <sbx:doElement type="QUERY" admin="true" />
-
-      </div>
-     </div>
+      <jsp:include page="/WEB-INF/views/common/_head_search_bar.jspx"/>
 
      <div class="row" id="first-row">
       <div class="row" id="search-status-bar">

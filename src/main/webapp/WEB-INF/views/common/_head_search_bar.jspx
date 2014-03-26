@@ -1,0 +1,33 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+  xmlns:sec="http://www.springframework.org/security/tags" version="2.0">
+  <jsp:output omit-xml-declaration="yes" />
+
+  <div class="row" id="search-bar">
+    <div class="col-md-3 col-sm-5 col-left">
+
+      <div class="media">
+        <spring:url value="${adminView ? '/admin' : ''}/${searchbox.getSlug()}/"
+          var="home_url" />
+        <a class="pull-left" href="${home_url}"> <spring:url
+            value="${searchbox.getLogo()}" var="logo" /> <img
+          src='${logo}' class="media-object" alt="Searchbox"
+          id="logo-image" />
+        </a>
+      </div>
+    </div>
+
+    <div class="clearfix visible-xs" style="margin-bottom: 10px">
+      <!-- clear -->
+    </div>
+
+    <div class="col-md-7 col-sm-7">
+      <sbx:doElement type="QUERY" />
+    </div>
+  </div>
+
+</jsp:root>

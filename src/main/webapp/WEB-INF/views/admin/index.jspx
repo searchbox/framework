@@ -31,22 +31,7 @@
 
    <div class="row" id="main-search-content">
 
-    <div class="row" id="search-bar">
-
-     <div class="col-md-3 col-sm-5 col-left">
-
-      <div class="media">
-        <spring:url value="/admin/${searchbox.getSlug()}/search"
-         var="home_url" />
-        <a class="pull-left" href="${home_url}"> <spring:url
-          value="${searchbox.getLogo()}"
-          var="logo" /> <img src='${logo}'
-         class="media-object" alt="Searchbox" id="logo-image" />
-        </a>
-       </div>
-     </div>
-
-    </div>
+    <jsp:include page="/WEB-INF/views/common/_head_search_bar.jspx"/>
 
     <div class="row" id="searchboxes">
 
