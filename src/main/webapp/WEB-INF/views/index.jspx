@@ -4,7 +4,8 @@
  xmlns:spring="http://www.springframework.org/tags"
  xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
  xmlns:form="http://www.springframework.org/tags/form"
- xmlns:helper="http://www.searchbox.com/helper">
+ xmlns:helper="http://www.searchbox.com/helper"
+ xmlns:sec="http://www.springframework.org/security/tags">
 
  <jsp:output omit-xml-declaration="yes" />
  <jsp:output doctype-root-element="HTML"
@@ -51,6 +52,7 @@
 
      </div>
 
+     <sec:authorize access="isAnonymous()">
      <div class="row col-md-7">
       <div class="col-md-12">
         <div class="panel panel-default">
@@ -59,6 +61,10 @@
         </div>
       </div>
      </div>
+     </sec:authorize>
+      <sec:authorize access="isAuthenticated()">
+        <jsp:forward page="/oppfin" /> 
+      </sec:authorize>
 
     </div>
 
