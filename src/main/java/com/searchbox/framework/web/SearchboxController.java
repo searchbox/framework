@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -190,6 +191,34 @@ public class SearchboxController {
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
 
+    Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+        process, conditions, collector);
+
+    model.addObject("preset", preset);
+    model.addObject("process", process);
+    model.addObject("elements", resultElements);
+    model.addObject("collector", collector);
+
+    return model;
+  }
+  
+  @RequestMapping(headers ={"Accept=application/json"}, value="/{preset}/{process}",method=RequestMethod.GET)
+  public ModelAndView executeJsonSearch(@PathVariable String process,
+      @ModelAttribute("searchboxes") List<SearchboxEntity> searchboxes,
+      @PathVariable SearchboxEntity searchbox, @PathVariable PresetEntity preset,
+      @ModelAttribute("collector") SearchCollector collector,
+      @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
+      ModelAndView model, RedirectAttributes redirectAttributes) {
+
+    LOGGER.info("JSON Search");
+    LOGGER.debug("search page for: {} with preset: {} and process: {}",
+        searchbox, preset, process);
+
+    // TODO check if we have a view for that process.
+    model.setViewName(this.getViewFolder() + "/" + process);
+
+    
+    //TODO: Make the JSON view- http://www.javablog.fr/javaspringjson-generate-json-withwithout-viewresolver-jsonview-with-json-lib-2-3-jdk15.html
     Set<SearchElement> resultElements = executeRequest(searchbox, preset,
         process, conditions, collector);
 
