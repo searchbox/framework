@@ -405,12 +405,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setSlug("cooperations")
         .setLabel("Cooperations")
         .addQueryElement()
-        .addDebugElement()
         .addStatElement()
         .addFieldFacet("Cooperation Source", "docSource")
+        .addFieldFacet("EEN Type", "eenReferenceType")
+        .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
+        .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
         .addPagingElement()
-
-      
+        .addDebugElement()
          
       /**
        * 
@@ -514,7 +515,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setVisible(false)
         .setDescription("IDEALIST cooperations")
         
-        .addFieldCondition("Open Opportunities Only", "idealistStatus","(NOT Closed)")
+        //.addFieldCondition("Open Opportunities Only", "idealistStatus","Open")
         .addFieldFacet("Status", "idealistStatus")
         
         .newFieldAttribute("Title","idealistTitle")
