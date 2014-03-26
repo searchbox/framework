@@ -66,7 +66,6 @@ public class FieldValueCondition extends AbstractSearchCondition {
 
   @Override
   public String getParamValue() {
-    System.out.println("******* Returning value *******"+getValue());
     return getFieldName() + "[" + getValue() + "]" + ((getTaged()) ? "x" : "");
   }
 
