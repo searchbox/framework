@@ -28,14 +28,25 @@
      <c:if test="${ppreset.slug.equals(preset.slug)}">
       <c:set var="cssClass" value="active"/>
      </c:if>
-     <spring:url var="linkUrl" value="/${searchbox.getSlug() }/${ppreset.getSlug() }"/>
+     
+     <c:choose>
+      <c:when test="${adminView}">
+           <spring:url var="linkUrl" value="/admin/${searchbox.getSlug() }/${ppreset.getSlug() }/search"/>
+      </c:when>
+      <c:otherwise>
+           <spring:url var="linkUrl" value="/${searchbox.getSlug() }/${ppreset.getSlug() }/"/>
+      </c:otherwise>
+     </c:choose>
+  
+     
+     
      <li class="${cssClass}"><a href="${linkUrl }">${ppreset.label }</a></li>
      </c:forEach>
     </ul>
-
-    <jsp:include page="/WEB-INF/views/common/_head_menu.jspx" />
+    <jsp:include page="/WEB-INF/views/common/_head_menu.jspx"/>
 
    </nav>
   </div>
  </header>
+
 </jsp:root>

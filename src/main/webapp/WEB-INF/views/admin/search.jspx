@@ -73,18 +73,6 @@
        <div
         class="col-md-2 col-md-push-5 col-sm-2 col-sm-push-5 col-xs-5 sort-col">
         <sbx:doElement type="SORT" admin="true" />
-
-       </div>
-
-       <!-- Tags -->
-       <div class="clearfix visible-xs" style="margin-bottom: 10px">
-        <!-- clear -->
-       </div>
-       <div class="col-md-5 col-md-pull-2 col-sm-5 col-sm-pull-2">
-        <span class="label label-default">Default</span> <span
-         class="label label-primary">Primary</span> <span
-         class="label label-success">Success</span> <span
-         class="label label-success">Success</span>
        </div>
       </div>
      </div>
