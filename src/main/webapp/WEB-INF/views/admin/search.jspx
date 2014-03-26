@@ -40,11 +40,11 @@
       <div class="col-md-3 col-left">
 
        <div class="media">
-        <spring:url value="/${searchbox.getSlug()}/search/"
+        <spring:url value="/admin/${searchbox.getSlug()}/search"
          var="home_url" />
         <a class="pull-left" href="${home_url}"> <spring:url
-          value="/assets/images/searchbox-logo-big.png"
-          var="searchbox_logo" /> <img src='${searchbox_logo}'
+          value="${searchbox.getLogo()}"
+          var="logo" /> <img src='${logo}'
          class="media-object" alt="Searchbox" id="logo-image" />
         </a>
        </div>

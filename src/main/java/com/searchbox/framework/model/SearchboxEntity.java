@@ -50,6 +50,8 @@ public class SearchboxEntity extends BaseEntity<Long>
 
   private String name;
 
+  private String logo = "assets/images/searchbox-logo-big.png";
+  
   private String alias;
 
   private String description;
@@ -78,6 +80,15 @@ public class SearchboxEntity extends BaseEntity<Long>
 
   public void setPrivacy(Privacy privacy) {
     this.privacy = privacy;
+  }
+
+  public String getLogo() {
+    return logo;
+  }
+
+  public SearchboxEntity setLogo(String logo) {
+    this.logo = logo;
+    return this;
   }
 
   public String getSlug() {

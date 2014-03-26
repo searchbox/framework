@@ -165,7 +165,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       LOGGER.info("++ Creating oppfin searchbox");
       SearchboxEntity searchbox = new SearchboxEntity()
         .setSlug("oppfin")
-        .setName("Opportunity Finder Searchbox");
+        .setName("Opportunity Finder Searchbox")
+        .setLogo("/assets/images/oppfin-logo.png");
 
 
       List<String> lang = new ArrayList<String>();
