@@ -59,6 +59,7 @@ public class DataConfiguration {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
     populator.setContinueOnError(true);
     populator.addScript(new ClassPathResource("data/oppfinUsers.sql"));
+    populator.addScript(new ClassPathResource("data/spring-batch-h2-schema.sql"));
     populator.populate(dataSource.getConnection());
     return populator;
   }
