@@ -24,7 +24,7 @@
 
       <div class="row" id="main-search-content">
         <spring:url var="searchUrl"
-          value="/${searchbox.getSlug() }/search/${preset.getSlug() }" />
+          value="/${searchbox.getSlug() }/${preset.getSlug() }/search" />
         <form id="searchForm" action="${searchUrl}">
           <c:if test="${not empty param.debug}">
             <input type="hidden" name="debug" value="${param.debug }" />
