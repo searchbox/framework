@@ -3,8 +3,12 @@
   xmlns:fn="http://java.sun.com/jsp/jstl/functions"
   xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
 
+  <c:set var="cordisUrl"
+    value="${fn:replace(hit.fieldValues['cordisUrl'], ']','')}" />
+  <c:set var="cordisUrl" value="${fn:replace(cordisUrl, '[','')}" />
+  
   <sbx:tagAttribute limit="1" label="External References"
-    link="${hit.fieldValues['cordisUrl']}"
+    link="${cordisUrl}"
     values="${hit.fieldValues['cordisId']}" />
     
   <sbx:tagAttribute limit="1" label="Program"
