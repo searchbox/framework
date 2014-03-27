@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
+import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 
@@ -42,6 +43,12 @@ public class AuthUserService implements UserDetailsService {
 
     UserEntity user = repository.findByEmail(username);
     LOGGER.info("Found user: {}", user);
+    
+    //TODO: remove this - users were imported without any role.
+    if(user.getRoles().size() == 0){
+      user.getRoles().add(Role.USER);
+      user = repository.save(user);
+    }
 
     return user;
   }

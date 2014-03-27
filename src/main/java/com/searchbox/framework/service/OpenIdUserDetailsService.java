@@ -60,9 +60,20 @@ public class OpenIdUserDetailsService implements
 //      user.setFirstName(attributes.get("lastname"));
       user.getRoles().add(Role.USER);
       
+      LOGGER.info("Saving user "+attributes.get("email"));
+      LOGGER.info("User Attributes {}",attributes);
+      
       user = repository.save(user);
-    } 
+      
+    } else {
+      //TODO: remove this - users were imported without any role.
+      if(user.getRoles().size() == 0){
+        user.getRoles().add(Role.USER);
+        user = repository.save(user);
+      }
+    }
     
+    LOGGER.info("returning user {}", user);
     return user;
   }
 }
