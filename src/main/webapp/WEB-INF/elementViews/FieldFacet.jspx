@@ -7,6 +7,8 @@
 
  <jsp:output omit-xml-declaration="yes" />
 
+<c:if test="${element.values.size() gt 0}">
+
  <!-- Mobile version -->
  <div class="btn-group facet-mobile">
   <button type="button" class="btn btn-default dropdown-toggle"
@@ -79,5 +81,5 @@
    </ul>
   </div>
  </div>
-
+</c:if>
 </jsp:root>
