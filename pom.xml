@@ -87,6 +87,21 @@
   </dependency>
   <!-- ************************************************* -->
   <!-- -->
+  <!-- Batch -->
+  <!-- -->
+  <!-- ************************************************* -->
+  <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-jms</artifactId>
+   <version>${spring.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>org.apache.activemq</groupId>
+   <artifactId>activemq-all</artifactId>
+   <version>5.9.0</version>
+  </dependency>
+  <!-- ************************************************* -->
+  <!-- -->
   <!-- Logging -->
   <!-- -->
   <!-- ************************************************* -->
@@ -197,21 +212,6 @@
    <groupId>commons-pool</groupId>
    <artifactId>commons-pool</artifactId>
    <version>1.5.6</version>
-  </dependency>
-  <dependency>
-   <groupId>commons-dbcp</groupId>
-   <artifactId>commons-dbcp</artifactId>
-   <version>1.4</version>
-   <exclusions>
-    <exclusion>
-     <groupId>commons-logging</groupId>
-     <artifactId>commons-logging</artifactId>
-    </exclusion>
-    <exclusion>
-     <groupId>xml-apis</groupId>
-     <artifactId>xml-apis</artifactId>
-    </exclusion>
-   </exclusions>
   </dependency>
   <dependency>
    <groupId>commons-digester</groupId>

@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.searchbox.collection.AbstractBatchCollection;
+import com.searchbox.collection.ExpiringDocuments;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
@@ -91,6 +92,12 @@ public class CordisCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "cordisArea"));
     fields.add(new Field(String.class, "cordisSubjectIndexCode"));
     fields.add(new Field(String.class, "cordisLanguage"));
+    
+    fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
+    fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
+    fields.add(new Field(String.class, StandardCollection.STD_TITLE_FIELD));
+    fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
+    
     return fields;
   }
 

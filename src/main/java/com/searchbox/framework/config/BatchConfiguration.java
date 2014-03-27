@@ -35,7 +35,8 @@ public class BatchConfiguration extends SimpleBatchConfiguration {
 
   @Bean
   public TaskExecutor taskExecutor() {
-    return new SimpleAsyncTaskExecutor();
+    TaskExecutor executor = new SimpleAsyncTaskExecutor();
+    return executor;
   }
 
   @Bean

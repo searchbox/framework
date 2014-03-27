@@ -97,8 +97,8 @@ public abstract class AbstractBatchCollection extends DefaultCollection
 
   protected Job getJob() {
 
-    JobBuilder builder = jobBuilderFactory.get(this.getName())
-        .incrementer(new RunIdIncrementer()).listener(this);
+    JobBuilder builder = jobBuilderFactory.get(this.getName());
+       
 
     Job job = getJobFlow(builder).build();
 
