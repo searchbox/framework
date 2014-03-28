@@ -96,4 +96,10 @@ public class MultiCollection implements Collection, SearchableCollection {
     this.searchEngine = searchEngine;
     return this;
   }
+
+  @Override
+  public List<Field> getFields() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

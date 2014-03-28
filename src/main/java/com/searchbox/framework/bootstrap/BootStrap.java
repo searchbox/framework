@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -35,24 +34,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.collection.ExpiringDocuments;
-import com.searchbox.collection.StandardCollection;
-import com.searchbox.collection.oppfin.CordisCollection;
-import com.searchbox.collection.oppfin.EENCollection;
-import com.searchbox.collection.oppfin.IdealISTCollection;
-import com.searchbox.collection.oppfin.TopicCollection;
-import com.searchbox.collection.sonar.IssueCollection;
-import com.searchbox.core.dm.MultiCollection;
+import com.searchbox.collection.sonar.NormalizedIssueCollection;
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.core.ref.Order;
-import com.searchbox.core.ref.Sort;
-import com.searchbox.core.search.debug.SolrToString;
-import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.paging.BasicPagination;
-import com.searchbox.core.search.query.EdismaxQuery;
-import com.searchbox.core.search.result.TemplateElement;
-import com.searchbox.core.search.sort.FieldSort;
-import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.event.SearchboxReady;
@@ -181,7 +164,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        */
       LOGGER.info("++ Creating issues Collection");
       CollectionEntity<?> issueCollection = new CollectionEntity<>()
-        .setClazz(IssueCollection.class)
+        .setClazz(NormalizedIssueCollection.class)
         .setName("SonarIssues")
         .setAutoStart(false)
         .setIdFieldName("id")
