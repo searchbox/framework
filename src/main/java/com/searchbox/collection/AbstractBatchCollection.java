@@ -1,6 +1,7 @@
 package com.searchbox.collection;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +99,6 @@ public abstract class AbstractBatchCollection extends DefaultCollection
   protected Job getJob() {
 
     JobBuilder builder = jobBuilderFactory.get(this.getName());
-       
 
     Job job = getJobFlow(builder).build();
 
@@ -136,63 +136,63 @@ public abstract class AbstractBatchCollection extends DefaultCollection
     ItemWriter<FieldMap> writer = new ItemWriter<FieldMap>() {
       public void write(List<? extends FieldMap> items) {
 
+        List<Map<String, Object>> indexables = new ArrayList<>();
+
         for (FieldMap fields : items) {
-          try {
 
-            Map<String, Object> actualFields = new HashMap<String, Object>();
+          Map<String, Object> actualFields = new HashMap<String, Object>();
 
-            // Manage STD fields for collection
-            if (StandardCollection.class
-                .isAssignableFrom(collection.getClass())) {
-              if (((StandardCollection) collection).getIdValue(fields) == null) {
-                throw new RuntimeException(
-                    "Collection Implementing StandardColleciton "
-                        + "cannot have a null value for field StandardCollection.STD_ID_FIELD");
-              }
-              actualFields.put(StandardCollection.STD_ID_FIELD,
-                  ((StandardCollection) collection).getIdValue(fields));
+          // Manage STD fields for collection
+          if (StandardCollection.class.isAssignableFrom(collection.getClass())) {
+            if (((StandardCollection) collection).getIdValue(fields) == null) {
+              throw new RuntimeException(
+                  "Collection Implementing StandardColleciton "
+                      + "cannot have a null value for field StandardCollection.STD_ID_FIELD");
+            }
+            actualFields.put(StandardCollection.STD_ID_FIELD,
+                ((StandardCollection) collection).getIdValue(fields));
 
-              if (((StandardCollection) collection).getTitleValue(fields) != null) {
-                actualFields.put(StandardCollection.STD_TITLE_FIELD,
-                    ((StandardCollection) collection).getTitleValue(fields));
-              }
-
-              if (((StandardCollection) collection).getPublishedValue(fields) != null) {
-                actualFields
-                    .put(StandardCollection.STD_PUBLISHED_FIELD,
-                        ((StandardCollection) collection)
-                            .getPublishedValue(fields));
-              }
-
-              if (((StandardCollection) collection).getUpdateValue(fields) != null) {
-                actualFields.put(StandardCollection.STD_UPDATED_FIELD,
-                    ((StandardCollection) collection).getUpdateValue(fields));
-              }
-
-              if (((StandardCollection) collection).getBodyValue(fields) != null) {
-                actualFields.put(StandardCollection.STD_BODY_FIELD,
-                    ((StandardCollection) collection).getBodyValue(fields));
-              }
+            if (((StandardCollection) collection).getTitleValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_TITLE_FIELD,
+                  ((StandardCollection) collection).getTitleValue(fields));
             }
 
-            // Manage STD_EXPIRE fields for collection
-            if (ExpiringDocuments.class.isAssignableFrom(collection.getClass())) {
-              actualFields.put(ExpiringDocuments.STD_DEADLINE_FIELD,
-                  ((ExpiringDocuments) collection).getDeadlineValue(fields));
+            if (((StandardCollection) collection).getPublishedValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_PUBLISHED_FIELD,
+                  ((StandardCollection) collection).getPublishedValue(fields));
             }
 
-            for (Entry<String, List<Object>> field : fields.entrySet()) {
-              if (!field.getValue().isEmpty()) {
-                actualFields.put(field.getKey(),
-                    (field.getValue().size() == 1) ? field.getValue().get(0)
-                        : field.getValue());
-              }
+            if (((StandardCollection) collection).getUpdateValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_UPDATED_FIELD,
+                  ((StandardCollection) collection).getUpdateValue(fields));
             }
 
-            getSearchEngine().indexMap(collection, actualFields);
-          } catch (Exception e) {
-            LOGGER.error("Could not index document", e);
+            if (((StandardCollection) collection).getBodyValue(fields) != null) {
+              actualFields.put(StandardCollection.STD_BODY_FIELD,
+                  ((StandardCollection) collection).getBodyValue(fields));
+            }
           }
+
+          // Manage STD_EXPIRE fields for collection
+          if (ExpiringDocuments.class.isAssignableFrom(collection.getClass())) {
+            actualFields.put(ExpiringDocuments.STD_DEADLINE_FIELD,
+                ((ExpiringDocuments) collection).getDeadlineValue(fields));
+          }
+
+          for (Entry<String, List<Object>> field : fields.entrySet()) {
+            if (!field.getValue().isEmpty()) {
+              actualFields.put(field.getKey(),
+                  (field.getValue().size() == 1) ? field.getValue().get(0)
+                      : field.getValue());
+            }
+          }
+          indexables.add(actualFields);
+
+        }
+        try {
+          getSearchEngine().indexMap(collection, indexables);
+        } catch (Exception e) {
+          LOGGER.error("Could not index document", e);
         }
       }
     };

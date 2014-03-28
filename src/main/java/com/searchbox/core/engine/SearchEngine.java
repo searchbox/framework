@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
+import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.search.AbstractSearchCondition;
 
 public interface SearchEngine<Q, R> {
@@ -41,10 +42,13 @@ public interface SearchEngine<Q, R> {
 
   boolean indexMap(Collection collection, Map<String, Object> fields);
 
+  boolean indexMap(Collection collection, java.util.Collection<Map<String, Object>> indexables);
+
   List<SearchElement> getSupportedElements();
 
   Boolean supportsElement(SearchElement element);
 
   Boolean supportsCondition(AbstractSearchCondition condition);
+
 
 }
