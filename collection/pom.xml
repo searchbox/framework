@@ -7,10 +7,8 @@
   <version>0.1.0-SNAPSHOT</version>
  </parent>
  <modelVersion>4.0.0</modelVersion>
- <groupId>com.searchbox</groupId>
  <artifactId>sb-batch-collection</artifactId>
  <packaging>jar</packaging>
- <version>0.1.0-SNAPSHOT</version>
  <name>Searchbox - Collection - Batch</name>
  <description>Searchbox is an analytical framework for big-data and searchengines</description>
  <url>http:/www.searchbox.com</url>
