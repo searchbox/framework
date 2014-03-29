@@ -33,15 +33,12 @@ import org.apache.solr.schema.CopyField;
 import org.apache.solr.schema.IndexSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 
-public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
-    DisposableBean {
+public class EmbeddedSolr extends SolrSearchEngine {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(EmbeddedSolr.class);
@@ -63,7 +60,6 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
     this.solrHome = solrHome;
   }
 
-  @Override
   public void afterPropertiesSet() throws Exception {
     if (EmbeddedSolr.coreContainer == null) {
       try {
@@ -76,7 +72,6 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
     }
   }
 
-  @Override
   public void destroy() throws Exception {
     coreContainer.shutdown();
   }

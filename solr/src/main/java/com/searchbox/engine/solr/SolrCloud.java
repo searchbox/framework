@@ -31,7 +31,6 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.dm.Collection;
@@ -39,8 +38,8 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
-public class SolrCloud extends SolrSearchEngine implements InitializingBean,
-    AccessibleSearchEngine {
+public class SolrCloud extends SolrSearchEngine 
+  implements AccessibleSearchEngine {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrCloud.class);
   
@@ -51,10 +50,6 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
 
   private static final String ZK_CORE_CONFIG_PATH = "/configs";
   private static final String ZK_COLLECTION_PATH = "/collections";
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-  }
 
   private static CloudSolrServer solrServer;
 

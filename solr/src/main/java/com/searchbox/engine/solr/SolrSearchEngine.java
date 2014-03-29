@@ -28,8 +28,8 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.FieldAttribute.USE;
 import com.searchbox.core.engine.AbstractSearchEngine;
+import com.searchbox.core.engine.FieldMappingSearchEngine;
 import com.searchbox.core.engine.ManagedSearchEngine;
-import com.searchbox.engine.FieldMappingSearchEngine;
 
 public abstract class SolrSearchEngine extends
     AbstractSearchEngine<SolrQuery, QueryResponse> implements
