@@ -287,4 +287,13 @@ public abstract class SolrSearchEngine extends
     return usages;
   }
 
+
+  @Override
+  public boolean indexMap(Collection collection,
+      java.util.Collection<Map<String, Object>> indexables) {
+    for(Map<String, Object> indexable:indexables){
+      this.indexMap(collection, indexable);
+    }
+    return true;
+  }
 }

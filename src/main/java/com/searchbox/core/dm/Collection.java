@@ -1,6 +1,7 @@
 package com.searchbox.core.dm;
 
-import com.searchbox.core.engine.SearchEngine;
+import java.util.List;
+import java.util.Set;
 
 
 public interface Collection {
@@ -19,5 +20,7 @@ public interface Collection {
    * @return the idFieldName
    */
   public abstract String getIdFieldName();
+  
+  public List<Field> getFields();
 
 }

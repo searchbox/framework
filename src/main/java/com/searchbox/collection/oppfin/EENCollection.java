@@ -107,6 +107,12 @@ public class EENCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "eenCompanyTurnover"));
     fields.add(new Field(String.class, "eenDisseminationPreferredKey"));
     fields.add(new Field(Integer.class, "eenCompanySince"));
+    
+    fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
+    fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
+    fields.add(new Field(String.class, StandardCollection.STD_TITLE_FIELD));
+    fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
+    
     return fields;
   }
 

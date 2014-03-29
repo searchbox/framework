@@ -70,7 +70,7 @@
   <jetty.version>8.1.5.v20120716</jetty.version>
   <lucene.version>4.7.0</lucene.version>
   <solr.version>4.7.0</solr.version>
-  <es.version>1.0.1</es.version>
+  <es.version>1.1.0</es.version>
   <m2eclipse.wtp.contextRoot>/searchbox</m2eclipse.wtp.contextRoot>
  </properties>
  <dependencies>
@@ -84,6 +84,21 @@
    <artifactId>junit</artifactId>
    <version>4.11</version>
    <scope>test</scope>
+  </dependency>
+  <!-- ************************************************* -->
+  <!-- -->
+  <!-- Batch -->
+  <!-- -->
+  <!-- ************************************************* -->
+  <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-jms</artifactId>
+   <version>${spring.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>org.apache.activemq</groupId>
+   <artifactId>activemq-all</artifactId>
+   <version>5.9.0</version>
   </dependency>
   <!-- ************************************************* -->
   <!-- -->
@@ -197,21 +212,6 @@
    <groupId>commons-pool</groupId>
    <artifactId>commons-pool</artifactId>
    <version>1.5.6</version>
-  </dependency>
-  <dependency>
-   <groupId>commons-dbcp</groupId>
-   <artifactId>commons-dbcp</artifactId>
-   <version>1.4</version>
-   <exclusions>
-    <exclusion>
-     <groupId>commons-logging</groupId>
-     <artifactId>commons-logging</artifactId>
-    </exclusion>
-    <exclusion>
-     <groupId>xml-apis</groupId>
-     <artifactId>xml-apis</artifactId>
-    </exclusion>
-   </exclusions>
   </dependency>
   <dependency>
    <groupId>commons-digester</groupId>
