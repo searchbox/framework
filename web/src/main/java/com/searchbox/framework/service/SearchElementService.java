@@ -30,10 +30,10 @@ public class SearchElementService {
 
   @Autowired
   ApplicationContext context;
-  
+
   Map<String, Set<String>> templateFields;
-  
-  public SearchElementService(){
+
+  public SearchElementService() {
     templateFields = new HashMap<>();
   }
 
@@ -51,15 +51,16 @@ public class SearchElementService {
     if (TemplateElement.class.isAssignableFrom(element.getClass())) {
       TemplateElement tmpl = (TemplateElement) element;
       try {
-        if(!templateFields.containsKey(tmpl.getTemplateFile())){
+        if (!templateFields.containsKey(tmpl.getTemplateFile())) {
           Resource resource = context.getResource(tmpl.getTemplateFile());
           LOGGER.debug("Read file for template from: {}", resource);
           String content = FileUtils.readFileToString(resource.getFile());
           LOGGER.trace("File content for template is {}", content);
-          templateFields.put(tmpl.getTemplateFile(), StringUtils.extractHitFields(content));
+          templateFields.put(tmpl.getTemplateFile(),
+              StringUtils.extractHitFields(content));
         }
         tmpl.setFields(templateFields.get(tmpl.getTemplateFile()));
-      
+
       } catch (IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -93,7 +94,7 @@ public class SearchElementService {
         LOGGER.error("Could not get SearchElement for: {}", elementEntity, e);
       }
     }
-    
+
     return searchElements;
   }
 

@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.SerializationUtils;
 
 @Entity
-//TODO Paramtrized AttributeEntity to not save the serialized...
-public class AttributeEntity extends BaseEntity<Long> 
-  implements Comparable<AttributeEntity> {
+// TODO Paramtrized AttributeEntity to not save the serialized...
+public class AttributeEntity extends BaseEntity<Long> implements
+    Comparable<AttributeEntity> {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(AttributeEntity.class);
@@ -43,7 +43,7 @@ public class AttributeEntity extends BaseEntity<Long>
   public AttributeEntity() {
 
   }
-  
+
   public Class<?> getType() {
     return type;
   }
@@ -73,11 +73,11 @@ public class AttributeEntity extends BaseEntity<Long>
   }
 
   public AttributeEntity setValue(Object value) {
-    if(value != null){
-      if(type == null){
+    if (value != null) {
+      if (type == null) {
         type = value.getClass();
       }
-      LOGGER.debug("Adding object of type {}",value.getClass());
+      LOGGER.debug("Adding object of type {}", value.getClass());
       try {
         this.valueAsByteArray = SerializationUtils.serialize(value);
       } catch (Exception e) {

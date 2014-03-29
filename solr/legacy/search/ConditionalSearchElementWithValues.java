@@ -48,7 +48,7 @@ public abstract class ConditionalSearchElementWithValues<K extends ValueElement,
       return "missingAnnotationOnSearchConditionClass";
     }
   }
-  
+
   @Override
   public String getParamValue() {
     return this.getSearchCondition().getParamValue();

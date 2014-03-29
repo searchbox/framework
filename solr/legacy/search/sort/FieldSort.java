@@ -117,7 +117,7 @@ public class FieldSort extends
     public Sort getSort() {
       return sort;
     }
-    
+
     @Override
     public String getParamValue() {
       return field + " " + this.sort;

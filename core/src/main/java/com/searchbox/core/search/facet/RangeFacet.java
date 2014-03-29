@@ -102,12 +102,11 @@ public class RangeFacet extends
       this.lowerElement = from;
       this.upperElement = to;
     }
-    
 
     @Override
     public String getParamValue() {
-      return this.fieldName + "[" + this.lowerElement + "##" + this.upperElement
-          + "]";
+      return this.fieldName + "[" + this.lowerElement + "##"
+          + this.upperElement + "]";
     }
   }
 

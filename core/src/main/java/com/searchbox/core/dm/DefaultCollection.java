@@ -26,8 +26,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.engine.SearchEngine;
 
-public class DefaultCollection 
-  implements Collection, CollectionWithFields, SearchableCollection {
+public class DefaultCollection implements Collection, CollectionWithFields,
+    SearchableCollection {
 
   @SearchAttribute
   protected String name;
@@ -39,7 +39,7 @@ public class DefaultCollection
 
   @SearchAttribute
   protected SearchEngine<?, ?> searchEngine;
-  
+
   @SearchAttribute
   Set<Preset> presets = new TreeSet<Preset>();
 
@@ -54,7 +54,9 @@ public class DefaultCollection
     this.name = name;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.searchbox.core.dm.Collection#getName()
    */
   @Override
@@ -66,7 +68,9 @@ public class DefaultCollection
     this.name = name;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.searchbox.core.dm.Collection#getDescription()
    */
   @Override
@@ -78,7 +82,9 @@ public class DefaultCollection
     this.description = description;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.searchbox.core.dm.Collection#getFields()
    */
   @Override
@@ -90,7 +96,9 @@ public class DefaultCollection
     this.fields = fields;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.searchbox.core.dm.Collection#getSearchEngine()
    */
   @Override
@@ -103,7 +111,9 @@ public class DefaultCollection
     return this;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.searchbox.core.dm.Collection#getIdFieldName()
    */
   @Override

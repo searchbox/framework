@@ -104,8 +104,8 @@ public class Hit implements Comparable<Hit> {
 
   @SuppressWarnings("unchecked")
   public String getTitle() {
-    Object title = (this.fieldValues.get(this.titleFieldName)!=null)?
-        this.fieldValues.get(this.titleFieldName):"";
+    Object title = (this.fieldValues.get(this.titleFieldName) != null) ? this.fieldValues
+        .get(this.titleFieldName) : "";
     if (List.class.isAssignableFrom(title.getClass())) {
       return ((List<String>) title).get(0);
     } else {
@@ -115,8 +115,8 @@ public class Hit implements Comparable<Hit> {
 
   @SuppressWarnings("unchecked")
   public String getUrl() {
-    Object url = (this.fieldValues.get(this.urlFieldName)!=null)?
-        this.fieldValues.get(this.urlFieldName):"";
+    Object url = (this.fieldValues.get(this.urlFieldName) != null) ? this.fieldValues
+        .get(this.urlFieldName) : "";
     if (List.class.isAssignableFrom(url.getClass())) {
       return ((List<String>) url).get(0);
     } else {

@@ -19,77 +19,180 @@ import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.query.EdismaxQuery;
 
 /**
- *
+ * 
  * @author gamars
  */
 public class Query {
 
   public void debug(boolean b) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void addFacet(String facetKey, boolean sticky) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
-  public void addFieldValueCondition(String facetKey, String conditionValue, Boolean taged) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  public void addFieldValueCondition(String facetKey, String conditionValue,
+      Boolean taged) {
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void hitsPerPage(Integer hitsPerPage) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public Object getHits() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public Integer hitsPerPage() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void limit(Integer hitsPerPage) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void offset(int i) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void operator(EdismaxQuery.Operator operator) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void addSearchField(String key, Float boost) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public String getText() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void setText(String collationQuery) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void addHighlightField(String fieldHighlightKey) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public boolean hasFields() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void addField(String score) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void addField(String label, String key) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public void sort(String key, Sort sort) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
-  
+
 }

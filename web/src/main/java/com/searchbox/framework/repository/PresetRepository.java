@@ -22,18 +22,16 @@ import org.springframework.data.repository.CrudRepository;
 import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 
-public interface PresetRepository extends
-    CrudRepository<PresetEntity, Long> {
+public interface PresetRepository extends CrudRepository<PresetEntity, Long> {
 
   public PresetEntity findPresetDefinitionBySearchboxAndSlug(
       SearchboxEntity searchbox, String slug);
 
   public List<PresetEntity> findAllBySearchbox(SearchboxEntity searchbox);
-  
+
   public List<PresetEntity> findAllBySearchboxAndVisible(
       SearchboxEntity searchbox, Boolean visible);
 
   public PresetEntity findPresetDefinitionBySlug(String slug);
-  
 
 }

@@ -36,12 +36,11 @@ public class AdminSearchController extends SearchboxController {
 
   @Autowired
   JobExplorer jobExplorer;
-  
+
   @ModelAttribute("user")
-  public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
+  public UserEntity getUser(@AuthenticationPrincipal UserEntity user) {
     return user;
   }
-
 
   @ModelAttribute("OrderEnum")
   public List<Order> getReferenceOrder() {

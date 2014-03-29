@@ -30,10 +30,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import com.searchbox.core.SearchAdapter;
-import com.searchbox.core.SearchAdapterMethod;
-
 public class SearchAdapterService {
 
   private static final Logger LOGGER = LoggerFactory
@@ -59,7 +55,8 @@ public class SearchAdapterService {
     arguments.addAll(Arrays.asList(objects));
     Long start = System.currentTimeMillis();
     this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
-    LOGGER.info("DoAdapt[{}] done in {}ms",time, (System.currentTimeMillis()-start));
+    LOGGER.info("DoAdapt[{}] done in {}ms", time,
+        (System.currentTimeMillis() - start));
   }
 
   private void doAdapt(Class<?> requiredArg, Map<Method, Object> methods,
@@ -111,12 +108,11 @@ public class SearchAdapterService {
         x++;
       }
 
-      LOGGER.debug("We'll need {} params",paramTypes.length);
+      LOGGER.debug("We'll need {} params", paramTypes.length);
       LOGGER.debug("Method bag is: ");
       for (int i = 0; i < paramTypes.length; i++) {
-        LOGGER.debug("Bag for param: {} is this bag a list? {}",
-            paramTypes[i].getSimpleName(),
-            parameters[i].getClass().getSimpleName());
+        LOGGER.debug("Bag for param: {} is this bag a list? {}", paramTypes[i]
+            .getSimpleName(), parameters[i].getClass().getSimpleName());
         for (Object obj : parameters[i]) {
           LOGGER.debug("\tin bag: {}", obj.getClass().getSimpleName());
         }
@@ -125,9 +121,10 @@ public class SearchAdapterService {
       // Execute method with permutated arguments.
       List<Object[]> argumentBags = findAllArgumentPermutations(parameters);
       for (Object[] argumentsInBag : argumentBags) {
-        LOGGER.trace("Found a working permutation for method: {} ", method.getName());
+        LOGGER.trace("Found a working permutation for method: {} ",
+            method.getName());
         for (Object obj : argumentsInBag) {
-          LOGGER.trace("\t{}",obj.getClass().getSimpleName());
+          LOGGER.trace("\t{}", obj.getClass().getSimpleName());
         }
         this.executeMethod(methods.get(method), method, argumentsInBag);
       }
@@ -167,12 +164,10 @@ public class SearchAdapterService {
       Class<?>[] paramTypes = method.getParameterTypes();
       for (Class<?> paramType : paramTypes) {
         for (Class<?> clazz : classSet) {
-          LOGGER.trace("\tclass:{} \tparamType: {} \t{}{}",
-              clazz.getSimpleName(),
-              paramType.getSimpleName(),
-              paramType.isAssignableFrom(clazz),
-              ((requiredClass == null) ? "" : "\trequired:"
-                  + requiredClass.isAssignableFrom(paramType)));
+          LOGGER.trace("\tclass:{} \tparamType: {} \t{}{}", clazz
+              .getSimpleName(), paramType.getSimpleName(), paramType
+              .isAssignableFrom(clazz), ((requiredClass == null) ? ""
+              : "\trequired:" + requiredClass.isAssignableFrom(paramType)));
           if (paramType.isAssignableFrom(clazz)) {
             match++;
             if (requiredClass != null
@@ -198,7 +193,8 @@ public class SearchAdapterService {
       Long start = System.currentTimeMillis();
       method.setAccessible(true);
       method.invoke(caller, arguments);
-      LOGGER.trace("Addapted with {} in {}ms",method.getName(), (System.currentTimeMillis()-start));
+      LOGGER.trace("Addapted with {} in {}ms", method.getName(),
+          (System.currentTimeMillis() - start));
     } catch (IllegalAccessException | IllegalArgumentException
         | InvocationTargetException e) {
       LOGGER.error("Method name: " + method.getName());
@@ -210,38 +206,37 @@ public class SearchAdapterService {
           + caller.getClass().getSimpleName(), e);
     }
   }
-  
-  
-   /**
-     * Permute all possible parameters
-     * 
-     * @param caller
-     * @param method
-     * @param allArguments
-     * @param offset
-     * @param arguments
-     */
-    public static List<Object[]> findAllArgumentPermutations(
-            Object[][] allArguments) {
-        return findAllArgumentPermutations(allArguments, 0, 0,
-                new Object[allArguments.length], new ArrayList<Object[]>());
 
-    }
+  /**
+   * Permute all possible parameters
+   * 
+   * @param caller
+   * @param method
+   * @param allArguments
+   * @param offset
+   * @param arguments
+   */
+  public static List<Object[]> findAllArgumentPermutations(
+      Object[][] allArguments) {
+    return findAllArgumentPermutations(allArguments, 0, 0,
+        new Object[allArguments.length], new ArrayList<Object[]>());
 
-    public static List<Object[]> findAllArgumentPermutations(
-            Object[][] allArguments, int depth, int offset, Object[] arguments,
-            List<Object[]> results) {
-        if (depth < allArguments.length) {
-            for (int i = offset; i < allArguments[depth].length; i++) {
-                arguments[depth] = allArguments[depth][i];
-                // we got a bag here...
-                if ((depth + 1) == arguments.length) {
-                    results.add(arguments.clone());
-                }
-                findAllArgumentPermutations(allArguments, depth + 1, offset,
-                        arguments, results);
-            }
+  }
+
+  public static List<Object[]> findAllArgumentPermutations(
+      Object[][] allArguments, int depth, int offset, Object[] arguments,
+      List<Object[]> results) {
+    if (depth < allArguments.length) {
+      for (int i = offset; i < allArguments[depth].length; i++) {
+        arguments[depth] = allArguments[depth][i];
+        // we got a bag here...
+        if ((depth + 1) == arguments.length) {
+          results.add(arguments.clone());
         }
-        return results;
+        findAllArgumentPermutations(allArguments, depth + 1, offset, arguments,
+            results);
+      }
     }
+    return results;
+  }
 }

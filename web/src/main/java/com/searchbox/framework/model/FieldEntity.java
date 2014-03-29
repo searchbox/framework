@@ -23,13 +23,12 @@ import javax.persistence.Entity;
 import com.searchbox.core.dm.Field;
 
 @Entity
-public class FieldEntity  extends BeanFactoryEntity<Long> 
-implements ParametrizedBeanFactory<Field>,
-Comparable<FieldEntity> {
+public class FieldEntity extends BeanFactoryEntity<Long> implements
+    ParametrizedBeanFactory<Field>, Comparable<FieldEntity> {
 
   private Class<?> clazz;
 
-  @Column(name="fkey")
+  @Column(name = "fkey")
   private String key;
 
   public FieldEntity() {
@@ -107,8 +106,7 @@ Comparable<FieldEntity> {
 
   @Override
   public int compareTo(FieldEntity o) {
-    return this.getKey()
-        .compareTo(o.getKey());
+    return this.getKey().compareTo(o.getKey());
   }
 
   @Override

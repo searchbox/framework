@@ -92,7 +92,8 @@ public class AdminController {
   }
 
   @ModelAttribute("searchbox")
-  public SearchboxEntity getSearchboxEntity(@PathVariable SearchboxEntity searchbox) {
+  public SearchboxEntity getSearchboxEntity(
+      @PathVariable SearchboxEntity searchbox) {
     return searchbox;
   }
 

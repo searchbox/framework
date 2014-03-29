@@ -59,18 +59,17 @@ import com.searchbox.framework.service.SearchService;
 
 @Controller
 @RequestMapping("/{searchbox}")
-@Order(value=10000000)
+@Order(value = 10000000)
 @Transactional
 public class SearchboxController {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchboxController.class);
-  
+
   @ModelAttribute("user")
-  public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
+  public UserEntity getUser(@AuthenticationPrincipal UserEntity user) {
     return user;
   }
-
 
   @Autowired
   ApplicationConversionService conversionService;
@@ -105,7 +104,8 @@ public class SearchboxController {
   }
 
   @ModelAttribute("presets")
-  public List<PresetEntity> getAllPresets(@PathVariable SearchboxEntity searchbox) {
+  public List<PresetEntity> getAllPresets(
+      @PathVariable SearchboxEntity searchbox) {
     return presetRepository.findAllBySearchboxAndVisible(searchbox, true);
   }
 
@@ -145,11 +145,11 @@ public class SearchboxController {
       RedirectAttributes redirectAttributes) {
     model.setViewName(this.getViewFolder() + "/home");
 
-    if(searchbox == null){
-    	LOGGER.error("Searchbox {} not found!",searchbox);
-    	return new ModelAndView(new RedirectView("/", true));
+    if (searchbox == null) {
+      LOGGER.error("Searchbox {} not found!", searchbox);
+      return new ModelAndView(new RedirectView("/", true));
     }
-    
+
     PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
@@ -162,11 +162,11 @@ public class SearchboxController {
       HttpServletRequest request, @PathVariable PresetEntity preset,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
-	  if(preset == null){
-		  LOGGER.error("Preset {} not found!",preset);
-		  return getHome(searchbox, request, model, redirectAttributes);
-		  
-	  }
+    if (preset == null) {
+      LOGGER.error("Preset {} not found!", preset);
+      return getHome(searchbox, request, model, redirectAttributes);
+
+    }
     String process = preset.getDefaultProcess();
     LOGGER.info(
         "Missing process. Redirecting to default process of preset: {}",
@@ -180,7 +180,8 @@ public class SearchboxController {
   @RequestMapping(value = { "/{preset}/{process}", "/{preset}/{process}/" })
   public ModelAndView executeSearch(@PathVariable String process,
       @ModelAttribute("searchboxes") List<SearchboxEntity> searchboxes,
-      @PathVariable SearchboxEntity searchbox, @PathVariable PresetEntity preset,
+      @PathVariable SearchboxEntity searchbox,
+      @PathVariable PresetEntity preset,
       @ModelAttribute("collector") SearchCollector collector,
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
       ModelAndView model, RedirectAttributes redirectAttributes) {
@@ -201,11 +202,12 @@ public class SearchboxController {
 
     return model;
   }
-  
-  @RequestMapping(headers ={"Accept=application/json"}, value="/{preset}/{process}",method=RequestMethod.GET)
+
+  @RequestMapping(headers = { "Accept=application/json" }, value = "/{preset}/{process}", method = RequestMethod.GET)
   public ModelAndView executeJsonSearch(@PathVariable String process,
       @ModelAttribute("searchboxes") List<SearchboxEntity> searchboxes,
-      @PathVariable SearchboxEntity searchbox, @PathVariable PresetEntity preset,
+      @PathVariable SearchboxEntity searchbox,
+      @PathVariable PresetEntity preset,
       @ModelAttribute("collector") SearchCollector collector,
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
       ModelAndView model, RedirectAttributes redirectAttributes) {
@@ -217,8 +219,8 @@ public class SearchboxController {
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
 
-    
-    //TODO: Make the JSON view- http://www.javablog.fr/javaspringjson-generate-json-withwithout-viewresolver-jsonview-with-json-lib-2-3-jdk15.html
+    // TODO: Make the JSON view-
+    // http://www.javablog.fr/javaspringjson-generate-json-withwithout-viewresolver-jsonview-with-json-lib-2-3-jdk15.html
     Set<SearchElement> resultElements = executeRequest(searchbox, preset,
         process, conditions, collector);
 
@@ -229,17 +231,17 @@ public class SearchboxController {
 
     return model;
   }
-  
-  private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
-    
+
+  private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset) {
+
     Set<FieldAttribute> fieldAttributes = new HashSet<>();
     for (FieldAttributeEntity def : preset.getFieldAttributes(true)) {
       fieldAttributes.add(def.build());
     }
-    
+
     return fieldAttributes;
   }
-  
+
   private Set<AbstractSearchCondition> getAllSearchConditions(
       PresetEntity preset) {
     Set<AbstractSearchCondition> fieldAttributes = new HashSet<>();
@@ -254,34 +256,36 @@ public class SearchboxController {
       PresetEntity preset, String process,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
-    Set<SearchElement> searchElements = elementService.getSearchElements(preset, process);
+    Set<SearchElement> searchElements = elementService.getSearchElements(
+        preset, process);
     LOGGER.debug("Required Search elements are {}", searchElements);
-    
+
     Set<FieldAttribute> fieldAttributes = getAllFieldAttribute(preset);
-    
+
     Set<AbstractSearchCondition> presetConditions = getAllSearchConditions(preset);
     LOGGER.info("Required preset Conditions are {}", presetConditions);
 
     Collection collection = preset.getCollection().build();
-    
-    if(!(SearchableCollection.class.isAssignableFrom(collection.getClass()))){
+
+    if (!(SearchableCollection.class.isAssignableFrom(collection.getClass()))) {
       LOGGER.error("Collection {} does NOT implement SearchableCollection!!!",
           collection.getName());
     }
-    
-    SearchEngine<?, ?> searchEngine = ((SearchableCollection)collection).getSearchEngine();
-    
+
+    SearchEngine<?, ?> searchEngine = ((SearchableCollection) collection)
+        .getSearchEngine();
+
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
     LOGGER.debug("Current Collection: {}", collection);
 
     Set<SearchElement> resultElements = null;
-    
-    resultElements = searchService.execute(searchEngine,
-        collection, searchElements, fieldAttributes,
-        presetConditions, conditions, collector);
 
-    LOGGER.debug("Resulting SearchElements are {}",resultElements);
-    
+    resultElements = searchService.execute(searchEngine, collection,
+        searchElements, fieldAttributes, presetConditions, conditions,
+        collector);
+
+    LOGGER.debug("Resulting SearchElements are {}", resultElements);
+
     // Check if we have a retry clause
     boolean retry = false;
     for (SearchElement element : resultElements) {
@@ -294,7 +298,8 @@ public class SearchboxController {
 
     if (retry) {
       resultElements = searchService.execute(searchEngine, collection,
-          searchElements, fieldAttributes, presetConditions, conditions, collector);
+          searchElements, fieldAttributes, presetConditions, conditions,
+          collector);
     }
     return resultElements;
   }

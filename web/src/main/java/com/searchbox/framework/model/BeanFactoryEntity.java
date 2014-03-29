@@ -10,8 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,9 +53,10 @@ public abstract class BeanFactoryEntity<K extends Serializable> extends
   public <T> T build(Class<T> clazz) {
     LOGGER.debug("BeanFactory for {}", clazz);
     try {
-      //T target = (T) clazz.newInstance();
-      //FIXME this will only work in Spring! 
-      T target = ContextUtil.context.getAutowireCapableBeanFactory().createBean(clazz);
+      // T target = (T) clazz.newInstance();
+      // FIXME this will only work in Spring!
+      T target = ContextUtil.context.getAutowireCapableBeanFactory()
+          .createBean(clazz);
       SearchElement t;
       BeanUtils.copyProperties(this, target);
       for (AttributeEntity attribute : this.attributes) {

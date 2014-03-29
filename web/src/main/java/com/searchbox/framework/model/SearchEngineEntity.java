@@ -29,20 +29,20 @@ import org.hibernate.annotations.LazyCollectionOption;
 import com.searchbox.core.engine.SearchEngine;
 
 @Entity
-public class SearchEngineEntity<K extends SearchEngine<?,?>> 
-  extends BeanFactoryEntity<Long> 
-  implements ParametrizedBeanFactory<K>, Comparable<SearchEngineEntity<K>> {
-  
-  @OneToMany(fetch=FetchType.LAZY, mappedBy = "searchEngine", orphanRemoval = true, 
-      cascade ={CascadeType.MERGE, CascadeType.REFRESH})
+public class SearchEngineEntity<K extends SearchEngine<?, ?>> extends
+    BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
+    Comparable<SearchEngineEntity<K>> {
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "searchEngine", orphanRemoval = true, cascade = {
+      CascadeType.MERGE, CascadeType.REFRESH })
   @LazyCollection(LazyCollectionOption.TRUE)
-  private Set<CollectionEntity<?>> collections; 
-  
+  private Set<CollectionEntity<?>> collections;
+
   private Class<?> clazz;
-  
+
   protected String name;
-  
-  public SearchEngineEntity(){
+
+  public SearchEngineEntity() {
     this.collections = new TreeSet<>();
   }
 
@@ -85,12 +85,11 @@ public class SearchEngineEntity<K extends SearchEngine<?,?>>
   public int compareTo(SearchEngineEntity<K> o) {
     return this.getName().compareTo(o.getName());
   }
-  
+
   public SearchEngineEntity<?> setAttribute(String name, Object value) {
-    this.getAttributes().add(new AttributeEntity()
-      .setName(name)
-      .setValue(value)
-      .setType(value.getClass()));
+    this.getAttributes().add(
+        new AttributeEntity().setName(name).setValue(value)
+            .setType(value.getClass()));
     return this;
   }
 
@@ -98,6 +97,5 @@ public class SearchEngineEntity<K extends SearchEngine<?,?>>
   public String toString() {
     return "SearchEngineEntity [clazz=" + clazz + ", name=" + name + "]";
   }
-  
-  
+
 }

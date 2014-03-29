@@ -23,7 +23,7 @@ public abstract class BaseEntity<K extends Serializable> {
 
   @Version
   private long version;
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private K id;
@@ -31,7 +31,7 @@ public abstract class BaseEntity<K extends Serializable> {
   public K getId() {
     return id;
   }
-  
+
   public void setId(K id) {
     this.id = id;
   }

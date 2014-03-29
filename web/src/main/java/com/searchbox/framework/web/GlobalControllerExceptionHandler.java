@@ -15,31 +15,31 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 @Component
 class GlobalDefaultExceptionHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
-    public static final String DEFAULT_ERROR_VIEW = "error/error";
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(GlobalDefaultExceptionHandler.class);
+  public static final String DEFAULT_ERROR_VIEW = "error/error";
 
-    
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public String handleResourceNotFoundException() {
-        return "error/404";
-    }
-    
-    
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-    	LOGGER.debug("entering defaultErrorHandler");
-        // If the exception is annotated with @ResponseStatus rethrow it and let
-        // the framework handle it - like the OrderNotFoundException example
-        // at the start of this post.
-        // AnnotationUtils is a Spring Framework utility class.
-        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-            throw e;
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public String handleResourceNotFoundException() {
+    return "error/404";
+  }
 
-        // Otherwise setup and send the user to a default error-view.
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e);
-        mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error/404");
-        return mav;
-    }
+  @ExceptionHandler(value = Exception.class)
+  public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e)
+      throws Exception {
+    LOGGER.debug("entering defaultErrorHandler");
+    // If the exception is annotated with @ResponseStatus rethrow it and let
+    // the framework handle it - like the OrderNotFoundException example
+    // at the start of this post.
+    // AnnotationUtils is a Spring Framework utility class.
+    if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
+      throw e;
+
+    // Otherwise setup and send the user to a default error-view.
+    ModelAndView mav = new ModelAndView();
+    mav.addObject("exception", e);
+    mav.addObject("url", req.getRequestURL());
+    mav.setViewName("error/404");
+    return mav;
+  }
 }

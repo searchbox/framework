@@ -9,6 +9,6 @@ public interface SearchableCollection {
    */
   public SearchEngine<?, ?> getSearchEngine();
 
-  public SearchableCollection setSearchEngine(SearchEngine<?,?> searchEngine);
+  public SearchableCollection setSearchEngine(SearchEngine<?, ?> searchEngine);
 
 }

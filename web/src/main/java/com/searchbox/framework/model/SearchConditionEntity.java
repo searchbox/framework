@@ -4,22 +4,18 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.searchbox.core.ref.ReflectionUtils;
 import com.searchbox.core.search.AbstractSearchCondition;
 
 @Entity
-public class SearchConditionEntity <K extends AbstractSearchCondition> 
-  extends BeanFactoryEntity<Long> 
-  implements ParametrizedBeanFactory<K>, Comparable<SearchConditionEntity<K>> {
-  
-  @ManyToOne(fetch=FetchType.LAZY)
+public class SearchConditionEntity<K extends AbstractSearchCondition> extends
+    BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
+    Comparable<SearchConditionEntity<K>> {
+
+  @ManyToOne(fetch = FetchType.LAZY)
   PresetEntity preset;
-  
+
   private Class<?> clazz;
-  
+
   private String label;
 
   public PresetEntity getPreset() {
@@ -58,33 +54,31 @@ public class SearchConditionEntity <K extends AbstractSearchCondition>
   @Override
   @SuppressWarnings("unchecked")
   public K build() {
-    if(this.getClazz() == null){
+    if (this.getClazz() == null) {
       throw new MissingClassAttributeException();
     }
     return (K) super.build(this.getClazz());
   }
-  
-  public PresetEntity end(){
+
+  public PresetEntity end() {
     this.getPreset().getConditions().add(this);
     return this.getPreset();
   }
-  
-  public SearchConditionEntity<K> setAttribute(String name, Object value){
-   
+
+  public SearchConditionEntity<K> setAttribute(String name, Object value) {
+
     AttributeEntity attribute = this.getAttributeByName(name);
-    if(attribute == null){
-   
+    if (attribute == null) {
+
     } else {
-      attribute
-      .setValue(value)
-      .setType(value.getClass());
+      attribute.setValue(value).setType(value.getClass());
     }
     return this;
   }
 
   @Override
   public String toString() {
-    return "SearchConditionEntity [clazz=" + clazz.getSimpleName() + ", label=" + label
-        + ", getAttributes()=" + getAttributes() + "]";
+    return "SearchConditionEntity [clazz=" + clazz.getSimpleName() + ", label="
+        + label + ", getAttributes()=" + getAttributes() + "]";
   }
 }

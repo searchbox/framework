@@ -8,9 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.searchbox.framework.web.util.FieldMatch;
 
-@FieldMatch.List({
-    @FieldMatch(first = "password", second = "passwordVerification", message = "The password fields must match"),
-})
+@FieldMatch.List({ @FieldMatch(first = "password", second = "passwordVerification", message = "The password fields must match"), })
 public class RegistrationForm {
 
   public static final String FIELD_NAME_EMAIL = "email";

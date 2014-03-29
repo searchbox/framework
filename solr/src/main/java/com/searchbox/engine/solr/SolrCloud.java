@@ -38,11 +38,11 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.AccessibleSearchEngine;
 
-public class SolrCloud extends SolrSearchEngine 
-  implements AccessibleSearchEngine {
+public class SolrCloud extends SolrSearchEngine implements
+    AccessibleSearchEngine {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrCloud.class);
-  
+
   private static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 
   @SearchAttribute
@@ -74,7 +74,9 @@ public class SolrCloud extends SolrSearchEngine
   protected SolrServer getSolrServer(Collection collection) {
     LOGGER.trace("Getting Solr Server for collection {}", collection);
     if (solrServer == null) {
-      LOGGER.debug("Solr Server does not exists, creating it for collection {}", collection);
+      LOGGER.debug(
+          "Solr Server does not exists, creating it for collection {}",
+          collection);
       initServer();
     }
     LOGGER.debug("Solr Server is {}", solrServer);
@@ -83,48 +85,49 @@ public class SolrCloud extends SolrSearchEngine
 
   @Override
   public void register(Collection collection) {
-    if(MultiCollection.class.isAssignableFrom(collection.getClass())){
+    if (MultiCollection.class.isAssignableFrom(collection.getClass())) {
       registerAlias((MultiCollection) collection);
     } else {
       registerCollection(collection);
     }
   }
-  
-  private void registerAlias(MultiCollection collection){
-    LOGGER.info("Registering multiCollection as alias {}",collection.getName());
+
+  private void registerAlias(MultiCollection collection) {
+    LOGGER
+        .info("Registering multiCollection as alias {}", collection.getName());
     String adminUrl = getAdminURL();
     LOGGER.info("Using Solr Base URL: {}", adminUrl);
     Set<String> collectionList = new TreeSet<String>();
-    for(String alias:collection.getCollections()){
+    for (String alias : collection.getCollections()) {
       collectionList.add(alias);
     }
-    String createAlias = adminUrl+"/collections"
-        +"?action=CREATEALIAS&name="+collection.getName()
-        +"&collections="+StringUtils.join(collectionList, ",");
-    
-    LOGGER.info("CreateAlias REST url: {}",createAlias);
+    String createAlias = adminUrl + "/collections"
+        + "?action=CREATEALIAS&name=" + collection.getName() + "&collections="
+        + StringUtils.join(collectionList, ",");
+
+    LOGGER.info("CreateAlias REST url: {}", createAlias);
     this.httpGET(createAlias);
-    
+
   }
-  
-  private CloudSolrServer getCloudServer(){
+
+  private CloudSolrServer getCloudServer() {
     return (CloudSolrServer) this.getSolrServer(null);
   }
-  
-  private File getConfiguration(){
+
+  private File getConfiguration() {
     String dir = this.getClass().getResource("/solr/conf").getFile();
     LOGGER.info("Path: {}", dir);
     return new File(dir);
   }
-    
-  private void registerCollection(Collection collection){
+
+  private void registerCollection(Collection collection) {
 
     try {
       SolrZkClient zkServer = getCloudServer().getZkStateReader().getZkClient();
 
       LOGGER.info("Creating configuration for: " + collection.getName());
-      uploadToZK(zkServer, getConfiguration(),
-          ZK_CORE_CONFIG_PATH + "/" + collection.getName());
+      uploadToZK(zkServer, getConfiguration(), ZK_CORE_CONFIG_PATH + "/"
+          + collection.getName());
 
       if (coreExists(zkServer, collection.getName())) {
         CollectionAdminResponse response = CollectionAdminRequest
@@ -190,7 +193,8 @@ public class SolrCloud extends SolrSearchEngine
     }
   }
 
-  protected boolean updateDataModel(Collection collection, Map<Field, Set<String>> copyFields) {
+  protected boolean updateDataModel(Collection collection,
+      Map<Field, Set<String>> copyFields) {
 
     try {
 
@@ -387,19 +391,19 @@ public class SolrCloud extends SolrSearchEngine
     }
     return response;
   }
-  
+
   private String getAdminURL() {
-    //TODO Actually resolve to an URL instead of default
-    return DEFAULT_SOLR_URL+"/admin";
+    // TODO Actually resolve to an URL instead of default
+    return DEFAULT_SOLR_URL + "/admin";
   }
 
   @Override
   public String getUrlBase(Collection collection) {
     String urlBase = null;
     String collectionName = collection.getName();
-    LOGGER.debug("Getting URL base for {}",collection);
-    if(MultiCollection.class.isAssignableFrom(collection.getClass())){
-      collectionName = ((MultiCollection)collection).getCollections().get(0);
+    LOGGER.debug("Getting URL base for {}", collection);
+    if (MultiCollection.class.isAssignableFrom(collection.getClass())) {
+      collectionName = ((MultiCollection) collection).getCollections().get(0);
     }
     try {
       ZkStateReader zkSateReader = ((CloudSolrServer) getSolrServer(null))

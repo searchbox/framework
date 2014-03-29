@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchAdapter;
 import com.searchbox.core.SearchAdapterMethod;
-import com.searchbox.core.ref.ReflectionUtils;
 
 @Service
 public class SearchAdapterService implements InitializingBean {
@@ -86,7 +85,8 @@ public class SearchAdapterService implements InitializingBean {
     arguments.addAll(Arrays.asList(objects));
     Long start = System.currentTimeMillis();
     this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
-    LOGGER.info("DoAdapt[{}] done in {}ms",time, (System.currentTimeMillis()-start));
+    LOGGER.info("DoAdapt[{}] done in {}ms", time,
+        (System.currentTimeMillis() - start));
   }
 
   private void doAdapt(Class<?> requiredArg, Map<Method, Object> methods,
@@ -138,12 +138,11 @@ public class SearchAdapterService implements InitializingBean {
         x++;
       }
 
-      LOGGER.debug("We'll need {} params",paramTypes.length);
+      LOGGER.debug("We'll need {} params", paramTypes.length);
       LOGGER.debug("Method bag is: ");
       for (int i = 0; i < paramTypes.length; i++) {
-        LOGGER.debug("Bag for param: {} is this bag a list? {}",
-            paramTypes[i].getSimpleName(),
-            parameters[i].getClass().getSimpleName());
+        LOGGER.debug("Bag for param: {} is this bag a list? {}", paramTypes[i]
+            .getSimpleName(), parameters[i].getClass().getSimpleName());
         for (Object obj : parameters[i]) {
           LOGGER.debug("\tin bag: {}", obj.getClass().getSimpleName());
         }
@@ -153,9 +152,10 @@ public class SearchAdapterService implements InitializingBean {
       List<Object[]> argumentBags = ReflectionUtils
           .findAllArgumentPermutations(parameters);
       for (Object[] argumentsInBag : argumentBags) {
-        LOGGER.trace("Found a working permutation for method: {} ", method.getName());
+        LOGGER.trace("Found a working permutation for method: {} ",
+            method.getName());
         for (Object obj : argumentsInBag) {
-          LOGGER.trace("\t{}",obj.getClass().getSimpleName());
+          LOGGER.trace("\t{}", obj.getClass().getSimpleName());
         }
         this.executeMethod(methods.get(method), method, argumentsInBag);
       }
@@ -195,12 +195,10 @@ public class SearchAdapterService implements InitializingBean {
       Class<?>[] paramTypes = method.getParameterTypes();
       for (Class<?> paramType : paramTypes) {
         for (Class<?> clazz : classSet) {
-          LOGGER.trace("\tclass:{} \tparamType: {} \t{}{}",
-              clazz.getSimpleName(),
-              paramType.getSimpleName(),
-              paramType.isAssignableFrom(clazz),
-              ((requiredClass == null) ? "" : "\trequired:"
-                  + requiredClass.isAssignableFrom(paramType)));
+          LOGGER.trace("\tclass:{} \tparamType: {} \t{}{}", clazz
+              .getSimpleName(), paramType.getSimpleName(), paramType
+              .isAssignableFrom(clazz), ((requiredClass == null) ? ""
+              : "\trequired:" + requiredClass.isAssignableFrom(paramType)));
           if (paramType.isAssignableFrom(clazz)) {
             match++;
             if (requiredClass != null
@@ -226,7 +224,8 @@ public class SearchAdapterService implements InitializingBean {
       Long start = System.currentTimeMillis();
       method.setAccessible(true);
       method.invoke(caller, arguments);
-      LOGGER.trace("Addapted with {} in {}ms",method.getName(), (System.currentTimeMillis()-start));
+      LOGGER.trace("Addapted with {} in {}ms", method.getName(),
+          (System.currentTimeMillis() - start));
     } catch (IllegalAccessException | IllegalArgumentException
         | InvocationTargetException e) {
       LOGGER.error("Method name: " + method.getName());

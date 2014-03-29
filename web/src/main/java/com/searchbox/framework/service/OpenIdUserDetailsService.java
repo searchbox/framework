@@ -14,65 +14,65 @@ import org.springframework.security.openid.OpenIDAttribute;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
 import com.searchbox.framework.domain.Role;
-import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 
-public class OpenIdUserDetailsService implements 
-  AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
-  
+public class OpenIdUserDetailsService implements
+    AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
+
   private UserRepository repository;
 
   @Autowired
   public OpenIdUserDetailsService(UserRepository repository) {
     this.repository = repository;
   }
-  
+
   private static final Logger LOGGER = LoggerFactory
       .getLogger(OpenIdUserDetailsService.class);
-  
+
   @Override
   public UserDetails loadUserDetails(OpenIDAuthenticationToken token)
       throws UsernameNotFoundException {
-    LOGGER.info("Got OpenIdAuth with token {}",token);
-    
+    LOGGER.info("Got OpenIdAuth with token {}", token);
+
     Map<String, String> attributes = new HashMap<>();
-        
+
     UserEntity user = null;
-    for(OpenIDAttribute attribute:token.getAttributes()){
-      attributes.put(attribute.getName().toLowerCase(), StringUtils.join(attribute.getValues(), " "));
-      if(attribute.getName().equalsIgnoreCase("email")){
-        for(String attributeValue:attribute.getValues()){
+    for (OpenIDAttribute attribute : token.getAttributes()) {
+      attributes.put(attribute.getName().toLowerCase(),
+          StringUtils.join(attribute.getValues(), " "));
+      if (attribute.getName().equalsIgnoreCase("email")) {
+        for (String attributeValue : attribute.getValues()) {
           user = repository.findByEmail(attributeValue);
-          if(user != null){
+          if (user != null) {
             break;
           }
         }
         break;
       }
     }
-    
-    if(user == null){
+
+    if (user == null) {
       user = new UserEntity();
       user.setUsername(attributes.get("email"));
       user.setEmail(attributes.get("email"));
-//      user.setFirstName(attributes.get("firstname"));
-//      user.setFirstName(attributes.get("lastname"));
+      // user.setFirstName(attributes.get("firstname"));
+      // user.setFirstName(attributes.get("lastname"));
       user.getRoles().add(Role.USER);
-      
-      LOGGER.info("Saving user "+attributes.get("email"));
-      LOGGER.info("User Attributes {}",attributes);
-      
+
+      LOGGER.info("Saving user " + attributes.get("email"));
+      LOGGER.info("User Attributes {}", attributes);
+
       user = repository.save(user);
-      
+
     } else {
-      //TODO: remove this - users were imported without any role.
-      if(user.getRoles().size() == 0){
+      // TODO: remove this - users were imported without any role.
+      if (user.getRoles().size() == 0) {
         user.getRoles().add(Role.USER);
         user = repository.save(user);
       }
     }
-    
+
     LOGGER.info("returning user {}", user);
     return user;
   }

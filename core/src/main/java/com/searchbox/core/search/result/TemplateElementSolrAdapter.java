@@ -1,10 +1,5 @@
 package com.searchbox.core.search.result;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -40,9 +35,10 @@ public class TemplateElementSolrAdapter {
   }
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void setRequieredFieldsForTemplate(SearchEngine engine, Collection collection,
-      TemplateElement searchElement, Query query, FieldAttribute attribute) {
-    
+  public void setRequieredFieldsForTemplate(SearchEngine engine,
+      Collection collection, TemplateElement searchElement, Query query,
+      FieldAttribute attribute) {
+
     if (!query.hasFields()) {
       query.addField("score");
       query.addField(searchElement.getIdField());
@@ -53,8 +49,9 @@ public class TemplateElementSolrAdapter {
 
     if (fields.contains(attribute.getField().getKey())) {
       String key = engine.getKeyForField(attribute, USE.DEFAULT);
-      LOGGER.trace("Adding {} as fl for {}",attribute.getField().getKey(),attribute.getLabel());
-      query.addField(attribute.getLabel(),attribute.getField().getKey());
+      LOGGER.trace("Adding {} as fl for {}", attribute.getField().getKey(),
+          attribute.getLabel());
+      query.addField(attribute.getLabel(), attribute.getField().getKey());
     }
   }
 
@@ -63,32 +60,29 @@ public class TemplateElementSolrAdapter {
       Response response, FieldAttribute attribute, Collection collection,
       SearchCollector collector, Hit hit) {
 
-     LOGGER.debug("Search for ID Attribute. {} Got: {} Needed: {}", (!attribute
+    LOGGER.debug("Search for ID Attribute. {} Got: {} Needed: {}", (!attribute
         .getField().getKey().equalsIgnoreCase(element.getIdField())), attribute
         .getField().getKey(), element.getIdField());
 
-     
     if (!attribute.getField().getKey().equalsIgnoreCase(element.getIdField())) {
       return;
     }
-    
-   
+
     LOGGER.debug("Generate Hit!!! for id {}", attribute.getField().getKey());
 
-   
-      hit.setIdFieldName(element.getIdField());
-      hit.setTitleFieldName(element.getTitleField());
-      hit.setUrlFieldName(element.getUrlField());
+    hit.setIdFieldName(element.getIdField());
+    hit.setTitleFieldName(element.getTitleField());
+    hit.setUrlFieldName(element.getUrlField());
 
-      // Set the template as per element definition
-      LOGGER.debug("Template file is {}", element.getTemplateFile());
-      hit.setDisplayTemplate(element.getTemplateFile());
+    // Set the template as per element definition
+    LOGGER.debug("Template file is {}", element.getTemplateFile());
+    hit.setDisplayTemplate(element.getTemplateFile());
 
-      // And we collect the hit for future use :)
-      collector.getCollectedItems(element.getCollectorKey()).add(hit);
-//      if(!element.getHits().contains(hit)){
-//        element.getHits().add(hit);
-//      }
+    // And we collect the hit for future use :)
+    collector.getCollectedItems(element.getCollectorKey()).add(hit);
+    // if(!element.getHits().contains(hit)){
+    // element.getHits().add(hit);
+    // }
 
   }
 }

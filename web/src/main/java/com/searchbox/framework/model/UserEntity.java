@@ -45,7 +45,7 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
 
   private String firstName;
   private String lastName;
-  
+
   private String password;
 
   private boolean accountNonExpired = true;

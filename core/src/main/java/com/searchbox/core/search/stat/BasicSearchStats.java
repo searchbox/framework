@@ -84,7 +84,7 @@ class BasicSearchStatsAdapter {
   @SearchAdapterMethod(execute = Time.POST)
   public BasicSearchStats getBasicStats(BasicSearchStats searchElement,
       Response response) {
-    
+
     searchElement.setHitCount(response.getNumFound());
     searchElement.setSearchTime(response.getTotalTime());
     return searchElement;

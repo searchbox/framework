@@ -43,7 +43,7 @@ public class FieldFacet extends
   private Integer limit = 15;
 
   public FieldFacet() {
-    this("",null);
+    this("", null);
   }
 
   public FieldFacet(String label, String fieldName) {
@@ -59,7 +59,7 @@ public class FieldFacet extends
     this.fieldName = fieldName;
     return this;
   }
-  
+
   public Integer getMinCount() {
     return minCount;
   }

@@ -44,33 +44,32 @@ import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
-public class CollectionService implements ApplicationListener<SearchboxReady>, InitializingBean{
+public class CollectionService implements ApplicationListener<SearchboxReady>,
+    InitializingBean {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionService.class);
-  
+
   public static final String UPDATE_DM_ON_START = "searchbox.dm.update.onstart";
   public static final Boolean UPDATE_DM_ON_START_DEFAULT = false;
 
   @Autowired
   CollectionRepository repository;
-  
+
   @Resource
   Environment env;
-  
+
   private Boolean updateDmOnStart;
-  
-  
-  public CollectionService(){
+
+  public CollectionService() {
     updateDmOnStart = false;
   }
-  
+
   @Override
   public void afterPropertiesSet() throws Exception {
     this.updateDmOnStart = env.getProperty(UPDATE_DM_ON_START, Boolean.class,
         UPDATE_DM_ON_START_DEFAULT);
   }
-  
 
   public Map<String, String> synchronizeData(CollectionEntity<?> collectiondef) {
     Map<String, String> result = new HashMap<String, String>();
@@ -96,31 +95,32 @@ public class CollectionService implements ApplicationListener<SearchboxReady>, I
 
   @Transactional
   public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
-    
+
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectionEntity.build();
-    
-    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
-      SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
-      
+
+    if (SearchableCollection.class.isAssignableFrom(collection.getClass())) {
+      SearchEngine<?, ?> engine = ((SearchableCollection) collection)
+          .getSearchEngine();
+
       if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
         LOGGER.info("Register Searchengine Configuration for \""
             + collection.getName() + "\"");
         ((ManagedSearchEngine) engine).register(collection);
       }
-      
-      if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
+
+      if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
         LOGGER.info("Starting DM synchronization for \"" + collection.getName()
             + "\"");
         for (PresetEntity presetDef : collectionEntity.getPresets()) {
           List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
-          for (FieldAttributeEntity fieldAttr : presetDef
-              .getFieldAttributes()) {
+          for (FieldAttributeEntity fieldAttr : presetDef.getFieldAttributes()) {
             fieldAttributes.add(fieldAttr.build());
           }
-          ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
+          ((ManagedSearchEngine) engine).updateDataModel(collection,
+              fieldAttributes);
         }
-      } 
+      }
     }
     return result;
   }
@@ -133,7 +133,7 @@ public class CollectionService implements ApplicationListener<SearchboxReady>, I
 
     Iterable<CollectionEntity<?>> collectionDefs = repository.findAll();
     for (CollectionEntity<?> collectionDef : collectionDefs) {
-      if(this.updateDmOnStart){
+      if (this.updateDmOnStart) {
         synchronizeDm(collectionDef);
         if (collectionDef.getAutoStart()) {
           synchronizeData(collectionDef);

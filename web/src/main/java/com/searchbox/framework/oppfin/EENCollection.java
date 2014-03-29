@@ -107,12 +107,12 @@ public class EENCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "eenCompanyTurnover"));
     fields.add(new Field(String.class, "eenDisseminationPreferredKey"));
     fields.add(new Field(Integer.class, "eenCompanySince"));
-    
+
     fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
     fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
     fields.add(new Field(String.class, StandardCollection.STD_TITLE_FIELD));
     fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
-    
+
     return fields;
   }
 
@@ -136,23 +136,20 @@ public class EENCollection extends AbstractBatchCollection implements
 
   @Override
   public Date getPublishedValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumSubmit").size()!=0?
-        fields.get("eenDatumSubmit").get(0):
-        null);
+    return (Date) (fields.get("eenDatumSubmit").size() != 0 ? fields.get(
+        "eenDatumSubmit").get(0) : null);
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumUpdate").size()!=0?
-        fields.get("eenDatumUpdate").get(0):
-          getPublishedValue(fields));
+    return (Date) (fields.get("eenDatumUpdate").size() != 0 ? fields.get(
+        "eenDatumUpdate").get(0) : getPublishedValue(fields));
   }
 
   @Override
   public Date getDeadlineValue(FieldMap fields) {
-    return (Date) (fields.get("eenDatumDeadline").size()!=0?
-        fields.get("eenDatumDeadline").get(0):
-        null);
+    return (Date) (fields.get("eenDatumDeadline").size() != 0 ? fields.get(
+        "eenDatumDeadline").get(0) : null);
   }
 
   public EENCollection() {

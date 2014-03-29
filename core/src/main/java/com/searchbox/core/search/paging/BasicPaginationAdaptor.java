@@ -11,8 +11,7 @@ import com.searchbox.core.search.paging.BasicPagination.PageCondition;
 public class BasicPaginationAdaptor {
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void setNumberOfHitsPerPage(BasicPagination searchElement,
-      Query query) {
+  public void setNumberOfHitsPerPage(BasicPagination searchElement, Query query) {
     query.hitsPerPage(searchElement.getHitsPerPage());
   }
 

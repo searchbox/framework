@@ -15,32 +15,17 @@
  ******************************************************************************/
 package com.searchbox.framework.web;
 
-import java.io.DataInputStream;
-import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.RuntimeMXBean;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,18 +56,18 @@ public class HomeController {
 
   @Autowired
   SearchEngineRepository searchEngineRepository;
-  
+
   @Autowired
   ServletContext servletContext;
-  
+
   @ModelAttribute("context")
-  public ServletContext getServletContext(){
-    
+  public ServletContext getServletContext() {
+
     return servletContext;
   }
-  
+
   @ModelAttribute("request")
-  public HttpServletRequest getServletRequest(HttpServletRequest request){
+  public HttpServletRequest getServletRequest(HttpServletRequest request) {
     return request;
   }
 
@@ -117,9 +102,9 @@ public class HomeController {
     }
     return searchboxes;
   }
-  
+
   @ModelAttribute("user")
-  public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
+  public UserEntity getUser(@AuthenticationPrincipal UserEntity user) {
     return user;
   }
 
@@ -131,10 +116,10 @@ public class HomeController {
     ModelAndView mav = new ModelAndView("index");
     return mav;
   }
-  
+
   @RequestMapping("/auth/openid")
-  public ModelAndView home(@RequestParam(required=true) String url, 
-      HttpServletRequest request, ModelAndView model){
+  public ModelAndView home(@RequestParam(required = true) String url,
+      HttpServletRequest request, ModelAndView model) {
     model.setViewName("util/autologin");
     model.addObject("openid_identifier", url);
     return model;

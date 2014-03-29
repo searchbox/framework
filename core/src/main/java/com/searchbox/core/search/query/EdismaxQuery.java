@@ -18,7 +18,6 @@ package com.searchbox.core.search.query;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
-import com.searchbox.core.SearchConverter;
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
@@ -121,9 +120,9 @@ public class EdismaxQuery extends
     public String getParamValue() {
       return query;
     }
-    
+
   }
-  
+
   @Override
   public void mergeSearchCondition(AbstractSearchCondition condition) {
     if (EdismaxQuery.Condition.class.equals(condition.getClass())) {

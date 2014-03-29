@@ -18,7 +18,6 @@ package com.searchbox.framework.service;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.search.AbstractSearchCondition;
-import com.searchbox.core.search.GenerateSearchCondition;
 import com.searchbox.core.search.SearchConditionToElementMerger;
 import com.searchbox.core.search.debug.SearchError;
 
@@ -49,29 +47,29 @@ public class SearchService {
   }
 
   @SuppressWarnings("rawtypes")
-  public Set<SearchElement> execute(SearchEngine searchEngine, Collection collection,
-      Set<SearchElement> searchElements, Set<FieldAttribute> fieldAttributes,
+  public Set<SearchElement> execute(SearchEngine searchEngine,
+      Collection collection, Set<SearchElement> searchElements,
+      Set<FieldAttribute> fieldAttributes,
       Set<AbstractSearchCondition> presetConditions,
       Set<AbstractSearchCondition> conditions, SearchCollector collector) {
 
     Object query = searchEngine.newQuery(collection);
 
-
     // Weave in all SearchElement in Query
-    adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine, collection, query,
-        fieldAttributes, searchElements, collector);
+    adapterService.doAdapt(SearchAdapter.Time.PRE, null, searchEngine,
+        collection, query, fieldAttributes, searchElements, collector);
 
     // Weave in all UI Conditions in query
     LOGGER.debug("Adapting condition from UI: " + conditions);
-    adapterService.doAdapt(SearchAdapter.Time.PRE,AbstractSearchCondition.class,
-        collection, searchEngine, query, fieldAttributes,
-        conditions, searchElements, collector);
+    adapterService.doAdapt(SearchAdapter.Time.PRE,
+        AbstractSearchCondition.class, collection, searchEngine, query,
+        fieldAttributes, conditions, searchElements, collector);
 
     // Weave in all presetConditions in query
     LOGGER.debug("Adapting condition from Preset: " + presetConditions);
-    adapterService.doAdapt(SearchAdapter.Time.PRE, AbstractSearchCondition.class,
-        searchEngine, collection, query, fieldAttributes,
-        presetConditions, searchElements, collector);
+    adapterService.doAdapt(SearchAdapter.Time.PRE,
+        AbstractSearchCondition.class, searchEngine, collection, query,
+        fieldAttributes, presetConditions, searchElements, collector);
 
     // Executing the query on the search engine!!!
     Object result = null;
@@ -111,11 +109,11 @@ public class SearchService {
   }
 
   private Object reflectionExecute(final SearchEngine<?, ?> engine,
-      final Collection collection, 
-      final Object query) throws NoSuchMethodException, IllegalAccessException,
+      final Collection collection, final Object query)
+      throws NoSuchMethodException, IllegalAccessException,
       InvocationTargetException {
-    Method execute = engine.getClass().getMethod("execute",
-        Collection.class, engine.getQueryClass());
+    Method execute = engine.getClass().getMethod("execute", Collection.class,
+        engine.getQueryClass());
     return execute.invoke(engine, collection, query);
   }
 }

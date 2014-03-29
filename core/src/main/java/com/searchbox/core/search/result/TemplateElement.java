@@ -36,7 +36,7 @@ public class TemplateElement extends SearchElementBean implements UseCollector {
 
   private static final String COLLECTOR_KEY = "hits";
   private static final String DEFAUTL_TEMPLATE = "/WEB-INF/templates/_defaultHitView.jspx";
-  
+
   private SortedSet<Hit> hits;
 
   @SearchAttribute

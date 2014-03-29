@@ -23,9 +23,8 @@ import javax.persistence.ManyToOne;
 import com.searchbox.core.dm.FieldAttribute;
 
 @Entity
-public class FieldAttributeEntity  extends BeanFactoryEntity<Long> 
-implements ParametrizedBeanFactory<FieldAttribute>,
-Comparable<FieldAttributeEntity> {
+public class FieldAttributeEntity extends BeanFactoryEntity<Long> implements
+    ParametrizedBeanFactory<FieldAttribute>, Comparable<FieldAttributeEntity> {
 
   @ManyToOne(targetEntity = PresetEntity.class)
   private PresetEntity preset;
@@ -59,22 +58,20 @@ Comparable<FieldAttributeEntity> {
   }
 
   public FieldAttributeEntity setAttribute(String name, Object value) {
-    this.getAttributes().add(new AttributeEntity()
-      .setName(name)
-      .setValue(value)
-      .setType(value.getClass()));
+    this.getAttributes().add(
+        new AttributeEntity().setName(name).setValue(value)
+            .setType(value.getClass()));
     return this;
   }
-  
+
   public PresetEntity end() {
     this.preset.getFieldAttributes().add(this);
     return this.getPreset();
   }
-  
+
   @Override
   public int compareTo(FieldAttributeEntity o) {
-    return this.getField().getKey()
-        .compareTo(o.getField().getKey());
+    return this.getField().getKey().compareTo(o.getField().getKey());
   }
 
   @Override
@@ -83,49 +80,49 @@ Comparable<FieldAttributeEntity> {
     attribute.setField(this.getField().build());
     return attribute;
   }
-  
-  public FieldAttributeEntity setSearchanble(Boolean searchable){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("searchable").setValue(searchable));
+
+  public FieldAttributeEntity setSearchanble(Boolean searchable) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("searchable").setValue(searchable));
     return this;
   }
-  
-  public FieldAttributeEntity setSuggestion(Boolean suggestion){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("suggestion").setValue(suggestion));
+
+  public FieldAttributeEntity setSuggestion(Boolean suggestion) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("suggestion").setValue(suggestion));
     return this;
   }
-  
-  public FieldAttributeEntity setLanguages(List<String> lang){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("lang").setValue(lang));
+
+  public FieldAttributeEntity setLanguages(List<String> lang) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("lang").setValue(lang));
     return this;
   }
-  
-  public FieldAttributeEntity setSpelling(Boolean spelling){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("spelling").setValue(spelling));
+
+  public FieldAttributeEntity setSpelling(Boolean spelling) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("spelling").setValue(spelling));
     return this;
   }
-  
-  public FieldAttributeEntity setHighlight(Boolean highlight){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("highlight").setValue(highlight));
+
+  public FieldAttributeEntity setHighlight(Boolean highlight) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("highlight").setValue(highlight));
     return this;
   }
-  
-  public FieldAttributeEntity setSortable(Boolean sortable){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("sortable").setValue(sortable));
+
+  public FieldAttributeEntity setSortable(Boolean sortable) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("sortable").setValue(sortable));
     return this;
   }
-  
-  public FieldAttributeEntity setBoost(Float boost){
-    this.getAttributes().add(new AttributeEntity()
-      .setName("boost").setValue(boost));
+
+  public FieldAttributeEntity setBoost(Float boost) {
+    this.getAttributes().add(
+        new AttributeEntity().setName("boost").setValue(boost));
     return this;
   }
-  
+
   @Override
   public String toString() {
     return "FieldAttributeEntity [field=" + field + "]";

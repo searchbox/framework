@@ -34,7 +34,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement(proxyTargetClass=true)
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories("com.searchbox.framework.repository")
 public class DataConfiguration {
 
@@ -59,7 +59,8 @@ public class DataConfiguration {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
     populator.setContinueOnError(true);
     populator.addScript(new ClassPathResource("data/oppfinUsers.sql"));
-    populator.addScript(new ClassPathResource("data/spring-batch-h2-schema.sql"));
+    populator
+        .addScript(new ClassPathResource("data/spring-batch-h2-schema.sql"));
     populator.populate(dataSource.getConnection());
     return populator;
   }

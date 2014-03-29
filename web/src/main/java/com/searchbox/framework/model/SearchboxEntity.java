@@ -24,54 +24,53 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.SortNatural;
 
 @Entity
-public class SearchboxEntity extends BaseEntity<Long> 
-  implements Comparable<SearchboxEntity>{
-  
+public class SearchboxEntity extends BaseEntity<Long> implements
+    Comparable<SearchboxEntity> {
+
   enum Privacy {
-    PUBLIC("public"), 
-    PRIVATE("private"),
-    SOCIAL("registration");
+    PUBLIC("public"), PRIVATE("private"), SOCIAL("registration");
     private final String stringValue;
-    private Privacy(final String s) { stringValue = s; }
-    public String toString() { return stringValue; }
+
+    private Privacy(final String s) {
+      stringValue = s;
+    }
+
+    public String toString() {
+      return stringValue;
+    }
   }
 
   @Column(unique = true)
   private String slug;
-  
-  private Privacy privacy= Privacy.PUBLIC;
+
+  private Privacy privacy = Privacy.PUBLIC;
 
   private String name;
 
   private String logo = "assets/images/searchbox-logo-big.png";
-  
+
   private String alias;
 
   private String description;
 
-  @OneToMany(mappedBy = "searchbox",
-      orphanRemoval = true,
-      cascade = CascadeType.ALL,
-      fetch=FetchType.LAZY)
+  @OneToMany(mappedBy = "searchbox", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<PresetEntity> presets;
 
-//  @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
-//  @LazyCollection(LazyCollectionOption.FALSE)
-//  @MapKey(name = "user")
-//  private Map<UserEntity, UserRole> userRoles; 
+  // @OneToMany(mappedBy = "searchbox", cascade = CascadeType.ALL)
+  // @LazyCollection(LazyCollectionOption.FALSE)
+  // @MapKey(name = "user")
+  // private Map<UserEntity, UserRole> userRoles;
 
   public SearchboxEntity() {
     this.presets = new TreeSet<>();
-//    this.userRoles = new HashMap<>();
+    // this.userRoles = new HashMap<>();
   }
 
   public Privacy getPrivacy() {
@@ -135,30 +134,29 @@ public class SearchboxEntity extends BaseEntity<Long>
     this.presets = presets;
   }
 
-//  public Map<UserEntity, UserRole> getUserRoles() {
-//    return userRoles;
-//  }
-//
-//  public void setUserRoles(Map<UserEntity, UserRole> userRoles) {
-//    this.userRoles = userRoles;
-//  }
-//
-//
-//  public SearchboxEntity addUserRole(UserRole userRole) {
-//    userRole.setSearchbox(this);
-//    this.userRoles.put(userRole.getUser(), userRole);
-//    return this;
-//  }
-  
+  // public Map<UserEntity, UserRole> getUserRoles() {
+  // return userRoles;
+  // }
+  //
+  // public void setUserRoles(Map<UserEntity, UserRole> userRoles) {
+  // this.userRoles = userRoles;
+  // }
+  //
+  //
+  // public SearchboxEntity addUserRole(UserRole userRole) {
+  // userRole.setSearchbox(this);
+  // this.userRoles.put(userRole.getUser(), userRole);
+  // return this;
+  // }
+
   @Override
   public int compareTo(SearchboxEntity o) {
     return this.getName().compareTo(o.getName());
   }
 
   public PresetEntity newPreset() {
-    return new PresetEntity()
-      .setSearchbox(this)
-      .setPosition(this.getPresets().size()+1);
+    return new PresetEntity().setSearchbox(this).setPosition(
+        this.getPresets().size() + 1);
   }
 
   @Override

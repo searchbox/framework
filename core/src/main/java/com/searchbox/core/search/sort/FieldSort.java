@@ -21,7 +21,6 @@ import java.util.SortedSet;
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
 import com.searchbox.core.SearchCondition;
-import com.searchbox.core.SearchConverter;
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -117,7 +116,7 @@ public class FieldSort extends
     public Sort getSort() {
       return sort;
     }
-    
+
     @Override
     public String getParamValue() {
       return field + " " + this.sort;

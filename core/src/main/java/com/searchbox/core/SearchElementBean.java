@@ -3,7 +3,6 @@ package com.searchbox.core;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-
 public class SearchElementBean implements SearchElement {
 
   private String label;
@@ -49,10 +48,10 @@ public class SearchElementBean implements SearchElement {
 
   @Override
   public int compareTo(SearchElement searchElement) {
-    return new Integer(this.getPosition()*10).compareTo(
-        new Integer(searchElement.getPosition()*10+1));
+    return new Integer(this.getPosition() * 10).compareTo(new Integer(
+        searchElement.getPosition() * 10 + 1));
   }
-  
+
   @Override
   public String toString() {
     return ReflectionToStringBuilder.toString(this,

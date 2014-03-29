@@ -1,6 +1,5 @@
 package com.searchbox.core.search.sort;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +20,9 @@ public class FieldSortSolrAdatptor {
   @SearchAdapterMethod(execute = Time.PRE)
   public void setSortCondition(SearchEngine engine,
       FieldSort.Condition condition, Query query, FieldAttribute attribute) {
-    
-     if (attribute.getField().getKey().equals(condition.getField())) {
-       attribute.setSortable(true);
+
+    if (attribute.getField().getKey().equals(condition.getField())) {
+      attribute.setSortable(true);
 
       String key = engine.getKeyForField(attribute, USE.SORT);
       query.sort(key, condition.getSort());

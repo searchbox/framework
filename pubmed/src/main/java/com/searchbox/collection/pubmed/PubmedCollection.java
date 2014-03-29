@@ -73,7 +73,7 @@ public class PubmedCollection extends AbstractBatchCollection implements
   }
 
   public PubmedCollection() {
-    
+
   }
 
   public PubmedCollection(String name) {

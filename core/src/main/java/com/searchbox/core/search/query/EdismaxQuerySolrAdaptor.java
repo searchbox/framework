@@ -29,7 +29,7 @@ public class EdismaxQuerySolrAdaptor {
   @SearchAdapterMethod(execute = Time.PRE)
   public void setQueryFields(SearchEngine searchEngine,
       EdismaxQuery SearchElement, Query query, FieldAttribute fieldAttribute) {
-    
+
     LOGGER.debug("Checking Field Attr for EdismaxQuery -- Field: {} ",
         fieldAttribute.getField().getKey());
 
@@ -47,14 +47,14 @@ public class EdismaxQuerySolrAdaptor {
   public void udpateElementQuery(EdismaxQuery searchElement, Query query,
       Response response) {
     searchElement.setQuery(query.getText());
-//    if (!searchElement.shouldRetry()
-//        && response.getSpellCheckResponse() != null) {
-//      LOGGER.debug("Collation query: "
-//          + response.getSpellCheckResponse().getCollatedResult());
-//      searchElement.setCollationQuery(response.getSpellCheckResponse()
-//          .getCollatedResult());
-//      searchElement.setHitCount(response.getResults().getNumFound());
-//    }
+    // if (!searchElement.shouldRetry()
+    // && response.getSpellCheckResponse() != null) {
+    // LOGGER.debug("Collation query: "
+    // + response.getSpellCheckResponse().getCollatedResult());
+    // searchElement.setCollationQuery(response.getSpellCheckResponse()
+    // .getCollatedResult());
+    // searchElement.setHitCount(response.getResults().getNumFound());
+    // }
   }
 
   @SearchAdapterMethod(execute = Time.PRE)
@@ -74,31 +74,33 @@ public class EdismaxQuerySolrAdaptor {
   public void getSugestions(SearchEngine engine, Collection collection,
       EdismaxQuery.Condition condition, Map<String, Object> result) {
 
-//    SolrQuery query = engine.newQuery(collection);
-//    query.setRequestHandler("/suggest");
-//    query.setQuery(condition.getQuery());
-//    SolrResponse response = engine.execute(collection, query);
-//
-//    List<String> suggestionTerms = new ArrayList<String>();
-//    /**
-//     * {"status":0,"QTime":1,"suggestions":["aa","aa a lambda and a kappa",
-//     * "aa trna and its 3", "aaap therapy",
-//     * "aachen are presented under the confin of the above definition" ,"aar"]}
-//     */
-//    Map<String, NamedList<Object>> data = (Map<String, NamedList<Object>>) response
-//        .getResponse().findRecursive("suggest");
-//    for (String suggester : data.keySet()) {
-//      NamedList<Object> suggestions = (NamedList<Object>) data.get(suggester)
-//          .get(condition.getQuery());
-//      List<Object> terms = (List<Object>) suggestions.get("suggestions");
-//      for (Object term : terms) {
-//        NamedList<Object> actualterm = (NamedList<Object>) term;
-//        suggestionTerms.add((String) actualterm.get("term"));
-//
-//      }
-//    }
+    // SolrQuery query = engine.newQuery(collection);
+    // query.setRequestHandler("/suggest");
+    // query.setQuery(condition.getQuery());
+    // SolrResponse response = engine.execute(collection, query);
+    //
+    // List<String> suggestionTerms = new ArrayList<String>();
+    // /**
+    // * {"status":0,"QTime":1,"suggestions":["aa","aa a lambda and a kappa",
+    // * "aa trna and its 3", "aaap therapy",
+    // * "aachen are presented under the confin of the above definition"
+    // ,"aar"]}
+    // */
+    // Map<String, NamedList<Object>> data = (Map<String, NamedList<Object>>)
+    // response
+    // .getResponse().findRecursive("suggest");
+    // for (String suggester : data.keySet()) {
+    // NamedList<Object> suggestions = (NamedList<Object>) data.get(suggester)
+    // .get(condition.getQuery());
+    // List<Object> terms = (List<Object>) suggestions.get("suggestions");
+    // for (Object term : terms) {
+    // NamedList<Object> actualterm = (NamedList<Object>) term;
+    // suggestionTerms.add((String) actualterm.get("term"));
+    //
+    // }
+    // }
     result.put("status", 0);
-//    result.put("QTime", response.getElapsedTime());
-//    result.put("suggestions", suggestionTerms);
+    // result.put("QTime", response.getElapsedTime());
+    // result.put("suggestions", suggestionTerms);
   }
 }

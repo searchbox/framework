@@ -115,7 +115,7 @@ public abstract class AbstractSearchCondition {
   public String getUrlParam() {
     return this.getClass().getAnnotation(SearchCondition.class).urlParam();
   }
-  
+
   public abstract String getParamValue();
 
   @Override

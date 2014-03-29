@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
-import com.searchbox.core.dm.DefaultCollection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.AbstractSearchCondition;
 
@@ -43,7 +42,8 @@ public interface SearchEngine<Q, R> {
 
   boolean indexMap(Collection collection, Map<String, Object> fields);
 
-  boolean indexMap(Collection collection, java.util.Collection<Map<String, Object>> indexables);
+  boolean indexMap(Collection collection,
+      java.util.Collection<Map<String, Object>> indexables);
 
   List<SearchElement> getSupportedElements();
 
@@ -53,7 +53,7 @@ public interface SearchEngine<Q, R> {
 
   public String getKeyForField(FieldAttribute attribute);
 
-  public String getKeyForField(FieldAttribute fieldAttribute, FieldAttribute.USE use);
-
+  public String getKeyForField(FieldAttribute fieldAttribute,
+      FieldAttribute.USE use);
 
 }

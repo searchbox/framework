@@ -1,6 +1,5 @@
 package com.searchbox.core.search.filter;
 
-
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.search.AbstractSearchCondition;
@@ -11,8 +10,7 @@ public class FieldValueCondition extends AbstractSearchCondition {
   public static final String FIELD_NAME_ATTR = "fieldName";
   public static final String VALUE_ATTR = "value";
   public static final String TAGED_ATTR = "taged";
-  
-  
+
   @SearchAttribute
   String fieldName;
 

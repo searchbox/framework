@@ -32,7 +32,7 @@ import com.searchbox.core.response.Response;
 
 @SearchComponent
 public class SolrToString extends SearchElementBean {
-  
+
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SolrToString.class);
 
@@ -80,8 +80,8 @@ public class SolrToString extends SearchElementBean {
 
   public String getExternalQueryURL() {
     if (AccessibleSearchEngine.class.isAssignableFrom(this.engine.getClass())) {
-      return ((AccessibleSearchEngine) engine).getUrlBase(collection) + "/select?"
-          + request.toString();
+      return ((AccessibleSearchEngine) engine).getUrlBase(collection)
+          + "/select?" + request.toString();
     } else {
       return null;
     }
@@ -98,7 +98,7 @@ public class SolrToString extends SearchElementBean {
     @SearchAdapterMethod(execute = Time.POST)
     public void getDebugInfo(SolrToString searchElement, Collection collection,
         Query query, Response response, SearchEngine engine) {
-      LOGGER.debug("Post SolrToString for collection {}",collection);
+      LOGGER.debug("Post SolrToString for collection {}", collection);
       searchElement.setRequest(query);
       searchElement.setResponse(response);
       searchElement.setEngine(engine);

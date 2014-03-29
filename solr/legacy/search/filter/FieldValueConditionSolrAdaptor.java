@@ -18,13 +18,12 @@ public class FieldValueConditionSolrAdaptor {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(FieldValueConditionSolrAdaptor.class);
-  
 
   @SearchAdapterMethod(execute = Time.PRE)
   public void createFilterQueries(SolrSearchEngine engine,
       FieldAttribute attribute, FieldValueCondition condition, SolrQuery query) {
 
-    LOGGER.debug("Adapting fieldValueCondition {}",condition);
+    LOGGER.debug("Adapting fieldValueCondition {}", condition);
 
     if (!attribute.getField().getKey().equals(condition.getFieldName())) {
       return;

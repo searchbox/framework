@@ -98,14 +98,16 @@ public class EmbeddedSolr extends SolrSearchEngine {
   }
 
   @Override
-  protected boolean updateDataModel(Collection collection, Map<Field, Set<String>> copyFields) {
+  protected boolean updateDataModel(Collection collection,
+      Map<Field, Set<String>> copyFields) {
     for (Entry<Field, Set<String>> copyField : copyFields.entrySet()) {
       this.addCopyFields(collection, copyField.getKey(), copyField.getValue());
     }
     return true;
   }
 
-  private boolean addCopyFields(Collection collection, Field field, Set<String> copyFields) {
+  private boolean addCopyFields(Collection collection, Field field,
+      Set<String> copyFields) {
     SolrCore core = coreContainer.getCore(collection.getName());
     IndexSchema schema = core.getLatestSchema();
 
@@ -113,8 +115,7 @@ public class EmbeddedSolr extends SolrSearchEngine {
       copyFields.remove(copyField.getDestination().getName());
     }
 
-    Map<String, java.util.Collection<String>> copyFieldsMap =
-        new HashMap<String, java.util.Collection<String>>();
+    Map<String, java.util.Collection<String>> copyFieldsMap = new HashMap<String, java.util.Collection<String>>();
     copyFieldsMap.put(field.getKey(), copyFields);
     schema = schema.addCopyFields(copyFieldsMap);
 

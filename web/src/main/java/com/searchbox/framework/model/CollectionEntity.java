@@ -57,11 +57,11 @@ public class CollectionEntity<K extends Collection> extends
 
   private String idFieldName;
 
-  @ManyToOne(fetch=FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @LazyCollection(LazyCollectionOption.TRUE)
   private SearchEngineEntity<?> searchEngine;
 
-  @OneToMany(fetch=FetchType.LAZY, mappedBy = "collection", cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "collection", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.TRUE)
   private Set<PresetEntity> presets;
 
@@ -117,7 +117,7 @@ public class CollectionEntity<K extends Collection> extends
       try {
         Method method = clazz.getMethod("GET_FIELDS");
         if (method != null) {
-          for (Field field :  (List<Field>) method.invoke(null)) {
+          for (Field field : (List<Field>) method.invoke(null)) {
             FieldEntity fieldDef = new FieldEntity(field.getClazz(),
                 field.getKey());
             LOGGER.debug("Created FieldDef[{},{}]", field.getClazz()
@@ -201,7 +201,7 @@ public class CollectionEntity<K extends Collection> extends
   public int compareTo(CollectionEntity<K> o) {
     return this.getName().compareTo(o.getName());
   }
-  
+
   @Override
   public String toString() {
     return "CollectionEntity [clazz=" + clazz + ", name=" + name

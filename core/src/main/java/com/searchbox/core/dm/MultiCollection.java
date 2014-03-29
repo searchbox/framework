@@ -37,9 +37,9 @@ public class MultiCollection implements Collection, SearchableCollection {
 
   @SearchAttribute
   protected String idFieldName;
-  
+
   @SearchAttribute
-  protected SearchEngine<?,?> searchEngine;
+  protected SearchEngine<?, ?> searchEngine;
 
   public MultiCollection() {
 
@@ -83,7 +83,7 @@ public class MultiCollection implements Collection, SearchableCollection {
   public String getIdFieldName() {
     return idFieldName;
   }
-  
+
   public void setIdFieldName(String idFieldName) {
     this.idFieldName = idFieldName;
   }

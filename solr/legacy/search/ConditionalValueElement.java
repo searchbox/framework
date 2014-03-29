@@ -16,27 +16,21 @@
 package com.searchbox.core.search;
 
 import com.searchbox.core.SearchCondition;
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElementBean;
 
-public abstract class ConditionalSearchElement<K extends AbstractSearchCondition>
-    extends SearchElementBean implements GenerateSearchCondition<K>,
-    SearchConditionToElementMerger {
+public abstract class ConditionalValueElement<T extends AbstractSearchCondition>
+    extends ValueElement implements GenerateSearchCondition<T> {
 
-  public ConditionalSearchElement(String label, SearchElement.Type type) {
-    this.setLabel(label);
-    this.setType(type);
-  }
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = 1L;
 
-  public ConditionalSearchElement() {
-    super();
+  public ConditionalValueElement(String label) {
+    super(label);
   }
 
   @Override
-  public abstract K getSearchCondition();
-
-  @Override
-  public abstract void mergeSearchCondition(AbstractSearchCondition condition);
+  public abstract T getSearchCondition();
 
   @Override
   public abstract Class<?> getConditionClass();
@@ -49,8 +43,8 @@ public abstract class ConditionalSearchElement<K extends AbstractSearchCondition
       return "missingAnnotationOnSearchConditionClass";
     }
   }
-  
-  public String getParamValue(){
+
+  public String getParamValue() {
     return this.getSearchCondition().getParamValue();
   }
 }

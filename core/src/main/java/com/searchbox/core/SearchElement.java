@@ -24,15 +24,15 @@ public interface SearchElement extends Comparable<SearchElement> {
   }
 
   public String getLabel();
-  
+
   public void setLabel(String label);
 
   public Integer getPosition();
-  
+
   public void setPosition(Integer position);
 
   public Type getType();
-  
+
   public void setType(Type type);
 
   public int compareTo(SearchElement searchElement);

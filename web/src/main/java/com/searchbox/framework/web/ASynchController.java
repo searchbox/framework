@@ -92,11 +92,12 @@ public class ASynchController {
     SearchEngine<?, ?> searchEngine = preset.getCollection().getSearchEngine()
         .build();
     Collection collection = preset.getCollection().build();
-    
+
     Map<String, Object> results = new HashMap<String, Object>();
 
-    adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine, collection,
-        searchEngine.newQuery(collection), results, fieldAttributes, element, conditions);
+    adapterService.doAdapt(SearchAdapter.Time.ASYNCH, null, searchEngine,
+        collection, searchEngine.newQuery(collection), results,
+        fieldAttributes, element, conditions);
 
     return results;
   }

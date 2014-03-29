@@ -121,7 +121,7 @@ public class EdismaxQuery extends
     public String getParamValue() {
       return query;
     }
-    
+
   }
 
   @SearchConverter

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.framework.domain.Role;
-import com.searchbox.framework.domain.UserRole;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.web.user.RegistrationForm;

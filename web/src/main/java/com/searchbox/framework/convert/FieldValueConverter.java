@@ -17,20 +17,22 @@ package com.searchbox.framework.convert;
 
 import org.springframework.core.convert.converter.Converter;
 
+import com.searchbox.core.SearchConverter;
+
 /**
  *
  * @author gamars
  */
 /** Format of FieldValueFacet is key[value]s where s makes it stick */
-  @SearchConverter(urlParam = "ff")
-  public static class FieldValueConditionConverter implements
-      Converter<String, FieldValueCondition> {
-    @Override
-    public FieldValueCondition convert(String source) {
-      String cfield = source.split("\\[")[0];
-      String cvalue = source.split("\\[")[1].split("]")[0];
-      // FIXME Problem here, the facet will not be sticky if not forced...
-      // :/
-      return new FieldValueCondition(cfield, cvalue, true);
-    }
+@SearchConverter(urlParam = "ff")
+public static class FieldValueConditionConverter implements
+    Converter<String, FieldValueCondition> {
+  @Override
+  public FieldValueCondition convert(String source) {
+    String cfield = source.split("\\[")[0];
+    String cvalue = source.split("\\[")[1].split("]")[0];
+    // FIXME Problem here, the facet will not be sticky if not forced...
+    // :/
+    return new FieldValueCondition(cfield, cvalue, true);
   }
+}

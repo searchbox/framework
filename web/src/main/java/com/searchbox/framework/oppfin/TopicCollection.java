@@ -3,6 +3,7 @@
  * Proprietary software license.
  *******************************************************************************/
 package com.searchbox.collection.oppfin;
+
 /*******************************************************************************
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,8 +80,8 @@ import com.searchbox.core.dm.FieldMap;
 import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
-public class TopicCollection extends AbstractBatchCollection implements 
-	StandardCollection, SynchronizedCollection {
+public class TopicCollection extends AbstractBatchCollection implements
+    StandardCollection, SynchronizedCollection {
 
   /** Properties */
   private final static String CRAWLER_USER_AGENT = "crawler.userAgent";
@@ -107,7 +108,7 @@ public class TopicCollection extends AbstractBatchCollection implements
   private final static String CALL_DETAIL_END_DEFAULT = "</div>";
 
   private final Map<String, FieldMap> callList = new HashMap<String, FieldMap>();
-  
+
   @Resource
   private Environment env;
 
@@ -119,7 +120,7 @@ public class TopicCollection extends AbstractBatchCollection implements
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(TopicCollection.class);
-  
+
   DateFormat df;
 
   public static List<Field> GET_FIELDS() {
@@ -140,10 +141,10 @@ public class TopicCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "callFileName"));
     fields.add(new Field(Date.class, "callDeadline"));
     fields.add(new Field(String.class, "callStatus"));
-    
-    //Extended call fields
+
+    // Extended call fields
     fields.add(new Field(Integer.class, "callTotalBudget"));
-    fields.add(new Field(String.class, "callFrameworkProgramme"));    
+    fields.add(new Field(String.class, "callFrameworkProgramme"));
     fields.add(new Field(String.class, "callCategory"));
     fields.add(new Field(String.class, "callType"));
     fields.add(new Field(Date.class, "callPublication"));
@@ -155,12 +156,12 @@ public class TopicCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "docType"));
     fields.add(new Field(String.class, "programme"));
     fields.add(new Field(String.class, "docSource"));
-    
+
     fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
     fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
     fields.add(new Field(String.class, StandardCollection.STD_TITLE_FIELD));
     fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
-    
+
     return fields;
   }
 
@@ -171,24 +172,24 @@ public class TopicCollection extends AbstractBatchCollection implements
 
   @Override
   public String getBodyValue(FieldMap fields) {
-	return (String) fields.get("topicDescriptionRaw").get(0);
+    return (String) fields.get("topicDescriptionRaw").get(0);
   }
 
   @Override
   public String getTitleValue(FieldMap fields) {
     return (String) fields.get("topicTitle").get(0);
   }
-  
+
   @Override
   public Date getPublishedValue(FieldMap fields) {
-	return null;
+    return null;
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-  	return null;
+    return null;
   }
-  
+
   public TopicCollection() {
     super("topicCollection");
     this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -267,7 +268,6 @@ public class TopicCollection extends AbstractBatchCollection implements
    */
   private String getCallDescription(String callFileName) {
 
-
     // If the call is not cached, load it from URL
     if (!callList.containsKey(callFileName)) {
       callList.put(callFileName, new FieldMap());
@@ -287,25 +287,23 @@ public class TopicCollection extends AbstractBatchCollection implements
           env.getProperty(CALL_DETAIL_END, CALL_DETAIL_END_DEFAULT)).trim();
 
       callList.get(callFileName).put("callDescriptionHtml", htmlValue);
-      
+
       String callDetailRaw = new HtmlToPlainText().getPlainText(Jsoup
           .parse(htmlValue));
-      
+
       callList.get(callFileName).put("callDescriptionRaw", callDetailRaw);
 
-      
       // Creating a new enhancedCall
-      JSONObject enhancedCall = new JSONObject();        
+      JSONObject enhancedCall = new JSONObject();
       // Pulling full HTML description from the web
-     
-      String callIdentifier = (String) callList.get(callFileName).get("callId").get(0);
+
+      String callIdentifier = (String) callList.get(callFileName).get("callId")
+          .get(0);
       enhancedCall.put("eur_call_description_html", htmlValue);
       enhancedCall.put("eur_call_description_raw", callDetailRaw);
 
-      enhancedCall
-      .put("FileName", callFileName);
-      enhancedCall
-          .put("eur_call_timestamp", Calendar.getInstance().getTime());
+      enhancedCall.put("FileName", callFileName);
+      enhancedCall.put("eur_call_timestamp", Calendar.getInstance().getTime());
       enhancedCall.put("eur_call_FileName", callFileName);
       enhancedCall.put("eur_call_CallId", callIdentifier);
 
@@ -329,7 +327,7 @@ public class TopicCollection extends AbstractBatchCollection implements
       } catch (IOException e) {
         LOGGER.error(e.getLocalizedMessage());
       }
-      
+
     }
 
     return callList.get(callFileName).get("callDescriptionHtml").toString();
@@ -449,20 +447,21 @@ public class TopicCollection extends AbstractBatchCollection implements
 
         // Creating the Field Map
         FieldMap doc = new FieldMap();
-        
-        //Lazzy Load the call description: 
-        if(!callList.get(callFileName).containsKey("callDescriptionHtml")){
+
+        // Lazzy Load the call description:
+        if (!callList.get(callFileName).containsKey("callDescriptionHtml")) {
           getCallDescription(callFileName);
         }
-        
-        //Merging
-        for(Entry<String, List<Object>> entry:callList.get(callFileName).entrySet()){
+
+        // Merging
+        for (Entry<String, List<Object>> entry : callList.get(callFileName)
+            .entrySet()) {
           doc.put(entry.getKey(), entry.getValue());
         }
 
-        LOGGER.info("Inserting call {} into topic {}", 
-        		callFileName,topicFileName);
-                
+        LOGGER.info("Inserting call {} into topic {}", callFileName,
+            topicFileName);
+
         doc.put("docSource", "H2020");
         doc.put("docType", "Funding");
         doc.put("programme", "H2020");
@@ -475,13 +474,11 @@ public class TopicCollection extends AbstractBatchCollection implements
 
         doc.put("topicTags", (JSONArray) topicObject.get("tags"));
         doc.put("topicFlags", (JSONArray) topicObject.get("flags"));
-       
+
         String utcDate = df.format(new Date(((Long) topicObject
             .get("callDeadline"))));
         doc.put("callDeadline", utcDate);
-        doc.put("callIdentifier", (String)topicObject.get("callIdentifier"));
-        
-        
+        doc.put("callIdentifier", (String) topicObject.get("callIdentifier"));
 
         if (LOGGER.isDebugEnabled()) {
           for (String key : doc.keySet()) {
@@ -489,10 +486,11 @@ public class TopicCollection extends AbstractBatchCollection implements
           }
         }
 
-        /*LOGGER.info("***************************");
-        LOGGER.info(doc.toString());
-        LOGGER.info("***************************");
-        System.exit(0);*/
+        /*
+         * LOGGER.info("***************************");
+         * LOGGER.info(doc.toString());
+         * LOGGER.info("***************************"); System.exit(0);
+         */
         return doc;
       }
     };
@@ -538,10 +536,13 @@ public class TopicCollection extends AbstractBatchCollection implements
 
         doc.put("callProgrammeDescription",
             (String) callObject.get("MainSpecificProgrammeLevel1Description"));
-        
-        doc.put("callPublication", df.format(new Date((Long) callObject.get("PublicationDate"))));
-        //We get the deadline from the topic. Do not push multiple (else cannot sort)
-        //doc.put("callDeadline", df.format(new Date((Long) callObject.get("PublicationDate"))));
+
+        doc.put("callPublication",
+            df.format(new Date((Long) callObject.get("PublicationDate"))));
+        // We get the deadline from the topic. Do not push multiple (else cannot
+        // sort)
+        // doc.put("callDeadline", df.format(new Date((Long)
+        // callObject.get("PublicationDate"))));
         doc.put("callFrameworkProgramme",
             (String) callObject.get("FrameworkProgramme"));
         doc.put("callType", (String) callObject.get("Type"));
@@ -565,7 +566,7 @@ public class TopicCollection extends AbstractBatchCollection implements
             LOGGER.debug("field: {}\t{}", key, doc.get(key));
           }
         }
-        
+
         return doc;
       }
     };
@@ -578,12 +579,11 @@ public class TopicCollection extends AbstractBatchCollection implements
       @Override
       public void write(List<? extends FieldMap> items) throws Exception {
         for (FieldMap item : items) {
-          LOGGER.info("Adding call {} to callList", 
-	        		  item.get("callFileName").get(0).toString()
-        		  	);
+          LOGGER.info("Adding call {} to callList", item.get("callFileName")
+              .get(0).toString());
 
-          //TODO: Find why the call filename is in bracket if we 
-          //don't put get(0) i.e: [h2020-msca-itn-2014]     
+          // TODO: Find why the call filename is in bracket if we
+          // don't put get(0) i.e: [h2020-msca-itn-2014]
           callList.put(item.get("callFileName").get(0).toString(), item);
         }
 
@@ -605,7 +605,6 @@ public class TopicCollection extends AbstractBatchCollection implements
     return builder.flow(callStep).next(topicStep).end();
   }
 
-
   public static void main(String... args)
       throws JobExecutionAlreadyRunningException, JobRestartException,
       JobInstanceAlreadyCompleteException, JobParametersInvalidException,
@@ -615,7 +614,7 @@ public class TopicCollection extends AbstractBatchCollection implements
         RootConfiguration.class, TopicCollection.class);
 
     TopicCollection collection = context.getBean(TopicCollection.class);
-    
+
     collection.synchronize();
   }
 }

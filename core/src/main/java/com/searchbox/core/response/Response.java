@@ -15,33 +15,64 @@
  */
 package com.searchbox.core.response;
 
-import com.searchbox.core.search.result.Hit;
 import java.util.List;
 
+import com.searchbox.core.search.result.Hit;
+
 /**
- *
+ * 
  * @author gamars
  */
 public class Response {
 
   public List<Facet> getFacetFields() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public Long getNumFound() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public List<Hit> getHits() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public long getElapsedTime() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
 
   public long getTotalTime() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet."); // To change
+                                                                   // body of
+                                                                   // generated
+                                                                   // methods,
+                                                                   // choose
+                                                                   // Tools |
+                                                                   // Templates.
   }
-  
+
 }

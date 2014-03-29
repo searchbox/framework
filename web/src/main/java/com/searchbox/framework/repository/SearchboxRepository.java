@@ -19,7 +19,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.searchbox.framework.model.SearchboxEntity;
 
-public interface SearchboxRepository extends CrudRepository<SearchboxEntity, Long> {
+public interface SearchboxRepository extends
+    CrudRepository<SearchboxEntity, Long> {
 
   public SearchboxEntity findBySlug(String slug);
 }

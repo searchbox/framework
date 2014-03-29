@@ -64,8 +64,7 @@ public class SearchboxWebApplicationInitializer extends
     charFilter.setEncoding("UTF-8");
     charFilter.setForceEncoding(true);
     return new Filter[] { new HiddenHttpMethodFilter(),
-        new OpenEntityManagerInViewFilter(), 
-        charFilter};
+        new OpenEntityManagerInViewFilter(), charFilter };
   }
 
   /**

@@ -46,10 +46,9 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -94,11 +93,11 @@ public class IdealISTCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "idealistTitle"));
     fields.add(new Field(String.class, "idealistPsId"));
     fields.add(new Field(String.class, "idealistStatus"));
-    
+
     fields.add(new Field(Date.class, "idealistDeadline"));
     fields.add(new Field(Date.class, "idealistUpdated"));
     fields.add(new Field(Date.class, "idealistPublished"));
-    
+
     fields.add(new Field(String.class, "idealistObjective"));
     fields.add(new Field(String.class, "idealistFundingScheme"));
     fields.add(new Field(String.class, "idealistEvaluationScheme"));
@@ -113,7 +112,7 @@ public class IdealISTCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "idealistDescriptionOfWork"));
 
     fields.add(new Field(String.class, "callIdentifier"));
-    
+
     fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
     fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
     fields.add(new Field(String.class, StandardCollection.STD_TITLE_FIELD));
@@ -121,38 +120,35 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
     return fields;
   }
-  
+
   @Override
   public String getIdValue(FieldMap fields) {
-    return (fields.get(this.getIdFieldName()).size() > 0) ?
-    		(String) fields.get(this.getIdFieldName()).get(0) :
-    		null;
+    return (fields.get(this.getIdFieldName()).size() > 0) ? (String) fields
+        .get(this.getIdFieldName()).get(0) : null;
   }
 
   @Override
   public String getBodyValue(FieldMap fields) {
-        return (fields.get("idealistBody").size() > 0)  ? 
-        		(String) fields.get("idealistBody").get(0) : 
-        		null;
+    return (fields.get("idealistBody").size() > 0) ? (String) fields.get(
+        "idealistBody").get(0) : null;
   }
 
   @Override
   public String getTitleValue(FieldMap fields) {
-    return (fields.get("idealistTitle").size() > 0) ? 
-    		(String) fields.get("idealistTitle").get(0) : 
-    		null;
+    return (fields.get("idealistTitle").size() > 0) ? (String) fields.get(
+        "idealistTitle").get(0) : null;
   }
-  
+
   @Override
   public Date getPublishedValue(FieldMap fields) {
-        return null;
+    return null;
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-        return null;
+    return null;
   }
-  
+
   @Override
   public void afterPropertiesSet() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -266,20 +262,19 @@ public class IdealISTCollection extends AbstractBatchCollection implements
           document, XPathConstants.NODESET);
 
       for (int i = 0; i < nodeList.getLength(); i++) {
-        
+
         StringBuilder textBuilder = new StringBuilder();
         for (int j = 0; j < nodeList.item(i).getChildNodes().getLength(); j++) {
-            Node textNode = nodeList.item(i).getChildNodes().item(j);
-            if (textNode.getNodeType() == Node.TEXT_NODE
-                || textNode.getNodeType() == Node.CDATA_SECTION_NODE) {
-                textBuilder.append(textNode.getNodeValue());
-            }
+          Node textNode = nodeList.item(i).getChildNodes().item(j);
+          if (textNode.getNodeType() == Node.TEXT_NODE
+              || textNode.getNodeType() == Node.CDATA_SECTION_NODE) {
+            textBuilder.append(textNode.getNodeValue());
+          }
         }
         String value = textBuilder.toString();
-        
-        LOGGER.debug("value for key {} is {}",
-            key, value);
-        if(value.isEmpty()){
+
+        LOGGER.debug("value for key {} is {}", key, value);
+        if (value.isEmpty()) {
           continue;
         }
         if (String.class.isAssignableFrom(clazz)) {
@@ -293,7 +288,8 @@ public class IdealISTCollection extends AbstractBatchCollection implements
             date = dfmt.parse(value);
             fields.put(fieldName, date);
           } catch (ParseException e) {
-            LOGGER.warn("Could not parse date({}) for for key {} in document {}",
+            LOGGER.warn(
+                "Could not parse date({}) for for key {} in document {}",
                 value, key, uid);
           }
         }
@@ -360,14 +356,13 @@ public class IdealISTCollection extends AbstractBatchCollection implements
           }
         }
 
-        //Filtering invalid ideal-ist, skip records where status is not open.
-        if(fields.get("idealistStatus").toString().equals("[Open]")){
+        // Filtering invalid ideal-ist, skip records where status is not open.
+        if (fields.get("idealistStatus").toString().equals("[Open]")) {
           LOGGER.info("Found a ideal-ist with open status.");
           return fields;
         } else {
-          LOGGER.info("The document has the following status {}", 
-              fields.get("idealistStatus").toString()
-             );
+          LOGGER.info("The document has the following status {}",
+              fields.get("idealistStatus").toString());
           return null;
         }
       }
@@ -388,14 +383,13 @@ public class IdealISTCollection extends AbstractBatchCollection implements
       JobInstanceAlreadyCompleteException, JobParametersInvalidException,
       SAXException, IOException {
 
-     AnnotationConfigApplicationContext context = new
-     AnnotationConfigApplicationContext(
-     RootConfiguration.class);
-    
-     IdealISTCollection collection = context
-         .getAutowireCapableBeanFactory().createBean(IdealISTCollection.class);
-    
-     collection.synchronize();
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+        RootConfiguration.class);
+
+    IdealISTCollection collection = context.getAutowireCapableBeanFactory()
+        .createBean(IdealISTCollection.class);
+
+    collection.synchronize();
 
   }
 }

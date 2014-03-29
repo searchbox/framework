@@ -39,8 +39,7 @@ public class TemplateElementSolrAdapter {
     String fieldHighlightKey = engine.getKeyForField(attribute, USE.SEARCH);
     query.setHighlight(true);
     query.setHighlightSnippets(3);
-    
-    
+
     if (query.getHighlightFields() == null
         || !Arrays.asList(query.getHighlightFields()).contains(
             fieldHighlightKey)) {
@@ -49,13 +48,13 @@ public class TemplateElementSolrAdapter {
   }
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void setRequieredFieldsForTemplate(SolrSearchEngine engine, Collection collection,
-      TemplateElement searchElement, SolrQuery query, FieldAttribute attribute) {
-    
+  public void setRequieredFieldsForTemplate(SolrSearchEngine engine,
+      Collection collection, TemplateElement searchElement, SolrQuery query,
+      FieldAttribute attribute) {
 
     // TODO check if template has a template. if not ask for all fields.
     if (query.getFields() == null) {
-      query.setFields("score", "[shard]",searchElement.getIdField());
+      query.setFields("score", "[shard]", searchElement.getIdField());
     }
 
     Set<String> fields = searchElement.getRequiredFields();
@@ -63,7 +62,8 @@ public class TemplateElementSolrAdapter {
 
     if (fields.contains(attribute.getField().getKey())) {
       String key = engine.getKeyForField(attribute, USE.DEFAULT);
-      LOGGER.trace("Adding {} as fl for {}",key, attribute.getField().getKey());
+      LOGGER
+          .trace("Adding {} as fl for {}", key, attribute.getField().getKey());
       if (!query.getFields().contains(key)) {
         List<String> qfields = new ArrayList<>();
         qfields.addAll(Arrays.asList(query.getFields().split(",")));
@@ -91,12 +91,12 @@ public class TemplateElementSolrAdapter {
     Iterator<SolrDocument> documents = response.getResults().iterator();
     while (documents.hasNext()) {
       SolrDocument document = documents.next();
-      
-      //This says it is not ours to handle! 
-      if(document.getFirstValue(element.getIdField()) == null){
+
+      // This says it is not ours to handle!
+      if (document.getFirstValue(element.getIdField()) == null) {
         continue;
       }
-      
+
       Hit hit = new Hit((Float) document.get("score"));
 
       // Set fields per element configuration
@@ -113,9 +113,10 @@ public class TemplateElementSolrAdapter {
       }
       // Now we push the highlights
       Object id = document.getFirstValue(attribute.getField().getKey());
-      if(response.getHighlighting() != null){
-        Map<String, List<String>> highlights = response.getHighlighting().get(id);
-        if(highlights != null){
+      if (response.getHighlighting() != null) {
+        Map<String, List<String>> highlights = response.getHighlighting().get(
+            id);
+        if (highlights != null) {
           for (String highlihgtkey : highlights.keySet()) {
             for (String fieldkey : document.getFieldNames()) {
               if (highlihgtkey.contains(fieldkey)) {
@@ -128,9 +129,9 @@ public class TemplateElementSolrAdapter {
 
       // And we collect the hit for future use :)
       collector.getCollectedItems(element.getCollectorKey()).add(hit);
-//      if(!element.getHits().contains(hit)){
-//        element.getHits().add(hit);
-//      }
+      // if(!element.getHits().contains(hit)){
+      // element.getHits().add(hit);
+      // }
     }
   }
 }

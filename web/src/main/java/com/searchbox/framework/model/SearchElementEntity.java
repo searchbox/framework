@@ -19,25 +19,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.searchbox.core.SearchElement;
-import com.searchbox.core.SearchElement.Type;
 import com.searchbox.core.SearchElementBean;
-import com.searchbox.core.ref.ReflectionUtils;
 
 @Entity
 public class SearchElementEntity<K extends SearchElementBean> extends
     BeanFactoryEntity<Long> implements ParametrizedBeanFactory<K>,
     Comparable<SearchElementEntity<K>> {
-  
+
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchElementEntity.class);
 
-  @ManyToOne(fetch=FetchType.LAZY, targetEntity = PresetEntity.class)
+  @ManyToOne(fetch = FetchType.LAZY, targetEntity = PresetEntity.class)
   private PresetEntity preset;
 
   private Class<?> clazz;
@@ -51,7 +46,7 @@ public class SearchElementEntity<K extends SearchElementBean> extends
   public SearchElementEntity() {
     // TODO infer class from generic Interface
   }
-  
+
   public PresetEntity getPreset() {
     return preset;
   }
@@ -61,18 +56,18 @@ public class SearchElementEntity<K extends SearchElementBean> extends
     return this;
   }
 
-  public PresetEntity end(){
+  public PresetEntity end() {
     this.getPreset().getSearchElements().add(this);
     return this.getPreset();
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
-  public K build(){
-    if(this.getClazz() == null){
+  public K build() {
+    if (this.getClazz() == null) {
       throw new MissingClassAttributeException();
     }
-    LOGGER.debug("Building Class for {}",this.getClazz());
+    LOGGER.debug("Building Class for {}", this.getClazz());
     SearchElementBean element = (K) super.build(this.getClazz());
     element.setId(this.getId());
     return (K) element;
@@ -117,21 +112,20 @@ public class SearchElementEntity<K extends SearchElementBean> extends
 
   @Override
   public int compareTo(SearchElementEntity<K> o) {
-    return new Integer(this.getPosition()*10)
-      .compareTo(new Integer(o.getPosition()*10+1));
+    return new Integer(this.getPosition() * 10).compareTo(new Integer(o
+        .getPosition() * 10 + 1));
   }
 
   public SearchElementEntity<K> setAttribute(String name, Object value) {
-    LOGGER.debug("Seeting attr {}[{}] to value {}",name,
-        (value!=null)?value.getClass():"xoxo", value);
+    LOGGER.debug("Seeting attr {}[{}] to value {}", name,
+        (value != null) ? value.getClass() : "xoxo", value);
     AttributeEntity attribute = this.getAttributeByName(name);
-    if(attribute == null){
-      LOGGER.warn("CAUTION! Setting an attribute ({}) that is not defined in {}",
-          name, this.getClazz());
+    if (attribute == null) {
+      LOGGER.warn(
+          "CAUTION! Setting an attribute ({}) that is not defined in {}", name,
+          this.getClazz());
     } else {
-      attribute
-      .setValue(value)
-      .setType(value.getClass());
+      attribute.setValue(value).setType(value.getClass());
     }
     return this;
   }
@@ -142,5 +136,4 @@ public class SearchElementEntity<K extends SearchElementBean> extends
         + ", position=" + position + "]";
   }
 
-  
 }

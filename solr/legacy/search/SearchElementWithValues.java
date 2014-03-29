@@ -25,7 +25,7 @@ import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 
 public class SearchElementWithValues<K extends ValueElement> extends
-  SearchElementBean {
+    SearchElementBean {
 
   @SearchAttribute
   protected Order order;

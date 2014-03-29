@@ -21,14 +21,14 @@ public class FieldMap extends HashMap<String, List<Object>> {
       return Collections.emptyList();
     }
   }
-  
-  public Class<?> getClazz(String key){
-    if(super.containsKey(key)){
+
+  public Class<?> getClazz(String key) {
+    if (super.containsKey(key)) {
       Object obj = super.get(key).get(0);
-      if(obj == null){
+      if (obj == null) {
         return null;
       } else {
-        return super.get(key).get(0).getClass();        
+        return super.get(key).get(0).getClass();
       }
     } else {
       return null;

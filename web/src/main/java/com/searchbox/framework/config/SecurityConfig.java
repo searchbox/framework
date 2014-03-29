@@ -47,7 +47,7 @@ import com.searchbox.framework.service.SimpleSocialUserDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   protected static final String USE_SECURITY = "use.security";
-  
+
   @Autowired
   private DataSource dataSource;
 
@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     if (env.getProperty(USE_SECURITY, Boolean.class, false)) {
       http
-      
+
       // Configures form login
       .formLogin()
           .loginPage("/")
@@ -79,68 +79,48 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .failureUrl("/?error=bad_credentials")
           .and()
 
-      // Configures the logout function
-      .logout()
+          // Configures the logout function
+          .logout()
           .deleteCookies("JSESSIONID")
           .logoutUrl("/logout")
           .logoutSuccessUrl("/")
           .and()
-          
-      // Configures url based authorization
-      .authorizeRequests()
+
+          // Configures url based authorization
+          .authorizeRequests()
           // Anyone can access the urls
-          .antMatchers("/","/*","/auth/**", "/login/**", "/signin/**",
-              "/signup/**", "/user/register/**").permitAll()
+          .antMatchers("/", "/*", "/auth/**", "/login/**", "/signin/**",
+              "/signup/**", "/user/register/**")
+          .permitAll()
           // The system part is protected
-          .antMatchers("/system/**").hasAnyRole("SYSTEM")
+          .antMatchers("/system/**")
+          .hasAnyRole("SYSTEM")
           // The admin part is protected
-          .antMatchers("/admin/**").hasAnyRole("SYSTEM", "ADMIN")
+          .antMatchers("/admin/**")
+          .hasAnyRole("SYSTEM", "ADMIN")
           // The rest of the our application is protected.
-          .antMatchers("/**").hasAnyRole("SYSTEM", "ADMIN", "USER")
+          .antMatchers("/**")
+          .hasAnyRole("SYSTEM", "ADMIN", "USER")
           .and()
-          
-      // Adds the SocialAuthenticationFilter to Spring Security's
-      // filter chain.
-      .apply(new SpringSocialConfigurer())
-          .and()
-      .openidLogin()
-        .loginPage("/")
-        .loginProcessingUrl("/login/openid")
-        .failureUrl("/?error=openid_fail")
-        .permitAll()
-        .authenticationUserDetailsService(openIdUserDetailsService())
-        .attributeExchange("https://www.google.com/.*")
-            .attribute("email")
-                .type("http://axschema.org/contact/email")
-                .required(true)
-                .and()
-            .attribute("firstname")
-                .type("http://axschema.org/namePerson/first")
-                .required(true)
-                .and()
-            .attribute("lastname")
-                .type("http://axschema.org/namePerson/last")
-                .required(true)
-                .and()
-            .and()
-        .attributeExchange(".*yahoo.com.*")
-            .attribute("email")
-                .type("http://axschema.org/contact/email")
-                .required(true)
-                .and()
-            .attribute("fullname")
-                .type("http://axschema.org/namePerson")
-                .required(true)
-                .and()
-            .and()
-        .attributeExchange(".*myopenid.com.*")
-            .attribute("email")
-                .type("http://schema.openid.net/contact/email")
-                .required(true)
-                .and()
-            .attribute("fullname")
-                .type("http://schema.openid.net/namePerson")
-                .required(true);
+
+          // Adds the SocialAuthenticationFilter to Spring Security's
+          // filter chain.
+          .apply(new SpringSocialConfigurer()).and().openidLogin()
+          .loginPage("/").loginProcessingUrl("/login/openid")
+          .failureUrl("/?error=openid_fail").permitAll()
+          .authenticationUserDetailsService(openIdUserDetailsService())
+          .attributeExchange("https://www.google.com/.*").attribute("email")
+          .type("http://axschema.org/contact/email").required(true).and()
+          .attribute("firstname").type("http://axschema.org/namePerson/first")
+          .required(true).and().attribute("lastname")
+          .type("http://axschema.org/namePerson/last").required(true).and()
+          .and().attributeExchange(".*yahoo.com.*").attribute("email")
+          .type("http://axschema.org/contact/email").required(true).and()
+          .attribute("fullname").type("http://axschema.org/namePerson")
+          .required(true).and().and().attributeExchange(".*myopenid.com.*")
+          .attribute("email").type("http://schema.openid.net/contact/email")
+          .required(true).and().attribute("fullname")
+          .type("http://schema.openid.net/namePerson").required(true);
     }
   }
 
@@ -161,7 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder(10);
   }
-  
+
   @Bean
   public OpenIdUserDetailsService openIdUserDetailsService() {
     return new OpenIdUserDetailsService(userRepository);
@@ -184,23 +164,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public UserDetailsService userDetailsService() {
     return new AuthUserService(userRepository);
   }
-  
-  
+
   @Bean
   public PersistentTokenRepository persistentTokenRepository() {
-      JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-      tokenRepository.setDataSource(dataSource);
-      return tokenRepository;
+    JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+    tokenRepository.setDataSource(dataSource);
+    return tokenRepository;
   }
-  
+
   @Bean
   public RememberMeServices rememberMeServices() {
-      PersistentTokenBasedRememberMeServices rememberMeServices = new PersistentTokenBasedRememberMeServices(
-              "uniqueSecret",
-              userDetailsService(),
-              persistentTokenRepository()
-      );
-      rememberMeServices.setAlwaysRemember(true);
-      return rememberMeServices;
+    PersistentTokenBasedRememberMeServices rememberMeServices = new PersistentTokenBasedRememberMeServices(
+        "uniqueSecret", userDetailsService(), persistentTokenRepository());
+    rememberMeServices.setAlwaysRemember(true);
+    return rememberMeServices;
   }
 }

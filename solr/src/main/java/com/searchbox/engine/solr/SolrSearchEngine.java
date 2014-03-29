@@ -62,7 +62,7 @@ public abstract class SolrSearchEngine extends
 
   protected abstract SolrServer getSolrServer(Collection collection);
 
-  protected abstract boolean updateDataModel(Collection collection, 
+  protected abstract boolean updateDataModel(Collection collection,
       Map<Field, Set<String>> copyFields);
 
   @Override
@@ -140,12 +140,12 @@ public abstract class SolrSearchEngine extends
   public boolean indexMap(Collection collection, Map<String, Object> fields) {
 
     SolrInputDocument document = new SolrInputDocument();
-    //TODO should never need this.. Make sure we use the ID field...
+    // TODO should never need this.. Make sure we use the ID field...
     if (!fields.containsKey("id")) {
       document.addField("id", fields.get(collection.getIdFieldName()));
     }
     for (Entry<String, Object> entry : fields.entrySet()) {
-      if(entry.getValue() == null){
+      if (entry.getValue() == null) {
         continue;
       } else if (Collection.class.isAssignableFrom(entry.getValue().getClass())) {
         for (Object value : ((java.util.Collection<?>) entry.getValue())) {
@@ -170,9 +170,10 @@ public abstract class SolrSearchEngine extends
       return false;
     }
   }
-  
+
   @Override
-  public boolean updateDataModel(Collection collection, List<FieldAttribute> fieldAttributes) {
+  public boolean updateDataModel(Collection collection,
+      List<FieldAttribute> fieldAttributes) {
     /** Get the translation for the field's key */
     Map<Field, Set<String>> copyFields = new HashMap<Field, Set<String>>();
     for (FieldAttribute fieldAttribute : fieldAttributes) {
@@ -287,11 +288,10 @@ public abstract class SolrSearchEngine extends
     return usages;
   }
 
-
   @Override
   public boolean indexMap(Collection collection,
       java.util.Collection<Map<String, Object>> indexables) {
-    for(Map<String, Object> indexable:indexables){
+    for (Map<String, Object> indexable : indexables) {
       this.indexMap(collection, indexable);
     }
     return true;

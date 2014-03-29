@@ -60,39 +60,41 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   @ManyToOne
   private SearchboxEntity searchbox;
 
-  @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,
+      CascadeType.PERSIST, CascadeType.REFRESH })
   @LazyCollection(LazyCollectionOption.TRUE)
   private PresetEntity parent;
 
-  @OneToMany(fetch=FetchType.LAZY, targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, targetEntity = PresetEntity.class, mappedBy = "parent", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<PresetEntity> children;
-  
-  @OneToMany(fetch=FetchType.LAZY, targetEntity = SearchConditionEntity.class, mappedBy = "preset", cascade = CascadeType.ALL)
+
+  @OneToMany(fetch = FetchType.LAZY, targetEntity = SearchConditionEntity.class, mappedBy = "preset", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.TRUE)
   @SortNatural
   private SortedSet<SearchConditionEntity<?>> conditions;
 
-  @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,
+      CascadeType.REFRESH })
   @LazyCollection(LazyCollectionOption.TRUE)
   private CollectionEntity<?> collection;
 
   @OneToMany(targetEntity = SearchElementEntity.class, mappedBy = "preset", cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.TRUE)
   private Set<SearchElementEntity<?>> searchElements;
-  
-  @ElementCollection(fetch=FetchType.EAGER)
+
+  @ElementCollection(fetch = FetchType.EAGER)
   private List<Class<?>> inheritedTypes;
-  
+
   private Boolean inheritFieldAttributes = true;
-  
+
   private Boolean inheritConditions = true;
 
   private String slug;
 
   private String label;
-  
+
   private Boolean visible = true;
 
   private String description;
@@ -133,13 +135,13 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public Boolean getInheritFieldAttributes() {
     return inheritFieldAttributes;
-  }  
+  }
 
   public PresetEntity setInheritFieldAttributes(Boolean inheritFieldAttributes) {
     this.inheritFieldAttributes = inheritFieldAttributes;
     return this;
   }
-  
+
   public String getDefaultProcess() {
     return defaultProcess;
   }
@@ -236,7 +238,7 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     }
     return null;
   }
-  
+
   public FieldAttributeEntity getFieldAttributeByField(FieldEntity field) {
     for (FieldAttributeEntity fieldAttribute : this.getFieldAttributes()) {
       if (fieldAttribute.getField().equals(field)) {
@@ -246,19 +248,18 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return null;
   }
 
-  public PresetEntity addFieldCondition(String label, String field, String value){
+  public PresetEntity addFieldCondition(String label, String field, String value) {
     return newSearchCondition().setLabel(label)
         .setClazz(FieldValueCondition.class)
         .setAttribute(FieldValueCondition.TAGED_ATTR, false)
         .setAttribute(FieldValueCondition.FIELD_NAME_ATTR, field)
-        .setAttribute(FieldValueCondition.VALUE_ATTR, value)
-        .end();
+        .setAttribute(FieldValueCondition.VALUE_ATTR, value).end();
   }
-  
-  public SearchConditionEntity<?> newSearchCondition(){
+
+  public SearchConditionEntity<?> newSearchCondition() {
     return new SearchConditionEntity<>().setPreset(this);
   }
-  
+
   public SortedSet<SearchConditionEntity<?>> getConditions() {
     return conditions;
   }
@@ -279,36 +280,38 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return searchElements;
   }
 
-  public Set<SearchElementEntity<?>> getSearchElements(List<Class<?>> types, Boolean inherited, String process) {
-    if(!inherited){
+  public Set<SearchElementEntity<?>> getSearchElements(List<Class<?>> types,
+      Boolean inherited, String process) {
+    if (!inherited) {
       return getSearchElements(process);
     } else {
       Set<SearchElementEntity<?>> definitions = new TreeSet<>();
-      for(SearchElementEntity<?> element:getSearchElements(process)){
-        if(types.contains(element.getClazz())){
+      for (SearchElementEntity<?> element : getSearchElements(process)) {
+        if (types.contains(element.getClazz())) {
           definitions.add(element);
         }
       }
-      for(PresetEntity child:this.getChildren()){
+      for (PresetEntity child : this.getChildren()) {
         definitions.addAll(child.getSearchElements(types, inherited, process));
       }
       return definitions;
     }
   }
-  
-  public Set<SearchElementEntity<?>> getSearchElements(Boolean inherited, String process) {
-    if(!inherited){
+
+  public Set<SearchElementEntity<?>> getSearchElements(Boolean inherited,
+      String process) {
+    if (!inherited) {
       return getSearchElements(process);
     } else {
       Set<SearchElementEntity<?>> definitions = getSearchElements(process);
-      for(PresetEntity child:this.getChildren()){
-        definitions.addAll(child.getSearchElements(this.getInheritedTypes(), 
+      for (PresetEntity child : this.getChildren()) {
+        definitions.addAll(child.getSearchElements(this.getInheritedTypes(),
             inherited, process));
       }
       return definitions;
     }
   }
-  
+
   public Set<SearchElementEntity<?>> getSearchElements(String process) {
     Set<SearchElementEntity<?>> definitions = new TreeSet<SearchElementEntity<?>>();
     for (SearchElementEntity<?> definition : this.searchElements) {
@@ -328,12 +331,12 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   public Set<FieldAttributeEntity> getFieldAttributes() {
     return fieldAttributes;
   }
-  
+
   public Set<FieldAttributeEntity> getFieldAttributes(Boolean inherited) {
-    if(inherited && this.inheritFieldAttributes) {
+    if (inherited && this.inheritFieldAttributes) {
       Set<FieldAttributeEntity> attributes = this.getFieldAttributes();
-      for(PresetEntity child:this.getChildren()){
-        if(this.inheritFieldAttributes){
+      for (PresetEntity child : this.getChildren()) {
+        if (this.inheritFieldAttributes) {
           attributes.addAll(child.getFieldAttributes(true));
         }
       }
@@ -362,73 +365,67 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   public FieldAttributeEntity newFieldAttribute() {
     return new FieldAttributeEntity().setPreset(this);
   }
-  
-  public PresetEntity addQueryElement(){
-    this.searchElements.add(newSearchElement()
-        .setClazz(EdismaxQuery.class));
+
+  public PresetEntity addQueryElement() {
+    this.searchElements.add(newSearchElement().setClazz(EdismaxQuery.class));
     return this;
   }
-  
+
   public PresetEntity addPagingElement() {
-    this.searchElements.add(newSearchElement()
-        .setClazz(BasicPagination.class));
+    this.searchElements.add(newSearchElement().setClazz(BasicPagination.class));
     return this;
   }
-  
-  
+
   public PresetEntity addDebugElement() {
-    this.searchElements.add(newSearchElement()
-        .setClazz(SolrToString.class));
-    return this;    
+    this.searchElements.add(newSearchElement().setClazz(SolrToString.class));
+    return this;
   }
 
   public PresetEntity addStatElement() {
-    this.searchElements.add(newSearchElement()
-        .setClazz(BasicSearchStats.class));
+    this.searchElements
+        .add(newSearchElement().setClazz(BasicSearchStats.class));
     return this;
   }
-  
-  public PresetEntity addFieldFacet(String label, String key){
+
+  public PresetEntity addFieldFacet(String label, String key) {
     this.searchElements.add(newFieldFacet(label, key));
     return this;
   }
-  
+
   public SearchElementEntity<?> newFieldFacet(String label, String key) {
-    return newSearchElement()
-        .setClazz(FieldFacet.class)
-        .setLabel(label)
-        .setAttribute("fieldName", key)
-        .setAttribute("order", Order.BY_VALUE)
+    return newSearchElement().setClazz(FieldFacet.class).setLabel(label)
+        .setAttribute("fieldName", key).setAttribute("order", Order.BY_VALUE)
         .setAttribute("sort", Sort.DESC);
   }
-  
-  public PresetEntity addTemplateElement(String titleFieldName, String templateFile) {
+
+  public PresetEntity addTemplateElement(String titleFieldName,
+      String templateFile) {
     this.searchElements.add(newTemplateElement(titleFieldName, templateFile));
     return this;
   }
 
-  public SearchElementEntity<?> newTemplateElement(String titleFieldName, String templateFile) {
-    return newSearchElement()
-        .setClazz(TemplateElement.class)
+  public SearchElementEntity<?> newTemplateElement(String titleFieldName,
+      String templateFile) {
+    return newSearchElement().setClazz(TemplateElement.class)
         .setAttribute("titleField", titleFieldName)
         .setAttribute("idField", collection.getIdFieldName())
         .setAttribute("templateFile", templateFile);
   }
 
-  
   public PresetEntity addSortableFieldAttribute(String label, String field) {
     this.fieldAttributes.add(newFieldAttribute(label, field).setSortable(true));
-    return this;    
+    return this;
   }
-  
-  public FieldAttributeEntity newFieldAttribute(String key){
+
+  public FieldAttributeEntity newFieldAttribute(String key) {
     return newFieldAttribute("", key);
   }
-  
-  public FieldAttributeEntity newFieldAttribute(String label, String key){
+
+  public FieldAttributeEntity newFieldAttribute(String label, String key) {
     FieldAttributeEntity attribute = this.getFieldAttributeByKey(key);
-    if(attribute==null){
-      LOGGER.warn("MISSING FieldAttribute for {}. Is collection properly set?",key);
+    if (attribute == null) {
+      LOGGER.warn("MISSING FieldAttribute for {}. Is collection properly set?",
+          key);
       return new FieldAttributeEntity().setPreset(this)
           .setField(this.getCollection().getField(key))
           .setAttribute("label", label);
@@ -443,30 +440,29 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
         .setProcess(DEFAULT_PROCESS);
   }
 
-  public PresetEntity endChild(){
+  public PresetEntity endChild() {
     this.searchbox.getPresets().add(this);
     this.getParent().getChildren().add(this);
     return this.getParent();
   }
-  
+
   public SearchboxEntity end() {
     this.searchbox.getPresets().add(this);
     return this.getSearchbox();
   }
 
-  public PresetEntity newChildPreset(boolean inheritFieldAttributes, Class<?>... inheritedTypes) {
+  public PresetEntity newChildPreset(boolean inheritFieldAttributes,
+      Class<?>... inheritedTypes) {
     this.setInheritFieldAttributes(inheritFieldAttributes);
     this.setInheritedTypes(Arrays.asList(inheritedTypes));
-    return new PresetEntity()
-      .setParent(this)
-      .setSearchbox(this.getSearchbox())
-      //Position the preset per parent.
-      .setPosition(this.getPosition()*10+(this.getChildren().size()+1));
+    return new PresetEntity().setParent(this).setSearchbox(this.getSearchbox())
+    // Position the preset per parent.
+        .setPosition(this.getPosition() * 10 + (this.getChildren().size() + 1));
   }
 
   public Set<SearchConditionEntity<?>> getSearchConditions(boolean b) {
     Set<SearchConditionEntity<?>> conditions = this.getConditions();
-    for(PresetEntity child:this.getChildren()){
+    for (PresetEntity child : this.getChildren()) {
       conditions.addAll(child.getSearchConditions(b));
     }
     return conditions;
@@ -477,6 +473,5 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return "PresetEntity [slug=" + slug + ", label=" + label + ", position="
         + position + "]";
   }
-  
-  
+
 }

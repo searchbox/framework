@@ -1,5 +1,8 @@
 package com.searchbox.core.search.facet;
 
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.params.FacetParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import com.searchbox.core.SearchAdapterMethod;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.query.Query;
+import com.searchbox.engine.solr.SolrSearchEngine;
 
 @SearchAdapter
 public class FieldFacetSolrAdaptor {
@@ -17,8 +21,8 @@ public class FieldFacetSolrAdaptor {
       .getLogger(FieldFacetSolrAdaptor.class);
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void addFacetField(SearchEngine engine, FieldFacet facet,
-      Query query, FieldAttribute attribute) {
+  public void addFacetField(SearchEngine engine, FieldFacet facet, Query query,
+      FieldAttribute attribute) {
 
     if (!attribute.getField().getKey().equals(facet.getFieldName())) {
       return;

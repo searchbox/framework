@@ -18,8 +18,8 @@ public class FieldFacetSolrAdaptor {
       .getLogger(FieldFacetSolrAdaptor.class);
 
   @SearchAdapterMethod(execute = Time.PRE)
-  public void addFacetField(SearchEngine engine, FieldFacet facet,
-      Query query, FieldAttribute attribute) {
+  public void addFacetField(SearchEngine engine, FieldFacet facet, Query query,
+      FieldAttribute attribute) {
 
     if (attribute.getField().getKey().equals(facet.getFieldName())) {
       String facetKey = engine.getKeyForField(attribute);
@@ -41,15 +41,15 @@ public class FieldFacetSolrAdaptor {
       return;
     }
 
-//    String facetKey = engine.getKeyForField(attribute);
-//    if (response.getFacetFields() != null) {
-//      for (Facet facet : response.getFacetFields()) {
-//        if (facet.getName().equals(facetKey)) {
-//          for (Count value : facet.getValues()) {
-//            fieldFacet.addValueElement(value.getName(), (int) value.getCount());
-//          }
-//        }
-//      }
-//    }
+    // String facetKey = engine.getKeyForField(attribute);
+    // if (response.getFacetFields() != null) {
+    // for (Facet facet : response.getFacetFields()) {
+    // if (facet.getName().equals(facetKey)) {
+    // for (Count value : facet.getValues()) {
+    // fieldFacet.addValueElement(value.getName(), (int) value.getCount());
+    // }
+    // }
+    // }
+    // }
   }
 }
