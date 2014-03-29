@@ -21,11 +21,19 @@ public class FieldMap extends HashMap<String, List<Object>> {
       return Collections.emptyList();
     }
   }
-
-  /**
-     * 
-     */
-  private static final long serialVersionUID = 6364672700946040334L;
+  
+  public Class<?> getClazz(String key){
+    if(super.containsKey(key)){
+      Object obj = super.get(key).get(0);
+      if(obj == null){
+        return null;
+      } else {
+        return super.get(key).get(0).getClass();        
+      }
+    } else {
+      return null;
+    }
+  }
 
   /**
    * Add item of any type to the field defined by key

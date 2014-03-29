@@ -19,6 +19,7 @@ import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.explore.JobExplorer;
@@ -108,9 +109,29 @@ public abstract class AbstractBatchCollection extends DefaultCollection
   protected abstract FlowJobBuilder getJobFlow(JobBuilder builder);
 
   @Override
-  public void beforeJob(JobExecution jobExecution) {
+  public void beforeJob(final JobExecution jobExecution) {
     LOGGER.info("Starting Batch Job");
 
+    new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+
+        while (jobExecution.isRunning()) {
+          LOGGER.info("Batch status: {}", jobExecution.getStatus());
+          for (StepExecution stepExecution : jobExecution.getStepExecutions()) {
+            LOGGER.info("step: {}, read:{}, write: {}",
+                stepExecution.getStepName(), stepExecution.getReadCount(),
+                stepExecution.getWriteCount());
+          }
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            ;
+          }
+        }
+      }
+    }).start();
   }
 
   @Override
