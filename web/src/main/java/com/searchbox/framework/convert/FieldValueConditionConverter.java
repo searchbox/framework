@@ -17,15 +17,15 @@ package com.searchbox.framework.convert;
 
 import org.springframework.core.convert.converter.Converter;
 
-import com.searchbox.core.SearchConverter;
+import com.searchbox.core.search.filter.FieldValueCondition;
 
 /**
  *
  * @author gamars
  */
 /** Format of FieldValueFacet is key[value]s where s makes it stick */
-@SearchConverter(urlParam = "ff")
-public static class FieldValueConditionConverter implements
+@SearchConverter //(urlParam = "ff")
+public class FieldValueConditionConverter implements
     Converter<String, FieldValueCondition> {
   @Override
   public FieldValueCondition convert(String source) {

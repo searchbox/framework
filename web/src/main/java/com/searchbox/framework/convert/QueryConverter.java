@@ -15,18 +15,21 @@
  */
 package com.searchbox.framework.convert;
 
+import org.springframework.core.convert.converter.Converter;
+
+import com.searchbox.core.search.query.EdismaxQuery;
+
 /**
- *
+ * 
  * @author gamars
  */
 @SearchConverter
-public static class QueryConverter {
-      implements Converter<String, EdismaxQuery.Condition> {
+public class QueryConverter implements
+    Converter<String, EdismaxQuery.Condition> {
 
-    @Override
-    public EdismaxQuery.Condition convert(String source) {
-      return new EdismaxQuery.Condition(source);
-    }
+  @Override
+  public EdismaxQuery.Condition convert(String source) {
+    return new EdismaxQuery.Condition(source);
   }
 
 }

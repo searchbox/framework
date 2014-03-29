@@ -15,26 +15,30 @@
  */
 package com.searchbox.framework.convert;
 
+import org.springframework.core.convert.converter.Converter;
+
+import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.sort.FieldSort;
+import com.searchbox.core.search.sort.FieldSort.Condition;
+
 /**
- *
+ * 
  * @author gamars
  */
-   @SearchConverter
+@SearchConverter
+public class FieldSortConditionConverter implements
+    Converter<String, Condition> {
 
-public class FieldSortConditionConverter {
- implements
-     Converter<String, Condition> {
+  @Override
+  public Condition convert(String source) {
+    String cfield = source.split(" ")[0];
+    String sort = source.split(" ")[1];
 
-    @Override
-    public Condition convert(String source) {
-      String cfield = source.split(" ")[0];
-      String sort = source.split(" ")[1];
-
-      if (sort.equalsIgnoreCase(Sort.DESC.toString())) {
-        return new Condition(cfield, Sort.DESC);
-      } else {
-        return new Condition(cfield, Sort.ASC);
-      }
+    if (sort.equalsIgnoreCase(Sort.DESC.toString())) {
+      return new FieldSort.Condition(cfield, Sort.DESC);
+    } else {
+      return new FieldSort.Condition(cfield, Sort.ASC);
     }
   }
+
 }

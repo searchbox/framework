@@ -34,8 +34,8 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.core.SearchCondition;
-import com.searchbox.core.SearchConverter;
 import com.searchbox.core.search.AbstractSearchCondition;
+import com.searchbox.framework.convert.SearchConverter;
 import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.PresetRepository;

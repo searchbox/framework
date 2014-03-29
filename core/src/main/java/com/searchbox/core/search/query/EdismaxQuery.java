@@ -108,7 +108,7 @@ public class EdismaxQuery extends
 
     String query;
 
-    Condition(String query) {
+    public Condition(String query) {
       this.query = query;
     }
 

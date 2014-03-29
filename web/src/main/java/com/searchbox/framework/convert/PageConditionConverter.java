@@ -15,12 +15,17 @@
  */
 package com.searchbox.framework.convert;
 
+import org.springframework.core.convert.converter.Converter;
+
+import com.searchbox.core.search.paging.BasicPagination;
+import com.searchbox.core.search.paging.BasicPagination.PageCondition;
+
 /**
  *
  * @author gamars
  */
-  @SearchConverter
-public static class PageConditionConverter 
+@SearchConverter
+public class PageConditionConverter 
     implements Converter<String, BasicPagination.PageCondition> {
 
     @Override
@@ -28,5 +33,4 @@ public static class PageConditionConverter
       return new PageCondition(Integer.parseInt(source));
     }
 
-  }
 }

@@ -98,7 +98,7 @@ public class FieldSort extends
     private final String field;
     private final Sort sort;
 
-    Condition(String field, Sort sort) {
+    public Condition(String field, Sort sort) {
       this.field = field;
       this.sort = sort;
     }
