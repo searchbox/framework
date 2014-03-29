@@ -15,23 +15,28 @@
  ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +44,9 @@ import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
 import com.searchbox.collection.oppfin.TopicCollection;
+import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.SearchAdapterService;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
@@ -51,6 +59,7 @@ import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.EmbeddedSolr;
+import com.searchbox.framework.convert.SearchConverter;
 import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
@@ -64,10 +73,10 @@ import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.UserService;
 
 @Component
-@Configuration
-@org.springframework.core.annotation.Order(value = 10000)
 @Transactional
-public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
+@org.springframework.core.annotation.Order(value = 10000)
+public class BootStrap implements ApplicationListener<ContextRefreshedEvent>,
+    InitializingBean {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BootStrap.class);
 
@@ -95,12 +104,44 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
   @Autowired
   ApplicationEventPublisher publisher;
 
+  @Autowired
+  SearchAdapterService adapterService;
+
   private static boolean BOOTSTRAPED = false;
 
   private static boolean defaultData = true;
 
   @Override
+  public void afterPropertiesSet() throws Exception {
+  }
+  
+  private void adapterLookup(){
+    // Register all SearchAdapter in classpath
+    ClassPathScanningCandidateComponentProvider scanner;
+    scanner = new ClassPathScanningCandidateComponentProvider(false);
+    scanner.addIncludeFilter(new AnnotationTypeFilter(SearchAdapter.class));
+    for (BeanDefinition bean : scanner.findCandidateComponents("com.searchbox")) {
+      Object adapter = null;
+      try{ 
+      adapter = context.getAutowireCapableBeanFactory()
+        .createBean( Class.forName(bean.getBeanClassName()));
+      } catch (Exception e) {
+        LOGGER.error("Could not instanciate dapter for class {}",bean.getBeanClassName(),e);
+      }
+      if(adapter != null){
+        for (Method method : adapter.getClass().getDeclaredMethods()) {
+          SearchAdapter.Time t = method.getAnnotation(SearchAdapterMethod.class)
+              .execute();
+          LOGGER.info("Registering adapter " + t + "\t-- " + method.getName());
+          adapterService.addSearchAdapterMethod(t, method, adapter);
+        }
+      }
+    }
+  }
+
+  @Override
   synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
+    adapterLookup();
     doBootStrap();
   }
 
