@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ <parent>
+  <groupId>com.searchbox</groupId>
+  <artifactId>sb-parent</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+ </parent>
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.searchbox</groupId>
+ <artifactId>sb-pubmed</artifactId>
+ <packaging>jar</packaging>
+ <version>0.1.0-SNAPSHOT</version>
+ <name>Searchbox - Collection - Sample</name>
+ <description>Searchbox is an analytical framework for big-data and searchengines</description>
+ <url>http:/www.searchbox.com</url>
+ <licenses>
+  <license>
+   <name>The Apache Software License, Version 2.0</name>
+   <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+   <distribution>repo</distribution>
+  </license>
+ </licenses>
+ <scm>
+  <connection>scm:git:git@github.com:searchbox/framework.git</connection>
+  <developerConnection>scm:git:git@github.com:searchbox/framework.git</developerConnection>
+  <url>git@github.com:searchbox/framework.git</url>
+ </scm>
+ <developers>
+  <developer>
+   <id>jonatrey</id>
+   <name>Jonathan Rey</name>
+   <email>jonathan.rey@searchbox.com</email>
+  </developer>
+  <developer>
+   <id>gamars</id>
+   <name>Stephane Gamard</name>
+   <email>stephane.gamard@searchbox.com</email>
+  </developer>
+ </developers>
+ <repositories>
+  <repository>
+   <id>spring-snapshots</id>
+   <name>Spring Snapshots</name>
+   <url>http://repo.spring.io/snapshot</url>
+   <snapshots>
+    <enabled>true</enabled>
+   </snapshots>
+  </repository>
+  <repository>
+   <id>spring-milestones</id>
+   <name>Spring Milestones</name>
+   <url>http://repo.spring.io/milestone</url>
+   <snapshots>
+    <enabled>false</enabled>
+   </snapshots>
+  </repository>
+ </repositories>
+ <properties>
+  <aspectj.version>1.7.2</aspectj.version>
+  <java.version>1.7</java.version>
+  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <hibernate.version>4.3.4.Final</hibernate.version>
+  <slf4j.version>1.7.5</slf4j.version>
+  <spring.version>4.0.2.RELEASE</spring.version>
+  <spring-batch.version>2.2.5.RELEASE</spring-batch.version>
+  <spring-security.version>3.2.1.RELEASE</spring-security.version>
+  <spring-social.version>1.1.0.RC1</spring-social.version>
+  <spring-data.version></spring-data.version>
+  <jetty.version>8.1.5.v20120716</jetty.version>
+  <lucene.version>4.7.0</lucene.version>
+  <solr.version>4.7.0</solr.version>
+  <es.version>1.1.0</es.version>
+  <m2eclipse.wtp.contextRoot>/searchbox</m2eclipse.wtp.contextRoot>
+ </properties>
+ <dependencies>
+   <dependency>
+     <groupId>com.searchbox</groupId>
+     <artifactId>sb-core</artifactId>
+     <version>0.1.0-SNAPSHOT</version>
+   </dependency>
+   <dependency>
+      <groupId>com.searchbox</groupId>
+      <artifactId>sb-batch-collection</artifactId>
+     <version>0.1.0-SNAPSHOT</version>
+   </dependency>
+ </dependencies>
+</project>

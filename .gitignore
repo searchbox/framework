@@ -1,3 +1,9 @@
 /target/
 /target
 /target
+/core/target/
+/solr/target/
+/collection/target/
+/pubmed/target/
+/es/target/
+/web/target/
