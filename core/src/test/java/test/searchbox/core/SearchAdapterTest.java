@@ -1,17 +1,16 @@
-package test.searchbox.framework.core.service;
+package test.searchbox.core;
 
 import java.lang.reflect.Method;
 
-import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.Test;
 
 import com.searchbox.core.SearchAdapter.Time;
 import com.searchbox.core.SearchAdapterMethod;
+import com.searchbox.core.SearchAdapterService;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.search.query.EdismaxQuery;
 import com.searchbox.core.search.query.EdismaxQuerySolrAdaptor;
-import com.searchbox.framework.service.SearchAdapterService;
 
 public class SearchAdapterTest {
 
@@ -41,7 +40,7 @@ public class SearchAdapterTest {
     fieldAttr2.setField(Field.stringField("article-abstract"));
     fieldAttr2.setSearchable(true);
 
-    service.doAdapt(Time.PRE, null, new SolrQuery(), fieldAttr, fieldAttr1,
-        fieldAttr2, q);
+//    service.doAdapt(Time.PRE, null, new SolrQuery(), fieldAttr, fieldAttr1,
+//        fieldAttr2, q);
   }
 }

@@ -26,6 +26,9 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 
+import com.searchbox.core.SearchAdapterService;
+import com.searchbox.core.SearchService;
+
 @Configuration
 @EnableSpringConfigured
 @PropertySource("classpath:application.properties")
@@ -50,5 +53,14 @@ public class RootConfiguration {
   @Bean
   public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
     return new PropertySourcesPlaceholderConfigurer();
+  }
+  
+  @Bean
+  public SearchService getCoreSearchService(){
+    return new SearchService(getAdapterService());
+  }
+  
+  @Bean public SearchAdapterService getAdapterService(){
+    return new SearchAdapterService();
   }
 }

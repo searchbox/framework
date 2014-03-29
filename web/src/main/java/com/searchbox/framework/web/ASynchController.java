@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.searchbox.core.SearchAdapter;
+import com.searchbox.core.SearchAdapterService;
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
@@ -28,7 +29,6 @@ import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.model.SearchElementEntity;
 import com.searchbox.framework.model.SearchboxEntity;
 import com.searchbox.framework.repository.SearchElementRepository;
-import com.searchbox.framework.service.SearchAdapterService;
 import com.searchbox.framework.service.SearchElementService;
 
 @Controller

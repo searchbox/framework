@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
 import com.searchbox.core.search.AbstractSearchCondition;
+import com.searchbox.framework.util.SearchBeanUtil;
 
 @Entity
 public class SearchConditionEntity<K extends AbstractSearchCondition> extends
@@ -42,7 +43,7 @@ public class SearchConditionEntity<K extends AbstractSearchCondition> extends
 
   public SearchConditionEntity<K> setClazz(Class<?> clazz) {
     this.clazz = clazz;
-    ReflectionUtils.inspectAndSaveAttribute(clazz, this.getAttributes());
+    SearchBeanUtil.inspectAndSaveAttribute(clazz, this.getAttributes());
     return this;
   }
 

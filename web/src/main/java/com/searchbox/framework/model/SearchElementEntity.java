@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.searchbox.core.SearchElementBean;
+import com.searchbox.framework.util.SearchBeanUtil;
 
 @Entity
 public class SearchElementEntity<K extends SearchElementBean> extends
@@ -88,7 +89,7 @@ public class SearchElementEntity<K extends SearchElementBean> extends
 
   public SearchElementEntity<?> setClazz(Class<?> clazz) {
     this.clazz = clazz;
-    ReflectionUtils.inspectAndSaveAttribute(clazz, this.getAttributes());
+    SearchBeanUtil.inspectAndSaveAttribute(clazz, this.getAttributes());
     return this;
   }
 

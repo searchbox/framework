@@ -41,6 +41,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.searchbox.core.SearchCollector;
 import com.searchbox.core.SearchElement;
+import com.searchbox.core.SearchService;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.FieldAttribute;
 import com.searchbox.core.dm.SearchableCollection;
@@ -55,7 +56,6 @@ import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.PresetRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
 import com.searchbox.framework.service.SearchElementService;
-import com.searchbox.framework.service.SearchService;
 
 @Controller
 @RequestMapping("/{searchbox}")

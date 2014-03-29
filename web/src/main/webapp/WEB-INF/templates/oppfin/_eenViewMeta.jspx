@@ -36,12 +36,12 @@
   <sbx:tagAttribute limit="1" label="Contact Organization"
     values="${hit.fieldValues['eenContactOrganization']}" />
  
- <sbx:tagAttribute limit="1"
+ <%-- <sbx:tagAttribute limit="1"
     values="${hit.fieldValues['eenContactOrganizationcountry']} 
     ${(hit.fieldValues['eenContactFullname'].size() > 0 ? hit.fieldValues['eenContactFullname'][0] :'')}
     ${(hit.fieldValues['eenContactPhone'].size() > 0 ? hit.fieldValues['eenContactPhone'][0] :'')}
     ${(hit.fieldValues['eenContactEmail'].size() > 0 ? hit.fieldValues['eenContactEmail'][0] :'')}
-    " />
+    " /> --%>
 
   <sbx:tagAttribute limit="1" label="Submit Date"
     datePattern="dd.MM.yyyy" values="${hit.fieldValues['eenDatumSubmit']}" />
