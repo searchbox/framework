@@ -4,7 +4,7 @@ import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchCondition;
 import com.searchbox.core.search.AbstractSearchCondition;
 
-@SearchCondition
+@SearchCondition(urlParam = "ff")
 public class FieldValueCondition extends AbstractSearchCondition {
 
   public static final String FIELD_NAME_ATTR = "fieldName";
