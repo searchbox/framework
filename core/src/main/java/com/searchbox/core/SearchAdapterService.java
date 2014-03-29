@@ -54,9 +54,11 @@ public class SearchAdapterService {
     ArrayList<Object> arguments = new ArrayList<Object>();
     arguments.addAll(Arrays.asList(objects));
     Long start = System.currentTimeMillis();
-    this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
-    LOGGER.info("DoAdapt[{}] done in {}ms", time,
-        (System.currentTimeMillis() - start));
+    if(this.searchAdapterMethods.containsKey(time)){
+      this.doAdapt(requiredArg, this.searchAdapterMethods.get(time), arguments);
+      LOGGER.info("DoAdapt[{}] done in {}ms", time,
+          (System.currentTimeMillis() - start));
+    }
   }
 
   private void doAdapt(Class<?> requiredArg, Map<Method, Object> methods,
