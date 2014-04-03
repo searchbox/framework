@@ -30,7 +30,7 @@ public class FieldValueConditionSolrAdaptor {
       return;
     }
 
-    String conditionValue = condition.getValue();
+    String conditionValue = "\""+condition.getValue()+"\""; //Literal for solr -> "
     String facetKey = engine.getKeyForField(attribute);
 
     boolean isnew = true;
