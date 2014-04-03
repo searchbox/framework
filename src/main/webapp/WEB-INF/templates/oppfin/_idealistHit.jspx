@@ -13,7 +13,10 @@
   <sbx:tagAttribute limit="1" label="Source" filter="docSource"
    values="${hit.fieldValues['docSource']}"
    cssClass="${hit.fieldValues['docSource']}" />
-
+   
+  <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Published"
+   values="${hit.fieldValues['updated']}" />
+   
   <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Deadline"
    values="${hit.fieldValues['deadline']}" />
 
