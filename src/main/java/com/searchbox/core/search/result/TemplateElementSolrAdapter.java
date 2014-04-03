@@ -89,9 +89,11 @@ public class TemplateElementSolrAdapter {
     LOGGER.debug("Generate Hit!!! for id {}", attribute.getField().getKey());
 
     Iterator<SolrDocument> documents = response.getResults().iterator();
+    int rank = 0;
     while (documents.hasNext()) {
+      rank++;
       SolrDocument document = documents.next();
-      
+
       //This says it is not ours to handle! 
       if(document.getFirstValue(element.getIdField()) == null){
         continue;
@@ -103,6 +105,7 @@ public class TemplateElementSolrAdapter {
       hit.setIdFieldName(element.getIdField());
       hit.setTitleFieldName(element.getTitleField());
       hit.setUrlFieldName(element.getUrlField());
+      hit.setRank(rank);
 
       // Set the template as per element definition
       LOGGER.debug("Template file is {}", element.getTemplateFile());
@@ -126,6 +129,9 @@ public class TemplateElementSolrAdapter {
         }
       }
 
+      LOGGER.info("hit rank: {} with id: {}",
+          rank, hit.getId());
+      
       // And we collect the hit for future use :)
       collector.getCollectedItems(element.getCollectorKey()).add(hit);
 //      if(!element.getHits().contains(hit)){

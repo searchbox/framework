@@ -10,7 +10,7 @@ public interface StandardCollection {
   public static final String STD_TITLE_FIELD = "title";
   public static final String STD_BODY_FIELD = "body";
   public static final String STD_PUBLISHED_FIELD = "published";
-  public static final String STD_UPDATED_FIELD = "udpated";
+  public static final String STD_UPDATED_FIELD = "updated";
 
   String getIdValue(FieldMap fields);
 

@@ -54,6 +54,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.searchbox.collection.AbstractBatchCollection;
+import com.searchbox.collection.ExpiringDocuments;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
@@ -62,7 +63,7 @@ import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
 public class IdealISTCollection extends AbstractBatchCollection implements
-    SynchronizedCollection, StandardCollection, InitializingBean {
+    SynchronizedCollection, StandardCollection, ExpiringDocuments, InitializingBean {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(IdealISTCollection.class);
@@ -85,6 +86,11 @@ public class IdealISTCollection extends AbstractBatchCollection implements
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
+    
+    fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
+    fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
+    fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
+    
     fields.add(new Field(String.class, "uid"));
     fields.add(new Field(String.class, "docSource"));
     fields.add(new Field(String.class, "docType"));
@@ -139,12 +145,23 @@ public class IdealISTCollection extends AbstractBatchCollection implements
   
   @Override
   public Date getPublishedValue(FieldMap fields) {
-        return null;
+    return (fields.get("idealistPublished").size() > 0) ? 
+        (Date) fields.get("idealistPublished").get(0) : 
+        null;
   }
 
   @Override
   public Date getUpdateValue(FieldMap fields) {
-        return null;
+    return (fields.get("idealistUpdated").size() > 0) ? 
+        (Date) fields.get("idealistUpdated").get(0) : 
+          getPublishedValue(fields) ;
+  }
+
+  @Override
+  public Date getDeadlineValue(FieldMap fields) {
+    return (fields.get("idealistDeadline").size() > 0) ? 
+        (Date) fields.get("idealistDeadline").get(0) : 
+        null;
   }
   
   @Override

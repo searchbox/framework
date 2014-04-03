@@ -69,6 +69,11 @@ public class EENCollection extends AbstractBatchCollection implements
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
+    
+    fields.add(new Field(Date.class, StandardCollection.STD_PUBLISHED_FIELD));
+    fields.add(new Field(Date.class, StandardCollection.STD_UPDATED_FIELD));
+    fields.add(new Field(Date.class, ExpiringDocuments.STD_DEADLINE_FIELD));
+
     fields.add(new Field(String.class, "docSource"));
     fields.add(new Field(String.class, "docType"));
     fields.add(new Field(String.class, "programme"));
@@ -200,6 +205,7 @@ public class EENCollection extends AbstractBatchCollection implements
       }
 
       public Profile read() throws RemoteException {
+        
         if (start.after(DateUtils.addYears(date, 3))) {
           return null;
         }

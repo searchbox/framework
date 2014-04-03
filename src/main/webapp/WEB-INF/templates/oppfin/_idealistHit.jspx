@@ -6,17 +6,23 @@
   <h4 class="result-title">
    <sbx:title hit="${hit}" />
   </h4>
-  <p><sbx:snippet hit="${hit}" field="idealistOutline"/></p>
-  
-    <sbx:tagAttribute limit="1" label="Source" filter="docSource"
-     values="${hit.fieldValues['docSource']}"
-     cssClass="${hit.fieldValues['docSource']}" />
+  <p>
+   <sbx:snippet hit="${hit}" field="idealistOutline" />
+  </p>
 
-    <sbx:tagAttribute limit="1" label="Partner Country"
-    values="${hit.fieldValues['idealistCountry']}" filter="idealistCountry" /> 
-    
-    <sbx:tagAttribute limit="1" label="Call Identifier"
-    values="${hit.fieldValues['callIdentifier']}" filter="callIdentifier" /> 
-   
+  <sbx:tagAttribute limit="1" label="Source" filter="docSource"
+   values="${hit.fieldValues['docSource']}"
+   cssClass="${hit.fieldValues['docSource']}" />
+
+  <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Deadline"
+   values="${hit.fieldValues['deadline']}" />
+
+  <sbx:tagAttribute limit="1" label="Partner Country"
+   values="${hit.fieldValues['idealistCountry']}"
+   filter="idealistCountry" />
+
+  <sbx:tagAttribute limit="1" label="Call Identifier"
+   values="${hit.fieldValues['callIdentifier']}" filter="callIdentifier" />
+
  </div>
 </jsp:root>

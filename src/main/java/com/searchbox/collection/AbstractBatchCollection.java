@@ -188,7 +188,7 @@ public abstract class AbstractBatchCollection extends DefaultCollection
                         : field.getValue());
               }
             }
-
+            
             getSearchEngine().indexMap(collection, actualFields);
           } catch (Exception e) {
             LOGGER.error("Could not index document", e);

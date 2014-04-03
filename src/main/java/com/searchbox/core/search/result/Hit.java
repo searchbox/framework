@@ -23,6 +23,8 @@ public class Hit implements Comparable<Hit> {
 
   public Map<String, Object> fieldValues;
   public Map<String, List<String>> highlights;
+  
+  private Integer rank = 0;
 
   private Float score;
 
@@ -169,6 +171,14 @@ public class Hit implements Comparable<Hit> {
 
   @Override
   public int compareTo(Hit other) {
-    return score.compareTo(other.getScore() + 0.001f) * -1;
+    return rank-other.getRank();
+  }
+
+  public Integer getRank() {
+    return rank;
+  }
+
+  public void setRank(Integer rank) {
+    this.rank = rank;
   }
 }

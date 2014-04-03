@@ -20,9 +20,12 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.ContentStreamBase;
+import org.hamcrest.core.IsAnything;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.collection.ExpiringDocuments;
+import com.searchbox.collection.StandardCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldAttribute;
@@ -81,6 +84,7 @@ public abstract class SolrSearchEngine extends
   @Override
   public QueryResponse execute(Collection collection, SolrQuery query) {
     try {
+      LOGGER.info("QUERY: {}", query);
       return this.getSolrServer(collection).query(query);
     } catch (SolrServerException e) {
       LOGGER.warn("Could not execute query {}", query);
@@ -204,6 +208,22 @@ public abstract class SolrSearchEngine extends
     return this.mapFieldUsage(fieldAttribute).get(operation);
   }
 
+  
+  
+  private boolean isActualField(String key){
+    //FIXME that should lookup in the schema of Solr
+    if(key.equals(StandardCollection.STD_ID_FIELD) || 
+        key.equals(StandardCollection.STD_BODY_FIELD) || 
+        key.equals(StandardCollection.STD_TITLE_FIELD) || 
+        key.equals(StandardCollection.STD_PUBLISHED_FIELD) || 
+        key.equals(StandardCollection.STD_UPDATED_FIELD) || 
+        key.equals(ExpiringDocuments.STD_DEADLINE_FIELD)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   private Map<USE, String> mapFieldUsage(FieldAttribute fieldAttribute) {
 
     Field field = fieldAttribute.getField();
@@ -212,6 +232,15 @@ public abstract class SolrSearchEngine extends
 
     String append = "";
     String prepend = "";
+    
+    if(isActualField(fieldAttribute.getField().getKey())){
+      usages.put(USE.DEFAULT, fieldAttribute.getField().getKey());
+      usages.put(USE.SEARCH, fieldAttribute.getField().getKey());
+      usages.put(USE.SORT, fieldAttribute.getField().getKey());
+      usages.put(USE.MATCH, fieldAttribute.getField().getKey());
+      usages.put(USE.VALUE, fieldAttribute.getField().getKey());
+      return usages;
+    }
 
     if (!fieldAttribute.getSortable()) {
       append = NON_SORTABLE_FIELD;

@@ -16,8 +16,8 @@
   <sbx:tagAttribute limit="1" label="Type" filter="eenReferenceType"
    values="${hit.fieldValues['eenReferenceType']}" />
 
-  <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Published"
-   values="${hit.fieldValues['eenDatumUpdate']}" />
+  <sbx:tagAttribute limit="1" datePattern="dd.MM.yyyy" label="Deadline"
+   values="${hit.fieldValues['deadline']}" />
 
   <sbx:tagAttribute limit="1" label="Partner Country"
    filter="eenCompanyCountryLabel"

@@ -35,6 +35,9 @@ public class FieldSortSolrAdatptor {
       } else {
         query.addSort(engine.getKeyForField(attribute, USE.SORT), ORDER.desc);
       }
+      //This forces to have a value for the sorting! 
+      String sortKey = engine.getKeyForField(attribute);
+      query.addFilterQuery(sortKey+":*");
     }
   }
 }

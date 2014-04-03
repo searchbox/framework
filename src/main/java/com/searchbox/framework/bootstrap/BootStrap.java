@@ -35,6 +35,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.searchbox.collection.ExpiringDocuments;
+import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.oppfin.CordisCollection;
 import com.searchbox.collection.oppfin.EENCollection;
 import com.searchbox.collection.oppfin.IdealISTCollection;
@@ -412,6 +414,20 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
         
         //TODO Steph: Check why this is failing.
+        .newSearchElement()
+          .setClazz(FieldSort.class)
+          .setAttribute("values",  new TreeSet<FieldSort.Value>(
+              Arrays.asList(new FieldSort.Value[]{
+                FieldSort.getRelevancySort(),
+                new FieldSort.Value(
+                    "By Update <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
+                    StandardCollection.STD_UPDATED_FIELD, Sort.DESC),
+                new FieldSort.Value(
+                    "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-up\"></span>",
+                    ExpiringDocuments.STD_DEADLINE_FIELD, Sort.ASC)
+                }
+              )))
+          .end()
         /*.addSortableFieldAttribute("Published", "eenDatumSubmit")
         .addSortableFieldAttribute("Updated", "eenDatumUpdate")
         .addSortableFieldAttribute("Deadline", "eenDatumDeadline")*/

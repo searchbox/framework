@@ -252,8 +252,8 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
               hasCopyPair = true;
             }
           }
-          // Check if its the copy pair exists
-          if (!hasCopyPair) {
+          // Check if the copy pair exists
+          if (!hasCopyPair && solrField != collectionField) {
             currentFieldCopys.getJSONArray("dest").put(solrField);
           }
         }

@@ -63,6 +63,28 @@
                 });
               });
             </script>
+            
+     <spring:url
+    value="/admin/${searchbox.getSlug()}/CollectionDefinition/${preset.collection.id}/merge"
+    var="synchDatamodel" />
+   <script type="text/javascript">
+              $(document).ready(function() {
+                $('.datamodel-synchronize').click(function(e, xhr) {
+                  e.preventDefault();
+                  var loadurl = "${synchDatamodel}";
+                
+                  $.post(loadurl, function(data) {
+                    console.log(data);
+                    $.bootstrapGrowl(data.message, {
+                      type : 'info',
+                      align : 'right',
+                      width : 'auto',
+                      allow_dismiss : true
+                    });
+                  });
+                });
+              });
+            </script>
 
 
    <div class="row">
