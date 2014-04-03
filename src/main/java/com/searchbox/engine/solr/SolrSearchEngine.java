@@ -20,7 +20,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.ContentStreamBase;
-import org.hamcrest.core.IsAnything;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
