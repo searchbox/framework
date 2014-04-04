@@ -3,11 +3,13 @@ package com.searchbox.framework.web.user;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,72 +29,75 @@ import com.searchbox.framework.util.SecurityUtil;
 @RequestMapping("/user/**")
 public class PasswordController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordController.class);
+  @Resource
+  Environment env;
 
-    @Autowired
-    private UserRepository repository;
-    
-    @Autowired
-    private UserService service;
-    
-    private static final String EMAIL_PARAM_NAME = "email";
-    
-    private boolean tokenIsValid(UserEntity user){
-      //check that token is still valid
-      Date referenceDate = new Date();
-      Calendar c = Calendar.getInstance(); 
-      c.setTime(referenceDate); 
-      c.add(Calendar.DAY_OF_MONTH, -1);     
-      return user.getResetDate().after(c.getTime());
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(PasswordController.class);
+
+  @Autowired
+  private UserRepository repository;
+
+  @Autowired
+  private UserService service;
+
+  private static final String EMAIL_PARAM_NAME = "email";
+
+  private boolean tokenIsValid(UserEntity user) {
+    // check that token is still valid
+    Date referenceDate = new Date();
+    Calendar c = Calendar.getInstance();
+    c.setTime(referenceDate);
+    c.add(Calendar.DAY_OF_MONTH, -1);
+    return user.getResetDate().after(c.getTime());
+  }
+
+  @RequestMapping(value = "/resetPassword/{token:.+}", method = RequestMethod.GET)
+  public ModelAndView resetPassword(@PathVariable String token) {
+
+    UserEntity user = repository.findByResetHash(token);
+    ModelAndView mav = new ModelAndView("user/passwordReset");
+
+    if (!tokenIsValid(user)) {
+      // The token is not valid anymore
+      LOGGER.info("Token is expired for user {}", user.getEmail());
+    } else {
+      mav.addObject("user", user);
     }
-    
-    @RequestMapping(value="/resetPassword/{token:.+}", method = RequestMethod.GET)
-    public ModelAndView resetPassword(@PathVariable String token){
-      
-      UserEntity user = repository.findByResetHash(token);      
-      ModelAndView mav = new ModelAndView("user/passwordReset");
-      
-      if(!tokenIsValid(user)){
-        //The token is not valid anymore
-        LOGGER.info("Token is expired for user {}",user.getEmail());
-      } else {     
-        mav.addObject("user", user);      
-      }
-      
-      //Provide resetForm
-      mav.addObject("token", token);
+
+    // Provide resetForm
+    mav.addObject("token", token);
+    return mav;
+  }
+
+  @RequestMapping(value = "/resetPassword/{token:.+}", method = RequestMethod.POST)
+  public ModelAndView resetPassword(@PathVariable String token,
+      String password, String passwordConfirm, WebRequest request) {
+
+    UserEntity user = repository.findByResetHash(token);
+    ModelAndView mav = new ModelAndView("user/passwordReset");
+
+    if (!tokenIsValid(user)) {
+      LOGGER.info("Token is expired for user {}", user.getEmail());
       return mav;
     }
-    
-    @RequestMapping(value="/resetPassword/{token:.+}", method = RequestMethod.POST)
-    public ModelAndView resetPassword(@PathVariable String token, 
-        String password, String passwordConfirm,
-        WebRequest request){
-            
-      UserEntity user = repository.findByResetHash(token);      
-      ModelAndView mav = new ModelAndView("user/passwordReset");
-      
-      if(!tokenIsValid(user)){
-        LOGGER.info("Token is expired for user {}",user.getEmail());
-        return mav;
-      }
-      
-      if(!password.equals(passwordConfirm)){
-        LOGGER.info("Passwords do not match!");
-      }
-      
-      //Ok we change the password of the user
-      user = service.changePassword(user, password);
 
-      //And we log him in (conveniance)
-      SecurityUtil.logInUser(user);
-      ProviderSignInUtils.handlePostSignUp(user.getEmail(), request);
-      LOGGER.info("User {} has been signed in", user.getEmail());
-      
-      return new ModelAndView(new RedirectView("/", true));
+    if (!password.equals(passwordConfirm)) {
+      LOGGER.info("Passwords do not match!");
     }
 
-    @RequestMapping("/reset/{email:.+}")
+    // Ok we change the password of the user
+    user = service.changePassword(user, password);
+
+    // And we log him in (conveniance)
+    SecurityUtil.logInUser(user);
+    ProviderSignInUtils.handlePostSignUp(user.getEmail(), request);
+    LOGGER.info("User {} has been signed in", user.getEmail());
+
+    return new ModelAndView(new RedirectView("/", true));
+  }
+
+  @RequestMapping("/reset/{email:.+}")
     @ResponseBody
     public String requestPasswordReset(@PathVariable String email,
         HttpServletRequest request) {
@@ -102,11 +107,16 @@ public class PasswordController {
         return "KO";
       }
       
-      
-      String host = request.getLocalName();
+      String host = env.getProperty("searchbox.dns");
+      if(host == null || host.isEmpty()){
+        host = request.getRemoteHost();
+      }
       LOGGER.debug("host for reset is {}",host);
       
-      Integer port = request.getLocalPort();
+      Integer port = Integer.parseInt(env.getProperty("searchbox.port"));
+      if(port == null){
+        port = request.getRemotePort();
+      }
       LOGGER.debug("Port for reset is {}", port);
 
       String path = request.getContextPath();
@@ -120,7 +130,5 @@ public class PasswordController {
 
       return "OK";
     }
-    
 
-   
- }
+}
