@@ -2,6 +2,8 @@ package com.searchbox.framework.web.user;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -98,37 +100,43 @@ public class PasswordController {
   }
 
   @RequestMapping("/reset/{email:.+}")
-    @ResponseBody
-    public String requestPasswordReset(@PathVariable String email,
-        HttpServletRequest request) {
-      
-      if(!service.emailExist(email)){
-        LOGGER.info("User with email {} does not exists",email);
-        return "KO";
-      }
-      
-      String host = env.getProperty("searchbox.dns");
-      if(host == null || host.isEmpty()){
-        host = request.getRemoteHost();
-      }
-      LOGGER.debug("host for reset is {}",host);
-      
-      Integer port = Integer.parseInt(env.getProperty("searchbox.port"));
-      if(port == null){
-        port = request.getRemotePort();
-      }
-      LOGGER.debug("Port for reset is {}", port);
+  @ResponseBody
+  public Map<String,String> requestPasswordReset(@PathVariable String email,
+      HttpServletRequest request) {
 
-      String path = request.getContextPath();
-      LOGGER.debug("Context path for reset is {}",path);
-
-      String hash = service.getResetHash(email);
-      LOGGER.debug("Hash for reset is {}",hash);
-      
-      String resetLink = service.resetPasswordWithEmail(email, host, port, path);
-      LOGGER.info("Reset password link for {} is {}",email, resetLink);
-
-      return "OK";
+    Map<String, String> result = new HashMap<>();
+    
+    if (!service.emailExist(email)) {
+      LOGGER.info("User with email {} does not exists", email);
+      result.put("status", "KO");
+      result.put("message", "User with email \""+email+"\" does not exists");
+      return result;
     }
+
+    String host = env.getProperty("searchbox.dns");
+    if (host == null || host.isEmpty()) {
+      host = request.getRemoteHost();
+    }
+    LOGGER.debug("host for reset is {}", host);
+
+    Integer port = Integer.parseInt(env.getProperty("searchbox.port"));
+    if (port == null) {
+      port = request.getRemotePort();
+    }
+    LOGGER.debug("Port for reset is {}", port);
+
+    String path = request.getContextPath();
+    LOGGER.debug("Context path for reset is {}", path);
+
+    String hash = service.getResetHash(email);
+    LOGGER.debug("Hash for reset is {}", hash);
+
+    String resetLink = service.resetPasswordWithEmail(email, host, port, path);
+    LOGGER.info("Reset password link for {} is {}", email, resetLink);
+
+    result.put("status", "OK");
+
+    return result;
+  }
 
 }
