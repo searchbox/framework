@@ -129,7 +129,7 @@ public class TemplateElementSolrAdapter {
         }
       }
 
-      LOGGER.info("hit rank: {} with id: {}",
+      LOGGER.debug("hit rank: {} with id: {}",
           rank, hit.getId());
       
       // And we collect the hit for future use :)

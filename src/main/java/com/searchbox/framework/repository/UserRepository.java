@@ -22,4 +22,6 @@ import com.searchbox.framework.model.UserEntity;
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
   public UserEntity findByEmail(String email);
+  
+  public UserEntity findByResetHash(String hash);
 }

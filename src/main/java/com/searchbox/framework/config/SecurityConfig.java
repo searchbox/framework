@@ -90,7 +90,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
           // Anyone can access the urls
           .antMatchers("/","/*","/auth/**", "/login/**", "/signin/**",
-              "/signup/**", "/user/register/**").permitAll()
+              "/signup/**", "/user/register/**",
+              "/user/reset/**",
+              "/user/resetPassword/**").permitAll()
           // The system part is protected
           .antMatchers("/system/**").hasAnyRole("SYSTEM")
           // The admin part is protected

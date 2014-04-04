@@ -17,6 +17,7 @@ package com.searchbox.framework.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -47,6 +48,9 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
   private String lastName;
   
   private String password;
+  
+  private String resetHash;
+  private Date resetDate;
 
   private boolean accountNonExpired = true;
   private boolean accountNonLocked = true;
@@ -144,13 +148,11 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
 
   @Override
   public boolean isAccountNonLocked() {
-    // TODO Auto-generated method stub
     return this.accountNonLocked;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    // TODO Auto-generated method stub
     return this.credentialsNonExpired;
   }
 
@@ -173,5 +175,25 @@ public class UserEntity extends BaseEntity<Long> implements SocialUserDetails,
   @Override
   public int compareTo(UserEntity o) {
     return this.getEmail().compareTo(o.getEmail());
+  }
+
+  public void setAccountNonLocked(boolean nonLocked){
+    this.accountNonLocked = nonLocked;
+  }
+  
+  public String getResetHash() {
+    return resetHash;
+  }
+
+  public void setResetHash(String resetHash) {
+    this.resetHash = resetHash;
+  }
+
+  public Date getResetDate() {
+    return resetDate;
+  }
+
+  public void setResetDate(Date resetDate) {
+    this.resetDate = resetDate;
   }
 }
