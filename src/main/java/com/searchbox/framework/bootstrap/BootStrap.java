@@ -99,7 +99,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   private static boolean BOOTSTRAPED = false;
 
-  private static boolean defaultData = true;
 
   @Override
   synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -113,8 +112,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     BOOTSTRAPED = true;
+    
+    boolean doBootstrap = new Boolean(env.getProperty("searchbox.bootstrap", "false"));
 
-    if (defaultData) {
+    if (doBootstrap) {
       
       /** 
        * The embedded Solr SearchEngine
