@@ -217,11 +217,8 @@ public class TopicCollection extends AbstractBatchCollection implements
 
       LOGGER.debug("Recieved the response code "
           + response.getStatusLine().getStatusCode() + " from " + url);
-
-      ContentType contentType = ContentType.getOrDefault(response.getEntity());
-
-      String result = EntityUtils.toString(response.getEntity(),
-          contentType.getCharset());
+      
+      String result = EntityUtils.toString(response.getEntity(), "utf-8");
 
       return result;
       
