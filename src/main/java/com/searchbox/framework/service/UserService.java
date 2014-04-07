@@ -138,12 +138,13 @@ public class UserService {
     repository.save(user);
     // send notification mail.
 
+    
     String resetUrl = "http://"+host+
         ((port!=80)?":"+port:"")+
         path+"/user/resetPassword/"+user.getResetHash();
     
     SimpleMailMessage msg = new SimpleMailMessage();
-    msg.setFrom("contact@searchbox.com");
+    msg.setFrom("no-reply@opportunity-finder.com");
     msg.setTo(email);
     msg.setSubject("Reset your password on opportunity-finder");
     msg.setText("Hi"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+",\n\n"+
