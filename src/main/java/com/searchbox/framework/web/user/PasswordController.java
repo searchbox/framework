@@ -43,8 +43,6 @@ public class PasswordController {
   @Autowired
   private UserService service;
 
-  private static final String EMAIL_PARAM_NAME = "email";
-
   private boolean tokenIsValid(UserEntity user) {
     // check that token is still valid
     Date referenceDate = new Date();
@@ -99,6 +97,7 @@ public class PasswordController {
     return new ModelAndView(new RedirectView("/", true));
   }
 
+  
   @RequestMapping("/reset/{email:.+}")
   @ResponseBody
   public Map<String,String> requestPasswordReset(@PathVariable String email,
