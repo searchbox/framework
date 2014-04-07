@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -98,11 +99,13 @@ public class PasswordController {
   }
 
   
-  @RequestMapping("/reset/{email:.+}")
+  @RequestMapping(value = "/reset", method = RequestMethod.GET,
+      params={"email"})
   @ResponseBody
-  public Map<String,String> requestPasswordReset(@PathVariable String email,
+  public Map<String,String> requestPasswordReset(
+      @RequestParam(value = "email") String email,
       HttpServletRequest request) {
-
+     
     Map<String, String> result = new HashMap<>();
     
     if (!service.emailExist(email)) {

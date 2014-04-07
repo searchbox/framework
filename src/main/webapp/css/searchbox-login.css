@@ -78,7 +78,7 @@ body > div.omb_login div div.row .col-sm-6{
   width: 2em;
 }
 
-.omb_login .omb_loginForm  .help-block {
+.omb_login .omb_loginForm  .help-block, form span.help-block {
   color: red;
 }
 
@@ -88,6 +88,7 @@ body > div.omb_login div div.row .col-sm-6{
 }
 .omb_forgotPwd{
   margin-top:10px;
+  text-align:right;
 }
 
 @media ( min-width : 768px) {

@@ -55,8 +55,7 @@
        placeholder="${springPassword }" />
      </div>
 
-
-     <span class="help-block"> <!-- blah --> <c:if
+     <span class="help-block error"> <!-- blah --> <c:if
        test="${param.error eq 'bad_credentials'}">
        <spring:message code="text.login.page.login.failed.error" />
       </c:if>
@@ -86,6 +85,9 @@
      aria-labelledby="myModalLabel" aria-hidden="true">
      <div class="modal-dialog">
       <div class="modal-content">
+       <c:url var="resetPasswordBase" value="/user/reset"/>
+       <form action="${resetPasswordBase}" id="resetPasswordForm" method="get">
+      
        <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"
          aria-hidden="true">x</button>
@@ -98,31 +100,55 @@
         <div class="input-group">
          <span class="input-group-addon"><i
           class="fa fa-envelope"> <!-- blah -->
-         </i></span> <input type="text" class="form-control" id="resetEmail"
+         </i></span> <input type="text" class="form-control" name="email" id="resetEmail"
           placeholder="${springUserEmail }" />
         </div>
-        <span class="help-block"> <!-- help -->
+        <span id="resetPassError" class="help-block"> <!-- help -->
         </span>
        </div>
        <div class="modal-footer">
+       <spring:url value="/assets/images/spin.gif" var="spinner" />
+       
+       
+        <span id="spinner" style="display:none;margin-right:10px"><img src="${spinner }"/></span>
         <button type="button" class="btn btn-default"
          data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="resetPassword()">Reset my
-         password</button>
+        <button type="submit" id="resetPassButton" class="btn btn-primary">
+        Reset my password</button>
        </div>
-       <c:url var="resetPasswordBase" value="/user/reset/"/>
-       <script>
-        function resetPassword(){
-          var email=$("#resetEmail").val();
-          $.get("${resetPasswordBase}"+email, function( data ) {
-            if(data.status=="KO"){
-              $("#resetModalBody").html("This email is not registered");
-            } else if(data.status=="OK"){
-              $("#resetModalBody").html("An email has been sent. Please follow the instructions to reset your password.");
-            }
-          });
-        }
+       <script type="text/javascript">
+       $(document).ready(function() {
+       	$('#resetPasswordForm').on('submit', function() {
+       		var $this = $(this);
+       		var email = $('#resetEmail').val();
+       		$("#resetPassButton").attr("disabled", "disabled");
+       		$("#spinner").show();
+       		
+       		if(email === '' ) {
+           		 $("#resetPassError").html("Please enter your email");
+       		} else {
+       			$.ajax({
+       			 	type: $this.attr('method'),
+       				url: $this.attr('action'),
+       				data: $this.serialize(),
+       				datatype:"json",
+       				success: function(data) { 
+         			   if(data.status=="KO"){
+                         $("#resetPassError").html("This email is not registered");
+                       } else if(data.status=="OK"){
+                         $("#resetModalBody").html("An email has been sent. Please follow the instructions to reset your password.");
+                       }
+       				}
+       			});
+       		}
+       		$("#spinner").hide();
+       		$("#resetPassButton").removeAttr("disabled");
+       		return false; // j'empêche le navigateur de soumettre lui-même le formulaire
+       	});
+       });
        </script>
+       </form>
+       
       </div>
      </div>
     </div>
