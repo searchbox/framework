@@ -147,7 +147,8 @@ public class UserService {
     msg.setFrom("no-reply@opportunity-finder.com");
     msg.setTo(email);
     msg.setSubject("Reset your password on opportunity-finder");
-    msg.setText("Hi"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+",\n\n"+
+    msg.setText("Dear"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+
+                      ((user.getLastName()!=null)?" "+user.getLastName():"")+",\n\n"+
                 "We received a request from you to reset your "+
                 "Opportunity-Finder password. To complete the process, "+
                 "simply click the link below: \n\n"+
@@ -155,7 +156,8 @@ public class UserService {
                 "The link is valid for 24 hours.\n\n"+
                 "If you don't want to change your Opportunity-Finder password "+
                 "you can ignore this mail.\n\n"+
-                "If you need any help, contact us at support@opportunity-finder.com.");
+                "If you need any help, contact us at contact@opportunity-finder.ch.\n\n"+
+                "Your Opportunity-Finder Team");
     
     mailSender.send(msg);
     
