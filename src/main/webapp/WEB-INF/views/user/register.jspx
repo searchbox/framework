@@ -19,14 +19,12 @@
 <body>
   <sec:authorize access="isAnonymous()">
     <div class="omb_login">
-      <c:url value="/user/register" var="registerUrl" />
+      <c:url value="/user/login" var="registerUrl" />
       <h3 class="omb_authTitle">
         <spring:message code="label.navigation.registration.link" />
-        or Login
+        or  <a href="${registerUrl}"><spring:message code="label.navigation.login.link" /></a>
       </h3>
           <jsp:include page="_socialLogins.jspx" />
-
-
       <div class="row omb_row-sm-offset-3 omb_loginOr">
         <div class="col-xs-12 col-sm-6">
           <!--  <hr class="omb_hrOr"/> -->
