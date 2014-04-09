@@ -22,6 +22,10 @@
 
    <jsp:include page="_socialLogins.jspx" />
 
+   <c:if test="${param.error eq 'invalid_token'}">
+    <span class="help-block openid-error"><spring:message code="text.login.page.resetPass.invalidtoken" /> </span>
+   </c:if>
+   
    <div class="row omb_row-sm-offset-3 omb_loginOr">
     <!--  <hr class="omb_hrOr"/> -->
     <span class="omb_spanOr">or</span>
