@@ -189,26 +189,21 @@ var bindResultPageEvents = function() {
   bindClickableTagsEvents();
 };
 
-var loadRelatedContent = function(selector, baseUrl, queryString) {
+var loadRelatedContent = function(selector, baseUrl, data) {
 
     console.log("elem "+ selector);
     console.log("BaseUrl "+ baseUrl);
-    console.log("QueryString "+queryString);
+    console.log("Data "+data);
     
   // var params = $.url(window.location.href).param();
   if (jQuery('#' + selector).length) {
     $.ajax({
-      type : 'GET',
-      data : queryString,
+      type : 'POST',
+      data : {"text": data,"limit":3},
       url : baseUrl,
-      dataType : "jsonp",
-      success : function(data, textStatus) {
-        jQuery('#' + selector).html(data.html);
-      },
-      error : function(XMLHttpRequest, textStatus, errorThrown) {
-        if (textStatus) {
-          jQuery('#' + selector).html("No related content");
-        }
+      //dataType : "jsonp",
+      success : function(data) {
+        jQuery('#' + selector).html(data);
       }
     });
   }

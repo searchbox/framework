@@ -100,9 +100,9 @@
   <dynamicField name="*_is" type="int" indexed="true"
    stored="true" multiValued="true" />
   <dynamicField name="*_s" type="string" indexed="true"
-   stored="true" />
+   stored="true" termVectors="true"/>
   <dynamicField name="*_ss" type="string" indexed="true"
-   stored="true" multiValued="true" />
+   stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_l" type="long" indexed="true"
    stored="true" />
   <dynamicField name="*_ls" type="long" indexed="true"
@@ -110,9 +110,9 @@
   <dynamicField name="*_t" type="text_general" indexed="true"
    stored="true" />
   <dynamicField name="*_txt" type="text_general" indexed="true"
-   stored="true" multiValued="true" />
+   stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_en" type="text_en" indexed="true"
-   stored="true" multiValued="true" />
+   stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_b" type="boolean" indexed="true"
    stored="true" />
   <dynamicField name="*_bs" type="boolean" indexed="true"

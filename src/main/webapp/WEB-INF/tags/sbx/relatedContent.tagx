@@ -11,7 +11,10 @@
  <jsp:directive.attribute name="preset" type="String" required="true"
   rtexprvalue="true" description="label to display" />
  
- <jsp:directive.attribute name="id" type="String" required="true"
+ <jsp:directive.attribute name="id" type="String" required="false"
+  rtexprvalue="true" description="docId to use as related content" />
+  
+   <jsp:directive.attribute name="datacontent" type="String" required="false"
   rtexprvalue="true" description="docId to use as related content" />
   
  <jsp:directive.attribute name="filter" type="String" required="false"
@@ -23,7 +26,6 @@
  
   <c:set var="elementId" value="related-content-${preset}"/>
   <spring:url var="baseUrl" value="/${searchbox.getSlug()}/${preset}/mlt" />
-  <c:set var="query" value="q=id:${id}${filter}"/>
 
   <div id="${elementId}" class="related list">
     <p>
@@ -34,7 +36,8 @@
   
   <script type="text/javascript">
 	jQuery(document).ready(function() { 
-	  loadRelatedContent("${elementId}","${baseUrl}", "${query}") 
+	  var data = $("${datacontent}").text();
+	  loadRelatedContent("${elementId}", "${baseUrl}", data) 
 	});
   </script>
  

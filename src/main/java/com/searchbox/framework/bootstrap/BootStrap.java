@@ -120,7 +120,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       /** 
        * The embedded Solr SearchEngine
        */
-      LOGGER.info("++ Creating Embedded Solr Engine");
+      LOGGER.info("++ Creating Search Engine");
       SearchEngineEntity<?> engine = null;
       try {
         
@@ -238,7 +238,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             .addQueryElement()
             .addFieldFacet("Source", "docSource")
             .addStatElement()
-            .addPagingElement()
+            .addPagingElement("search")
             .addDebugElement()
    
             
@@ -248,8 +248,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        *  
        */
       //Create a new preset in searchbox
-            .newChildPreset(true, TemplateElement.class)
-            .setLabel("Project Funding")
+      .newChildPreset(true, TemplateElement.class)
+        .setLabel("Project Funding")
         .setDescription("Project Funding (open calls)")
         .setSlug("funding")
         
@@ -309,6 +309,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicHit.jspx")
           .setProcess("search")
+          .end()
+          
+        .newSearchElement()
+          .setClazz(TemplateElement.class)
+          .setAttribute("titleField", "topicTitle")
+          .setAttribute("idField", topicsCollection.getIdFieldName())
+          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicMLTHit.jspx")
+          .setProcess("mlt")
           .end()
           
         .newSearchElement()
@@ -377,6 +385,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
          
        .newSearchElement()
          .setClazz(BasicPagination.class)
+         .setProcess("search")
          .end()
        .endChild()
        
@@ -433,7 +442,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addSortableFieldAttribute("Updated", "eenDatumUpdate")
         .addSortableFieldAttribute("Deadline", "eenDatumDeadline")*/
         
-        .addPagingElement()
+        .addPagingElement("search")
         .addDebugElement()
          
       /**
@@ -496,6 +505,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
           .setProcess("search")
           .end()
+          
+        .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenMLTHit.jspx")
+          .setProcess("mlt")
+          .end()
         
         .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenViewMeta.jspx")
           .setLabel("leftCol")
@@ -520,7 +533,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
           .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
           
-        .addPagingElement()
+        .addPagingElement("search")
         .addDebugElement()
         .endChild()
          
@@ -576,6 +589,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
           .setProcess("search")
           .end()
+        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistMLTHit.jspx")
+          .setProcess("mlt")
+          .end()
         .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistView.jspx")
           .setLabel("body")
           .setProcess("view")
@@ -585,7 +601,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setProcess("view")
           .end()
           
-        .addPagingElement()
+        .addPagingElement("search")
         .addDebugElement()
         .endChild()
        .endChild()
@@ -643,7 +659,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setProcess("view")
           .end()
 
-        .addPagingElement()
+        .addPagingElement("search")
         .addDebugElement()
         .endChild()
        .end();
