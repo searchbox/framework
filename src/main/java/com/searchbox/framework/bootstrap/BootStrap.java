@@ -252,6 +252,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setLabel("Project Funding")
         .setDescription("Project Funding (open calls)")
         .setSlug("funding")
+        //TODO Steph, make this work 
+        //.addFieldCondition("Future deadlines only", "callDeadline","[NOW TO *]")
+
         
         .setCollection(topicsCollection)
       
@@ -343,8 +346,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
               Arrays.asList(new FieldSort.Value[]{
                 FieldSort.getRelevancySort(),
                 new FieldSort.Value(
-                  "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
-                  "callDeadline", Sort.ASC)
+                  "By Deadline <span class=\"pull-right glyphicon glyphicon-sort-by-order\"></span>",
+                  "callDeadline", Sort.ASC),
+                new FieldSort.Value(
+                  "By Deadline <span class=\"pull-right glyphicon glyphicon-sort-by-order-alt\"></span>",
+                  "callDeadline", Sort.DESC)
                 }
               )))
           .end()

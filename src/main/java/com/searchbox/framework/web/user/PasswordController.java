@@ -59,7 +59,9 @@ public class PasswordController {
     UserEntity user = repository.findByResetHash(token);
     ModelAndView mav = new ModelAndView("user/passwordReset");
 
-    if (!tokenIsValid(user)) {
+    if (user == null){
+      LOGGER.info("There is no user for that token");
+    } else if(!tokenIsValid(user)) {
       // The token is not valid anymore
       LOGGER.info("Token is expired for user {}", user.getEmail());
     } else {
