@@ -375,6 +375,12 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     return this;
   }
   
+  public PresetEntity addPagingElement(String process) {
+    this.searchElements.add(newSearchElement(process)
+        .setClazz(BasicPagination.class));
+    return this;
+  }
+  
   
   public PresetEntity addDebugElement() {
     this.searchElements.add(newSearchElement()
@@ -438,9 +444,13 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
   }
 
   public SearchElementEntity<?> newSearchElement() {
+    return newSearchElement(DEFAULT_PROCESS);
+  }
+  
+  public SearchElementEntity<?> newSearchElement(String process) {
     return new SearchElementEntity<>()
         .setPosition(this.getSearchElements().size()).setPreset(this)
-        .setProcess(DEFAULT_PROCESS);
+        .setProcess(process);
   }
 
   public PresetEntity endChild(){
