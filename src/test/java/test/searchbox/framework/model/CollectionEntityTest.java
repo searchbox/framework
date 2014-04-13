@@ -61,55 +61,55 @@ public class CollectionEntityTest {
         MyCollection.class.isAssignableFrom(coll.getClass()));
   }
 
-  @Test
-  public void testBuildCollectionFactory() {
-    CollectionEntity cf = new CollectionEntity()
-        .setClazz(DefaultCollection.class);
-    Collection coll = cf.build();
-    Assert.assertNotNull("Did build default Collection", coll);
-    Assert.assertTrue("Class of Default is DefaultCollection",
-        DefaultCollection.class.isAssignableFrom(coll.getClass()));
-  }
+//  @Test
+//  public void testBuildCollectionFactory() {
+//    CollectionEntity cf = new CollectionEntity()
+//        .setClazz(DefaultCollection.class);
+//    Collection coll = cf.build();
+//    Assert.assertNotNull("Did build default Collection", coll);
+//    Assert.assertTrue("Class of Default is DefaultCollection",
+//        DefaultCollection.class.isAssignableFrom(coll.getClass()));
+//  }
 
-  @Test
-  public void testCustomCollectionBuild_NoType() {
-    CollectionEntity cf = new CollectionEntity().setClazz(MyCollection.class);
-    Collection my = cf.build();
-    Assert.assertTrue("Class of Collection is MyCollection",
-        MyCollection.class.isAssignableFrom(my.getClass()));
-  }
+//  @Test
+//  public void testCustomCollectionBuild_NoType() {
+//    CollectionEntity cf = new CollectionEntity().setClazz(MyCollection.class);
+//    Collection my = cf.build();
+//    Assert.assertTrue("Class of Collection is MyCollection",
+//        MyCollection.class.isAssignableFrom(my.getClass()));
+//  }
 
-  @Test
-  public void testCustomCollectionBuild_Type() {
-    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
-        .setClazz(MyCollection.class);
-    MyCollection my = cf.build();
-    Assert.assertTrue("Class of Collection is MyCollection",
-        MyCollection.class.isAssignableFrom(my.getClass()));
-  }
+//  @Test
+//  public void testCustomCollectionBuild_Type() {
+//    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
+//        .setClazz(MyCollection.class);
+//    MyCollection my = cf.build();
+//    Assert.assertTrue("Class of Collection is MyCollection",
+//        MyCollection.class.isAssignableFrom(my.getClass()));
+//  }
 
-  @Test
-  public void testBeanFieldCopyInCollectionFactory() {
+//  @Test
+//  public void testBeanFieldCopyInCollectionFactory() {
+//
+//    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
+//        .setName(COLLECTION_NAME).setClazz(MyCollection.class)
+//        .setAttribute("myAttribute", COLLECTION_ATTR);
+//
+//    MyCollection my = cf.build();
+//
+//    Assert.assertEquals("Collection Name (bean Copy)", COLLECTION_NAME,
+//        my.getName());
+//  }
 
-    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
-        .setName(COLLECTION_NAME).setClazz(MyCollection.class)
-        .setAttribute("myAttribute", COLLECTION_ATTR);
-
-    MyCollection my = cf.build();
-
-    Assert.assertEquals("Collection Name (bean Copy)", COLLECTION_NAME,
-        my.getName());
-  }
-
-  @Test
-  public void testAttributeCopyInCollectionFactory() {
-    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
-        .setName(COLLECTION_NAME).setClazz(MyCollection.class)
-        .setAttribute("myAttribute", COLLECTION_ATTR);
-
-    MyCollection my = cf.build();
-
-    Assert.assertEquals("Collection Attribute (attribute Copy)",
-        COLLECTION_ATTR, my.getMyAttribute());
-  }
+//  @Test
+//  public void testAttributeCopyInCollectionFactory() {
+//    CollectionEntity<MyCollection> cf = new CollectionEntity<MyCollection>()
+//        .setName(COLLECTION_NAME).setClazz(MyCollection.class)
+//        .setAttribute("myAttribute", COLLECTION_ATTR);
+//
+//    MyCollection my = cf.build();
+//
+//    Assert.assertEquals("Collection Attribute (attribute Copy)",
+//        COLLECTION_ATTR, my.getMyAttribute());
+//  }
 }

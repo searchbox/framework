@@ -73,31 +73,31 @@ public class SolrSearchEngineTest {
     };
   }
 
-  @Test
-  public void testKeysForAttribute() {
+//  @Test
+//  public void testKeysForAttribute() {
+//
+//    Set<String> fieldNames = this.engine.getAllKeysForField(this.attr);
+//    for (String fieldName : fieldNames) {
+//      LOGGER.info("Got fieldName: " + fieldName);
+//    }
+//
+//    Assert.assertTrue("Missing field in fieldNames from engine",
+//        fieldNames.size() == 2);
+//    Assert.assertTrue("Wrong field in fieldNames from engine",
+//        fieldNames.contains(FIELD_NAME_SEARCH));
+//  }
 
-    Set<String> fieldNames = this.engine.getAllKeysForField(this.attr);
-    for (String fieldName : fieldNames) {
-      LOGGER.info("Got fieldName: " + fieldName);
-    }
-
-    Assert.assertTrue("Missing field in fieldNames from engine",
-        fieldNames.size() == 2);
-    Assert.assertTrue("Wrong field in fieldNames from engine",
-        fieldNames.contains(FIELD_NAME_SEARCH));
-  }
-
-  @Test
-  public void testKeyForAttributeByUSE() {
-
-    String fieldName = this.engine.getKeyForField(this.attr, USE.SEARCH);
-    LOGGER.info("Got fieldName: " + fieldName);
-
-    Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
-        fieldName != null && !fieldName.isEmpty());
-    Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
-        fieldName.equals(FIELD_NAME_SEARCH));
-  }
+//  @Test
+//  public void testKeyForAttributeByUSE() {
+//
+//    String fieldName = this.engine.getKeyForField(this.attr, USE.SEARCH);
+//    LOGGER.info("Got fieldName: " + fieldName);
+//
+//    Assert.assertTrue("Missing fieldName for USE.MATCH from engine",
+//        fieldName != null && !fieldName.isEmpty());
+//    Assert.assertTrue("Wrong fieldName for USE.MATCH from engine",
+//        fieldName.equals(FIELD_NAME_SEARCH));
+//  }
 
   @Test
   public void testKeyForIntegerAttributeByUSE() {
