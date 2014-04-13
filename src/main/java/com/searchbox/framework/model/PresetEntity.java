@@ -493,9 +493,10 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
 
   public Set<SearchConditionEntity<?>> getSearchConditions(boolean b) {
     Set<SearchConditionEntity<?>> conditions = this.getConditions();
-    for(PresetEntity child:this.getChildren()){
-      conditions.addAll(child.getSearchConditions(b));
-    }
+    //FIXME Disabled inheritence of presetFilters...
+//    for(PresetEntity child:this.getChildren()){
+//      conditions.addAll(child.getSearchConditions(b));
+//    }
     return conditions;
   }
 
