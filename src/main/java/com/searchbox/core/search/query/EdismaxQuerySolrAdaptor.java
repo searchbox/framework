@@ -71,7 +71,7 @@ public class EdismaxQuerySolrAdaptor {
 
   @SearchAdapterMethod(execute = Time.PRE)
   public void getQueryCondition(EdismaxQuery searchElement,
-      EdismaxQuery.Condition condition, SolrQuery query) {
+      QueryCondition condition, SolrQuery query) {
     if (searchElement.shouldRetry()
         && searchElement.getCollationQuery() != null
         && !searchElement.getCollationQuery().isEmpty()) {
@@ -84,7 +84,7 @@ public class EdismaxQuerySolrAdaptor {
 
   @SearchAdapterMethod(execute = Time.ASYNCH)
   public void getSugestions(SolrSearchEngine engine, Collection collection,
-      EdismaxQuery.Condition condition, Map<String, Object> result) {
+      QueryCondition condition, Map<String, Object> result) {
 
     SolrQuery query = engine.newQuery(collection);
     query.setRequestHandler("/suggest");

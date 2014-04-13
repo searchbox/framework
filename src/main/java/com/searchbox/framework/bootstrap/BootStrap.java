@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright Searchbox - http://www.searchbox.com
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,6 +49,7 @@ import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
+import com.searchbox.core.search.query.MoreLikeThisQuery;
 import com.searchbox.core.search.result.TemplateElement;
 import com.searchbox.core.search.sort.FieldSort;
 import com.searchbox.core.search.stat.BasicSearchStats;
@@ -72,7 +73,7 @@ import com.searchbox.framework.service.UserService;
 public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BootStrap.class);
-  
+
   @Resource
   Environment env;
 
@@ -90,7 +91,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   @Autowired
   UserService userService;
-  
+
   @Autowired
   UserRepository userRepository;
 
@@ -112,18 +113,18 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     BOOTSTRAPED = true;
-    
+
     boolean doBootstrap = new Boolean(env.getProperty("searchbox.bootstrap", "false"));
 
     if (doBootstrap) {
-      
-      /** 
+
+      /**
        * The embedded Solr SearchEngine
        */
       LOGGER.info("++ Creating Search Engine");
       SearchEngineEntity<?> engine = null;
       try {
-        
+
         String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
         Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
         engine = new SearchEngineEntity<>()
@@ -141,28 +142,28 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       UserEntity system = userService.registerNewUserAccount("system@searchbox.com", "password");
       UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
       UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
-      
+
       system = userService.addRole(system, Role.SYSTEM, Role.ADMIN, Role.USER);
       admin = userService.addRole(admin, Role.ADMIN, Role.USER);
       user = userService.addRole(user, Role.USER);
-      
-      
+
+
       userRepository.save(
           new UserEntity()
             .setEmail("jonathan@xtremsoft.com")
             .setFirstName("Jonathan")
             .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
-      
+
       userRepository.save(
           new UserEntity()
             .setEmail("stephane@gamard.net")
             .setFirstName("stephane")
             .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
-      
+
 
       LOGGER.info("Bootstraping application with oppfin data...");
 
-      /** 
+      /**
        * The base Searchbox.
        */
       LOGGER.info("++ Creating oppfin searchbox");
@@ -175,10 +176,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       List<String> lang = new ArrayList<String>();
       lang.add("en");
 
-      /** 
-       * 
+      /**
+       *
        * Oppfin Collections
-       *  
+       *
        */
       LOGGER.info("++ Creating oppfin Topic Collection");
       CollectionEntity<?> topicsCollection = new CollectionEntity<>()
@@ -188,8 +189,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setIdFieldName("topicIdentifier")
         .setSearchEngine(engine);
       topicsCollection = collectionRepository.save(topicsCollection);
-      
-      
+
+
       LOGGER.info("++ Creating oppfin EEN Collection");
       CollectionEntity<?> eenCollection = new CollectionEntity<>()
           .setClazz(EENCollection.class)
@@ -198,7 +199,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setIdFieldName("eenReferenceExternal")
           .setSearchEngine(engine);
       eenCollection = collectionRepository.save(eenCollection);
-      
+
       /** The base collection for idealist */
       LOGGER.info("++ Creating oppfin IDEALIST Collection");
       CollectionEntity<?> idealistCollection = new CollectionEntity<>()
@@ -208,8 +209,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAutoStart(false)
           .setIdFieldName("uid");
       idealistCollection = collectionRepository.save(idealistCollection);
-      
-      
+
+
       LOGGER.info("++ Creating oppfin CORDIS Collection");
       CollectionEntity<?> cordisCollection = new CollectionEntity<>()
         .setClazz(CordisCollection.class)
@@ -218,8 +219,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setAutoStart(false)
         .setSearchEngine(engine);
       cordisCollection = collectionRepository.save(cordisCollection);
-      
-      
+
+
       searchbox.newPreset().setLabel("Search All")
       .setDescription("All Collections")
       .setSlug("all")
@@ -228,36 +229,37 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             .setClazz(MultiCollection.class)
             .setName("all")
             .setSearchEngine(engine)
-            .setAttribute("collections", 
+            .setAttribute("collections",
                 Arrays.asList(new String[]{
                     topicsCollection.getName(),
                     eenCollection.getName(),
                     idealistCollection.getName(),
                     cordisCollection.getName()
-                }))))      
+                }))))
             .addQueryElement()
             .addFieldFacet("Source", "docSource")
             .addStatElement()
             .addPagingElement("search")
             .addDebugElement()
-   
-            
-      /** 
-       * 
+
+
+      /**
+       *
        * Topic Preset
-       *  
+       *
        */
       //Create a new preset in searchbox
       .newChildPreset(true, TemplateElement.class)
         .setLabel("Project Funding")
         .setDescription("Project Funding (open calls)")
         .setSlug("funding")
-        //TODO Steph, make this work 
+
+        //TODO Steph, make this work
         //.addFieldCondition("Future deadlines only", "callDeadline","[NOW TO *]")
 
-        
+
         .setCollection(topicsCollection)
-      
+
         /**
          * Setting up fieldAttributes for preset
          */
@@ -267,14 +269,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("suggestion", true)
           .setAttribute("label", "Topic ID")
           .end()
-          
+
         .newFieldAttribute("callIdentifier")
           .setAttribute("searchable", true)
           .setAttribute("spelling", true)
           .setAttribute("suggestion", true)
           .setAttribute("label", "Call ID")
           .end()
-          
+
         .newFieldAttribute("topicTitle")
           .setAttribute("searchable", true)
           .setAttribute("spelling", true)
@@ -283,7 +285,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("label", "title")
           .setAttribute("lang", lang)
           .end()
-          
+
         .newFieldAttribute("description","topicDescriptionRaw")
           .setAttribute("searchable", true)
           .setAttribute("spelling", true)
@@ -292,20 +294,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("label", "description")
           .setAttribute("lang", lang)
           .end()
-          
+
         .newFieldAttribute("callDeadline")
           .setAttribute("sortable", true)
           .end()
-          
+
         /**
-         *  Creating the SearchElements for preset 
+         *  Creating the SearchElements for preset
          */
         .newSearchElement()
           .setClazz(SolrToString.class).end()
-          
-        .newSearchElement()
+
+        .newSearchElement("search")
           .setClazz(EdismaxQuery.class).end()
-          
+        .newSearchElement("view")
+          .setClazz(EdismaxQuery.class).end()
+
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setAttribute("titleField", "topicTitle")
@@ -313,7 +317,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicHit.jspx")
           .setProcess("search")
           .end()
-          
+
+        .newSearchElement()
+          .setClazz(MoreLikeThisQuery.class)
+          .setProcess("mlt")
+          .end()
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setAttribute("titleField", "topicTitle")
@@ -321,7 +329,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicMLTHit.jspx")
           .setProcess("mlt")
           .end()
-          
+
         .newSearchElement()
           .setClazz(TemplateElement.class)
           .setLabel("leftCol")
@@ -330,7 +338,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicViewMeta.jspx")
 	  .end()
-	  
+
 	.newSearchElement()
 	  .setClazz(TemplateElement.class)
           .setLabel("body")
@@ -339,7 +347,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setAttribute("idField", topicsCollection.getIdFieldName())
           .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicView.jspx")
           .end()
-          
+
         .newSearchElement()
           .setClazz(FieldSort.class)
           .setAttribute("values",  new TreeSet<FieldSort.Value>(
@@ -354,7 +362,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
                 }
               )))
           .end()
-        
+
        .newSearchElement()
          .setClazz(BasicSearchStats.class)
          .setLabel("Basic Stats")
@@ -380,7 +388,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
          .setAttribute("order", Order.BY_VALUE)
          .setAttribute("sort", Sort.DESC)
          .end()
-         
+
        .newSearchElement()
          .setClazz(FieldFacet.class)
          .setAttribute("fieldName", "topicFlags")
@@ -388,47 +396,48 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
          .setAttribute("order", Order.BY_VALUE)
          .setAttribute("sort", Sort.DESC)
          .end()
-         
+
        .newSearchElement()
          .setClazz(BasicPagination.class)
          .setProcess("search")
          .end()
        .endChild()
-       
-       
-       
-      
-      
-      
+
+
+
+
+
+
       /**
-       * 
+       *
        * Cooperation preset
-       * 
-       * 
+       *
+       *
        */
-      
-   
-      
+
+
+
       .newChildPreset(true, TemplateElement.class)
         .setCollection(collectionRepository.save(
             new CollectionEntity<>()
             .setClazz(MultiCollection.class)
             .setName("cooperations")
             .setSearchEngine(engine)
-            .setAttribute("collections", 
+            .setAttribute("collections",
                 Arrays.asList(new String[]{
                     eenCollection.getName(),
                     idealistCollection.getName()
                 }))))
         .setSlug("cooperations")
         .setLabel("Cooperations")
-        .addQueryElement()
+        .addQueryElement("search")
+        .addQueryElement("view")
         .addStatElement()
         .addFieldFacet("Cooperation Source", "docSource")
         .addFieldFacet("EEN Type", "eenReferenceType")
         .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
         .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
-        
+
         //TODO Steph: Check why this is failing.
         .newSearchElement()
           .setClazz(FieldSort.class)
@@ -447,27 +456,27 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         /*.addSortableFieldAttribute("Published", "eenDatumSubmit")
         .addSortableFieldAttribute("Updated", "eenDatumUpdate")
         .addSortableFieldAttribute("Deadline", "eenDatumDeadline")*/
-        
+
         .addPagingElement("search")
         .addDebugElement()
-         
+
       /**
-       * 
+       *
        * EEN preset
-       * 
-       * 
+       *
+       *
        */
-     
-   
+
+
       //LOGGER.info("++ Creating Cooperation preset");
       //searchbox.newPreset()
-      .newChildPreset(true, FieldFacet.class, TemplateElement.class)
+      .newChildPreset(true, FieldFacet.class, TemplateElement.class, MoreLikeThisQuery.class)
         .setCollection(eenCollection)
         .setDescription("EEN cooperations")
         .setLabel("EEN")
         .setSlug("een")
         .setVisible(false)
-         
+
         .addSortableFieldAttribute("Published", "eenDatumSubmit")
         .addSortableFieldAttribute("Updated", "eenDatumUpdate")
         .addSortableFieldAttribute("Deadline", "eenDatumDeadline")
@@ -479,7 +488,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .setLanguages(lang)
           .end()
-          
+
         .newFieldAttribute("Summary","eenContentSummary")
           .setSearchanble(true)
           .setHighlight(true)
@@ -487,40 +496,45 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .setLanguages(lang)
           .end()
-          
+
         .newFieldAttribute("Keyword","eenKeywordTechnologiesLabel")
           .setSearchanble(true)
           .setSpelling(true)
           .setHighlight(true)
           .setLanguages(lang)
           .end()
-          
+
         .newFieldAttribute("Description","eenContentDescription")
           .setSearchanble(true)
           .setHighlight(true)
           .setSpelling(true)
           .setSuggestion(true)
           .setLanguages(lang)
-          .end()    
+          .end()
 
-        .addQueryElement()
+        .addQueryElement("Search")
+        .addQueryElement("view")
+
         .newSearchElement().setClazz(BasicSearchStats.class)
           .setProcess("search")
           .end()
-          
+
         .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
           .setProcess("search")
           .end()
-          
+
+        .newSearchElement("mlt")
+          .setClazz(MoreLikeThisQuery.class)
+          .end()
         .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenMLTHit.jspx")
           .setProcess("mlt")
           .end()
-        
+
         .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenViewMeta.jspx")
           .setLabel("leftCol")
           .setProcess("view")
           .end()
-          
+
         .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenView.jspx")
           .setLabel("body")
           .setProcess("view")
@@ -534,32 +548,32 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
                   new FieldSort.Value("Newest first", "eenDatumUpdate", Sort.DESC)
               })))
           .end()
-        
+
           .addFieldFacet("EEN Type", "eenReferenceType")
           .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
           .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
-          
+
         .addPagingElement("search")
         .addDebugElement()
         .endChild()
-         
+
 
       /**
        * IDEALIST PRESET
-       * 
-       * 
+       *
+       *
        */
-      
+
       .newChildPreset(true,  FieldFacet.class, TemplateElement.class)
         .setCollection(idealistCollection)
         .setSlug("idealist")
         .setLabel("Ideal-IST")
         .setVisible(false)
         .setDescription("IDEALIST cooperations")
-        
+
         //.addFieldCondition("Open Opportunities Only", "idealistStatus","Open")
         .addFieldFacet("Status", "idealistStatus")
-        
+
         .newFieldAttribute("Title","idealistTitle")
           .setLanguages(lang)
           .setSearchanble(true)
@@ -567,7 +581,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSpelling(true)
           .setSuggestion(true)
           .end()
-        
+
         .newFieldAttribute("Summary","idealistOutline")
           .setLanguages(lang)
           .setSearchanble(true)
@@ -575,7 +589,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSpelling(true)
           .setSuggestion(true)
           .end()
-          
+
         .newFieldAttribute("Summary","idealistBody")
           .setLanguages(lang)
           .setSearchanble(true)
@@ -606,28 +620,28 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setLabel("leftCol")
           .setProcess("view")
           .end()
-          
+
         .addPagingElement("search")
         .addDebugElement()
         .endChild()
        .endChild()
-          
+
       /**
-       * 
+       *
        * Cordis Preset
-       * 
-       * 
+       *
+       *
        */
-     
+
 
       //LOGGER.info("++ Creating CORDIS preset");
-      
+
        .newChildPreset(true, TemplateElement.class)
         .setLabel("Funded Projects")
         .setDescription("Funded projects")
         .setSlug("funded")
         .setCollection(cordisCollection)
-        
+
         .newFieldAttribute("Title","cordisTitle")
           .setLanguages(lang)
           .setSearchanble(true)
@@ -635,7 +649,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSpelling(true)
           .setSuggestion(true)
           .end()
-          
+
         .newFieldAttribute("Summary", "cordisSnippet")
           .setLanguages(lang)
           .setSearchanble(true)
@@ -643,16 +657,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSpelling(true)
           .setSuggestion(true)
           .end()
-          
+
         .addQueryElement()
         .addStatElement()
-        
+
         .addFieldFacet("Year", "cordisStartYear")
         .addFieldFacet("Area", "cordisArea")
         .addFieldFacet("Category", "cordisCategory")
         .addFieldFacet("Tag", "cordisTag")
         .addFieldFacet("Status", "cordisProjectStatus")
-        
+
         .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
           .setProcess("search")
           .end()
@@ -669,7 +683,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addDebugElement()
         .endChild()
        .end();
-      
+
       /**
        * Users preset
        */
@@ -677,7 +691,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 //      searchbox.addUserRole(new UserRole(system, Role.SYSTEM))
 //        .addUserRole(new UserRole(admin, Role.ADMIN))
 //        .addUserRole(new UserRole(user, Role.USER));
-      
+
       repository.save(searchbox);
 
       LOGGER.info("Bootstraping application with oppfin data... done");

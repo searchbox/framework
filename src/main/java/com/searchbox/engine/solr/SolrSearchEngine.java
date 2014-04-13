@@ -64,7 +64,7 @@ public abstract class SolrSearchEngine extends
 
   protected abstract SolrServer getSolrServer(Collection collection);
 
-  protected abstract boolean updateDataModel(Collection collection, 
+  protected abstract boolean updateDataModel(Collection collection,
       Map<Field, Set<String>> copyFields);
 
   @Override
@@ -173,7 +173,7 @@ public abstract class SolrSearchEngine extends
       return false;
     }
   }
-  
+
   @Override
   public boolean updateDataModel(Collection collection, List<FieldAttribute> fieldAttributes) {
     /** Get the translation for the field's key */
@@ -207,22 +207,22 @@ public abstract class SolrSearchEngine extends
     return this.mapFieldUsage(fieldAttribute).get(operation);
   }
 
-  
-  
+
+
   private boolean isActualField(String key){
     //FIXME that should lookup in the schema of Solr
-    if(key.equals(StandardCollection.STD_ID_FIELD) || 
-        key.equals(StandardCollection.STD_BODY_FIELD) || 
-        key.equals(StandardCollection.STD_TITLE_FIELD) || 
-        key.equals(StandardCollection.STD_PUBLISHED_FIELD) || 
-        key.equals(StandardCollection.STD_UPDATED_FIELD) || 
+    if(key.equals(StandardCollection.STD_ID_FIELD) ||
+        key.equals(StandardCollection.STD_BODY_FIELD) ||
+        key.equals(StandardCollection.STD_TITLE_FIELD) ||
+        key.equals(StandardCollection.STD_PUBLISHED_FIELD) ||
+        key.equals(StandardCollection.STD_UPDATED_FIELD) ||
         key.equals(ExpiringDocuments.STD_DEADLINE_FIELD)){
       return true;
     } else {
       return false;
     }
   }
-  
+
   private Map<USE, String> mapFieldUsage(FieldAttribute fieldAttribute) {
 
     Field field = fieldAttribute.getField();
@@ -231,7 +231,7 @@ public abstract class SolrSearchEngine extends
 
     String append = "";
     String prepend = "";
-    
+
     if(isActualField(fieldAttribute.getField().getKey())){
       usages.put(USE.DEFAULT, fieldAttribute.getField().getKey());
       usages.put(USE.SEARCH, fieldAttribute.getField().getKey());

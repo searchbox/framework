@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.searchbox.core.search.filter.FieldValueCondition;
 import com.searchbox.core.search.query.EdismaxQuery;
+import com.searchbox.core.search.query.QueryCondition;
 
 public class SearchConditionTest {
 
@@ -30,11 +31,11 @@ public class SearchConditionTest {
     FieldValueCondition c2 = new FieldValueCondition("1", "1");
     FieldValueCondition c3 = new FieldValueCondition("1", "3");
 
-    EdismaxQuery.Condition qc1 = new EdismaxQuery("Hello world")
+    QueryCondition qc1 = new EdismaxQuery("Hello world")
         .getSearchCondition();
-    EdismaxQuery.Condition qc2 = new EdismaxQuery("Hello world")
+    QueryCondition qc2 = new EdismaxQuery("Hello world")
         .getSearchCondition();
-    EdismaxQuery.Condition qc3 = new EdismaxQuery("Hello").getSearchCondition();
+    QueryCondition qc3 = new EdismaxQuery("Hello").getSearchCondition();
 
     Assert.assertTrue("FieldValueCondition equals itself", c1.equals(c1));
     Assert.assertTrue("FieldValueCondition same values", c1.equals(c2));

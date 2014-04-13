@@ -1,7 +1,7 @@
 /**
  * Handle facet actions (add/remove facet filter from url) and redirect to that
  * url
- * 
+ *
  * @param string
  *          action Accepted value "remove" / "add" what needs to be done with
  *          the facet
@@ -191,15 +191,11 @@ var bindResultPageEvents = function() {
 
 var loadRelatedContent = function(selector, baseUrl, data) {
 
-    console.log("elem "+ selector);
-    console.log("BaseUrl "+ baseUrl);
-    console.log("Data "+data);
-    
   // var params = $.url(window.location.href).param();
   if (jQuery('#' + selector).length) {
     $.ajax({
       type : 'POST',
-      data : {"text": data,"limit":3},
+      data : {"q": data},
       url : baseUrl,
       //dataType : "jsonp",
       success : function(data) {

@@ -11,5 +11,6 @@
 <sbx:relatedContent preset="funding" datacontent="#topicContent"/>
 
 <h2>Related Technology Partners</h2>
+<sbx:relatedContent preset="een" datacontent="#topicContent"/>
 
 </jsp:root>

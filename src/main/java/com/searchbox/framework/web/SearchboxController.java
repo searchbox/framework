@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright Searchbox - http://www.searchbox.com
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,7 +66,7 @@ public class SearchboxController {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SearchboxController.class);
-  
+
   @ModelAttribute("user")
   public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
     return user;
@@ -117,6 +117,7 @@ public class SearchboxController {
     Set<AbstractSearchCondition> conditions = new HashSet<AbstractSearchCondition>();
     for (String param : conversionService.getSearchConditionParams()) {
       if (request.getParameterValues(param) != null) {
+        LOGGER.info("Parsing condition {} from params",param);
         for (String value : request.getParameterValues(param)) {
           if (value != null && !value.isEmpty()) {
             try {
@@ -150,7 +151,7 @@ public class SearchboxController {
     	LOGGER.error("Searchbox {} not found!",searchbox);
     	return new ModelAndView(new RedirectView("/", true));
     }
-    
+
     PresetEntity preset = searchbox.getPresets().first();
     LOGGER.info("No Preset, redirect to: {}", preset.getSlug());
     ModelAndView redirect = new ModelAndView(new RedirectView("/"
@@ -166,7 +167,7 @@ public class SearchboxController {
 	  if(preset == null){
 		  LOGGER.error("Preset {} not found!",preset);
 		  return getHome(searchbox, request, model, redirectAttributes);
-		  
+
 	  }
     String process = preset.getDefaultProcess();
     LOGGER.info(
@@ -186,8 +187,8 @@ public class SearchboxController {
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
-    LOGGER.debug("search page for: {} with preset: {} and process: {}",
-        searchbox, preset, process);
+    LOGGER.info("search page for: {} with preset: {} and process: {}",
+        searchbox.getName(), preset.getLabel(), process);
 
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
@@ -202,7 +203,7 @@ public class SearchboxController {
 
     return model;
   }
-  
+
   @RequestMapping(headers ={"Accept=application/json"}, value="/{preset}/{process}",method=RequestMethod.GET)
   public ModelAndView executeJsonSearch(@PathVariable String process,
       @ModelAttribute("searchboxes") List<SearchboxEntity> searchboxes,
@@ -218,7 +219,7 @@ public class SearchboxController {
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
 
-    
+
     //TODO: Make the JSON view- http://www.javablog.fr/javaspringjson-generate-json-withwithout-viewresolver-jsonview-with-json-lib-2-3-jdk15.html
     Set<SearchElement> resultElements = executeRequest(searchbox, preset,
         process, conditions, collector);
@@ -230,17 +231,17 @@ public class SearchboxController {
 
     return model;
   }
-  
+
   private Set<FieldAttribute> getAllFieldAttribute(PresetEntity preset){
-    
+
     Set<FieldAttribute> fieldAttributes = new HashSet<>();
     for (FieldAttributeEntity def : preset.getFieldAttributes(true)) {
       fieldAttributes.add(def.build());
     }
-    
+
     return fieldAttributes;
   }
-  
+
   private Set<AbstractSearchCondition> getAllSearchConditions(
       PresetEntity preset) {
     Set<AbstractSearchCondition> fieldAttributes = new HashSet<>();
@@ -257,32 +258,32 @@ public class SearchboxController {
 
     Set<SearchElement> searchElements = elementService.getSearchElements(preset, process);
     LOGGER.debug("Required Search elements are {}", searchElements);
-    
+
     Set<FieldAttribute> fieldAttributes = getAllFieldAttribute(preset);
-    
+
     Set<AbstractSearchCondition> presetConditions = getAllSearchConditions(preset);
     LOGGER.info("Required preset Conditions are {}", presetConditions);
 
     Collection collection = preset.getCollection().build();
-    
+
     if(!(SearchableCollection.class.isAssignableFrom(collection.getClass()))){
       LOGGER.error("Collection {} does NOT implement SearchableCollection!!!",
           collection.getName());
     }
-    
+
     SearchEngine<?, ?> searchEngine = ((SearchableCollection)collection).getSearchEngine();
-    
+
     LOGGER.debug("Current SearchEngine: {}", searchEngine);
     LOGGER.debug("Current Collection: {}", collection);
 
     Set<SearchElement> resultElements = null;
-    
+
     resultElements = searchService.execute(searchEngine,
         collection, searchElements, fieldAttributes,
         presetConditions, conditions, collector);
 
     LOGGER.debug("Resulting SearchElements are {}",resultElements);
-    
+
     // Check if we have a retry clause
     boolean retry = false;
     for (SearchElement element : resultElements) {

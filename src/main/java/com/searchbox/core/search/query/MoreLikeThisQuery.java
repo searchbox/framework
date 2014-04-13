@@ -17,39 +17,30 @@ package com.searchbox.core.search.query;
 
 import com.searchbox.core.SearchAttribute;
 import com.searchbox.core.SearchComponent;
+import com.searchbox.core.SearchCondition;
 import com.searchbox.core.SearchConverter;
 import com.searchbox.core.SearchElement;
 import com.searchbox.core.search.AbstractSearchCondition;
 import com.searchbox.core.search.ConditionalSearchElement;
-import com.searchbox.core.search.RetryElement;
 
 @SearchComponent
-public class EdismaxQuery extends
-    ConditionalSearchElement<QueryCondition> implements RetryElement {
-
-  public enum Operator {
-    OR, AND
-  }
+public class MoreLikeThisQuery extends
+    ConditionalSearchElement<QueryCondition> {
 
   private String query;
-  private String collationQuery;
-  private Long hitCount = 0l;
 
   @SearchAttribute
-  private Operator operator = Operator.AND;
+  private String id;
 
-  public EdismaxQuery() {
-    super("query component", SearchElement.Type.QUERY);
+  private Long hitCount = 0l;
+
+  public MoreLikeThisQuery() {
+    super("mlt component", SearchElement.Type.QUERY);
   }
 
-  public EdismaxQuery(String query) {
-    super("query component", SearchElement.Type.QUERY);
+  public MoreLikeThisQuery(String query) {
+    super("mlt component", SearchElement.Type.QUERY);
     this.query = query;
-  }
-
-  @Override
-  public boolean shouldRetry() {
-    return (hitCount == 0 && collationQuery != null);
   }
 
   public String getQuery() {
@@ -66,43 +57,12 @@ public class EdismaxQuery extends
   }
 
   /**
-   * @return the collationQuery
-   */
-  public String getCollationQuery() {
-    return collationQuery;
-  }
-
-  /**
-   * @param collationQuery
-   *          the collationQuery to set
-   */
-  public void setCollationQuery(String collationQuery) {
-    this.collationQuery = collationQuery;
-  }
-
-  /**
-   * @return the operator
-   */
-  public Operator getOperator() {
-    return operator;
-  }
-
-  /**
-   * @param operator
-   *          the operator to set
-   */
-  public void setOperator(Operator operator) {
-    this.operator = operator;
-  }
-
-  /**
    * @param l
    *          the hitCount to set
    */
   public void setHitCount(Long l) {
     this.hitCount = l;
   }
-
 
   @Override
   public void mergeSearchCondition(AbstractSearchCondition condition) {
