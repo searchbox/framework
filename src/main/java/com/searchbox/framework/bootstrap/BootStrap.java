@@ -255,7 +255,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setSlug("funding")
 
         //TODO Steph, make this work
-        //.addFieldCondition("Future deadlines only", "callDeadline","[NOW TO *]")
+        .addRangeCondition("Future deadlines only", "callDeadline","NOW","*")
 
 
         .setCollection(topicsCollection)

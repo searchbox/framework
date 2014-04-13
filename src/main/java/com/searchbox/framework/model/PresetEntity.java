@@ -41,6 +41,7 @@ import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.filter.FieldRangeCondition;
 import com.searchbox.core.search.filter.FieldValueCondition;
 import com.searchbox.core.search.paging.BasicPagination;
 import com.searchbox.core.search.query.EdismaxQuery;
@@ -244,6 +245,17 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
       }
     }
     return null;
+  }
+
+
+  public PresetEntity addRangeCondition(String label, String field, String min, String max){
+    return newSearchCondition().setLabel(label)
+        .setClazz(FieldRangeCondition.class)
+        .setAttribute(FieldRangeCondition.TAGED_ATTR, false)
+        .setAttribute(FieldRangeCondition.FIELD_NAME_ATTR, field)
+        .setAttribute(FieldRangeCondition.MIN_ATTR, min)
+        .setAttribute(FieldRangeCondition.MAX_ATTR, max)
+        .end();
   }
 
   public PresetEntity addFieldCondition(String label, String field, String value){
