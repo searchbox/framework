@@ -45,7 +45,7 @@
      <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-envelope">
         <!-- blah -->
-      </i></span> <input type="text" class="form-control" id="email" name="username"
+      </i></span> <input type="text" class="form-control" tabindex="0" id="email" name="username"
        placeholder="${springUserEmail }" />
      </div>
      <span class="help-block"> <!-- help -->
@@ -79,14 +79,14 @@
    </div>
    <div class="col-xs-12 col-sm-3">
     <p class="omb_forgotPwd">
-     <a href="#" class="" data-toggle="modal" data-target="#myModal">
+     <a href="#" class="" id="forgotPassLink" data-toggle="modal" data-target="#resetPassModal">
       <spring:message code="label.user.forgotPassword" />
      </a>
 
 
      <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="resetPassModal" tabindex="-1" role="dialog"
+     aria-labelledby="resetPassModalLabel" aria-hidden="true">
      <div class="modal-dialog">
       <div class="modal-content">
        <c:url var="resetPasswordBase" value="/user/reset"/>
@@ -95,7 +95,7 @@
        <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"
          aria-hidden="true">x</button>
-        <h4 class="modal-title" id="myModalLabel">A link to reset
+        <h4 class="modal-title" id="resetPassModalLabel">A link to reset
          your password will be sent shortly.</h4>
        </div>
        <div id="resetModalBody" class="modal-body">
@@ -122,6 +122,12 @@
        </div>
        <script type="text/javascript">
        $(document).ready(function() {
+         $("#email").focus();
+         
+         $('#resetPassModal').on('shown.bs.modal', function () {
+           $('#resetEmail').focus();
+       	});
+         
        	$('#resetPasswordForm').on('submit', function() {
        		var $this = $(this);
        		var email = $('#resetEmail').val();
@@ -167,9 +173,6 @@
   <hr />
    Logged is as user: ${user.getEmail() }
   </p>
-  <c:forEach var="role" items="${user.getAuthorities() }">
-   <p>tata: ${role.getAuthority() }</p>
-  </c:forEach>
   <spring:url value="/logout" var="logoutUrl" />
   <a href="${logoutUrl }">logout</a>
  </sec:authorize>
