@@ -122,14 +122,8 @@
     </div>
   </sec:authorize>
   <sec:authorize access="isAuthenticated()">
-    <p>
-      <spring:message code="text.login.page.authenticated.user.help" />
-    </p>
-    <c:forEach var="role" items="${user.getAuthorities() }">
-      <p>tata: ${role.getAuthority() }</p>
-    </c:forEach>
-    <spring:url value="/logout" var="logoutUrl" />
-    <a href="${logoutUrl }">logout</a>
+    <c:url value="/" var="redirect" />
+    <jsp:forward page="${redirect}" /> 
   </sec:authorize>
 </body>
   </html>
