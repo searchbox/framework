@@ -56,9 +56,11 @@ public class PasswordController {
   @RequestMapping(value = "/resetPassword/{token:.+}", method = RequestMethod.GET)
   public ModelAndView resetPassword(@PathVariable String token) {
 
+    //TODO: Check why this is not working as expected
     UserEntity user = repository.findByResetHash(token);
     ModelAndView mav = new ModelAndView("user/passwordReset");
 
+    LOGGER.info("Found user {}",user);
     if (user == null || !tokenIsValid(user)) {
       // The token is not valid anymore
       LOGGER.info("Token is expired of invalid {}", token);
@@ -116,7 +118,7 @@ public class PasswordController {
       result.put("message", "User with email \""+email+"\" does not exists");
       return result;
     }
-
+    
     String host = env.getProperty("searchbox.dns");
     if (host == null || host.isEmpty()) {
       host = request.getRemoteHost();
@@ -131,9 +133,6 @@ public class PasswordController {
 
     String path = request.getContextPath();
     LOGGER.debug("Context path for reset is {}", path);
-
-    String hash = service.getResetHash(email);
-    LOGGER.debug("Hash for reset is {}", hash);
 
     String resetLink = service.resetPasswordWithEmail(email, host, port, path);
     LOGGER.info("Reset password link for {} is {}", email, resetLink);

@@ -140,13 +140,16 @@ public class UserService {
     user.setResetHash(this.getResetHash(email));
     user.setResetDate(new Date());
     repository.save(user);
-    // send notification mail.
-
+    
+    LOGGER.info("Saved user {}",user);
     
     String resetUrl = "http://"+host+
         ((port!=80)?":"+port:"")+
         path+"/user/resetPassword/"+user.getResetHash();
     
+    LOGGER.info("Preparing the reset email with link {}", resetUrl);
+
+    // send notification mail.
     SimpleMailMessage msg = new SimpleMailMessage();
     msg.setFrom("no-reply@opportunity-finder.com");
     msg.setTo(email);
