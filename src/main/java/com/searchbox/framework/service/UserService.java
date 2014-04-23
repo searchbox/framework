@@ -112,6 +112,10 @@ public class UserService {
     return false;
   }
 
+  public String encodePasswordString(String password){
+    return passwordEncoder.encode(password);
+  }
+  
   private String encodePassword(RegistrationForm dto) {
     String encodedPassword = null;
 

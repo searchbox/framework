@@ -100,7 +100,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
   private static boolean BOOTSTRAPED = false;
 
-
   @Override
   synchronized public void onApplicationEvent(ContextRefreshedEvent event) {
     doBootStrap();
@@ -154,6 +153,13 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             .setFirstName("Jonathan")
             .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
 
+      userRepository.save(
+          new UserEntity()
+            .setEmail("jonatrey@yahoo.com")
+            .setPassword(userService.encodePasswordString("searchbox2014"))
+            .setFirstName("Jonathan Rey")
+            .setRoles(Arrays.asList(new Role[]{Role.USER})));
+      
       userRepository.save(
           new UserEntity()
             .setEmail("stephane@gamard.net")
