@@ -114,11 +114,11 @@
        <spring:url value="/assets/images/spin.gif" var="spinner" />
        
        
-        <span id="spinner" style="display:none;margin-right:10px"><img src="${spinner }"/></span>
         <button type="button" class="btn btn-default"
          data-dismiss="modal">Close</button>
         <button type="submit" id="resetPassButton" class="btn btn-primary">
         Reset my password</button>
+        <span id="spinner" style="display:none;"><img src="${spinner }"/></span>
        </div>
        <script type="text/javascript">
        $(document).ready(function() {
@@ -132,7 +132,8 @@
        		var $this = $(this);
        		var email = $('#resetEmail').val();
        		$("#resetPassButton").attr("disabled", "disabled");
-       		$("#spinner").show();
+       		$("#spinner").css("display", "inline-block");
+       		
        		
        		if(email === '' ) {
            		 $("#resetPassError").html("Please enter your email");
@@ -148,6 +149,9 @@
                        } else if(data.status=="OK"){
                          $("#resetModalBody").html("An email has been sent. Please follow the instructions to reset your password.");
                        }
+       				},
+       				error:function(data){
+       				 $("#resetPassError").html("An error happened, please email contact@searchbox.com");
        				}
        			});
        		}
