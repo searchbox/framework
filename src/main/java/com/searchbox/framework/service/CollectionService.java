@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright Searchbox - http://www.searchbox.com
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,17 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.searchbox.collection.SynchronizedCollection;
@@ -44,33 +51,35 @@ import com.searchbox.framework.model.PresetEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 
 @Service
-public class CollectionService implements ApplicationListener<SearchboxReady>, InitializingBean{
+public class CollectionService implements ApplicationListener<SearchboxReady>,
+    InitializingBean {
 
   private static final Logger LOGGER = LoggerFactory
       .getLogger(CollectionService.class);
-  
+
   public static final String UPDATE_DM_ON_START = "searchbox.dm.update.onstart";
   public static final Boolean UPDATE_DM_ON_START_DEFAULT = false;
 
   @Autowired
   CollectionRepository repository;
-  
+
   @Resource
   Environment env;
-  
+
+  @Autowired
+  private JobExplorer jobExplorer;
+
   private Boolean updateDmOnStart;
-  
-  
-  public CollectionService(){
+
+  public CollectionService() {
     updateDmOnStart = false;
   }
-  
+
   @Override
   public void afterPropertiesSet() throws Exception {
     this.updateDmOnStart = env.getProperty(UPDATE_DM_ON_START, Boolean.class,
         UPDATE_DM_ON_START_DEFAULT);
   }
-  
 
   public Map<String, String> synchronizeData(CollectionEntity<?> collectiondef) {
     Map<String, String> result = new HashMap<String, String>();
@@ -96,31 +105,32 @@ public class CollectionService implements ApplicationListener<SearchboxReady>, I
 
   @Transactional
   public Map<String, String> synchronizeDm(CollectionEntity<?> collectionEntity) {
-    
+
     Map<String, String> result = new HashMap<String, String>();
     Collection collection = collectionEntity.build();
-    
-    if(SearchableCollection.class.isAssignableFrom(collection.getClass())){
-      SearchEngine<?, ?> engine = ((SearchableCollection)collection).getSearchEngine();
-      
+
+    if (SearchableCollection.class.isAssignableFrom(collection.getClass())) {
+      SearchEngine<?, ?> engine = ((SearchableCollection) collection)
+          .getSearchEngine();
+
       if (ManagedSearchEngine.class.isAssignableFrom(engine.getClass())) {
         LOGGER.info("Register Searchengine Configuration for \""
             + collection.getName() + "\"");
         ((ManagedSearchEngine) engine).register(collection);
       }
-      
-      if(SynchronizedCollection.class.isAssignableFrom(collection.getClass())){
+
+      if (SynchronizedCollection.class.isAssignableFrom(collection.getClass())) {
         LOGGER.info("Starting DM synchronization for \"" + collection.getName()
             + "\"");
         for (PresetEntity presetDef : collectionEntity.getPresets()) {
           List<FieldAttribute> fieldAttributes = new ArrayList<FieldAttribute>();
-          for (FieldAttributeEntity fieldAttr : presetDef
-              .getFieldAttributes()) {
+          for (FieldAttributeEntity fieldAttr : presetDef.getFieldAttributes()) {
             fieldAttributes.add(fieldAttr.build());
           }
-          ((ManagedSearchEngine) engine).updateDataModel(collection, fieldAttributes);
+          ((ManagedSearchEngine) engine).updateDataModel(collection,
+              fieldAttributes);
         }
-      } 
+      }
     }
     return result;
   }
@@ -133,10 +143,66 @@ public class CollectionService implements ApplicationListener<SearchboxReady>, I
 
     Iterable<CollectionEntity<?>> collectionDefs = repository.findAll();
     for (CollectionEntity<?> collectionDef : collectionDefs) {
-      if(this.updateDmOnStart){
+      if (this.updateDmOnStart) {
         synchronizeDm(collectionDef);
         if (collectionDef.getAutoStart()) {
           synchronizeData(collectionDef);
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns a new object which specifies the the wanted result page.
+   *
+   * @param pageIndex
+   *          The index of the wanted result page
+   * @return
+   */
+  private Pageable constructPageSpecification(int pageIndex) {
+    Pageable pageSpecification = new PageRequest(pageIndex, 10, sortByName());
+    return pageSpecification;
+  }
+
+  /**
+   * Returns a Sort object which sorts collection in ascending order by using
+   * the name.
+   *
+   * @return
+   */
+  private Sort sortByName() {
+    return new Sort(Sort.Direction.ASC, "name");
+  }
+
+  public List<CollectionEntity<?>> findAll() {
+    return this.findAll(0);
+  }
+
+  public List<CollectionEntity<?>> findAll(int pageIndex) {
+    LOGGER.debug("Listing all collections for page: " + pageIndex);
+    Page<CollectionEntity<?>> requestedPage = repository
+        .findAll(constructPageSpecification(pageIndex));
+    for (CollectionEntity<?> collection : requestedPage.getContent()) {
+      setJobStatus(collection);
+    }
+    return requestedPage.getContent();
+  }
+
+  private void setJobStatus(CollectionEntity<?> collection) {
+    if (collection.isRunnable()) {
+      // This will retrieve the latest job instance:
+      List<JobInstance> jobInstances = jobExplorer.getJobInstances(
+          collection.getName(), 0, 1);
+      if (!jobInstances.isEmpty()) {
+        // This will retrieve the latest job execution:
+        List<JobExecution> jobExecutions = jobExplorer
+            .getJobExecutions(jobInstances.get(0));
+
+        if (!jobExecutions.isEmpty()) {
+          collection.setJobCount(jobExecutions.size());
+          collection.setLastJobDate(jobExecutions.get(0).getCreateTime());
+          collection.setLastJobStatus(jobExecutions.get(0).getStatus()
+              .toString());
         }
       }
     }

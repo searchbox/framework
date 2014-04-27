@@ -28,9 +28,9 @@
       <!-- divider -->
      </li>
     </sec:authorize>
-    
+
     <spring:url var="home" value="/${searchbox.getSlug() }/" />
-    <spring:url var="admin" value="/admin/${searchbox.getSlug() }/${preset.getSlug() }/${process }" />
+    <spring:url var="admin" value="/admin/${searchbox.getSlug() }" />
     <spring:url var="system" value="/system" />
     <li><a href="${home }">Home</a></li>
     <sec:authorize access="hasRole('ROLE_ADMIN')">

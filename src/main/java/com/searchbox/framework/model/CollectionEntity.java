@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright Searchbox - http://www.searchbox.com
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package com.searchbox.framework.model;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,12 +28,14 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Collection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.MultiCollection;
@@ -69,10 +72,47 @@ public class CollectionEntity<K extends Collection> extends
   @LazyCollection(LazyCollectionOption.TRUE)
   private Set<FieldEntity> fields;
 
+  @Transient
+  private Date lastJobDate;
+
+  @Transient
+  private String lastJobStatus;
+
+  @Transient
+  private int jobCount;
+
   public CollectionEntity() {
     this.fields = new TreeSet<FieldEntity>();
     this.presets = new TreeSet<PresetEntity>();
     // TODO infer clazz thru reflection
+  }
+
+  public boolean isRunnable(){
+    return SynchronizedCollection.class.isAssignableFrom(this.clazz);
+  }
+
+  public Date getLastJobDate() {
+    return lastJobDate;
+  }
+
+  public void setLastJobDate(Date lastJobDate) {
+    this.lastJobDate = lastJobDate;
+  }
+
+  public String getLastJobStatus() {
+    return lastJobStatus;
+  }
+
+  public void setLastJobStatus(String lastJobStatus) {
+    this.lastJobStatus = lastJobStatus;
+  }
+
+  public int getJobCount() {
+    return jobCount;
+  }
+
+  public void setJobCount(int i) {
+    this.jobCount = i;
   }
 
   public String getName() {
@@ -201,7 +241,7 @@ public class CollectionEntity<K extends Collection> extends
   public int compareTo(CollectionEntity<K> o) {
     return this.getName().compareTo(o.getName());
   }
-  
+
   @Override
   public String toString() {
     return "CollectionEntity [clazz=" + clazz + ", name=" + name

@@ -1,0 +1,112 @@
+<jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
+ xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+ xmlns:spring="http://www.springframework.org/tags"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+ xmlns:form="http://www.springframework.org/tags/form"
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:helper="http://www.searchbox.com/helper">
+
+ <jsp:output omit-xml-declaration="yes" />
+ <jsp:output doctype-root-element="HTML"
+  doctype-system="about:legacy-compat" />
+
+ <jsp:directive.page contentType="text/html;charset=UTF-8" />
+ <jsp:directive.page pageEncoding="UTF-8" />
+ <form method="get" action="#users">
+
+  <a id="users">
+   <!-- blah -->
+  </a>
+  <div class="row">
+   <div class="panel panel-default">
+    <div class="panel-heading">
+     <b>${searchbox.name }</b> Users
+    </div>
+    <div class="panel-body">
+     <table class="table table-striped">
+      <thead>
+       <tr>
+        <th></th>
+        <th><a href="#" class="step-xs"
+         onclick="submitForm('userTable_sort', 'email,asc')">email</a></th>
+        <th><a href="#" class="step-xs"
+         onclick="submitForm('userTable_sort', 'firstName,asc')">Name</a>
+        </th>
+        <th>lastLogin</th>
+        <th></th>
+       </tr>
+      </thead>
+      <tbody>
+       <c:forEach items="${users }" var="muser" varStatus="item">
+        <tr>
+         <td>${(userTable.pageNumber*userTable.pageSize)+item.count }</td>
+         <td>${muser.email }</td>
+         <td>${muser.firstName }</td>
+         <td></td>
+         <td></td>
+        </tr>
+       </c:forEach>
+      </tbody>
+     </table>
+
+     <c:if test="${userCount > userTable.pageSize}">
+      <c:set var="maxPage" value="${userCount/userTable.pageSize}" />
+      <c:set var="beginPage"
+       value="${(userTable.pageNumber - 3) > 0 ? (userTable.pageNumber - 3) : 0}" />
+      <c:set var="endPage"
+       value="${maxPage > (userTable.pageNumber + 3) ?  (userTable.pageNumber + 3) : maxPage}" />
+      <c:set var="nextPage"
+       value="${(userTable.pageNumber + 1) > maxPage ? 0 : (userTable.pageNumber + 1)}" />
+      <c:set var="prevPage" value="${userTable.pageNumber - 1}" />
+
+      <!--
+       Begin ${beginPage} - end ${endPage} - max ${maxPage} - prev ${prevPage} - next ${nextPage} - current ${element.currentPage}
+    -->
+
+      <div id="basic-pagination">
+
+       <c:if test="${prevPage >= 0}">
+        <a href="#" onclick="submitForm('userTable_page', ${prevPage})"
+         class="prevLink-xs">Prev</a>
+       </c:if>
+
+       <c:if test="${beginPage>1}">
+        <span class="step-xs gap">..</span>
+       </c:if>
+
+
+
+
+       <c:forEach var="value" begin="${beginPage}" end="${endPage}"
+        varStatus="i">
+        <c:choose>
+         <c:when test="${i.index == userTable.pageNumber}">
+          <span class="currentStep-xs">${i.index+1}</span>
+         </c:when>
+         <c:otherwise>
+          <a href="#" class="step-xs"
+           onclick="submitForm('userTable_page', ${i.index})">${i.index+1}</a>
+         </c:otherwise>
+        </c:choose>
+       </c:forEach>
+
+       <c:if test="${(maxPage-1)>endPage}">
+        <span class="step-xs gap">..</span>
+       </c:if>
+
+       <c:if test="${nextPage > 0}">
+        <a class="nextLink" href="#"
+         onclick="submitForm('userTable_page', ${nextPage})">Next</a>
+       </c:if>
+      </div>
+     </c:if>
+    </div>
+   </div>
+  </div>
+  <input type="hidden" id="userTable_page" name="userTable_page"
+   value="${userTable.pageNumber }" /> <input type="hidden"
+   id="userTable_size" name="userTable_size"
+   value="${userTable.pageSize }" />
+ </form>
+</jsp:root>

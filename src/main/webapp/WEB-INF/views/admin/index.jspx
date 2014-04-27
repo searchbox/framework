@@ -1,8 +1,11 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
  xmlns:c="http://java.sun.com/jsp/jstl/core"
+ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
  xmlns:spring="http://www.springframework.org/tags"
+ xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
  xmlns:form="http://www.springframework.org/tags/form"
- xmlns:sb="urn:jsptagdir:/WEB-INF/tags/sb">
+ xmlns:sbx="urn:jsptagdir:/WEB-INF/tags/sbx"
+ xmlns:helper="http://www.searchbox.com/helper">
 
  <jsp:output omit-xml-declaration="yes" />
  <jsp:output doctype-root-element="HTML"
@@ -10,18 +13,33 @@
 
  <jsp:directive.page contentType="text/html;charset=UTF-8" />
  <jsp:directive.page pageEncoding="UTF-8" />
- <c:set scope="request" var="adminView" value="true"/>
+ <c:set scope="request" var="adminView" value="true" />
 
  <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=8" />  -->
+<jsp:include page="/WEB-INF/views/common/_head.jspx" />
+<jsp:include page="/WEB-INF/views/common/_admin-scripts.jspx" />
 
-<sb:base-scripts />
 
-<title>${title ? title : "Searchbox admin page"}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.collection-synchronize').click(function(e, xhr) {
+      e.preventDefault();
+      var button = $(this)
+      var loadurl = $(this).attr("data-synch")
+      console.log("Wassup: " + loadurl)
+      $.post(loadurl, function(data) {
+        console.log(data);
+        location.reload();
+      });
+    });
+  });
+</script>
+
+
 </head>
+
 <body>
  <div id="wrap">
 
@@ -31,85 +49,182 @@
 
    <div class="row" id="main-search-content">
 
-    <jsp:include page="/WEB-INF/views/common/_head_search_bar.jspx"/>
+    <jsp:include page="/WEB-INF/views/common/_head_search_bar.jspx" />
 
-    <div class="row" id="searchboxes">
+    <div class="row" id="first-row">
+     <div class="row" id="search-status-bar">
 
-     <div class="col-md-8 col-md-push-2">
-      <ul>
-       <li>Slug: ${searchbox.slug}</li>
-       <li>Name: ${searchbox.name}</li>
-       <li>Alias: ${searchbox.alias}</li>
-       <li>Description: ${searchbox.description}</li>
-       <li>Presets:
+      <!-- Found x results in x time -->
+      <div class="col-md-3 col-sm-5 col-xs-7">
+       <sbx:doElement type="STAT" admin="true" />
 
-        <ul>
-         <c:forEach var="preset" items="${searchbox.presets}">
-          <li>${preset.getCollection().getName()}</li>
-          <li><c:out value="${preset.getCollection()}" /></li>
-         </c:forEach>
-        </ul>
-       </li>
-      </ul>
+      </div>
 
-
-      <hr />
-
-
-      <div class="panel panel-default">
-       <div class="panel-heading">
-        Searchbox Users
-        <div role="toolbar" class="btn-group btn-group-xs pull-right">
-         <button data-toggle="modal" class="btn btn-default"
-          type="button">
-          <span class="glyphicon glyphicon-plus"> <!-- icon -->
-          </span>
-         </button>
-        </div>
-       </div>
-
-       <div class="panel-body">
-        <table
-         class="table table-striped tablesorter-bootstrap tablesorter">
-         <thead>
-          <th>ID</th>
-          <th>email</th>
-          <th>roles</th>
-          <th>actions</th>
-         </thead>
-         <c:forEach var="user" items="${users}">
-          <tr>
-           <td>${user.id}</td>
-           <td>${user.email}</td>
-           <td><c:forEach var="role" items="${user.roles}">
-             <c:out value="${role.role}" />
-            </c:forEach></td>
-           <td>
-            <div class="btn-group" data-toggle="buttons">
-             <label class="btn btn-default btn-sm"> <a href="#">
-               <span class="glyphicon glyphicon-pencil"> <!-- icon -->
-              </span>
-             </a>
-             </label> <label class="btn btn-default btn-sm"> <a href="#"><span
-               class="glyphicon glyphicon-trash"> <!-- icon -->
-              </span></a>
-             </label>
-            </div>
-
-
-           </td>
-          </tr>
-         </c:forEach>
-
-        </table>
-
-       </div>
+      <!-- Sort button -->
+      <div
+       class="col-md-2 col-md-push-5 col-sm-2 col-sm-push-5 col-xs-5 sort-col">
+       <sbx:doElement type="SORT" admin="true" />
       </div>
      </div>
     </div>
+
+
+    <div class="row" id="info">
+
+     <!-- LEFT COLUMN  -->
+     <div class="col-md-3">
+
+      <div class="block" id="instance">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         <b>Server</b>
+        </div>
+        <div class="panel-body">
+         <div class="content">
+          <ul class="data">
+           <li><dl>
+             <dt>Host</dt>
+             <dd>
+              <c:url value="/" />
+             </dd>
+            </dl></li>
+           <li><dl>
+             <dt>
+              <span>Version</span>
+             </dt>
+             <dd class="version">1.0-SNAPSHOT-SEARCHBOX</dd>
+            </dl></li>
+          </ul>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+
+
+     <!-- MAIN COLUMN  -->
+     <div class="col-md-7" id="collections">
+
+      <div class="row">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+         Available Collections on <b>${searchbox.name }</b>
+        </div>
+        <div class="panel-body">
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th></th>
+            <th>name</th>
+            <th>presets</th>
+            <th>runs</th>
+            <th>lastUpdate</th>
+            <th>status</th>
+            <th></th>
+           </tr>
+          </thead>
+          <tbody>
+           <c:forEach items="${collections }" var="collection"
+            varStatus="item">
+            <tr>
+             <td>${item.count }</td>
+             <td>${collection.name }</td>
+             <td><c:forEach items="${collection.presets }"
+               var="cpreset">
+               <spring:url
+                value="${cpreset.searchbox.slug}/${cpreset.slug}"
+                var="plink" />
+               <a href="${plink}">${cpreset.label }</a>
+              </c:forEach></td>
+             <td><c:if test="${collection.isRunnable() }">
+              ${collection.jobCount}
+             </c:if></td>
+             <td><c:if test="${collection.isRunnable() }">
+               <fmt:formatDate value="${collection.lastJobDate}"
+                dateStyle="medium" timeStyle="none" />
+              </c:if></td>
+             <td><c:if test="${collection.isRunnable() }">
+               <c:choose>
+                <c:when test="${collection.lastJobStatus == 'STARTED'}">
+                 <span class="label label-info">Running...</span>
+                </c:when>
+                <c:when test="${collection.lastJobStatus == 'FAILED'}">
+                 <span class="label label-danger">Failed</span>
+                </c:when>
+                <c:when
+                 test="${collection.lastJobStatus == 'COMPLETED'}">
+                 <span class="label label-success">Completed</span>
+                </c:when>
+                <c:otherwise>
+                 ${exec.getStatus()}
+               </c:otherwise>
+               </c:choose>
+              </c:if></td>
+             <td><c:if test="${collection.isRunnable() }">
+               <c:set var="cssAddon" value="" />
+               <c:if test="${collection.lastJobStatus == 'STARTED'}">
+                <c:set var="cssAddon" value="disabled" />
+               </c:if>
+               <spring:url
+                value="/admin/${searchbox.getSlug()}/CollectionDefinition/${collection.id}/synchronize"
+                var="synchUrl" />
+               <button
+                class="btn btn-default btn-xs collection-synchronize ${cssAddon }"
+                data-synch="${synchUrl }" type="button"
+                title="Synchronize collection now"
+                alt="Synchronize collection now">
+                <span class="glyphicon glyphicon-refresh"></span>
+               </button>
+              </c:if></td>
+            </tr>
+           </c:forEach>
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+
+
+      <jsp:include page="/WEB-INF/views/admin/user/_table.jspx" />
+
+
+     </div>
+
+
+    </div>
+
    </div>
   </div>
  </div>
+
+ <style>
+ul.data {
+ list-style: none;
+ padding-left: 5px;
+}
+
+ul.data dl {
+ margin-bottom: 5px;
+ float: left;
+ width: 100%;
+ clear: both;
+}
+
+ul.data li dt {
+ float: left;
+ white-space: nowrap;
+ width: 20%;
+ min-width: 90px;
+}
+
+ul.data li dd {
+ float: left;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
+ max-width: 60%;
+}
+</style>
 </body>
  </html>
 </jsp:root>

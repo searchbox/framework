@@ -2,13 +2,16 @@ package com.searchbox.framework.service;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +32,7 @@ public class UserService {
   private PasswordEncoder passwordEncoder;
 
   private UserRepository repository;
-  
+
   private MailSender mailSender;
 
   @Autowired
@@ -115,7 +118,7 @@ public class UserService {
   public String encodePasswordString(String password){
     return passwordEncoder.encode(password);
   }
-  
+
   private String encodePassword(RegistrationForm dto) {
     String encodedPassword = null;
 
@@ -126,13 +129,13 @@ public class UserService {
 
     return encodedPassword;
   }
-  
+
   public UserEntity addRole(UserEntity user, Role... role) {
     user.getRoles().addAll(Arrays.asList(role));
     return repository.save(user);
   }
 
-  public String resetPasswordWithEmail(String email, String host, 
+  public String resetPasswordWithEmail(String email, String host,
       Integer port,  String path) {
     UserEntity user = repository.findByEmail(email);
     // disable log-in for User Account
@@ -140,40 +143,72 @@ public class UserService {
     user.setResetHash(this.getResetHash(email));
     user.setResetDate(new Date());
     repository.save(user);
-    
+
     LOGGER.info("Saved user {}",user);
-    
+
     String resetUrl = "http://"+host+
         ((port!=80)?":"+port:"")+
         path+"/user/resetPassword/"+user.getResetHash();
-    
+
     LOGGER.info("Preparing the reset email with link {}", resetUrl);
 
     // send notification mail.
-    SimpleMailMessage msg = new SimpleMailMessage();
-    msg.setFrom("no-reply@opportunity-finder.com");
-    msg.setTo(email);
-    msg.setSubject("Reset your password on opportunity-finder");
-    msg.setText("Dear"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+
-                      ((user.getLastName()!=null)?" "+user.getLastName():"")+",\n\n"+
-                "We received a request from you to reset your "+
-                "Opportunity-Finder password. To complete the process, "+
-                "simply click the link below: \n\n"+
-                resetUrl+"\n\n"+
-                "The link is valid for 24 hours.\n\n"+
-                "If you don't want to change your Opportunity-Finder password "+
-                "you can ignore this mail.\n\n"+
-                "If you need any help, contact us at contact@opportunity-finder.ch.\n\n"+
-                "Your Opportunity-Finder Team");
-    
-    mailSender.send(msg);
-    
+//    SimpleMailMessage msg = new SimpleMailMessage();
+//    msg.setFrom("no-reply@opportunity-finder.com");
+//    msg.setTo(email);
+//    msg.setSubject("Reset your password on opportunity-finder");
+//    msg.setText("Dear"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+
+//                      ((user.getLastName()!=null)?" "+user.getLastName():"")+",\n\n"+
+//                "We received a request from you to reset your "+
+//                "Opportunity-Finder password. To complete the process, "+
+//                "simply click the link below: \n\n"+
+//                resetUrl+"\n\n"+
+//                "The link is valid for 24 hours.\n\n"+
+//                "If you don't want to change your Opportunity-Finder password "+
+//                "you can ignore this mail.\n\n"+
+//                "If you need any help, contact us at contact@opportunity-finder.ch.\n\n"+
+//                "Your Opportunity-Finder Team");
+//
+//    mailSender.send(msg);
+
     return resetUrl;
   }
 
   public UserEntity changePassword(UserEntity user, String password) {
     user.setPassword(passwordEncoder.encode(password));
-    
     return repository.save(user);
+  }
+
+  /**
+   * Returns a new object which specifies the the wanted result page.
+   * @param pageIndex The index of the wanted result page
+   * @return
+   */
+  private Pageable constructPageSpecification() {
+      Pageable pageSpecification = new PageRequest(0, 10, sortByEmail());
+      return pageSpecification;
+  }
+
+  /**
+   * Returns a Sort object which sorts persons in ascending order by using the last name.
+   * @return
+   */
+  private Sort sortByEmail() {
+      return new Sort(Sort.Direction.ASC, "email");
+  }
+
+
+  public List<UserEntity> findAll(){
+    return findAll(constructPageSpecification());
+  }
+
+  public List<UserEntity> findAll(Pageable pageRequest){
+    LOGGER.debug("Listing all persons for page: " + pageRequest.getPageNumber());
+    Page<UserEntity> requestedPage = repository.findAll(pageRequest);
+    return requestedPage.getContent();
+  }
+
+  public long countAll() {
+    return repository.count();
   }
 }

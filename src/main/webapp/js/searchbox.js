@@ -213,7 +213,7 @@ var submitForm = function(paramName, paramValue, multi) {
     if ($(this).val() == multi) {
       $(this).val("");
     } else if (!multi) {
-      $(this).val("");
+      $(this).remove();
     }
   });
 

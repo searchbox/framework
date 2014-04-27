@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright SearchboxEntity - http://www.searchbox.com
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,22 +71,21 @@ public class SystemController {
 
   @Autowired
   SearchEngineRepository searchEngineRepository;
-  
+
   @Autowired
   ServletContext servletContext;
-  
+
   @ModelAttribute("context")
   public ServletContext getServletContext(){
-    
     return servletContext;
   }
-  
+
   @ModelAttribute("user")
   public UserEntity getUser(@AuthenticationPrincipal UserEntity user){
     return user;
   }
 
-  
+
   @ModelAttribute("request")
   public HttpServletRequest getServletRequest(HttpServletRequest request){
     return request;
@@ -271,10 +270,10 @@ public class SystemController {
   /**
    * Try to run a getter function. This is useful because java 1.6 has a few
    * extra useful functions on the <code>OperatingSystemMXBean</code>
-   * 
+   *
    * If you are running a sun jvm, there are nice functions in:
    * UnixOperatingSystemMXBean and com.sun.management.OperatingSystemMXBean
-   * 
+   *
    * it is package protected so it can be tested...
    */
   static void addGetterIfAvaliable(Object obj, String getter,
