@@ -23,12 +23,12 @@
    <nav class="collapse navbar-collapse bs-navbar-collapse left"
     role="navigation">
     <ul class="nav navbar-nav" id="preset-bar">
-     <c:forEach var="ppreset" items="${presets}">    
+     <c:forEach var="ppreset" items="${presets}">
      <c:set var="cssClass" value=""/>
      <c:if test="${ppreset.slug.equals(preset.slug)}">
       <c:set var="cssClass" value="active"/>
      </c:if>
-     
+
      <c:choose>
       <c:when test="${adminView}">
            <spring:url var="linkUrl" value="/admin/${searchbox.getSlug() }/${ppreset.getSlug() }/search"/>
@@ -37,9 +37,9 @@
            <spring:url var="linkUrl" value="/${searchbox.getSlug() }/${ppreset.getSlug() }/"/>
       </c:otherwise>
      </c:choose>
-  
-     
-     
+
+
+
      <li class="${cssClass}"><a href="${linkUrl }">${ppreset.label }</a></li>
      </c:forEach>
     </ul>

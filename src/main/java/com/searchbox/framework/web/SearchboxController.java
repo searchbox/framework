@@ -72,12 +72,6 @@ public class SearchboxController {
     return user;
   }
 
-  @ModelAttribute("adminView")
-  public boolean isAdminView(){
-    return true;
-  }
-
-
   @Autowired
   ApplicationConversionService conversionService;
 
