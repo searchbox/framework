@@ -68,11 +68,11 @@
 
        <c:if test="${prevPage >= 0}">
         <a href="#" onclick="submitForm('userTable_page', ${prevPage})"
-         class="prevLink-xs">Prev</a>
+         class="prevLink">Prev</a>
        </c:if>
 
        <c:if test="${beginPage>1}">
-        <span class="step-xs gap">..</span>
+        <span class="step gap">..</span>
        </c:if>
 
 
@@ -82,17 +82,17 @@
         varStatus="i">
         <c:choose>
          <c:when test="${i.index == userTable.pageNumber}">
-          <span class="currentStep-xs">${i.index+1}</span>
+          <span class="currentStep">${i.index+1}</span>
          </c:when>
          <c:otherwise>
-          <a href="#" class="step-xs"
+          <a href="#" class="step"
            onclick="submitForm('userTable_page', ${i.index})">${i.index+1}</a>
          </c:otherwise>
         </c:choose>
        </c:forEach>
 
        <c:if test="${(maxPage-1)>endPage}">
-        <span class="step-xs gap">..</span>
+        <span class="step gap">..</span>
        </c:if>
 
        <c:if test="${nextPage > 0}">
