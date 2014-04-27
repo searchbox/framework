@@ -64,7 +64,7 @@ public class PasswordController {
     if (user == null || !tokenIsValid(user)) {
       // The token is not valid anymore
       LOGGER.info("Token is expired of invalid {}", token);
-      
+
       return new ModelAndView("redirect:/?error=invalid_token");
     } else {
       mav.addObject("user", user);
@@ -87,8 +87,16 @@ public class PasswordController {
       return mav;
     }
 
+    if (password.isEmpty()) {
+      LOGGER.info("Password is empty");
+      mav.addObject("error", "Password cannot be empty");
+      return mav;
+    }
+
     if (!password.equals(passwordConfirm)) {
       LOGGER.info("Passwords do not match!");
+      mav.addObject("error", "Passwords do not match");
+      return mav;
     }
 
     // Ok we change the password of the user
@@ -98,27 +106,30 @@ public class PasswordController {
     SecurityUtil.logInUser(user);
     ProviderSignInUtils.handlePostSignUp(user.getEmail(), request);
     LOGGER.info("User {} has been signed in", user.getEmail());
+    mav.addObject("user", user);
+    mav.addObject("redirect", "/");
+    return mav;
 
-    return new ModelAndView(new RedirectView("/", true));
+    //return new ModelAndView(new RedirectView("/", true));
   }
 
-  
+
   @RequestMapping(value = "/reset", method = RequestMethod.GET,
       params={"email"})
   @ResponseBody
   public Map<String,String> requestPasswordReset(
       @RequestParam(value = "email") String email,
       HttpServletRequest request) {
-     
+
     Map<String, String> result = new HashMap<>();
-    
+
     if (!service.emailExist(email)) {
       LOGGER.info("User with email {} does not exists", email);
       result.put("status", "KO");
       result.put("message", "User with email \""+email+"\" does not exists");
       return result;
     }
-    
+
     String host = env.getProperty("searchbox.dns");
     if (host == null || host.isEmpty()) {
       host = request.getRemoteHost();
