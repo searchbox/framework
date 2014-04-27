@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,23 +154,23 @@ public class UserService {
     LOGGER.info("Preparing the reset email with link {}", resetUrl);
 
     // send notification mail.
-//    SimpleMailMessage msg = new SimpleMailMessage();
-//    msg.setFrom("no-reply@opportunity-finder.com");
-//    msg.setTo(email);
-//    msg.setSubject("Reset your password on opportunity-finder");
-//    msg.setText("Dear"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+
-//                      ((user.getLastName()!=null)?" "+user.getLastName():"")+",\n\n"+
-//                "We received a request from you to reset your "+
-//                "Opportunity-Finder password. To complete the process, "+
-//                "simply click the link below: \n\n"+
-//                resetUrl+"\n\n"+
-//                "The link is valid for 24 hours.\n\n"+
-//                "If you don't want to change your Opportunity-Finder password "+
-//                "you can ignore this mail.\n\n"+
-//                "If you need any help, contact us at contact@opportunity-finder.ch.\n\n"+
-//                "Your Opportunity-Finder Team");
-//
-//    mailSender.send(msg);
+    SimpleMailMessage msg = new SimpleMailMessage();
+    msg.setFrom("no-reply@opportunity-finder.com");
+    msg.setTo(email);
+    msg.setSubject("Reset your password on opportunity-finder");
+    msg.setText("Dear"+((user.getFirstName()!=null)?" "+user.getFirstName():"")+
+                      ((user.getLastName()!=null)?" "+user.getLastName():"")+",\n\n"+
+                "We received a request from you to reset your "+
+                "Opportunity-Finder password. To complete the process, "+
+                "simply click the link below: \n\n"+
+                resetUrl+"\n\n"+
+                "The link is valid for 24 hours.\n\n"+
+                "If you don't want to change your Opportunity-Finder password "+
+                "you can ignore this mail.\n\n"+
+                "If you need any help, contact us at contact@opportunity-finder.ch.\n\n"+
+                "Your Opportunity-Finder Team");
+
+    mailSender.send(msg);
 
     return resetUrl;
   }
