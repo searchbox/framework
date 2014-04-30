@@ -162,6 +162,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       
       userRepository.save(
           new UserEntity()
+            .setEmail("jonatrey@test.com")
+            .setPassword(userService.encodePasswordString("searchbox2014"))
+            .setFirstName("Jonathan Rey"));
+      
+      userRepository.save(
+          new UserEntity()
             .setEmail("stephane@gamard.net")
             .setFirstName("stephane")
             .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));

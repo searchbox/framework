@@ -23,6 +23,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.UserRepository;
 import com.searchbox.framework.service.UserService;
@@ -102,6 +103,16 @@ public class PasswordController {
     // Ok we change the password of the user
     user = service.changePassword(user, password);
 
+    //Make the hash and the date invalid
+    user.setResetHash(null);
+    user.setResetDate(null);
+    
+    //TODO: remove this - users were imported without any role.
+    if(user.getRoles().size() == 0){
+      user.getRoles().add(Role.USER);
+    }
+    user = repository.save(user);
+    
     // And we log him in (conveniance)
     SecurityUtil.logInUser(user);
     ProviderSignInUtils.handlePostSignUp(user.getEmail(), request);
