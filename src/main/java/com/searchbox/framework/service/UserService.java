@@ -143,8 +143,9 @@ public class UserService {
     //user.setAccountNonLocked(false);
     user.setResetHash(this.getResetHash(email));
     user.setResetDate(new Date());
+    //TODO Steph: This method doesn't seem to update the user.
     repository.save(user);
-
+    
     LOGGER.info("Saved user {}",user);
 
     String resetUrl = "http://"+host+
