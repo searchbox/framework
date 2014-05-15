@@ -33,6 +33,7 @@
     <spring:url var="admin" value="/admin/${searchbox.getSlug() }" />
     <spring:url var="system" value="/system" />
     <li><a href="${home }">Home</a></li>
+    <jsp:include page="/WEB-INF/views/common/_head_menu_custom_entries.jspx"/>
     <sec:authorize access="hasRole('ROLE_ADMIN')">
     <li><a href="${admin }">Admin</a></li>
      </sec:authorize>
