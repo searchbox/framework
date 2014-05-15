@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.common.params.DisMaxParams;
 import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
@@ -79,6 +80,9 @@ public class EdismaxQuerySolrAdaptor {
       query.setQuery(searchElement.getCollationQuery());
     } else {
       query.setQuery(ClientUtils.escapeQueryChars(condition.getQuery()));
+    }
+    if(condition.getQuery().split(" ").length > 5){
+      query.setParam("q.op", "OR");
     }
   }
 
