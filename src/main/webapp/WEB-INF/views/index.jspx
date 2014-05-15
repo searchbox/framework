@@ -1,105 +1,123 @@
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
- xmlns:c="http://java.sun.com/jsp/jstl/core"
- xmlns:fn="http://java.sun.com/jsp/jstl/functions"
- xmlns:spring="http://www.springframework.org/tags"
- xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
- xmlns:form="http://www.springframework.org/tags/form"
- xmlns:helper="http://www.searchbox.com/helper"
- xmlns:sec="http://www.springframework.org/security/tags">
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:spring="http://www.springframework.org/tags"
+  xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+  xmlns:form="http://www.springframework.org/tags/form"
+  xmlns:helper="http://www.searchbox.com/helper"
+  xmlns:sec="http://www.springframework.org/security/tags">
 
- <jsp:output omit-xml-declaration="yes" />
- <jsp:output doctype-root-element="HTML"
-  doctype-system="about:legacy-compat" />
+  <jsp:output omit-xml-declaration="yes" />
+  <jsp:output doctype-root-element="HTML"
+    doctype-system="about:legacy-compat" />
 
- <jsp:directive.page contentType="text/html;charset=UTF-8" />
- <jsp:directive.page pageEncoding="UTF-8" />
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:directive.page pageEncoding="UTF-8" />
 
- <html>
- 
- <head>
- <jsp:include page="/WEB-INF/views/common/_head.jspx" />
- </head>
+  <html>
+
+<head>
+<jsp:include page="/WEB-INF/views/common/_head.jspx" />
+</head>
 
 <body>
- <div id="wrap">
+  <div id="wrap">
 
-  <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
+    <jsp:include page="/WEB-INF/views/common/_navbar.jspx" />
 
-  <div id="main-content" role="main">
+    <div id="main-content" role="main">
 
-   <div class="row" id="main-search-content">
+      <div class="row" id="main-search-content">
 
-    <div class="row" id="search-bar" style="margin-bottom: 25px;">
+        <div class="row" id="search-bar" style="margin-bottom: 25px;">
 
-     <div class="col-md-3 col-sm-5 col-left">
+          <div class="col-md-3 col-sm-5 col-left">
 
-      <div class="media">
-       <spring:url value="/" var="home_url" />
-       <a class="pull-left" href="${home_url}"> <spring:url
-         value="/assets/images/oppfin-logo.png"
-         var="searchbox_logo" /> <img src='${searchbox_logo}'
-        class="media-object" alt="Searchbox" id="logo-image" />
-       </a>
-      </div>
-     </div>
+            <div class="media">
+              <spring:url value="/" var="home_url" />
+              <a class="pull-left" href="${home_url}"> <spring:url
+                  value="/assets/images/oppfin-logo.png"
+                  var="searchbox_logo" /> <img src='${searchbox_logo}'
+                class="media-object" alt="Searchbox" id="logo-image" />
+              </a>
+            </div>
+          </div>
 
-    </div>
-
-    <div class="row" id="info">
-     <div class="col-md-3">
-
-      <!--  left column -->
-
-     </div>
-
-     <sec:authorize access="isAnonymous()">
-     <div class="row col-md-7">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">Login</div>
-          <div class="panel-body"> <jsp:include page="/WEB-INF/views/user/login.jspx" /></div>
         </div>
+
+        <div class="row" id="info">
+          <div class="col-md-3">
+
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">About</div>
+                <div class="omb_login">
+                <p>
+                  <a style="padding-left:10px" href="http://cdn.searchbox.com/sbf/oppfin-landing/landing.html" target="_blank">Learn more</a> about the Opportunity-finder
+                  <ul>
+                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/landing.html" target="_blank">What is the Opportunity-finder?</a></li>
+                  
+                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/assets/pdf/New%20Terms%20and%20Conditions%20of%20Use%20%2009-10-2012%20EC.pdf" target="_blank">Terms of use</a></li>
+                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/assets/pdf/Getting%20Started%20with%20Opportunity-Finder_X01%2006.pdf" target="_blank">Getting started Guide</a></li>
+                  </ul>
+                
+                  
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <sec:authorize access="isAnonymous()">
+            <div class="row col-md-7">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">Login</div>
+                  <div class="panel-body">
+                    <jsp:include page="/WEB-INF/views/user/login.jspx" /></div>
+                </div>
+              </div>
+            </div>
+          </sec:authorize>
+          <sec:authorize access="isAuthenticated()">
+            <jsp:forward page="/oppfin" />
+          </sec:authorize>
+
+        </div>
+
       </div>
-     </div>
-     </sec:authorize>
-      <sec:authorize access="isAuthenticated()">
-        <jsp:forward page="/oppfin" /> 
-      </sec:authorize>
-
     </div>
-
-   </div>
   </div>
- </div>
 
- <style>
+  <style>
 ul.data {
- list-style: none;
- padding-left: 5px;
+  list-style: none;
+  padding-left: 5px;
 }
 
 ul.data dl {
- margin-bottom: 5px;
- float: left;
- width: 100%;
- clear: both;
+  margin-bottom: 5px;
+  float: left;
+  width: 100%;
+  clear: both;
 }
 
 ul.data li dt {
- float: left;
- white-space: nowrap;
- width: 20%;
- min-width: 90px;
+  float: left;
+  white-space: nowrap;
+  width: 20%;
+  min-width: 90px;
 }
 
 ul.data li dd {
- float: left;
- text-overflow: ellipsis;
- overflow: hidden;
- white-space: nowrap;
- max-width: 60%;
+  float: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 60%;
 }
 </style>
 </body>
- </html>
+  </html>
 </jsp:root>
