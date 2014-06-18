@@ -37,10 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.collection.ExpiringDocuments;
 import com.searchbox.collection.StandardCollection;
-import com.searchbox.collection.oppfin.CordisCollection;
-import com.searchbox.collection.oppfin.EENCollection;
-import com.searchbox.collection.oppfin.IdealISTCollection;
-import com.searchbox.collection.oppfin.TopicCollection;
+import com.searchbox.collection.deindeal.ProductCollection;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
@@ -137,40 +134,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         LOGGER.error("Could not set definition for SolrEmbededServer", e);
       }
 
-      LOGGER.info("Creating Default Users...");
-      UserEntity system = userService.registerNewUserAccount("system@searchbox.com", "password");
-      UserEntity admin = userService.registerNewUserAccount("admin@searchbox.com", "password");
-      UserEntity user = userService.registerNewUserAccount("user@searchbox.com", "password");
-
-      system = userService.addRole(system, Role.SYSTEM, Role.ADMIN, Role.USER);
-      admin = userService.addRole(admin, Role.ADMIN, Role.USER);
-      user = userService.addRole(user, Role.USER);
-
-
-      userRepository.save(
-          new UserEntity()
-            .setEmail("jonathan@xtremsoft.com")
-            .setFirstName("Jonathan")
-            .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
-
-      userRepository.save(
-          new UserEntity()
-            .setEmail("jonatrey@yahoo.com")
-            .setPassword(userService.encodePasswordString("searchbox2014"))
-            .setFirstName("Jonathan Rey")
-            .setRoles(Arrays.asList(new Role[]{Role.USER})));
       
-      userRepository.save(
-          new UserEntity()
-            .setEmail("jonatrey@test.com")
-            .setPassword(userService.encodePasswordString("searchbox2014"))
-            .setFirstName("Jonathan Rey"));
-      
-      userRepository.save(
-          new UserEntity()
-            .setEmail("stephane@gamard.net")
-            .setFirstName("stephane")
-            .setRoles(Arrays.asList(new Role[]{Role.ADMIN, Role.SYSTEM, Role.USER})));
 
 
       LOGGER.info("Bootstraping application with oppfin data...");
@@ -180,8 +144,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        */
       LOGGER.info("++ Creating oppfin searchbox");
       SearchboxEntity searchbox = new SearchboxEntity()
-        .setSlug("oppfin")
-        .setName("Opportunity Finder Searchbox")
+        .setSlug("deindeal")
+        .setName("DeinDeal Searchbox")
         .setLogo("/assets/images/oppfin-logo.png");
 
 
@@ -194,44 +158,17 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        *
        */
       LOGGER.info("++ Creating oppfin Topic Collection");
-      CollectionEntity<?> topicsCollection = new CollectionEntity<>()
-        .setClazz(TopicCollection.class)
-        .setName("H2020Topics")
+      CollectionEntity<?> productsCollection = new CollectionEntity<>()
+        .setClazz(ProductCollection.class)
+        .setName("Products")
         .setAutoStart(false)
-        .setIdFieldName("topicIdentifier")
+        .setIdFieldName("id")
         .setSearchEngine(engine);
-      topicsCollection = collectionRepository.save(topicsCollection);
+      productsCollection = collectionRepository.save(productsCollection);
 
 
-      LOGGER.info("++ Creating oppfin EEN Collection");
-      CollectionEntity<?> eenCollection = new CollectionEntity<>()
-          .setClazz(EENCollection.class)
-          .setName("eenCooperations")
-          .setAutoStart(false)
-          .setIdFieldName("eenReferenceExternal")
-          .setSearchEngine(engine);
-      eenCollection = collectionRepository.save(eenCollection);
-
-      /** The base collection for idealist */
-      LOGGER.info("++ Creating oppfin IDEALIST Collection");
-      CollectionEntity<?> idealistCollection = new CollectionEntity<>()
-          .setClazz(IdealISTCollection.class)
-          .setName("idealistCooperations")
-          .setSearchEngine(engine)
-          .setAutoStart(false)
-          .setIdFieldName("uid");
-      idealistCollection = collectionRepository.save(idealistCollection);
-
-
-      LOGGER.info("++ Creating oppfin CORDIS Collection");
-      CollectionEntity<?> cordisCollection = new CollectionEntity<>()
-        .setClazz(CordisCollection.class)
-        .setIdFieldName("cordisId")
-        .setName("fundedProjects")
-        .setAutoStart(false)
-        .setSearchEngine(engine);
-      cordisCollection = collectionRepository.save(cordisCollection);
-
+      
+/*
 
       searchbox.newPreset().setLabel("Search All")
       .setDescription("All Collections")
@@ -243,418 +180,30 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
             .setSearchEngine(engine)
             .setAttribute("collections",
                 Arrays.asList(new String[]{
-                    topicsCollection.getName(),
-                    eenCollection.getName(),
-                    idealistCollection.getName(),
-                    cordisCollection.getName()
+                    productsCollection.getName()
                 }))))
             .addQueryElement()
             .addFieldFacet("Source", "docSource")
             .addStatElement()
             .addPagingElement("search")
             .addDebugElement()
-
-
-      /**
-       *
-       * Topic Preset
-       *
-       */
-      //Create a new preset in searchbox
-      .newChildPreset(true, TemplateElement.class)
-        .setLabel("Project Funding")
-        .setDescription("Project Funding (open calls)")
-        .setSlug("funding")
-
-        //TODO Steph, make this work
-        .addRangeCondition("Future deadlines only", "callDeadline","NOW","*")
-
-
-        .setCollection(topicsCollection)
-
-        /**
-         * Setting up fieldAttributes for preset
-         */
-        .newFieldAttribute("topicIdentifier")
-          .setAttribute("searchable", true)
-          .setAttribute("spelling", true)
-          .setAttribute("suggestion", true)
-          .setAttribute("label", "Topic ID")
-          .end()
-
-        .newFieldAttribute("callIdentifier")
-          .setAttribute("searchable", true)
-          .setAttribute("spelling", true)
-          .setAttribute("suggestion", true)
-          .setAttribute("label", "Call ID")
-          .end()
-
-        .newFieldAttribute("topicTitle")
-          .setAttribute("searchable", true)
-          .setAttribute("spelling", true)
-          .setAttribute("suggestion", true)
-          .setAttribute("highlight", true)
-          .setAttribute("label", "title")
-          .setAttribute("lang", lang)
-          .end()
-
-        .newFieldAttribute("description","topicDescriptionRaw")
-          .setAttribute("searchable", true)
-          .setAttribute("spelling", true)
-          .setAttribute("suggestion", true)
-          .setAttribute("highlight", true)
-          .setAttribute("label", "description")
-          .setAttribute("lang", lang)
-          .end()
-
-        .newFieldAttribute("callDeadline")
-          .setAttribute("sortable", true)
-          .end()
-
-        /**
-         *  Creating the SearchElements for preset
-         */
-        .newSearchElement()
-          .setClazz(SolrToString.class).end()
-
-        .newSearchElement("search")
-          .setClazz(EdismaxQuery.class).end()
-        .newSearchElement("view")
-          .setClazz(EdismaxQuery.class).end()
-
-        .newSearchElement()
-          .setClazz(TemplateElement.class)
-          .setAttribute("titleField", "topicTitle")
-          .setAttribute("idField", topicsCollection.getIdFieldName())
-          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicHit.jspx")
-          .setProcess("search")
-          .end()
-
-        .newSearchElement()
-          .setClazz(MoreLikeThisQuery.class)
-          .setProcess("mlt")
-          .end()
-        .newSearchElement()
-          .setClazz(TemplateElement.class)
-          .setAttribute("titleField", "topicTitle")
-          .setAttribute("idField", topicsCollection.getIdFieldName())
-          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicMLTHit.jspx")
-          .setProcess("mlt")
-          .end()
-
-        .newSearchElement()
-          .setClazz(TemplateElement.class)
-          .setLabel("leftCol")
-          .setProcess("view")
-          .setAttribute("titleField", "topicTitle")
-          .setAttribute("idField", topicsCollection.getIdFieldName())
-          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicViewMeta.jspx")
-	  .end()
-
-	.newSearchElement()
-	  .setClazz(TemplateElement.class)
-          .setLabel("body")
-          .setProcess("view")
-          .setAttribute("titleField", "topicTitle")
-          .setAttribute("idField", topicsCollection.getIdFieldName())
-          .setAttribute("templateFile", "/WEB-INF/templates/oppfin/_topicView.jspx")
-          .end()
-
-        .newSearchElement()
-          .setClazz(FieldSort.class)
-          .setAttribute("values",  new TreeSet<FieldSort.Value>(
-              Arrays.asList(new FieldSort.Value[]{
-                FieldSort.getRelevancySort(),
-                new FieldSort.Value(
-                  "By Deadline <span class=\"pull-right glyphicon glyphicon-sort-by-order\"></span>",
-                  "callDeadline", Sort.ASC),
-                new FieldSort.Value(
-                  "By Deadline <span class=\"pull-right glyphicon glyphicon-sort-by-order-alt\"></span>",
-                  "callDeadline", Sort.DESC)
-                }
-              )))
-          .end()
-
-       .newSearchElement()
-         .setClazz(BasicSearchStats.class)
-         .setLabel("Basic Stats")
-         .setProcess("search")
-         .end()
-
-       .newSearchElement()
-         .setClazz(FieldFacet.class)
-         .setLabel("Call")
-         .setAttribute("fieldName", "callIdentifier")
-         .setAttribute("order", Order.BY_VALUE)
-         .setAttribute("sort", Sort.DESC)
-         .end()
-
-      /**
-       * Ideally this is a range facet. We agreed that for now it will be a list
-       * of months For instance(March 14, April 14, May 14, June 14, ...)
-       */
-       .newSearchElement()
-         .setClazz(FieldFacet.class)
-         .setLabel("Deadline")
-         .setAttribute("fieldName","callDeadline")
-         .setAttribute("order", Order.BY_VALUE)
-         .setAttribute("sort", Sort.DESC)
-         .end()
-
-       .newSearchElement()
-         .setClazz(FieldFacet.class)
-         .setAttribute("fieldName", "topicFlags")
-         .setLabel("Flags")
-         .setAttribute("order", Order.BY_VALUE)
-         .setAttribute("sort", Sort.DESC)
-         .end()
-
-       .newSearchElement()
-         .setClazz(BasicPagination.class)
-         .setProcess("search")
-         .end()
-       .endChild()
-
-
-
-
-
+*/
 
       /**
        *
-       * Cooperation preset
+       * Products Preset
        *
        *
        */
-
-
-
-      .newChildPreset(true, TemplateElement.class)
-        .setCollection(collectionRepository.save(
-            new CollectionEntity<>()
-            .setClazz(MultiCollection.class)
-            .setName("cooperations")
-            .setSearchEngine(engine)
-            .setAttribute("collections",
-                Arrays.asList(new String[]{
-                    eenCollection.getName(),
-                    idealistCollection.getName()
-                }))))
-        .setSlug("cooperations")
-        .setLabel("Cooperations")
-        .addQueryElement("search")
-        .addQueryElement("view")
-        .addStatElement()
-        .addFieldFacet("Cooperation Source", "docSource")
-        .addFieldFacet("EEN Type", "eenReferenceType")
-        .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
-        .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
-
-        //TODO Steph: Check why this is failing.
-        .newSearchElement()
-          .setClazz(FieldSort.class)
-          .setAttribute("values",  new TreeSet<FieldSort.Value>(
-              Arrays.asList(new FieldSort.Value[]{
-                FieldSort.getRelevancySort(),
-                new FieldSort.Value(
-                    "By Update <span class=\"pull-right glyphicon glyphicon-chevron-down\"></span>",
-                    StandardCollection.STD_UPDATED_FIELD, Sort.DESC),
-                new FieldSort.Value(
-                    "By Deadline <span class=\"pull-right glyphicon glyphicon-chevron-up\"></span>",
-                    ExpiringDocuments.STD_DEADLINE_FIELD, Sort.ASC)
-                }
-              )))
-          .end()
-        /*.addSortableFieldAttribute("Published", "eenDatumSubmit")
-        .addSortableFieldAttribute("Updated", "eenDatumUpdate")
-        .addSortableFieldAttribute("Deadline", "eenDatumDeadline")*/
-
-        .addPagingElement("search")
-        .addDebugElement()
-
-      /**
-       *
-       * EEN preset
-       *
-       *
-       */
-
-
-      //LOGGER.info("++ Creating Cooperation preset");
-      //searchbox.newPreset()
-      .newChildPreset(true, FieldFacet.class, TemplateElement.class, MoreLikeThisQuery.class)
-        .setCollection(eenCollection)
-        .setDescription("EEN cooperations")
-        .setLabel("EEN")
-        .setSlug("een")
-        .setVisible(false)
-
-        .addSortableFieldAttribute("Published", "eenDatumSubmit")
-        .addSortableFieldAttribute("Updated", "eenDatumUpdate")
-        .addSortableFieldAttribute("Deadline", "eenDatumDeadline")
-
-        .newFieldAttribute("Title","eenContentTitle")
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .setLanguages(lang)
-          .end()
-
-        .newFieldAttribute("Summary","eenContentSummary")
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .setLanguages(lang)
-          .end()
-
-        .newFieldAttribute("Keyword","eenKeywordTechnologiesLabel")
-          .setSearchanble(true)
-          .setSpelling(true)
-          .setHighlight(true)
-          .setLanguages(lang)
-          .end()
-
-        .newFieldAttribute("Description","eenContentDescription")
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .setLanguages(lang)
-          .end()
-
-        .addQueryElement("Search")
-        .addQueryElement("view")
-
-        .newSearchElement().setClazz(BasicSearchStats.class)
-          .setProcess("search")
-          .end()
-
-        .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenHit.jspx")
-          .setProcess("search")
-          .end()
-
-        .newSearchElement("mlt")
-          .setClazz(MoreLikeThisQuery.class)
-          .end()
-        .newTemplateElement("eenContentTitle",  "/WEB-INF/templates/oppfin/_eenMLTHit.jspx")
-          .setProcess("mlt")
-          .end()
-
-        .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenViewMeta.jspx")
-          .setLabel("leftCol")
-          .setProcess("view")
-          .end()
-
-        .newTemplateElement("eenContentTitle", "/WEB-INF/templates/oppfin/_eenView.jspx")
-          .setLabel("body")
-          .setProcess("view")
-          .end()
-
-        .newSearchElement()
-          .setClazz(FieldSort.class)
-          .setAttribute("values", new TreeSet<FieldSort.Value>(
-              Arrays.asList(new FieldSort.Value[]{
-                  FieldSort.getRelevancySort(),
-                  new FieldSort.Value("Newest first", "eenDatumUpdate", Sort.DESC)
-              })))
-          .end()
-
-          .addFieldFacet("EEN Type", "eenReferenceType")
-          .addFieldFacet("Keyword", "eenKeywordTechnologiesLabel")
-          .addFieldFacet("Partner Country", "eenCompanyCountryLabel")
-
-        .addPagingElement("search")
-        .addDebugElement()
-        .endChild()
-
-
-      /**
-       * IDEALIST PRESET
-       *
-       *
-       */
-
-      .newChildPreset(true,  FieldFacet.class, TemplateElement.class)
-        .setCollection(idealistCollection)
-        .setSlug("idealist")
-        .setLabel("Ideal-IST")
-        .setVisible(false)
-        .setDescription("IDEALIST cooperations")
-
-        //.addFieldCondition("Open Opportunities Only", "idealistStatus","Open")
-        .addFieldFacet("Status", "idealistStatus")
-
-        .newFieldAttribute("Title","idealistTitle")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .newFieldAttribute("Summary","idealistOutline")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .newFieldAttribute("Summary","idealistBody")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-//      /** Facets for the presetIdealist. */
-//     /**
-//      * - Cooperation Source
-//      * - Partner Country
-//      */
-
-        .addQueryElement()
-        .addStatElement()
-        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistHit.jspx")
-          .setProcess("search")
-          .end()
-        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistMLTHit.jspx")
-          .setProcess("mlt")
-          .end()
-        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistView.jspx")
-          .setLabel("body")
-          .setProcess("view")
-          .end()
-        .newTemplateElement("idealistTitle", "/WEB-INF/templates/oppfin/_idealistViewMeta.jspx")
-          .setLabel("leftCol")
-          .setProcess("view")
-          .end()
-
-        .addPagingElement("search")
-        .addDebugElement()
-        .endChild()
-       .endChild()
-
-      /**
-       *
-       * Cordis Preset
-       *
-       *
-       */
-
 
       //LOGGER.info("++ Creating CORDIS preset");
 
-       .newChildPreset(true, TemplateElement.class)
-        .setLabel("Funded Projects")
-        .setDescription("Funded projects")
-        .setSlug("funded")
-        .setCollection(cordisCollection)
+      searchbox.newPreset().setLabel("Search All")
+      .setDescription("All Collections")
+      .setSlug("products")
+      
 
-        .newFieldAttribute("Title","cordisTitle")
+        .newFieldAttribute("Title","title")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -662,7 +211,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
 
-        .newFieldAttribute("Summary", "cordisSnippet")
+        .newFieldAttribute("Summary", "description")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -696,17 +245,11 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .endChild()
        .end();
 
-      /**
-       * Users preset
-       */
-
-//      searchbox.addUserRole(new UserRole(system, Role.SYSTEM))
-//        .addUserRole(new UserRole(admin, Role.ADMIN))
-//        .addUserRole(new UserRole(user, Role.USER));
+      
 
       repository.save(searchbox);
 
-      LOGGER.info("Bootstraping application with oppfin data... done");
+      LOGGER.info("Bootstraping application with Deindeal data... done");
 
     }
 
@@ -724,12 +267,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     LOGGER.info("*                  Welcome                         *");
     LOGGER.info("****************************************************");
     LOGGER.info("*                                                  *");
-    LOGGER.info("*                             __ _                 *");
-    LOGGER.info("*           ___  _ __  _ __  / _(_)_ __            *");
-    LOGGER.info("*          / _ \\| '_ \\| '_ \\| |_| | '_ \\           *");
-    LOGGER.info("*         | (_) | |_) | |_) |  _| | | | |          *");
-    LOGGER.info("*          \\___/| .__/| .__/|_| |_|_| |_|          *");
-    LOGGER.info("*               |_|   |_|                          *");
+    LOGGER.info("*                DeinDeal Searchbox                *");
     LOGGER.info("*                                                  *");
     LOGGER.info("****************************************************");
     LOGGER.info("*                                                  *");

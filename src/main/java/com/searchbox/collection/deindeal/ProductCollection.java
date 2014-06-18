@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.searchbox.collection.oppfin;
+package com.searchbox.collection.deindeal;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -50,7 +50,7 @@ import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
 
 @Configurable
-public class CordisCollection extends AbstractBatchCollection implements
+public class ProductCollection extends AbstractBatchCollection implements
     SynchronizedCollection, StandardCollection {
 
   @Autowired
@@ -62,7 +62,7 @@ public class CordisCollection extends AbstractBatchCollection implements
   DateFormat df;
 
   private static final Logger LOGGER = LoggerFactory
-      .getLogger(CordisCollection.class);
+      .getLogger(ProductCollection.class);
 
   public static List<Field> GET_FIELDS() {
     List<Field> fields = new ArrayList<Field>();
@@ -94,13 +94,13 @@ public class CordisCollection extends AbstractBatchCollection implements
     return fields;
   }
 
-  public CordisCollection() {
+  public ProductCollection() {
     this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
   }
 
-  public CordisCollection(String name) {
+  public ProductCollection(String name) {
     super(name);
   }
 
