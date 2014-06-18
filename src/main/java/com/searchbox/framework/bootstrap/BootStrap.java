@@ -154,15 +154,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       /**
        *
-       * Oppfin Collections
+       * DeinDeal Base Product Collections
        *
        */
-      LOGGER.info("++ Creating oppfin Topic Collection");
+
+      LOGGER.info("++ Creating DeinDeal Product Base Collection");
       CollectionEntity<?> productsCollection = new CollectionEntity<>()
         .setClazz(ProductCollection.class)
         .setName("Products")
         .setAutoStart(false)
-        .setIdFieldName("id")
+        .setIdFieldName("productId")
         .setSearchEngine(engine);
       productsCollection = collectionRepository.save(productsCollection);
 
@@ -196,14 +197,35 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        *
        */
 
-      //LOGGER.info("++ Creating CORDIS preset");
-
       searchbox.newPreset().setLabel("Search All")
       .setDescription("All Collections")
-      .setSlug("products")
-      
+      .setSlug("all")
+      .setCollection(collectionRepository.save(
+            new CollectionEntity<>()
+            .setClazz(MultiCollection.class)
+            .setName("all")
+            .setSearchEngine(engine)
+            .setAttribute("collections",
+                Arrays.asList(new String[]{
+                    productsCollection.getName()
+                  
+                }))))
+            .addQueryElement()
+            .addFieldFacet("Source", "docSource")
+            .addStatElement()
+            .addPagingElement("search")
+            .addDebugElement()
+            
+      //LOGGER.info("++ Creating CORDIS preset");
 
-        .newFieldAttribute("Title","title")
+      .newChildPreset(true,  FieldFacet.class, TemplateElement.class)
+        .setCollection(productsCollection)
+        .setSlug("products")
+        .setLabel("Products")
+        .setVisible(true)
+        .setDescription("DeinDeal products")
+
+        .newFieldAttribute("Title","name")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -211,7 +233,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
 
-        .newFieldAttribute("Summary", "description")
+        .newFieldAttribute("Summary", "description_fr")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -222,11 +244,10 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addQueryElement()
         .addStatElement()
 
-        .addFieldFacet("Year", "cordisStartYear")
-        .addFieldFacet("Area", "cordisArea")
-        .addFieldFacet("Category", "cordisCategory")
-        .addFieldFacet("Tag", "cordisTag")
-        .addFieldFacet("Status", "cordisProjectStatus")
+        .addFieldFacet("State", "state")
+        .addFieldFacet("Category", "category_fr")
+        .addFieldFacet("Sub-Category", "subcategory_fr")
+        .addFieldFacet("Color", "color_fr")
 
         .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
           .setProcess("search")

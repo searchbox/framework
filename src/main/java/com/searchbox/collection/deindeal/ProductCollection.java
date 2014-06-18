@@ -65,32 +65,45 @@ public class ProductCollection extends AbstractBatchCollection implements
       .getLogger(ProductCollection.class);
 
   public static List<Field> GET_FIELDS() {
+    /*
+     * "62218":{
+      "name":"Muskelstimulator \u00abVitality\u00bb 1043023",
+      "state":"work_in_progress",
+      "updated_at":"2014-06-18 14:55:37.98397",
+      "fr":{
+         "category":"",
+         "description":"",
+         "hl_name":"",
+         "color":"",
+         "subcategory":""
+      },
+      "de":{
+         "category":"Fitness",
+         "description":"Alle wollen einen sexy Body, wenn da nur das Trainieren nicht w\u00e4re. Mit diesem Muskelstimulator kannst du dein Training angenehmer gestalten. Das Ger\u00e4t l\u00e4sst sich gut an deine Tagesplanung anpassen und kann deine Muskeln zwischen den Aktivit\u00e4ten und Ruhephasen stimulieren. Die ausgesendeten Reize sorgen f\u00fcr Muskelzuckungen, die deine Muskulatur nicht von richtigem Training unterscheiden kann. So kannst du dein Workout perfektionieren und deinen Weg zum Traumk\u00f6rper etwas bequemer bestreiten.",
+         "hl_name":"Muskelstimulator \u00abVitality\u00bb",
+         "color":"gr\u00fcn",
+         "subcategory":"Muskelstimulation"
+      }
+   },
+     */
     List<Field> fields = new ArrayList<Field>();
-    fields.add(new Field(String.class, "docSource"));
-    fields.add(new Field(String.class, "cordisId"));
-    fields.add(new Field(String.class, "cordisTag"));
-    fields.add(new Field(Integer.class, "cordisStartYear"));
-    fields.add(new Field(Date.class, "cordisProjectStartDate"));
-    fields.add(new Field(Integer.class, "cordisProjectFunding"));
-    fields.add(new Field(String.class, "cordisContractType"));
-
-    fields.add(new Field(String.class, "cordisProjectStatus"));
-    fields.add(new Field(String.class, "cordisUrl"));
-    fields.add(new Field(String.class, "cordisCategory"));
-    fields.add(new Field(String.class, "cordisProgram"));
-    fields.add(new Field(String.class, "cordisProjectCost"));
-    fields.add(new Field(Date.class, "cordisProjectEndDate"));
-
-    fields.add(new Field(Integer.class, "cordisProjectDuration"));
-    fields.add(new Field(String.class, "cordisAcronymDescription"));
-    fields.add(new Field(String.class, "cordisSnippet"));
-    fields.add(new Field(String.class, "cordisSubProgrammArea"));
-    fields.add(new Field(String.class, "cordisCallIdentifier"));
-    fields.add(new Field(String.class, "cordisTitle"));
-    fields.add(new Field(String.class, "cordisCountryCode"));
-    fields.add(new Field(String.class, "cordisArea"));
-    fields.add(new Field(String.class, "cordisSubjectIndexCode"));
-    fields.add(new Field(String.class, "cordisLanguage"));
+    fields.add(new Field(Integer.class, "productId"));
+    fields.add(new Field(String.class, "name"));
+    fields.add(new Field(String.class, "state"));
+    fields.add(new Field(Date.class, "updated_at"));
+    
+    fields.add(new Field(String.class, "category_fr"));
+    fields.add(new Field(String.class, "description_fr"));
+    fields.add(new Field(String.class, "hl_name_fr"));
+    fields.add(new Field(String.class, "color_fr"));
+    fields.add(new Field(String.class, "subcategory_fr"));
+    
+    fields.add(new Field(String.class, "category_de"));
+    fields.add(new Field(String.class, "description_de"));
+    fields.add(new Field(String.class, "hl_name_de"));
+    fields.add(new Field(String.class, "color_de"));
+    fields.add(new Field(String.class, "subcategory_de"));
+    
     return fields;
   }
 
@@ -108,25 +121,25 @@ public class ProductCollection extends AbstractBatchCollection implements
 
     return new ItemReader<JSONObject>() {
 
-      JSONArray cordisData;
+      JSONArray productData;
       Iterator iterator;
 
       {
         LOGGER.info("Starting collection / ItemReader");
         String jsonData = FileUtils.readFileToString(context.getResource(
-            "classpath:data/cordis.json").getFile());
+            "classpath:data/test_data_deindeal.json").getFile());
 
-        LOGGER.info("Finished reading cordis.json. File is {}",
+        LOGGER.info("Finished reading test_data_deindeal.json. File is {}",
             jsonData.length());
 
         Object obj = JSONValue.parse(jsonData);
         LOGGER.info("Cordis data is loaded {}", obj != null);
 
         jsonData = null;
-        cordisData = (JSONArray) obj;
-        LOGGER.info("Cordis data is parsed {}", cordisData.size());
+        productData = (JSONArray) obj;
+        LOGGER.info("Cordis data is parsed {}", productData.size());
 
-        iterator = cordisData.iterator();
+        iterator = productData.iterator();
       }
 
       @Override
@@ -149,10 +162,20 @@ public class ProductCollection extends AbstractBatchCollection implements
         LOGGER.info("Processing cordis {}", item.get("id"));
         FieldMap doc = new FieldMap();
         
-        doc.put("docSource", "Cordis");
-        doc.put("docType", "Cordis");
-        doc.put("programme", item.get("program"));
+        doc.put("docSource", "JSON");
+        doc.put("docType", "Product");
+        
+/*
+ * fields.add(new Field(Integer.class, "productId"));
+    fields.add(new Field(String.class, "name"));
+    fields.add(new Field(String.class, "state"));
+    fields.add(new Field(Date.class, "updated_at"));
+ */
+        doc.put("productId", item.get("name"));
 
+        System.out.println(item.toString());
+        System.exit(0);
+        
         doc.put("cordisId", item.get("id"));
         doc.put("cordisTag", item.get("tag"));
         doc.put("cordisStartYear", item.get("start_year"));
@@ -217,7 +240,7 @@ public class ProductCollection extends AbstractBatchCollection implements
   public Date getUpdateValue(FieldMap fields) {
     return null;
   }
-
+  
   @Override
   protected FlowJobBuilder getJobFlow(JobBuilder builder) {
 
