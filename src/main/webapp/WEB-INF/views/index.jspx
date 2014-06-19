@@ -46,29 +46,7 @@
         </div>
 
         <div class="row" id="info">
-          <div class="col-md-3">
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">About</div>
-                <div class="omb_login">
-                <p>
-                  <a style="padding-left:10px" href="http://cdn.searchbox.com/sbf/oppfin-landing/landing.html" target="_blank">Learn more</a> about the Opportunity-finder
-                  <ul>
-                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/landing.html" target="_blank">What is the Opportunity-finder?</a></li>
-                  
-                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/assets/pdf/New%20Terms%20and%20Conditions%20of%20Use%20%2009-10-2012%20EC.pdf" target="_blank">Terms of use</a></li>
-                  <li><a href="http://cdn.searchbox.com/sbf/oppfin-landing/assets/pdf/Getting%20Started%20with%20Opportunity-Finder_X01%2006.pdf" target="_blank">Getting started Guide</a></li>
-                  </ul>
-                
-                  
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
+          
           <sec:authorize access="isAnonymous()">
             <div class="row col-md-7">
               <div class="col-md-12">

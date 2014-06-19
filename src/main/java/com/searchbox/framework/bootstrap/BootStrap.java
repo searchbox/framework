@@ -137,7 +137,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       
 
 
-      LOGGER.info("Bootstraping application with oppfin data...");
+      LOGGER.info("Bootstraping application with deindeal data...");
 
       /**
        * The base Searchbox.
@@ -249,14 +249,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("Sub-Category", "subcategory_fr")
         .addFieldFacet("Color", "color_fr")
 
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisHit.jspx")
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
           .setProcess("search")
           .end()
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisView.jspx")
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("body")
           .setProcess("view")
           .end()
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/oppfin/_cordisViewMeta.jspx")
+        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("leftCol")
           .setProcess("view")
           .end()

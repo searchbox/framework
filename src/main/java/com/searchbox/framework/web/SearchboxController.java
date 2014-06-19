@@ -186,6 +186,11 @@ public class SearchboxController {
       @ModelAttribute("conditions") Set<AbstractSearchCondition> conditions,
       ModelAndView model, RedirectAttributes redirectAttributes) {
 
+    LOGGER.info("execute search controller");
+    LOGGER.info(searchbox.getName());
+    LOGGER.info(preset.getLabel());
+    LOGGER.info(process);
+    
     LOGGER.info("search page for: {} with preset: {} and process: {}",
         searchbox.getName(), preset.getLabel(), process);
 
