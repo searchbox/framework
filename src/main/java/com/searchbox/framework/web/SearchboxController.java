@@ -197,13 +197,13 @@ public class SearchboxController {
     // TODO check if we have a view for that process.
     model.setViewName(this.getViewFolder() + "/" + process);
 
-    Set<SearchElement> resultElements = executeRequest(searchbox, preset,
+    /*Set<SearchElement> resultElements = executeRequest(searchbox, preset,
         process, conditions, collector);
 
     model.addObject("preset", preset);
     model.addObject("process", process);
     model.addObject("elements", resultElements);
-    model.addObject("collector", collector);
+    model.addObject("collector", collector);*/
 
     return model;
   }

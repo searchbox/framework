@@ -47,7 +47,7 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
       .getLogger(EmbeddedSolr.class);
 
   @SearchAttribute
-  private String solrHome;
+  private String solrHome = "/Users/jonatrey/Documents/dev/java/roo_app/framework/src/main/resources/solr/";
 
   @SearchAttribute
   private String dataDir;
@@ -60,7 +60,7 @@ public class EmbeddedSolr extends SolrSearchEngine implements InitializingBean,
 
   public EmbeddedSolr(String name, String solrHome) {
     super(name);
-    this.solrHome = solrHome;
+    //this.solrHome = solrHome;
   }
 
   @Override

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -121,10 +122,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchEngineEntity<?> engine = null;
       try {
 
+        LOGGER.info("Property " + env.getProperty("searchengine.prop.value"));
         String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
         Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
+        
+        File f = new File(env.getProperty("searchengine.prop.value"));
         engine = new SearchEngineEntity<>()
             .setClazz(clazz)
+            //.setAttribute("solrHome",f.getPath());
             .setAttribute(env.getProperty("searchengine.prop","solrHome"),
                 env.getProperty("searchengine.prop.value",
                     context.getResource("classpath:solr/").getURL().getPath()));
@@ -150,7 +155,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 
       List<String> lang = new ArrayList<String>();
-      lang.add("en");
+      lang.add("fr");
 
       /**
        *
@@ -161,8 +166,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       LOGGER.info("++ Creating DeinDeal Product Base Collection");
       CollectionEntity<?> productsCollection = new CollectionEntity<>()
         .setClazz(ProductCollection.class)
-        .setName("Products")
-        .setAutoStart(false)
+        .setName("products")
+        .setAutoStart(true)
         .setIdFieldName("productId")
         .setSearchEngine(engine);
       productsCollection = collectionRepository.save(productsCollection);
@@ -249,14 +254,14 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("Sub-Category", "subcategory_fr")
         .addFieldFacet("Color", "color_fr")
 
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
           .setProcess("search")
           .end()
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("body")
           .setProcess("view")
           .end()
-        .newTemplateElement("cordisTitle", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("leftCol")
           .setProcess("view")
           .end()

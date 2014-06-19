@@ -58,8 +58,8 @@ public class DataConfiguration {
       throws Exception {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
     populator.setContinueOnError(true);
-    populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
-    //populator.addScript(new ClassPathResource("data/spring-batch-h2-schema.sql"));
+    //populator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
+    populator.addScript(new ClassPathResource("data/spring-batch-h2-schema.sql"));
     populator.populate(dataSource.getConnection());
     return populator;
   }

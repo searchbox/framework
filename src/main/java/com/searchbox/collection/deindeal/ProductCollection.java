@@ -31,23 +31,27 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.FlowJobBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.searchbox.collection.AbstractBatchCollection;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.SynchronizedCollection;
 import com.searchbox.core.dm.Field;
 import com.searchbox.core.dm.FieldMap;
+import com.searchbox.framework.config.RootConfiguration;
 
 @Configurable
 public class ProductCollection extends AbstractBatchCollection implements
@@ -110,7 +114,6 @@ public class ProductCollection extends AbstractBatchCollection implements
   public ProductCollection() {
     this.df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     this.df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
   }
 
   public ProductCollection(String name) {
@@ -132,14 +135,20 @@ public class ProductCollection extends AbstractBatchCollection implements
         LOGGER.info("Finished reading test_data_deindeal.json. File is {}",
             jsonData.length());
 
+        
         Object obj = JSONValue.parse(jsonData);
-        LOGGER.info("Cordis data is loaded {}", obj != null);
+        LOGGER.info("DeinDeal data is loaded {}", obj != null);
+       
 
-        jsonData = null;
+        JSONObject productObject=(JSONObject)obj;
+        LOGGER.info("Object has {} entries", productObject.size());
+
+        
+        /*jsonData = null;
         productData = (JSONArray) obj;
-        LOGGER.info("Cordis data is parsed {}", productData.size());
+        LOGGER.info("DeinDeal data is parsed {}", productData.size());*/
 
-        iterator = productData.iterator();
+        iterator = productObject.values().iterator();
       }
 
       @Override
@@ -159,57 +168,41 @@ public class ProductCollection extends AbstractBatchCollection implements
         DateFormat dfSource = new SimpleDateFormat(
             "EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
 
-        LOGGER.info("Processing cordis {}", item.get("id"));
+        LOGGER.info("Processing Deindeal {}", item.get("name"));
         FieldMap doc = new FieldMap();
         
         doc.put("docSource", "JSON");
         doc.put("docType", "Product");
         
-/*
- * fields.add(new Field(Integer.class, "productId"));
-    fields.add(new Field(String.class, "name"));
-    fields.add(new Field(String.class, "state"));
-    fields.add(new Field(Date.class, "updated_at"));
- */
-        doc.put("productId", item.get("name"));
-
-        System.out.println(item.toString());
-        System.exit(0);
+        //Global fields
+        doc.put("productId", item.get("id"));
+        doc.put("name", item.get("name"));
+        doc.put("state", item.get("state"));
+        //doc.put("updated_at", item.get("updated_at"));
         
-        doc.put("cordisId", item.get("id"));
-        doc.put("cordisTag", item.get("tag"));
-        doc.put("cordisStartYear", item.get("start_year"));
-        doc.put("cordisProjectFunding", item.get("projectfunding"));
-        doc.put("cordisContractType", item.get("contract_type"));
-        doc.put("cordisProjectStatus", item.get("project_status"));
-        doc.put("cordisUrl", item.get("url"));
-        doc.put("cordisCategory", item.get("category"));
-        doc.put("cordisProgram", item.get("program"));
-        doc.put("cordisProjectCost", item.get("projectcost"));
-        doc.put("cordisProjectDuration", item.get("projectduration"));
-        doc.put("cordisAcronymDescription", item.get("acronym_description"));
-        doc.put("cordisSnippet", item.get("snippet"));
-        doc.put("cordisSubProgrammArea", item.get("subprogrammearea"));
-        doc.put("cordisCallIdentifier", item.get("call_identifier"));
-        doc.put("cordisTitle", item.get("title"));
-        doc.put("cordisCountryCode", item.get("country_code"));
-        doc.put("cordisArea", item.get("aera"));
-        doc.put("cordisSubjectIndexCode", item.get("subjectindexcode"));
-        doc.put("cordisLanguage", item.get("language"));
+        //French
+        JSONObject fr_item = (JSONObject) item.get("fr");
+        doc.put("category_fr", fr_item.get("category"));
+        doc.put("description_fr", fr_item.get("description"));
+        doc.put("hl_name_fr", fr_item.get("hl_name"));
+        doc.put("color_fr", fr_item.get("color"));
+        doc.put("subcategory_fr", fr_item.get("subcategory"));
+        
+        //German
+        JSONObject de_item = (JSONObject) item.get("de");
+        doc.put("category_de", de_item.get("category"));
+        doc.put("description_de", de_item.get("description"));
+        doc.put("hl_name_de", de_item.get("hl_name"));
+        doc.put("color_de", de_item.get("color"));
+        doc.put("subcategory_de", de_item.get("subcategory"));
+        
 
-        try {
-          doc.put("cordisProjectStartDate",
-              dfSource.parse((String) item.get("projectstartdate")));
+       /* try {
+          doc.put("updated_at",
+              dfSource.parse((String) item.get("updated_at")));
         } catch (Exception e) {
           LOGGER.error("Cannot parse date", e);
-        }
-
-        try {
-          doc.put("cordisProjectEndDate",
-              dfSource.parse((String) item.get("projectenddate")));
-        } catch (Exception e) {
-          LOGGER.error("Cannot parse date", e);
-        }
+        }*/
 
         return doc;
       }
@@ -218,12 +211,12 @@ public class ProductCollection extends AbstractBatchCollection implements
 
   @Override
   public String getIdValue(FieldMap fields) {
-    return (String) fields.get("cordisId").get(0);
+    return (String) fields.get("productId").get(0);
   }
 
   @Override
   public String getTitleValue(FieldMap fields) {
-    return (String) fields.get("cordisTitle").get(0);
+    return (String) fields.get("name").get(0);
   }
 
   @Override
@@ -253,6 +246,19 @@ public class ProductCollection extends AbstractBatchCollection implements
       LOGGER.error("Could not build step.", e);
     }
     return builder.flow(step).end();
+  }
+  
+  public static void main(String... args)
+      throws JobExecutionAlreadyRunningException, JobRestartException,
+      JobInstanceAlreadyCompleteException, JobParametersInvalidException,
+      IOException {
+
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+        RootConfiguration.class, ProductCollection.class);
+
+    ProductCollection collection = context.getBean(ProductCollection.class);
+
+    collection.synchronize();
   }
 
 }
