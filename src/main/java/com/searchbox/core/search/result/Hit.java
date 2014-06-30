@@ -98,7 +98,7 @@ public class Hit implements Comparable<Hit> {
   public String getId() {
     Object id = this.fieldValues.get(this.idFieldName);
     if (List.class.isAssignableFrom(id.getClass())) {
-      return ((List<String>) id).get(0);
+      return ((List) id).get(0).toString();
     } else {
       return (String) id;
     }
