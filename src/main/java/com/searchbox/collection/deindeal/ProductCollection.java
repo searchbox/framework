@@ -181,20 +181,28 @@ public class ProductCollection extends AbstractBatchCollection implements
         //doc.put("updated_at", item.get("updated_at"));
         
         //French
-        JSONObject fr_item = (JSONObject) item.get("fr");
-        doc.put("category_fr", fr_item.get("category"));
-        doc.put("description_fr", fr_item.get("description"));
-        doc.put("hl_name_fr", fr_item.get("hl_name"));
-        doc.put("color_fr", fr_item.get("color"));
-        doc.put("subcategory_fr", fr_item.get("subcategory"));
+        try {
+          JSONObject fr_item = (JSONObject) item.get("fr");
+          doc.put("category_fr", fr_item.get("category"));
+          doc.put("description_fr", fr_item.get("description"));
+          doc.put("hl_name_fr", fr_item.get("hl_name"));
+          doc.put("color_fr", fr_item.get("color"));
+          doc.put("subcategory_fr", fr_item.get("subcategory"));
+        } catch(Exception e){
+          LOGGER.error("Cannot cast french object {}",e);
+        }
         
         //German
-        JSONObject de_item = (JSONObject) item.get("de");
-        doc.put("category_de", de_item.get("category"));
-        doc.put("description_de", de_item.get("description"));
-        doc.put("hl_name_de", de_item.get("hl_name"));
-        doc.put("color_de", de_item.get("color"));
-        doc.put("subcategory_de", de_item.get("subcategory"));
+        try {
+          JSONObject de_item = (JSONObject) item.get("de");
+          doc.put("category_de", de_item.get("category"));
+          doc.put("description_de", de_item.get("description"));
+          doc.put("hl_name_de", de_item.get("hl_name"));
+          doc.put("color_de", de_item.get("color"));
+          doc.put("subcategory_de", de_item.get("subcategory"));
+        } catch(Exception e){
+          LOGGER.error("Cannot cast german object {}",e);
+        }
         
 
        /* try {
