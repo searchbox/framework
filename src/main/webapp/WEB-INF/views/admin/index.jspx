@@ -132,7 +132,7 @@
              <td><c:forEach items="${collection.presets }"
                var="cpreset">
                <spring:url
-                value="${cpreset.searchbox.slug}/${cpreset.slug}/search"
+                value="/admin/${cpreset.searchbox.slug}/${cpreset.slug}/search"
                 var="plink" />
                <a href="${plink}">${cpreset.label }</a>
               </c:forEach></td>
