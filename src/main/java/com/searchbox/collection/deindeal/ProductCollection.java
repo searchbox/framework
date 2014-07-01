@@ -96,17 +96,17 @@ public class ProductCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "state"));
     fields.add(new Field(Date.class, "updated_at"));
     
-    fields.add(new Field(String.class, "category_fr"));
-    fields.add(new Field(String.class, "description_fr"));
-    fields.add(new Field(String.class, "hl_name_fr"));
-    fields.add(new Field(String.class, "color_fr"));
-    fields.add(new Field(String.class, "subcategory_fr"));
+    fields.add(new Field(String.class, "category"));
+    fields.add(new Field(String.class, "description"));
+    fields.add(new Field(String.class, "hl_name"));
+    fields.add(new Field(String.class, "color"));
+    fields.add(new Field(String.class, "subcategory"));
     
-    fields.add(new Field(String.class, "category_de"));
+    /*fields.add(new Field(String.class, "category_de"));
     fields.add(new Field(String.class, "description_de"));
     fields.add(new Field(String.class, "hl_name_de"));
     fields.add(new Field(String.class, "color_de"));
-    fields.add(new Field(String.class, "subcategory_de"));
+    fields.add(new Field(String.class, "subcategory_de"));*/
     
     return fields;
   }
@@ -183,17 +183,17 @@ public class ProductCollection extends AbstractBatchCollection implements
         //French
         try {
           JSONObject fr_item = (JSONObject) item.get("fr");
-          doc.put("category_fr", fr_item.get("category"));
-          doc.put("description_fr", fr_item.get("description"));
-          doc.put("hl_name_fr", fr_item.get("hl_name"));
-          doc.put("color_fr", fr_item.get("color"));
-          doc.put("subcategory_fr", fr_item.get("subcategory"));
+          doc.put("category", fr_item.get("category"));
+          doc.put("description", fr_item.get("description"));
+          doc.put("hl_name", fr_item.get("hl_name"));
+          doc.put("color", fr_item.get("color"));
+          doc.put("subcategory", fr_item.get("subcategory"));
         } catch(Exception e){
           LOGGER.error("Cannot cast french object {}",e);
         }
         
         //German
-        try {
+        /*try {
           JSONObject de_item = (JSONObject) item.get("de");
           doc.put("category_de", de_item.get("category"));
           doc.put("description_de", de_item.get("description"));
@@ -202,7 +202,7 @@ public class ProductCollection extends AbstractBatchCollection implements
           doc.put("subcategory_de", de_item.get("subcategory"));
         } catch(Exception e){
           LOGGER.error("Cannot cast german object {}",e);
-        }
+        }*/
         
 
        /* try {

@@ -156,7 +156,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
       List<String> lang = new ArrayList<String>();
       lang.add("fr");
-      lang.add("de");
+      //lang.add("de");
 
       /**
        * DeinDeal Base Product Collections
@@ -177,29 +177,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        *
        */
 
-      searchbox.newPreset().setLabel("Search All")
-      .setDescription("All Collections")
-      .setSlug("all")
-      .setCollection(collectionRepository.save(
-            new CollectionEntity<>()
-            .setClazz(MultiCollection.class)
-            .setName("all")
-            .setSearchEngine(engine)
-            .setAttribute("collections",
-                Arrays.asList(new String[]{
-                    productsCollection.getName()
-                  
-                }))))
-            .addQueryElement()
-            .addFieldFacet("Source", "docSource")
-            .addStatElement()
-            .addPagingElement("search")
-            .addDebugElement()
-            
-      //LOGGER.info("++ Creating Products preset");
-
-      //Product fr
-      .newChildPreset(true,  TemplateElement.class)
+      searchbox.newPreset()
         .setCollection(productsCollection)
         .setSlug("products")
         .setLabel("Products")
@@ -214,7 +192,23 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
 
-        .newFieldAttribute("Summary", "description_fr")
+        .newFieldAttribute("Summary", "description")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+          
+        .newFieldAttribute("Summary", "hl_name")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+          
+        .newFieldAttribute("SubCategory", "subcategory")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -226,9 +220,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addStatElement()
 
         .addFieldFacet("State", "state")
-        .addFieldFacet("Category", "category_fr")
-        .addFieldFacet("Sub-Category", "subcategory_fr")
-        .addFieldFacet("Color", "color_fr")
+        .addFieldFacet("Category", "category")
+        .addFieldFacet("Sub-Category", "subcategory")
+        .addFieldFacet("Color", "color")
 
         .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
           .setProcess("search")
@@ -244,10 +238,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addPagingElement("search")
         .addDebugElement()
-        .endChild()
         
         //Product DE
-        .newChildPreset(true,  TemplateElement.class)
+       /* .newChildPreset(true,  TemplateElement.class)
         .setCollection(productsCollection)
         .setSlug("products_de")
         .setLabel("Products DE")
@@ -292,7 +285,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addPagingElement("search")
         .addDebugElement()
-        .endChild()
+        .endChild()*/
        .end();
 
       

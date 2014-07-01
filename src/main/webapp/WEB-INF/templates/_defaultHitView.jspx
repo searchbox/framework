@@ -7,11 +7,11 @@
   <h4 class="result-title">
    <sbx:title hit="${hit}" />
   </h4>
-    <p><sbx:snippet hit="${hit}" field="description_fr"/></p>
+    <p><sbx:snippet hit="${hit}" field="description"/></p>
   
       
    <sbx:tagAttribute limit="1" label="Color"
-    values="${hit.fieldValues['color']}" filter="color_fr" />
+    values="${hit.fieldValues['color']}" filter="color" />
    
     
   

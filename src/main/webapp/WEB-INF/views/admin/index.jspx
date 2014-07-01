@@ -26,9 +26,13 @@
   $(document).ready(function() {
     $('.collection-synchronize').click(function(e, xhr) {
       e.preventDefault();
-      var button = $(this)
-      var loadurl = $(this).attr("data-synch")
-      console.log("Wassup: " + loadurl)
+      var loadurl = $(this).attr("data-synch");
+      console.log("data:"+loadurl);
+      
+      $.post( "test.php", function( data ) {
+        alert( "Data Loaded: " + data );
+      });
+      
       $.post(loadurl, function(data) {
         console.log(data);
         location.reload();
