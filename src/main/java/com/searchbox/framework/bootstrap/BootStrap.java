@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.searchbox.collection.ExpiringDocuments;
 import com.searchbox.collection.StandardCollection;
 import com.searchbox.collection.deindeal.ProductCollection;
+import com.searchbox.collection.deindeal.IndividualProductCollection;
 import com.searchbox.core.dm.MultiCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.core.ref.Order;
@@ -161,7 +162,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       /**
        * DeinDeal Base Product Collections
        */
-      LOGGER.info("++ Creating DeinDeal Product Base Collection");
+      LOGGER.info("++ Creating DeinDeal Product Collection");
       CollectionEntity<?> productsCollection = new CollectionEntity<>()
         .setClazz(ProductCollection.class)
         .setName("products")
@@ -169,15 +170,26 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setIdFieldName("productId")
         .setSearchEngine(engine);
       productsCollection = collectionRepository.save(productsCollection);
+      
+      /**
+       * DeinDeal Base Product Collections
+       */
+      LOGGER.info("++ Creating DeinDeal Individual Product Collection");
+      CollectionEntity<?> individualProductsCollection = new CollectionEntity<>()
+        .setClazz(IndividualProductCollection.class)
+        .setName("individualProducts")
+        .setAutoStart(true)
+        .setIdFieldName("indProductId")
+        .setSearchEngine(engine);
+      individualProductsCollection = collectionRepository.save(individualProductsCollection);
+      
 
       /**
-       *
        * Products Preset
-       *
-       *
        */
 
-      searchbox.newPreset()
+      searchbox
+        .newPreset()
         .setCollection(productsCollection)
         .setSlug("products")
         .setLabel("Products")
@@ -286,7 +298,65 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addPagingElement("search")
         .addDebugElement()
         .endChild()*/
+       .end()
+       
+       
+       .newPreset()
+        .setCollection(individualProductsCollection)
+        .setSlug("products2")
+        .setLabel("Individual Products")
+        .setVisible(true)
+        .setDescription("DeinDeal products")
+
+        .newFieldAttribute("Title","hl_name")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+
+        .newFieldAttribute("Summary", "description")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+          
+        .newFieldAttribute("SubCategory", "subcategory")
+          .setLanguages(lang)
+          .setSearchanble(true)
+          .setHighlight(true)
+          .setSpelling(true)
+          .setSuggestion(true)
+          .end()
+
+        .addQueryElement()
+        .addStatElement()
+
+        .addFieldFacet("State", "state")
+        .addFieldFacet("Category", "category")
+        .addFieldFacet("Sub-Category", "subcategory")
+        .addFieldFacet("Color", "color")
+        .addFieldFacet("Option name", "option_name")
+
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+          .setProcess("search")
+          .end()
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+          .setLabel("body")
+          .setProcess("view")
+          .end()
+        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+          .setLabel("leftCol")
+          .setProcess("view")
+          .end()
+
+        .addPagingElement("search")
+        .addDebugElement()
        .end();
+      
 
       
 
