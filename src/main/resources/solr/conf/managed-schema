@@ -498,4 +498,15 @@
   <copyField source="hl_name" dest="hl_name_fr"/>
   <copyField source="hl_name" dest="suggest"/>
   <copyField source="hl_name" dest="text"/>
+  <copyField source="material" dest="material_ss"/>
+  <copyField source="special_highlights" dest="special_highlights_ss"/>
+  <copyField source="product_group_id" dest="product_group_id_tis"/>
+  <copyField source="option_name" dest="option_name_ss"/>
+  <copyField source="pg_differentiation_factor" dest="pg_differentiation_factor_ss"/>
+  <copyField source="discount_percent" dest="discount_percent_tfs"/>
+  <copyField source="price" dest="price_tfs"/>
+  <copyField source="collection_id" dest="collection_id_tis"/>
+  <copyField source="pg_sku_group_title" dest="pg_sku_group_title_ss"/>
+  <copyField source="variant_id" dest="variant_id_tis"/>
+  <copyField source="indProductId" dest="indProductId_tis"/>
 </schema>
