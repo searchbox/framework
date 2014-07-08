@@ -15,12 +15,9 @@
  ******************************************************************************/
 package com.searchbox.framework.bootstrap;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -36,29 +33,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.collection.ExpiringDocuments;
-import com.searchbox.collection.StandardCollection;
-import com.searchbox.collection.deindeal.ProductCollection;
 import com.searchbox.collection.deindeal.IndividualProductCollection;
-import com.searchbox.core.dm.MultiCollection;
+import com.searchbox.collection.deindeal.ProductCollection;
 import com.searchbox.core.engine.SearchEngine;
-import com.searchbox.core.ref.Order;
-import com.searchbox.core.ref.Sort;
-import com.searchbox.core.search.debug.SolrToString;
-import com.searchbox.core.search.facet.FieldFacet;
-import com.searchbox.core.search.paging.BasicPagination;
-import com.searchbox.core.search.query.EdismaxQuery;
-import com.searchbox.core.search.query.MoreLikeThisQuery;
-import com.searchbox.core.search.result.TemplateElement;
-import com.searchbox.core.search.sort.FieldSort;
-import com.searchbox.core.search.stat.BasicSearchStats;
 import com.searchbox.engine.solr.EmbeddedSolr;
-import com.searchbox.framework.domain.Role;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
 import com.searchbox.framework.model.SearchEngineEntity;
 import com.searchbox.framework.model.SearchboxEntity;
-import com.searchbox.framework.model.UserEntity;
 import com.searchbox.framework.repository.CollectionRepository;
 import com.searchbox.framework.repository.SearchEngineRepository;
 import com.searchbox.framework.repository.SearchboxRepository;
@@ -123,7 +105,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchEngineEntity<?> engine = null;
       try {
 
-        LOGGER.info("Property " + env.getProperty("searchengine.prop.value"));
+        /*LOGGER.info("Property " + env.getProperty("searchengine.prop.value"));
         String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
         Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
         
@@ -131,6 +113,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         engine = new SearchEngineEntity<>()
             .setClazz(clazz)
             //.setAttribute("solrHome",f.getPath());
+            .setAttribute(env.getProperty("searchengine.prop","solrHome"),
+                env.getProperty("searchengine.prop.value",
+                    context.getResource("classpath:solr/").getURL().getPath()));
+
+        engine = engineRepository.save(engine);*/
+        
+        String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
+        Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
+        engine = new SearchEngineEntity<>()
+            .setClazz(clazz)
             .setAttribute(env.getProperty("searchengine.prop","solrHome"),
                 env.getProperty("searchengine.prop.value",
                     context.getResource("classpath:solr/").getURL().getPath()));
@@ -156,7 +148,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 
       List<String> lang = new ArrayList<String>();
-      lang.add("fr");
+      lang.add("en");
       //lang.add("de");
 
       /**
@@ -338,6 +330,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("State", "state")
         .addFieldFacet("Category", "category")
         .addFieldFacet("Sub-Category", "subcategory")
+        .addHierarchicalFieldFacet("Category tree", "category_path")
         .addFieldFacet("Color", "color")
         .addFieldFacet("Option name", "option_name")
 
