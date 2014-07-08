@@ -113,6 +113,10 @@
    stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_en" type="text_en" indexed="true"
    stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="*_fr" type="text_fr" indexed="true"
+   stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="*_de" type="text_de" indexed="true"
+   stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_b" type="boolean" indexed="true"
    stored="true" />
   <dynamicField name="*_bs" type="boolean" indexed="true"
