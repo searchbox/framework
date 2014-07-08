@@ -307,6 +307,7 @@ public class SolrCloud extends SolrSearchEngine implements InitializingBean,
     for (File file : files) {
       if (!file.getName().startsWith(".")) {
         if (!file.isDirectory()) {
+          LOGGER.info("Uploading " + file.toString() + " to "+zkPath + "/" + file.getName());
           zkClient.makePath(zkPath + "/" + file.getName(), file, false, true);
         } else {
           uploadToZK(zkClient, file, zkPath + "/" + file.getName());
