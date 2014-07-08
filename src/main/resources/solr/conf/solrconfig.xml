@@ -509,7 +509,7 @@
 
  <!-- implemented as: - https://issues.apache.org/jira/browse/SOLR-5378 -
   https://issues.apache.org/jira/browse/SOLR-5528 - https://lucene.apache.org/solr/4_7_0/changes/Changes.html#v4.7.0.new_features -->
- <!--  <requestHandler name="/suggest" class="solr.SearchHandler">
+ <requestHandler name="/suggest" class="solr.SearchHandler">
   <lst name="defaults">
    <str name="suggest.dictionary">FreeTextLookupFactory</str>
     <str name="suggest.dictionary">AnalyzingInfixLookupFactory</str>
@@ -521,11 +521,11 @@
   <arr name="components">
    <str>suggest</str>
   </arr>
- </requestHandler> -->
+ </requestHandler>
 
 
 
-<!--   <searchComponent class="solr.SuggestComponent" name="suggest">
+<searchComponent class="solr.SuggestComponent" name="suggest">
   <lst name="suggester">
    <str name="name">FreeTextLookupFactory</str>
    <str name="lookupImpl">FreeTextLookupFactory</str>
@@ -537,7 +537,7 @@
    <str name="suggestFreeTextAnalyzerFieldType">text_general</str>
    <str name="buildOnCommit">false</str>
 
-  </lst>-->
+  </lst>
 <!-- <lst name="suggester"> <str name="name">AnalyzingInfixLookupFactory</str>
    <str name="lookupImpl">AnalyzingInfixLookupFactory</str> <str name="dictionaryImpl">DocumentDictionaryFactory</str>
    <str name="field">suggest</str> <str name="weightField">popularity</str>
@@ -559,7 +559,7 @@
    <str name="field">suggest</str> <str name="weightField">popularity</str>
    <str name="storeDir">WFSTLookupFactory</str> <str name="suggestAnalyzerFieldType">text_general</str>
    </lst> -->
-<!--  </searchComponent> -->
+</searchComponent>
 
 
 
