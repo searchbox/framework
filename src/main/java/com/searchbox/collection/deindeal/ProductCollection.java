@@ -182,12 +182,12 @@ public class ProductCollection extends AbstractBatchCollection implements
         
         //French
         try {
-          JSONObject fr_item = (JSONObject) item.get("fr");
-          doc.put("category", fr_item.get("category"));
-          doc.put("description", fr_item.get("description"));
-          doc.put("hl_name", fr_item.get("hl_name"));
-          doc.put("color", fr_item.get("color"));
-          doc.put("subcategory", fr_item.get("subcategory"));
+          JSONObject de_item = (JSONObject) item.get("de");
+          doc.put("category", de_item.get("category"));
+          doc.put("description", de_item.get("description"));
+          doc.put("hl_name", de_item.get("hl_name"));
+          doc.put("color", de_item.get("color"));
+          doc.put("subcategory", de_item.get("subcategory"));
         } catch(Exception e){
           LOGGER.error("Cannot cast french object {}",e);
         }
@@ -224,7 +224,7 @@ public class ProductCollection extends AbstractBatchCollection implements
 
   @Override
   public String getTitleValue(FieldMap fields) {
-    return (String) fields.get("name").get(0);
+    return (String) fields.get("hl_name").get(0);
   }
 
   @Override

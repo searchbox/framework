@@ -215,21 +215,21 @@ public class IndividualProductCollection extends AbstractBatchCollection impleme
         doc.put("discount_percent", item.get("discount_percent"));
 
         
-        //French
+        //German
         try {
-          JSONObject fr_item = (JSONObject) item.get("fr");
-          LOGGER.info("Processing IndividualProduct {}", fr_item.get("pg_sku_group_title"));
+          JSONObject de_item = (JSONObject) item.get("de");
+          LOGGER.info("Processing IndividualProduct {}", de_item.get("pg_sku_group_title"));
 
           
-          doc.put("category", fr_item.get("category"));
-          doc.put("subcategory", fr_item.get("subcategory"));
-          doc.put("description", fr_item.get("description"));
-          doc.put("option_name", fr_item.get("option_name"));
-          doc.put("color", fr_item.get("color"));
-          doc.put("material", fr_item.get("material"));
-          doc.put("special_highlights", fr_item.get("special_highlights"));
-          doc.put("pg_differentiation_factor", fr_item.get("pg_differentiation_factor"));
-          doc.put("pg_sku_group_title", fr_item.get("pg_sku_group_title"));
+          doc.put("category", de_item.get("category"));
+          doc.put("subcategory", de_item.get("subcategory"));
+          doc.put("description", de_item.get("description"));
+          doc.put("option_name", de_item.get("option_name"));
+          doc.put("color", de_item.get("color"));
+          doc.put("material", de_item.get("material"));
+          doc.put("special_highlights", de_item.get("special_highlights"));
+          doc.put("pg_differentiation_factor_de", de_item.get("pg_differentiation_factor"));
+          doc.put("pg_sku_group_title_de", de_item.get("pg_sku_group_title"));
           
         } catch(Exception e){
           LOGGER.error("Cannot cast french object {}",e);
@@ -246,7 +246,7 @@ public class IndividualProductCollection extends AbstractBatchCollection impleme
   }
 
   @Override
-  public String getTitleValue(FieldMap fields) {
+  public String getTitleValue(FieldMap fields) {    
     return (String) fields.get("pg_sku_group_title").get(0);
   }
 
