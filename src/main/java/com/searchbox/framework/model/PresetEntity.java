@@ -41,6 +41,7 @@ import com.searchbox.core.ref.Order;
 import com.searchbox.core.ref.Sort;
 import com.searchbox.core.search.debug.SolrToString;
 import com.searchbox.core.search.facet.FieldFacet;
+import com.searchbox.core.search.facet.HierarchicalFieldFacet;
 import com.searchbox.core.search.filter.FieldRangeCondition;
 import com.searchbox.core.search.filter.FieldValueCondition;
 import com.searchbox.core.search.paging.BasicPagination;
@@ -415,10 +416,24 @@ public class PresetEntity extends BeanFactoryEntity<Long> implements
     this.searchElements.add(newFieldFacet(label, key));
     return this;
   }
+  
+  public PresetEntity addHierarchicalFieldFacet(String label, String key){
+    this.searchElements.add(newHierarchicalFieldFacet(label, key));
+    return this;
+  }
 
   public SearchElementEntity<?> newFieldFacet(String label, String key) {
     return newSearchElement()
         .setClazz(FieldFacet.class)
+        .setLabel(label)
+        .setAttribute("fieldName", key)
+        .setAttribute("order", Order.BY_VALUE)
+        .setAttribute("sort", Sort.DESC);
+  }
+  
+  public SearchElementEntity<?> newHierarchicalFieldFacet(String label, String key) {
+    return newSearchElement()
+        .setClazz(HierarchicalFieldFacet.class)
         .setLabel(label)
         .setAttribute("fieldName", key)
         .setAttribute("order", Order.BY_VALUE)
