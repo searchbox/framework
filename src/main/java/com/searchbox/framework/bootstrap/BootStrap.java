@@ -33,8 +33,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.searchbox.collection.deindeal.IndividualProductCollection;
-import com.searchbox.collection.deindeal.ProductCollection;
+import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.engine.SearchEngine;
 import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.event.SearchboxReady;
@@ -105,19 +104,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchEngineEntity<?> engine = null;
       try {
 
-        /*LOGGER.info("Property " + env.getProperty("searchengine.prop.value"));
-        String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
-        Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
-        
-        File f = new File(env.getProperty("searchengine.prop.value"));
-        engine = new SearchEngineEntity<>()
-            .setClazz(clazz)
-            //.setAttribute("solrHome",f.getPath());
-            .setAttribute(env.getProperty("searchengine.prop","solrHome"),
-                env.getProperty("searchengine.prop.value",
-                    context.getResource("classpath:solr/").getURL().getPath()));
-
-        engine = engineRepository.save(engine);*/
+        LOGGER.info("Property " + env.getProperty("searchengine.prop.value"));
         
         String className = env.getProperty("searchengine.class", EmbeddedSolr.class.getName());
         Class<SearchEngine<?,?>> clazz = (Class<SearchEngine<?, ?>>) Class.forName(className);
@@ -135,60 +122,46 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       
 
 
-      LOGGER.info("Bootstraping application with deindeal data...");
+      LOGGER.info("Bootstraping application with pubmed data...");
 
       /**
        * The base Searchbox.
        */
-      LOGGER.info("++ Creating DeinDeal searchbox");
+      LOGGER.info("++ Creating Pubmed searchbox");
       SearchboxEntity searchbox = new SearchboxEntity()
-        .setSlug("deindeal")
-        .setName("DeinDeal Searchbox")
-        .setLogo("http://blog.carpathia.ch/wp-content/uploads/2014/02/logo-deindeal.jpg");
+        .setSlug("pubmed")
+        .setName("Pubmed Searchbox")
+        .setLogo("http://openaccess.eprints.org/uploads/pubmed.jpg");
 
 
       List<String> lang = new ArrayList<String>();
-      lang.add("de");
-      //lang.add("de");
+      lang.add("en");
 
       /**
        * DeinDeal Base Product Collections
        */
-      LOGGER.info("++ Creating DeinDeal Product Collection");
+      LOGGER.info("++ Creating Pubmed Collection");
       CollectionEntity<?> productsCollection = new CollectionEntity<>()
-        .setClazz(ProductCollection.class)
-        .setName("products")
+        .setClazz(PubmedCollection.class)
+        .setName("pubmed")
         .setAutoStart(true)
-        .setIdFieldName("productId")
+        .setIdFieldName("id")
         .setSearchEngine(engine);
       productsCollection = collectionRepository.save(productsCollection);
       
-      /**
-       * DeinDeal Base Product Collections
-       */
-      /*LOGGER.info("++ Creating DeinDeal Individual Product Collection");
-      CollectionEntity<?> individualProductsCollection = new CollectionEntity<>()
-        .setClazz(IndividualProductCollection.class)
-        .setName("individualProducts")
-        .setAutoStart(true)
-        .setIdFieldName("indProductId")
-        .setSearchEngine(engine);
-      individualProductsCollection = collectionRepository.save(individualProductsCollection);
-      */
 
       /**
-       * Products Preset
+       * Pubmed Articles Preset
        */
-
       searchbox
         .newPreset()
         .setCollection(productsCollection)
-        .setSlug("products")
-        .setLabel("Products")
+        .setSlug("articles")
+        .setLabel("Scientific articles")
         .setVisible(true)
-        .setDescription("DeinDeal products")
+        .setDescription("Pubmed articles")
 
-        .newFieldAttribute("Title","name")
+        .newFieldAttribute("Title","article-title")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -196,7 +169,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
 
-        .newFieldAttribute("Summary", "description")
+        .newFieldAttribute("Summary", "article-abstract")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -204,20 +177,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
           
-        .newFieldAttribute("Summary", "hl_name")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
+        .newFieldAttribute("Completion Date", "article-completion-date")
+          .setSortable(true)
           .end()
           
-        .newFieldAttribute("SubCategory", "subcategory")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
+        .newFieldAttribute("Revision", "article-revision-date")
+          .setSortable(true)
           .end()
 
         .addQueryElement()
@@ -229,7 +194,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addHierarchicalFieldFacet("Category tree", "category_tree_path")
         .addFieldFacet("Color", "color")
 
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("name", "/WEB-INF/templates/_pubmedHit.jspx")
           .setProcess("search")
           .end()
         .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
@@ -243,116 +208,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addPagingElement("search")
         .addDebugElement()
-        
-        //Product DE
-       /* .newChildPreset(true,  TemplateElement.class)
-        .setCollection(productsCollection)
-        .setSlug("products_de")
-        .setLabel("Products DE")
-        .setVisible(true)
-        .setDescription("DeinDeal products")
-
-        .newFieldAttribute("Title","name")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .newFieldAttribute("Summary", "description_de")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .addQueryElement()
-        .addStatElement()
-
-        .addFieldFacet("State", "state")
-        .addFieldFacet("Category", "category_de")
-        .addFieldFacet("Sub-Category", "subcategory_de")
-        .addFieldFacet("Color", "color_de")
-
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setProcess("search")
-          .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setLabel("body")
-          .setProcess("view")
-          .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setLabel("leftCol")
-          .setProcess("view")
-          .end()
-
-        .addPagingElement("search")
-        .addDebugElement()
-        .endChild()*/
        .end();
        
-       /*
-       .newPreset()
-        .setCollection(individualProductsCollection)
-        .setSlug("products2")
-        .setLabel("Individual Products")
-        .setVisible(true)
-        .setDescription("DeinDeal products")
-
-        .newFieldAttribute("Title","hl_name")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .newFieldAttribute("Summary", "description")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-          
-        .newFieldAttribute("SubCategory", "subcategory")
-          .setLanguages(lang)
-          .setSearchanble(true)
-          .setHighlight(true)
-          .setSpelling(true)
-          .setSuggestion(true)
-          .end()
-
-        .addQueryElement()
-        .addStatElement()
-
-        .addFieldFacet("State", "state")
-        .addFieldFacet("Category", "category")
-        .addFieldFacet("Sub-Category", "subcategory")
-        .addFieldFacet("Color", "color")
-        .addFieldFacet("Option name", "option_name")
-
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setProcess("search")
-          .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setLabel("body")
-          .setProcess("view")
-          .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
-          .setLabel("leftCol")
-          .setProcess("view")
-          .end()
-
-        .addPagingElement("search")
-        .addDebugElement()
-       .end();*/
       
-
-      
-
       repository.save(searchbox);
 
       LOGGER.info("Bootstraping application with Deindeal data... done");
@@ -373,7 +231,12 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     LOGGER.info("*                  Welcome                         *");
     LOGGER.info("****************************************************");
     LOGGER.info("*                                                  *");
-    LOGGER.info("*                DeinDeal Searchbox                *");
+    LOGGER.info("*   __                     _     _                 *");
+    LOGGER.info("*  / _\\ ___  __ _ _ __ ___| |__ | |__   _____  __  *");
+    LOGGER.info("*  \\ \\ / _ \\/ _` | '__/ __| '_ \\| '_ \\ / _ \\ \\/ /  *");
+    LOGGER.info("*  _\\ \\  __/ (_| | | | (__| | | | |_) | (_) >  <   *");
+    LOGGER.info("*  \\__/\\___|\\__,_|_|  \\___|_| |_|_.__/ \\___/_/\\_\\  *");
+    LOGGER.info("*                                                  *");
     LOGGER.info("*                                                  *");
     LOGGER.info("****************************************************");
     LOGGER.info("*                                                  *");
