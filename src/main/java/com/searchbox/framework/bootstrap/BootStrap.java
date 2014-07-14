@@ -35,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.searchbox.collection.pubmed.PubmedCollection;
 import com.searchbox.core.engine.SearchEngine;
+import com.searchbox.core.ref.Order;
+import com.searchbox.core.ref.Sort;
+import com.searchbox.core.search.facet.FieldFacet;
 import com.searchbox.engine.solr.EmbeddedSolr;
 import com.searchbox.framework.event.SearchboxReady;
 import com.searchbox.framework.model.CollectionEntity;
@@ -138,16 +141,16 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       lang.add("en");
 
       /**
-       * DeinDeal Base Product Collections
+       * Pubmed Collections
        */
       LOGGER.info("++ Creating Pubmed Collection");
-      CollectionEntity<?> productsCollection = new CollectionEntity<>()
+      CollectionEntity<?> pumedCollection = new CollectionEntity<>()
         .setClazz(PubmedCollection.class)
         .setName("pubmed")
         .setAutoStart(true)
         .setIdFieldName("id")
         .setSearchEngine(engine);
-      productsCollection = collectionRepository.save(productsCollection);
+      pumedCollection = collectionRepository.save(pumedCollection);
       
 
       /**
@@ -155,21 +158,22 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
        */
       searchbox
         .newPreset()
-        .setCollection(productsCollection)
+        .setCollection(pumedCollection)
         .setSlug("articles")
         .setLabel("Scientific articles")
         .setVisible(true)
         .setDescription("Pubmed articles")
 
-        .newFieldAttribute("Title","article-title")
+        .newFieldAttribute("Title","articleTitle")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
           .setSpelling(true)
+          .setBoost(1.8f)
           .setSuggestion(true)
           .end()
 
-        .newFieldAttribute("Summary", "article-abstract")
+        .newFieldAttribute("Summary", "articleAbstract")
           .setLanguages(lang)
           .setSearchanble(true)
           .setHighlight(true)
@@ -177,22 +181,32 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
           .setSuggestion(true)
           .end()
           
-        .newFieldAttribute("Completion Date", "article-completion-date")
+        .newFieldAttribute("Completion Date", "articleCompletionDate")
           .setSortable(true)
           .end()
           
-        .newFieldAttribute("Revision", "article-revision-date")
+        .newFieldAttribute("Revision", "articleRevisionDate")
           .setSortable(true)
           .end()
 
+        .newSearchElement()
+         .setClazz(FieldFacet.class)
+         .setLabel("Author")
+         .setAttribute("fieldName","author")
+         .setAttribute("order", Order.BY_VALUE)
+         .setAttribute("sort", Sort.DESC)
+         .end()
+
+       .newSearchElement()
+         .setClazz(FieldFacet.class)
+         .setAttribute("fieldName", "articleYear")
+         .setLabel("Year")
+         .setAttribute("order", Order.BY_KEY)
+         .setAttribute("sort", Sort.DESC)
+         .end()
+         
         .addQueryElement()
         .addStatElement()
-
-        .addFieldFacet("State", "state")
-        .addFieldFacet("Category", "category")
-        .addFieldFacet("Sub-Category", "subcategory")
-        .addHierarchicalFieldFacet("Category tree", "category_tree_path")
-        .addFieldFacet("Color", "color")
 
         .newTemplateElement("name", "/WEB-INF/templates/_pubmedHit.jspx")
           .setProcess("search")
@@ -213,7 +227,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       
       repository.save(searchbox);
 
-      LOGGER.info("Bootstraping application with Deindeal data... done");
+      LOGGER.info("Bootstraping application with Pubmed data... done");
 
     }
 
@@ -246,8 +260,8 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
     LOGGER.info("*  sample data from the PUBMED directory has been  *");
     LOGGER.info("*  automatically added.                            *");
     LOGGER.info("*                                                  *");
-    LOGGER.info("*  visit: http://localhost:8080/searchbox          *");
-    LOGGER.info("*  admin: http://localhost:8080/searchbox/admin    *");
+    LOGGER.info("*  visit: http://localhost:8080/searchbox/pubmed   *");
+    LOGGER.info("*  admin: http://localhost:8080/searchbox/admin/pubmed*");
     LOGGER.info("*                                                  *");
     LOGGER.info("****************************************************");
 

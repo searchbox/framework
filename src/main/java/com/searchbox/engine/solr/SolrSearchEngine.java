@@ -179,8 +179,10 @@ public abstract class SolrSearchEngine extends
     /** Get the translation for the field's key */
     Map<Field, Set<String>> copyFields = new HashMap<Field, Set<String>>();
     for (FieldAttribute fieldAttribute : fieldAttributes) {
-      copyFields.put(fieldAttribute.getField(),
-          this.getAllKeysForField(fieldAttribute));
+      if(fieldAttribute.getField().getKey() != "id"){
+        copyFields.put(fieldAttribute.getField(),
+            this.getAllKeysForField(fieldAttribute));
+      }
     }
     LOGGER.info("Updating all fields");
     this.updateDataModel(collection, copyFields);
@@ -231,7 +233,7 @@ public abstract class SolrSearchEngine extends
 
     String append = "";
     String prepend = "";
-
+    
     if(isActualField(fieldAttribute.getField().getKey())){
       usages.put(USE.DEFAULT, fieldAttribute.getField().getKey());
       usages.put(USE.SEARCH, fieldAttribute.getField().getKey());
