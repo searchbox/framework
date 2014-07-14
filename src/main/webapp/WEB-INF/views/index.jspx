@@ -36,7 +36,7 @@
             <div class="media">
               <spring:url value="/" var="home_url" />
               <a class="pull-left" href="${home_url}"> <spring:url
-                  value="/assets/images/oppfin-logo.png"
+                  value="/assets/images/searchbox-logo-big.png"
                   var="searchbox_logo" /> <img src='${searchbox_logo}'
                 class="media-object" alt="Searchbox" id="logo-image" />
               </a>
@@ -46,22 +46,7 @@
         </div>
 
         <div class="row" id="info">
-          
-          <sec:authorize access="isAnonymous()">
-            <div class="row col-md-7">
-              <div class="col-md-12">
-                <div class="panel panel-default">
-                  <div class="panel-heading">Login</div>
-                  <div class="panel-body">
-                    <jsp:include page="/WEB-INF/views/user/login.jspx" /></div>
-                </div>
-              </div>
-            </div>
-          </sec:authorize>
-          <sec:authorize access="isAuthenticated()">
-            <jsp:forward page="/oppfin" />
-          </sec:authorize>
-
+            <jsp:forward page="/pubmed" />
         </div>
 
       </div>

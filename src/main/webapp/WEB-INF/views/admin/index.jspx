@@ -27,20 +27,14 @@
     $('.collection-synchronize').click(function(e, xhr) {
       e.preventDefault();
       var loadurl = $(this).attr("data-synch");
-      console.log("data:"+loadurl);
+      console.log("Loading: *" + loadurl + "*");
       
-      $.post( "test.php", function( data ) {
-        alert( "Data Loaded: " + data );
-      });
-      
-      $.post(loadurl, function(data) {
-        console.log(data);
+      $.post(loadurl, {start: "collection"}, function(data) {
         location.reload();
       });
     });
   });
 </script>
-
 
 </head>
 
@@ -174,7 +168,7 @@
                 var="synchUrl" />
                <button
                 class="btn btn-default btn-xs collection-synchronize ${cssAddon }"
-                data-synch="${synchUrl }" type="button"
+                data-synch="${synchUrl}" type="button"
                 title="Synchronize collection now"
                 alt="Synchronize collection now">
                 <span class="glyphicon glyphicon-refresh"></span>
