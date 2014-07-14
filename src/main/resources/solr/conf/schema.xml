@@ -95,6 +95,17 @@
    the glob-like pattern in the name attribute must have a "*" only at the start 
    or the end. -->
 
+  <!--  Searchbox dynamic fields -->
+  <dynamicField name="*_path" type="text_path" indexed="true" stored="true" /> 
+  
+  <dynamicField name="*_en" type="text_en" indexed="true"
+   stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="*_fr" type="text_fr" indexed="true"
+   stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="*_de" type="text_de" indexed="true"
+   stored="true" multiValued="true" termVectors="true"/>
+   
+   
   <dynamicField name="*_i" type="int" indexed="true"
    stored="true" />
   <dynamicField name="*_is" type="int" indexed="true"
@@ -110,12 +121,6 @@
   <dynamicField name="*_t" type="text_general" indexed="true"
    stored="true" />
   <dynamicField name="*_txt" type="text_general" indexed="true"
-   stored="true" multiValued="true" termVectors="true"/>
-  <dynamicField name="*_en" type="text_en" indexed="true"
-   stored="true" multiValued="true" termVectors="true"/>
-  <dynamicField name="*_fr" type="text_fr" indexed="true"
-   stored="true" multiValued="true" termVectors="true"/>
-  <dynamicField name="*_de" type="text_de" indexed="true"
    stored="true" multiValued="true" termVectors="true"/>
   <dynamicField name="*_b" type="boolean" indexed="true"
    stored="true" />
@@ -140,6 +145,7 @@
    stored="true" multiValued="true" />
   <dynamicField name="*_p" type="location" indexed="true"
    stored="true" />
+   
 
   <!-- some trie-coded dynamic fields for faster range queries -->
   <dynamicField name="*_ti" type="tint" indexed="true"
@@ -649,7 +655,18 @@
   <fieldType name="currency" class="solr.CurrencyField"
    precisionStep="8" defaultCurrency="USD" currencyConfig="currency.xml" />
 
-
+  <!-- wiki.apache.org/solr/AnalyzersTokenizersTokenFilters -->
+  <!-- Output file path / category trees as synonyms -->
+  <fieldType name="text_path" class="solr.TextField">
+   <analyzer type="index">
+    <tokenizer class="solr.PathHierarchyTokenizerFactory"
+     delimiter="/" />
+   </analyzer>
+   <analyzer type="query">
+    <tokenizer class="solr.KeywordTokenizerFactory" />
+   </analyzer>
+  </fieldType>
+  
 
   <!-- some examples for different languages (generally ordered by ISO code) -->
 

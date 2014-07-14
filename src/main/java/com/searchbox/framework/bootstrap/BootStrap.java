@@ -148,7 +148,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
 
       List<String> lang = new ArrayList<String>();
-      lang.add("en");
+      lang.add("de");
       //lang.add("de");
 
       /**
@@ -166,7 +166,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       /**
        * DeinDeal Base Product Collections
        */
-      LOGGER.info("++ Creating DeinDeal Individual Product Collection");
+      /*LOGGER.info("++ Creating DeinDeal Individual Product Collection");
       CollectionEntity<?> individualProductsCollection = new CollectionEntity<>()
         .setClazz(IndividualProductCollection.class)
         .setName("individualProducts")
@@ -174,7 +174,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .setIdFieldName("indProductId")
         .setSearchEngine(engine);
       individualProductsCollection = collectionRepository.save(individualProductsCollection);
-      
+      */
 
       /**
        * Products Preset
@@ -226,6 +226,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("State", "state")
         .addFieldFacet("Category", "category")
         .addFieldFacet("Sub-Category", "subcategory")
+        .addHierarchicalFieldFacet("Category tree", "category_tree_path")
         .addFieldFacet("Color", "color")
 
         .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
@@ -290,9 +291,9 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addPagingElement("search")
         .addDebugElement()
         .endChild()*/
-       .end()
+       .end();
        
-       
+       /*
        .newPreset()
         .setCollection(individualProductsCollection)
         .setSlug("products2")
@@ -330,7 +331,6 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addFieldFacet("State", "state")
         .addFieldFacet("Category", "category")
         .addFieldFacet("Sub-Category", "subcategory")
-        .addHierarchicalFieldFacet("Category tree", "category_path")
         .addFieldFacet("Color", "color")
         .addFieldFacet("Option name", "option_name")
 
@@ -348,7 +348,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
 
         .addPagingElement("search")
         .addDebugElement()
-       .end();
+       .end();*/
       
 
       

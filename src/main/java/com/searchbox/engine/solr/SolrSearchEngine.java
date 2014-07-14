@@ -312,6 +312,7 @@ public abstract class SolrSearchEngine extends
       usages.put(USE.SUGGEST, SUGGESTION_FIELD);
     }
 
+    System.out.println(usages);
     return usages;
   }
 

@@ -102,6 +102,8 @@ public class ProductCollection extends AbstractBatchCollection implements
     fields.add(new Field(String.class, "color"));
     fields.add(new Field(String.class, "subcategory"));
     
+    fields.add(new Field(String.class, "category_tree_path"));
+    
     /*fields.add(new Field(String.class, "category_de"));
     fields.add(new Field(String.class, "description_de"));
     fields.add(new Field(String.class, "hl_name_de"));
@@ -188,6 +190,8 @@ public class ProductCollection extends AbstractBatchCollection implements
           doc.put("hl_name", de_item.get("hl_name"));
           doc.put("color", de_item.get("color"));
           doc.put("subcategory", de_item.get("subcategory"));
+          
+          doc.put("category_tree_path", "/DeinDeal/"+ de_item.get("category")+"/"+de_item.get("subcategory"));
         } catch(Exception e){
           LOGGER.error("Cannot cast french object {}",e);
         }
@@ -212,6 +216,7 @@ public class ProductCollection extends AbstractBatchCollection implements
           LOGGER.error("Cannot parse date", e);
         }*/
 
+        LOGGER.info("DOC: " + doc.toString());
         return doc;
       }
     };

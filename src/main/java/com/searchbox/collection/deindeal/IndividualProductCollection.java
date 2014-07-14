@@ -228,8 +228,8 @@ public class IndividualProductCollection extends AbstractBatchCollection impleme
           doc.put("color", de_item.get("color"));
           doc.put("material", de_item.get("material"));
           doc.put("special_highlights", de_item.get("special_highlights"));
-          doc.put("pg_differentiation_factor_de", de_item.get("pg_differentiation_factor"));
-          doc.put("pg_sku_group_title_de", de_item.get("pg_sku_group_title"));
+          doc.put("pg_differentiation_factor", de_item.get("pg_differentiation_factor"));
+          doc.put("pg_sku_group_title", de_item.get("pg_sku_group_title"));
           
         } catch(Exception e){
           LOGGER.error("Cannot cast french object {}",e);
