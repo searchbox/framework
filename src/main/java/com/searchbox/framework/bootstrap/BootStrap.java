@@ -134,7 +134,7 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
       SearchboxEntity searchbox = new SearchboxEntity()
         .setSlug("pubmed")
         .setName("Pubmed Searchbox")
-        .setLogo("http://openaccess.eprints.org/uploads/pubmed.jpg");
+        .setLogo("https://www.nihms.nih.gov/corehtml/pmc/pmcgifs/pmclogo.gif");
 
 
       List<String> lang = new ArrayList<String>();
@@ -208,14 +208,15 @@ public class BootStrap implements ApplicationListener<ContextRefreshedEvent> {
         .addQueryElement()
         .addStatElement()
 
-        .newTemplateElement("name", "/WEB-INF/templates/_pubmedHit.jspx")
+        //Param - title field, template file
+        .newTemplateElement("articleTitle", "/WEB-INF/templates/_pubmedHit.jspx")
           .setProcess("search")
           .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("articleTitle", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("body")
           .setProcess("view")
           .end()
-        .newTemplateElement("name", "/WEB-INF/templates/_defaultHitView.jspx")
+        .newTemplateElement("articleTitle", "/WEB-INF/templates/_defaultHitView.jspx")
           .setLabel("leftCol")
           .setProcess("view")
           .end()

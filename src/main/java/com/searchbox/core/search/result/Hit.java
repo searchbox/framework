@@ -106,6 +106,10 @@ public class Hit implements Comparable<Hit> {
 
   @SuppressWarnings("unchecked")
   public String getTitle() {
+    System.out.println("Getting title ");
+    System.out.println("Getting title for "+ this.titleFieldName);
+    System.out.println(this.fieldValues);
+    
     Object title = (this.fieldValues.get(this.titleFieldName)!=null)?
         this.fieldValues.get(this.titleFieldName):"";
     if (List.class.isAssignableFrom(title.getClass())) {
