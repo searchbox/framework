@@ -64,7 +64,7 @@
   <slf4j.version>1.7.5</slf4j.version>
   <spring.version>4.0.2.RELEASE</spring.version>
   <spring-batch.version>2.2.5.RELEASE</spring-batch.version>
-  <spring-security.version>3.2.1.RELEASE</spring-security.version>
+  <spring-security.version>5.2.10.RELEASE</spring-security.version>
   <spring-social.version>1.1.0.RC1</spring-social.version>
   <spring-data.version></spring-data.version>
   <jetty.version>8.1.5.v20120716</jetty.version>
