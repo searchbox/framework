@@ -70,7 +70,7 @@
   <jetty.version>8.1.5.v20120716</jetty.version>
   <lucene.version>4.7.0</lucene.version>
   <solr.version>4.7.0</solr.version>
-  <es.version>1.0.1</es.version>
+  <es.version>6.8.15</es.version>
   <m2eclipse.wtp.contextRoot>/searchbox</m2eclipse.wtp.contextRoot>
  </properties>
  <dependencies>
