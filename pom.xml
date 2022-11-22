@@ -65,7 +65,7 @@
   <spring.version>4.0.2.RELEASE</spring.version>
   <spring-batch.version>2.2.5.RELEASE</spring-batch.version>
   <spring-security.version>3.2.1.RELEASE</spring-security.version>
-  <spring-social.version>1.1.0.RC1</spring-social.version>
+  <spring-social.version>1.1.4.BUILD-SNAPSHOT</spring-social.version>
   <spring-data.version></spring-data.version>
   <jetty.version>8.1.5.v20120716</jetty.version>
   <lucene.version>4.7.0</lucene.version>
